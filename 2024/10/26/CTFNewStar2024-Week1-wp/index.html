@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #ffa2c4">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #ff7d73">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -202,15 +202,13 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="reverse"><a href="#reverse" class="headerlink" title="reverse"></a>reverse</h1><h2 id="base64"><a href="#base64" class="headerlink" title="base64"></a>base64</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week1/base64.zip">(・∀・)つ原题</a></p>
-<h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>Die 发现是 PE64，直接丢入 ide64，函数名混乱，直接 shift+f12，查找用”Enter the flag: “ 进入主函数，发现输入的值 str 为 26 位然后被 sub_7FF706EE14E0(Str, 26, Str1)加密输出为 str1，再与 g84Gg6m2ATtVeYqUZ9xRnaBpBvOVZYtj+Tc&#x3D;比较相等即 str 是 flag 值.<br>进入sub_7FF706EE14E0()函数，再由题目提示的 base64 丁帧为 base64 加密函数，并找到了一个字符串 WHydo3sThiS7ABLElO0k5trange+CZfVIGRvup81NKQbjmPzU4MDc9Y6q2XwFxJ&#x2F; ,一眼就是密钥 .</p>
+        <h1 id="reverse"><a href="#reverse" class="headerlink" title="reverse"></a>reverse</h1><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs">(・∀・)つ原题</a> </p>
+<h2 id="base64"><a href="#base64" class="headerlink" title="base64"></a>base64</h2><h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>Die 发现是 PE64，直接丢入 ide64，函数名混乱，直接 shift+f12，查找用”Enter the flag: “ 进入主函数，发现输入的值 str 为 26 位然后被 sub_7FF706EE14E0(Str, 26, Str1)加密输出为 str1，再与 g84Gg6m2ATtVeYqUZ9xRnaBpBvOVZYtj+Tc&#x3D;比较相等即 str 是 flag 值.<br>进入sub_7FF706EE14E0()函数，再由题目提示的 base64 丁帧为 base64 加密函数，并找到了一个字符串 WHydo3sThiS7ABLElO0k5trange+CZfVIGRvup81NKQbjmPzU4MDc9Y6q2XwFxJ&#x2F; ,一眼就是密钥 .</p>
 <p>直接用密钥 base64 解密得 flag</p>
 <hr>
-<h2 id="ezAndroidStudy"><a href="#ezAndroidStudy" class="headerlink" title="ezAndroidStudy"></a>ezAndroidStudy</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week1/ezAndroidStudy.zip">(・∀・)つ原题</a></p>
-<h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>apk 先安装看一看，全是提示就跟着提示来<br>activity 有个 work.pangbai.ezandroidstudy.Homo 的页面,直接搜索进入拿下 flag 第一段 flag{Y0u<br>发现flag字符转被定义在一个名为flag1的变量里，于是推测有flag2,直接搜索 flag2，拿下flag2的值为 _@r4。<br>同样搜索 flag3，直接拿下 flag3 的值为_900d。<br>flag4 在提示的目录下为_andr01d.<br>第五步提示要逆向 so 文件（c 语言），于是找到在 lib&#x2F;arm64-v8a 下的so 文件，提取出来直接丢入 ida64，shift+f12 在libezandroidstudy.so 文件中找到最后flag，_r4V4rs4r}</p>
+<h2 id="ezAndroidStudy"><a href="#ezAndroidStudy" class="headerlink" title="ezAndroidStudy"></a>ezAndroidStudy</h2><h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>apk 先安装看一看，全是提示就跟着提示来<br>activity 有个 work.pangbai.ezandroidstudy.Homo 的页面,直接搜索进入拿下 flag 第一段 flag{Y0u<br>发现flag字符转被定义在一个名为flag1的变量里，于是推测有flag2,直接搜索 flag2，拿下flag2的值为 _@r4。<br>同样搜索 flag3，直接拿下 flag3 的值为_900d。<br>flag4 在提示的目录下为_andr01d.<br>第五步提示要逆向 so 文件（c 语言），于是找到在 lib&#x2F;arm64-v8a 下的so 文件，提取出来直接丢入 ida64，shift+f12 在libezandroidstudy.so 文件中找到最后flag，_r4V4rs4r}</p>
 <hr>
-<h2 id="Simple-encryption"><a href="#Simple-encryption" class="headerlink" title="Simple_encryption"></a>Simple_encryption</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week1/Simple_encryption.zip">(・∀・)つ原题</a></p>
-<h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>查壳拖进 ida64，简单的算法，脚本如下</p>
+<h2 id="Simple-encryption"><a href="#Simple-encryption" class="headerlink" title="Simple_encryption"></a>Simple_encryption</h2><h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>查壳拖进 ida64，简单的算法，脚本如下</p>
 <pre><code class="c">#include&lt;stdio.h&gt;
 int main() &#123;
 unsigned char buffer[32] = &#123;
@@ -237,11 +235,9 @@ printf(&quot;%s&quot;, buffer);
 </code></pre>
 <p>输出 flag{IT_15_R3Al1y_V3Ry-51Mp1e}</p>
 <hr>
-<h2 id="ez-debug"><a href="#ez-debug" class="headerlink" title="ez_debug"></a>ez_debug</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week1/ez_debug.zip">(・∀・)つ原题</a></p>
-<h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>用 ida 看了一下代码，发现最后有个输出是解密 flag 的，但是并没有发现加密的 flag 值，<br>于是就用 ida 动态调试看值，但是 ida 中的编译代码很乱，难以看懂，比较的两个值也<br>不是 flag 加密的值，所以尝试跳过比较去直接输出 Decrypted flag，然而并没有东西。<br>再 看 题 目 发 现 提 示 用 xdbg ， 于 是 用 xdbg 调 试 ， 在 0000000000401CB3 的 je<br>0x0000000000401CD9 处断点修改 ZF 的值为 0，使其执行 right 部分的代码，再在输出<br>Decrypted flag 的后面断点，发现 flag 已经在右侧显示出来了<br>flag{y0u_ar3_g0od_@_Debu9}</p>
+<h2 id="ez-debug"><a href="#ez-debug" class="headerlink" title="ez_debug"></a>ez_debug</h2><h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>用 ida 看了一下代码，发现最后有个输出是解密 flag 的，但是并没有发现加密的 flag 值，<br>于是就用 ida 动态调试看值，但是 ida 中的编译代码很乱，难以看懂，比较的两个值也<br>不是 flag 加密的值，所以尝试跳过比较去直接输出 Decrypted flag，然而并没有东西。<br>再 看 题 目 发 现 提 示 用 xdbg ， 于 是 用 xdbg 调 试 ， 在 0000000000401CB3 的 je<br>0x0000000000401CD9 处断点修改 ZF 的值为 0，使其执行 right 部分的代码，再在输出<br>Decrypted flag 的后面断点，发现 flag 已经在右侧显示出来了<br>flag{y0u_ar3_g0od_@_Debu9}</p>
 <hr>
-<h2 id="begin"><a href="#begin" class="headerlink" title="begin"></a>begin</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week1/begin.zip">(・∀・)つ原题</a></p>
-<h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>全程提示<br>Main 函数中 F5 后点击&amp;flag_part1，按 a 转换字符串<br>Shift+f12，看到第二部分<br>定位字符串的函数，然后按 x 再定位到调用的函数，函数名就是 flag 的第三部分<br>flag{Mak3_aN_3Ff0rt_tO_5eArcH_F0r_th3_f14g_C0Rpse}</p>
+<h2 id="begin"><a href="#begin" class="headerlink" title="begin"></a>begin</h2><h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>全程提示<br>Main 函数中 F5 后点击&amp;flag_part1，按 a 转换字符串<br>Shift+f12，看到第二部分<br>定位字符串的函数，然后按 x 再定位到调用的函数，函数名就是 flag 的第三部分<br>flag{Mak3_aN_3Ff0rt_tO_5eArcH_F0r_th3_f14g_C0Rpse}</p>
 <hr>
 <h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="PangBai-过家家（1）"><a href="#PangBai-过家家（1）" class="headerlink" title="PangBai 过家家（1）"></a>PangBai 过家家（1）</h2><h3 id="思路；"><a href="#思路；" class="headerlink" title="思路；"></a>思路；</h3><p>跟随提示<br>Leve1 在请求头的 localtion 中找到868f4249-8170-4ece-909b-36ad36e6037f，<br>直接输入跳转地址<br>Get 传参 ？Ask&#x3D;miao<br>Post say&#x3D;hello<br>Post say&#x3D;flag<br>提示 Agent 为 Papa，修改请求头 User-Agent 为 Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64)AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Papa&#x2F;129.0.0.0 Safari&#x2F;537.36<br>Post say&#x3D;玛卡巴卡阿卡哇卡米卡玛卡呣<br>提示上传文件，在本地电脑上创建一个任意名字的 zip 压缩包，并将 cookie 复制到<br>postman，再用 postman 以 PACTH 方式上传压缩包，提示“玛卡巴卡阿卡哇卡米卡玛卡<br>呣”必不可少，于是再上传一个 key 为 say 的 text 句子，value 为玛卡巴卡阿卡哇卡米<br>卡玛卡呣。<br>提示 jwt，密钥为 0ZmeYwg8aIgb2jVC，了解到可以 jwt 伪造，先对当前 cookie 解密发现<br>有一个 level：6 的内容，但是不知道伪造的值是多少，先尝试修改为 7，输入后不通过，<br>后看剧情猜测可能是 0，于是修改为 0，直接通过。<br>提示要成为 Pangbai 的家人，Localhost，使用 hackbar 直接添加 X-Forwarded-For 的值为<br>Localhost<br>点击页面上的按钮获取 flag</p>
 <hr>

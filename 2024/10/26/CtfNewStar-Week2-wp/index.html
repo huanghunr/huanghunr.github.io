@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #ff7d73">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #03a9f4">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -202,8 +202,8 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><h2 id="drink-tea"><a href="#drink-tea" class="headerlink" title="drink_tea"></a>drink_tea</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week2/drink_tea.arj">(✿･ω･)&#x2F;原题</a></p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路:"></a>思路:</h3><p>查壳后丢进ida，在main函数中发现加密函数，密钥和加密后的密文。分析加密函数，发现tea加密的特征deltea值，于是把密钥的值按d变为dd形式的数据，拿到4个密钥，然后提取出密文写脚本解密，把加密过程反过来就行。脚本如下。  </p>
+        <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs">(✿･ω･)&#x2F;原题</a></p>
+<h2 id="drink-tea"><a href="#drink-tea" class="headerlink" title="drink_tea"></a>drink_tea</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路:"></a>思路:</h3><p>查壳后丢进ida，在main函数中发现加密函数，密钥和加密后的密文。分析加密函数，发现tea加密的特征deltea值，于是把密钥的值按d变为dd形式的数据，拿到4个密钥，然后提取出密文写脚本解密，把加密过程反过来就行。脚本如下。  </p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 int __fastcall dec(unsigned int* input, unsigned int* key_1);
@@ -251,8 +251,7 @@ unsigned int i;
 &#125;  
 </code></pre>
 <hr>
-<h2 id="Dirty-flowers"><a href="#Dirty-flowers" class="headerlink" title="Dirty_flowers"></a>Dirty_flowers</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week2/Dirty_flowers%20.zip">(✿･ω･)&#x2F;原题</a></p>
-<h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>查壳后丢进ida32，提示花指令。发现有两处爆红，发现是以call和ret构造的花指令，直接nop掉，在函数入口处按u后再按p，就可以编译了。在main函数中发现了加密函数和key，于是直接写脚本解密。脚本如下（不知道为什么编译器识别密钥有13位，其实数下来就12位），输出结果就是flag</p>
+<h2 id="Dirty-flowers"><a href="#Dirty-flowers" class="headerlink" title="Dirty_flowers"></a>Dirty_flowers</h2><h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>查壳后丢进ida32，提示花指令。发现有两处爆红，发现是以call和ret构造的花指令，直接nop掉，在函数入口处按u后再按p，就可以编译了。在main函数中发现了加密函数和key，于是直接写脚本解密。脚本如下（不知道为什么编译器识别密钥有13位，其实数下来就12位），输出结果就是flag</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 int main() &#123;
@@ -307,8 +306,7 @@ int main() &#123;
 &#125;
 </code></pre>
 <hr>
-<h2 id="UPX"><a href="#UPX" class="headerlink" title="UPX"></a>UPX</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week2/UPX.zip">(✿･ω･)&#x2F;原题</a></p>
-<h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>用die查看发现带壳，于是用upx脱壳，丢入ida,发现RC4加密函数。还有密钥，发现密文data为空，于是用linux进行调试，在比较处断点，发现data的值，这样就得到了密文。想了一下决定用网站进行解密，于是把密钥先转化成十进制（脚本如下），把输出结果用<a target="_blank" rel="noopener" href="https://gs.jisuanla.com/decimal-to-ascii.html%E8%BD%AC%E5%8C%96%E4%B8%BAascii%E7%A0%81%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8Cbase64%E7%BC%96%E7%A0%81%EF%BC%8C%E6%9C%80%E5%90%8E%E7%94%A8%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86https://www.mklab.cn/utils/rc4%E3%80%82">https://gs.jisuanla.com/decimal-to-ascii.html转化为ascii码，然后进行base64编码，最后用在线网站进行解密https://www.mklab.cn/utils/rc4。</a>  </p>
+<h2 id="UPX"><a href="#UPX" class="headerlink" title="UPX"></a>UPX</h2><h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>用die查看发现带壳，于是用upx脱壳，丢入ida,发现RC4加密函数。还有密钥，发现密文data为空，于是用linux进行调试，在比较处断点，发现data的值，这样就得到了密文。想了一下决定用网站进行解密，于是把密钥先转化成十进制（脚本如下），把输出结果用<a target="_blank" rel="noopener" href="https://gs.jisuanla.com/decimal-to-ascii.html%E8%BD%AC%E5%8C%96%E4%B8%BAascii%E7%A0%81%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8Cbase64%E7%BC%96%E7%A0%81%EF%BC%8C%E6%9C%80%E5%90%8E%E7%94%A8%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86https://www.mklab.cn/utils/rc4%E3%80%82">https://gs.jisuanla.com/decimal-to-ascii.html转化为ascii码，然后进行base64编码，最后用在线网站进行解密https://www.mklab.cn/utils/rc4。</a>  </p>
 <p>flag{Do_you_know_UPX?}  </p>
 <pre><code class="c">#include&lt;stdio.h&gt;
 
@@ -326,8 +324,7 @@ int main() &#123;
 &#125;
 </code></pre>
 <hr>
-<h2 id="Ezencrypt"><a href="#Ezencrypt" class="headerlink" title="Ezencrypt"></a>Ezencrypt</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week2/ezencrypt.zip">(✿･ω･)&#x2F;原题</a></p>
-<h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>先找到main函数，发现里面对输入得数据进行了加密。仔细分析，明文tx被Enc函数加密，然后调用enc中得check方法对密文进行检验。在Enc中我们发现明文先是被AES加密再用base64编码，然后在调用check时，加密后的密文又被传入一个位于native的doEncCheck的函数中。所以提取so文件在ida中查看。在ida中我们发现了doEncCheck函数，但是它先调用了一个enc函数与密钥进行了简单的异或，然后enc函数最后又调用了一个encc函数，分析encc函数发现类似于RC4加密，密钥与enc相同，最后再由doEncCheck函数把加密后的密文与正确的密文进行比对返回结果。<br>所以解密顺序就是先解密encc然后是enc再是AES，脚本如下，输出的是被base64编码的被AES加密的密。<br>进行AES解密，能看到密钥被放在了MainActivity.title里面，用(<a target="_blank" rel="noopener" href="https://www.mklab.cn/utils/aes)%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86%EF%BC%8C%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag%E3%80%82">https://www.mklab.cn/utils/aes)进行解密，得到结果就是flag。</a>  </p>
+<h2 id="Ezencrypt"><a href="#Ezencrypt" class="headerlink" title="Ezencrypt"></a>Ezencrypt</h2><h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>先找到main函数，发现里面对输入得数据进行了加密。仔细分析，明文tx被Enc函数加密，然后调用enc中得check方法对密文进行检验。在Enc中我们发现明文先是被AES加密再用base64编码，然后在调用check时，加密后的密文又被传入一个位于native的doEncCheck的函数中。所以提取so文件在ida中查看。在ida中我们发现了doEncCheck函数，但是它先调用了一个enc函数与密钥进行了简单的异或，然后enc函数最后又调用了一个encc函数，分析encc函数发现类似于RC4加密，密钥与enc相同，最后再由doEncCheck函数把加密后的密文与正确的密文进行比对返回结果。<br>所以解密顺序就是先解密encc然后是enc再是AES，脚本如下，输出的是被base64编码的被AES加密的密。<br>进行AES解密，能看到密钥被放在了MainActivity.title里面，用(<a target="_blank" rel="noopener" href="https://www.mklab.cn/utils/aes)%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86%EF%BC%8C%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag%E3%80%82">https://www.mklab.cn/utils/aes)进行解密，得到结果就是flag。</a>  </p>
 <p>flag{0hh_U_kn0w_7h15_5ki11}</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
@@ -409,11 +406,9 @@ unsigned long encc(char* key, char* input) &#123;
 &#125;
 </code></pre>
 <hr>
-<h2 id="Pangbai泰拉记（1）"><a href="#Pangbai泰拉记（1）" class="headerlink" title="Pangbai泰拉记（1）"></a>Pangbai泰拉记（1）</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week2/Pangbai%E6%B3%B0%E6%8B%89%E8%AE%B0%EF%BC%881%EF%BC%89.zip">(✿･ω･)&#x2F;原题</a></p>
-<h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>Die查壳后丢入ida，看到了一堆混淆，f5查看main函数，分析一下看到提示用调试获得flag，还发现flag与key进行了异或，看了下key和flag的值后直接启动调试，此时再看key的值发生了变化，而flag的值也是假的，尝试用没调试时的key解flag，发现也是不行。<br>想了一下，可能是调试状态的改变使flag和key的值不正确（main函数前面有个检测调试，虽然改变变量的函数没在main里被调用，但是在main函数执行前还有许多的函数会先被调用），所以看异或前两个的值，发现flag的值不变，但是key的值是已经变化了，于是按x找到调用key的函数。<br>发现key在一个main0的函数中被进行了异或操作，在if判断了是否为调试之类的，然后把key与的两种不同的值进行异或。于是在if的jz处下断点，调试到这里发现ZF的值为0，输出的就是一开始调试的key，所以我们改变ZF的值为1，让key为正确的密钥。<br>此时在主函数的结束处下断点便于查看flag的值，运行到此直接查看flag的值，按a转为字符串，这就是真的flag了。</p>
+<h2 id="Pangbai泰拉记（1）"><a href="#Pangbai泰拉记（1）" class="headerlink" title="Pangbai泰拉记（1）"></a>Pangbai泰拉记（1）</h2><h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>Die查壳后丢入ida，看到了一堆混淆，f5查看main函数，分析一下看到提示用调试获得flag，还发现flag与key进行了异或，看了下key和flag的值后直接启动调试，此时再看key的值发生了变化，而flag的值也是假的，尝试用没调试时的key解flag，发现也是不行。<br>想了一下，可能是调试状态的改变使flag和key的值不正确（main函数前面有个检测调试，虽然改变变量的函数没在main里被调用，但是在main函数执行前还有许多的函数会先被调用），所以看异或前两个的值，发现flag的值不变，但是key的值是已经变化了，于是按x找到调用key的函数。<br>发现key在一个main0的函数中被进行了异或操作，在if判断了是否为调试之类的，然后把key与的两种不同的值进行异或。于是在if的jz处下断点，调试到这里发现ZF的值为0，输出的就是一开始调试的key，所以我们改变ZF的值为1，让key为正确的密钥。<br>此时在主函数的结束处下断点便于查看flag的值，运行到此直接查看flag的值，按a转为字符串，这就是真的flag了。</p>
 <hr>
-<h2 id="Ptrace"><a href="#Ptrace" class="headerlink" title="Ptrace"></a>Ptrace</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week2/Ptrace.zip">(✿･ω･)&#x2F;原题</a></p>
-<h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>题目提示ptrace，发现了father和son两个文件，die查了后用ida分析。<br>先看father，在main函数中我们发现，他先是创建了一个子进程，然后根据fork函数的特性，子进程打开了名为son的可执行文件，而父进程则监控着子进程，并对子进程传入了一个为3的参数，而后父进程就等待子进程的执行完成，程序结束。<br>在子进程中我们发现了一个加密函数，把我们输入的s进行了|运算，并与mm判断是否相等。<br>这时的我们拿到了密文和加密方法，所以直接写脚本解密就行,注意偏移的值是父进程传入的3(猜的)，脚本如下，输出的结果就是flag<br>flag{Do_you_really_know_ptrace?}</p>
+<h2 id="Ptrace"><a href="#Ptrace" class="headerlink" title="Ptrace"></a>Ptrace</h2><h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>题目提示ptrace，发现了father和son两个文件，die查了后用ida分析。<br>先看father，在main函数中我们发现，他先是创建了一个子进程，然后根据fork函数的特性，子进程打开了名为son的可执行文件，而父进程则监控着子进程，并对子进程传入了一个为3的参数，而后父进程就等待子进程的执行完成，程序结束。<br>在子进程中我们发现了一个加密函数，把我们输入的s进行了|运算，并与mm判断是否相等。<br>这时的我们拿到了密文和加密方法，所以直接写脚本解密就行,注意偏移的值是父进程传入的3(猜的)，脚本如下，输出的结果就是flag<br>flag{Do_you_really_know_ptrace?}</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 unsigned char m[32] = &#123;
