@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>CtfNewStar Week3 Writeup | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>CtfNewStar Week3 Writeup</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/10/28
+        </span>
+        
+        <span class="category">
+            <a href="/categories/CTFNewStar2024-WP/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                CTFNewStar2024 WP
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #ffa2c4">
+                    CtfNewStar Writeup
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><h2 id="simpleAndroid"><a href="#simpleAndroid" class="headerlink" title="simpleAndroid"></a>simpleAndroid</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week3/simpleAndroid.zip">(・∀・)つ原题</a></p>
+<h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>打开后发现了一个checkActivity的文件里发现我们输入的字符串被传到了so文件里加密，于是解压出so文件丢入ida分析，找到了一个datacheck函数，一进去就发现了一个base64编码和编码密钥。<br>加密代码看似很多其实总共就两次，一次是反转，还有一次是一个”|”和”&amp;”运算，把反转后的字符串逐个进行运算，最后和密文进行比较。<br>直接抄下来就行，解密脚本反一下就行，先运算后反转（脚本如下）<br>最后用密钥在赛博厨师解base64编码就行。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+unsigned char data_1[32] = &#123;
+    0xB2, 0x74, 0x45, 0x16, 0x47, 0x34, 0x95, 0x36, 0x17, 0xF4, 0x43, 0x95, 0x03, 0xD6, 0x33, 0x95,
+    0xC6, 0xD6, 0x33, 0x36, 0xA7, 0x35, 0xE6, 0x36, 0x96, 0x57, 0x43, 0x16, 0x96, 0x97, 0xE6, 0x16
+&#125;;
+
+void res1(unsigned char* m, int len) &#123;
+    for (int i = 0; i &lt; len; ++i) &#123;
+        m[i] = (m[i] &gt;&gt; 4) &amp; 0x0F | (16 * m[i]) &amp; 0xF0;
+    &#125;
+&#125;
+
+void res2(unsigned char* m, int len) &#123;
+    for (int i = 0; i &lt; len / 2; ++i) &#123;
+        unsigned char temp = m[i];
+        m[i] = m[len + ~i];
+        m[len + ~i] = temp;
+    &#125;
+&#125;
+
+int main() &#123;
+    int len = sizeof(data_1) / sizeof(data_1[0]);
+    res1(data_1, len);
+    res2(data_1, len);
+
+    for (int i = 0; i &lt; len; ++i) &#123;
+        printf(&quot;%c&quot;, data_1[i]);
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<h2 id="取啥名字好呢？"><a href="#取啥名字好呢？" class="headerlink" title="取啥名字好呢？"></a>取啥名字好呢？</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week3/%E6%88%91%E4%B9%9F%E4%B8%8D%E7%9F%A5%E9%81%93%E5%8F%96%E5%95%A5%E5%90%8D.arj">(・∀・)つ原题</a></p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路:"></a>思路:</h3><p>Ida分析发现main函数里套了许多的signal函数，查询了一下发现是收集异常的函数，然后在第一个signal（注意到报错是8，也就是SIGFPE）函数里找到了一段加密代码，大概就是异或下标吧，之后会把密文比较判断。<br>打算先猜一手，先提取出密文，写出异或解密脚本后发现不正确，于是用动调看input的值的变化，发现input的所有值在第一次报错8之前被统一更改了，后面就是正常地报错8，进行异或下标加密。<br>输入不同的字符发现改变前后的差是统一的，当我输入0x31时发现数据被转成0xa1,那么就是我输入的字符被减去了0x17,所以写出脚本，输出的就是flag.</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+unsigned char m[23] = &#123;
+    0x4F, 0x54, 0x48, 0x53, 0x60, 0x45, 0x37, 0x1A, 0x28, 0x41, 0x26, 0x16, 0x3B, 0x45, 0x14, 0x47,
+    0x0E, 0x0C, 0x70, 0x3B, 0x3C, 0x3D, 0x70
+&#125;;
+
+int main() &#123;
+    for (int i = 0; i &lt; 23; i++) &#123;
+        m[i] ^= i;
+        printf(&quot;%c&quot;, m[i] + (0x31 - 0x1a));
+    &#125;
+&#125;
+</code></pre>
+<h2 id="flowering-shrubs"><a href="#flowering-shrubs" class="headerlink" title="flowering_shrubs"></a>flowering_shrubs</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week3/flowering_shrubs_2.zip">(・∀・)つ原题</a></p>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路:"></a>思路:</h3><p>die发现是fle64文件，ida分析天崩开局全是花，不会用pythonida脚本去画捏，手动去花，nop掉push和ret之前的内容(包含有call $+5),识别成函数后就是正常内容。分析函数，加密过程大概就是把明文字符四个一组然后在组内分别与key中的一个字符进行异或和运算加密，而加密的顺序据取决于一个随机数生成的下标，这决定了一个组的密钥。  分析随机数的生成，种子是0，但是是在Linux的文件，因为wind和linux的随机数生成不同，我们要写一份生成随机数的代码到Linux进行生成（脚本1）。<br>在生成随机数时会舍弃掉一次生成的第一个数，之后若生成与之前相同的数就会重复生成直到不重复（在这个过程中不会跳过第一个生成的数），不知道为什么在winds写的代码在Linux里面运行有问题，无奈把随机数全部生成（200个）然后用上面的逻辑，自己手动整理，最后得到的就是加密的下标顺序（index）。<br>有了每个的加密顺序就直接反向解密就行。（脚本2）</p>
+<pre><code class="c">//脚本1
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char* argv[]) &#123;
+    int rands;
+    srand(0);
+    for (int i = 0; i &lt; 10; i++) &#123;
+        
+        rands = (rand() % 40) &amp; 0xFC;
+        printf(&quot;%d,&quot;, rands);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<pre><code class="c">//脚本2
+#include &lt;stdio.h&gt;
+
+unsigned char m[40] = &#123;
+    0x54, 0xF4, 0x20, 0x47, 0xFC, 0xC4, 0x93, 0xE6, 0x39, 0xE0, 0x6E, 0x00, 0xA5, 0x6E, 0xAA, 0x9F,
+    0x7A, 0xA1, 0x66, 0x39, 0x76, 0xB7, 0x67, 0x57, 0x3D, 0x95, 0x61, 0x22, 0x55, 0xC9, 0x3B, 0x4E,
+    0x4F, 0xE8, 0x66, 0x08, 0x3D, 0x50, 0x43, 0x3E
+&#125;;
+
+int index[] = &#123;0,4,32,12,8,24,16,20,28,36&#125;;
+
+int dec(unsigned char* input, unsigned char *key) &#123;
+
+    *input ^= input[3];
+    input[3] ^= input[2];
+    input[2] += *key;
+    input[2] ^= input[1];
+    input[1] -= *key;
+    input[1] ^= *input;
+    *input ^= *key;
+    return 0;
+&#125;
+
+int main() &#123;
+    unsigned char key[] = &quot;uarefirst.&quot;;
+
+    for (int i = 0; i &lt; 10; i++) &#123;
+        dec(&amp;m[index[i]], &amp;key[i]);
+    &#125;
+    printf(&quot;%s&quot;, m);
+    
+    return 0;
+&#125;
+</code></pre>
+<h2 id="SMc-math"><a href="#SMc-math" class="headerlink" title="SMc_math"></a>SMc_math</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week3/SMc_math%20.zip">(・∀・)つ原题</a></p>
+<h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>Ida分析发现里面代码就是一坨，看题目是smc，于是先寻找解密代码，发现在调用加密函数前，有一个for循环对加密函数进行了异或运算，这估计就是解密加密函数的代码，于是在调用处断点。<br>进行动调，到断点处用快捷键恢复函数，这样就可以看到加密函数的内容了。<br>分析函数，就是一个七元一次方程，查找资料想到用z3库来解密，脚本如下。<br>因为加密时以int转入，解方程后的结果应该是4字节数据16进制转化成了数字表示，因为数据是4字节小端序存储，所以我们要用小端序读取并转成字符就可以了（脚本如下）。</p>
+<pre><code class="py">from z3 import *
+
+v2, v3, v4, v5, v6, v7, v8 = Ints(&#39;v2 v3 v4 v5 v6 v7 v8&#39;)
+
+a = Solver()
+a.add(5 * (v3 + v2) + 4 * v4 + 6 * v5 + v6 + 9 * v8 + 2 * v7 == 0xD5CC7D4FF)
+a.add(4 * v8 + 3 * v5 + 6 * v4 + 10 * v3 + 9 * v2 + 9 * v7 + 3 * v6 == 0x102335844B)
+a.add(9 * v6 + 4 * (v5 + v4) + 5 * v3 + 4 * v2 + 3 * v8 + 10 * v7 == 0xD55AEABB9)
+a.add(9 * v3 + 5 * v2 + 9 * v8 + 2 * (v4 + 2 * v5 + 5 * v6 + v7) == 0xF89F6B7FA)
+a.add(5 * v6 + 9 * v5 + 7 * v2 + 2 * v3 + v4 + 3 * v8 + 9 * v7 == 0xD5230B80B)
+a.add(8 * v8 + 6 * v5 + 10 * v4 + 5 * v3 + 6 * v2 + 3 * v7 + 9 * v6 == 0x11E28ED873)
+a.add(v2 + 4 * (v4 + v3 + 2 * v5) + 9 * v6 + v7 + 3 * v8 == 0xB353C03E1)
+
+che = a.check()
+res = a.model()
+print(res)
+
+m = [1734437990, 1596998779, 1601515609, 1999662667, 1129149279, 1148073055, 2100517471]  # 手动收集的数据，因为不会把res中的计算结果转化为列表
+
+flag = &quot;&quot;
+
+for i in m:
+    result = i.to_bytes(4, &#39;little&#39;)  # 
+    flag += result.decode(&#39;utf-8&#39;)
+
+print(flag)
+</code></pre>
+<h2 id="SecretsOfKawaii"><a href="#SecretsOfKawaii" class="headerlink" title="SecretsOfKawaii"></a>SecretsOfKawaii</h2><p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week3/SecretsOfKawaii.zip">(・∀・)つ原题</a></p>
+<h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>Jeb解混淆，在mainacticity里面发现了加密代码，在这里主要逻辑就是把明文rc4加密（密钥就在旁边），然后base64编码后交到so层check方法处理。<br>提取出so文件，查壳发现带壳，后用upx脱壳，然后丢进ida分析。找到一个带check的函数，里面有一个btea函数和密钥，分析btea函数，是一个xxtea加密和密文，把密文用ida提取。<br>和网上的xxtea加密对比发现delta被修改了，把在网上找到的解密代码的delta进行修改，就可以写出解密脚本（脚本如下）。<br>把解密后的字符串进行base64编码再rc4解密，密钥是rc4k4y，(<a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrc4)%EF%BC%8C%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5base64%E7%BC%96%E7%A0%81%E5%B0%B1%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%AF%86%E5%87%BA%E7%BB%93%E6%9E%9C%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag">http://tool.chacuo.net/cryptrc4)，直接输入base64编码就可以解密出结果，结果就是flag</a></p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+unsigned char secrets[48] = &#123;
+    0xDF, 0xD3, 0x12, 0x8C, 0x37, 0x41, 0x4C, 0x5F,  
+    0x02, 0x3D, 0x9D, 0x1A, 0xB7, 0x94, 0x12, 0x2D, 
+    0x37, 0x2B, 0x62, 0xFB, 0xE3, 0x84, 0x8D, 0xD1, 
+    0x92, 0x45, 0x4C, 0x06, 0xAB, 0x5C, 0x98, 0x16, 
+    0x69, 0x6D, 0xB0, 0xFD, 0xE3, 0xB1, 0x30, 0xFB, 
+    0xD3, 0x2F, 0x5C, 0x92, 0x0C, 0xB4, 0x1B, 0x2E, 
+&#125;;
+
+__int64 __fastcall dec2(unsigned int* input, int n, const unsigned int* key)  
+&#123;
+    int e; 
+    int rounds; 
+    unsigned int p; 
+    unsigned int delta;
+    unsigned int z; 
+    unsigned int y;
+
+    rounds = 52 / n + 6;
+    unsigned int sum;
+    delta = 559038737; 
+    sum = 0 - delta * rounds; 
+    y = input[0];
+    do
+    &#123;
+        e = (sum &gt;&gt; 2) &amp; 3;
+        for (p = n - 1; p &gt; 0; p--)
+        &#123;
+            z = input[p - 1];
+            y = input[p] -= (((z ^ key[e ^ p &amp; 3]) + (y ^ sum)) ^ (((4 * z) ^ (y &gt;&gt; 3)) + ((8 * y) ^ (z &gt;&gt; 5))));
+        &#125;
+        z = input[n - 1];
+        y = input[0] -= (((z ^ key[e ^ p &amp; 3]) + (y ^ sum)) ^ (((4 * z) ^ (y &gt;&gt; 3)) + ((8 * y) ^ (z &gt;&gt; 5))));
+        sum += delta;
+
+    &#125; while (--rounds);
+    return rounds;
+&#125;
+
+int main() &#123;
+
+    unsigned char key[] = &quot;meow~meow~tea~~~&quot;;
+    dec2((unsigned int*)secrets, 12, (const unsigned int*)key); 
+    for (int x = 0; x &lt; 48; x++) &#123;
+        printf(&quot;%c&quot;, secrets[x]); 
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<h2 id="PangBai-过家家（3）"><a href="#PangBai-过家家（3）" class="headerlink" title="PangBai 过家家（3）"></a>PangBai 过家家（3）</h2><h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>用pyinstxtractor进行解包exe文件，再用pycdc提取NotNormalExe.pyc文件，发现代码逻辑不完整并有提示WARNING: Decompyle incomplete，可能是编译不了，于是想到去查看字节码，找ai帮我写了一个用pythondis库查看字节码的脚本（脚本1），看不懂py的字节码，于是丢给ai让它帮我反汇编成代码，这下看到了源码就是完整的了，加密逻辑比较简单就是普通的异或，直接写出脚本就可以解密成功了（脚本2）。</p>
+<pre><code class="py"># 脚本1
+import marshal
+import dis
+import os
+
+
+def disassemble_pyc(file_path):
+    with open(file_path, &#39;rb&#39;) as f:
+        f.read(16)
+        code_obj = marshal.load(f)
+        dis.dis(code_obj)
+
+pyc_file = r&#39;D:\Userdata\download\pycdc\NotNormalExe.pyc&#39;
+disassemble_pyc(pyc_file)
+</code></pre>
+<pre><code class="py">脚本2
+from pwn import xor
+
+enc = [40, 9, 22, 52, 15, 56, 66, 71, 111, 121, 90, 33, 18, 40, 3, 13, 80, 28, 65, 68, 83, 88, 34, 86, 5, 12, 35, 82, 67, 3, 17, 79]
+key = &quot;NewStar2024&quot;
+for x in range(len(enc)):
+    enc[x] ^= ord(key[x % len(key)])
+
+flag = &quot;&quot;
+
+for x in enc:
+    re = x.to_bytes(1, &quot;big&quot;)
+    flag += re.decode(&#39;utf-8&#39;)
+print(flag)
+</code></pre>
+<h2 id="Include-Me"><a href="#Include-Me" class="headerlink" title="Include Me"></a>Include Me</h2><h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>Php伪协议，发现很多东西都被过滤了，查了资料看到data协议没有被过滤，至于执行命令可以用base64编码，想用&lt;?php system(“ls &#x2F;“);&gt;查看目录但发现&#x3D;被过滤了，所以尝试在base64编码下不含等号的命令。<br>注意到flag被过滤了，推测flag的文件名就是flag，就尝试直接cat &#x2F;flag，构造&lt;?php system(“cat &#x2F;flag”);&gt;，刚好编码后又没有含有&#x3D;，直接执行，<a target="_blank" rel="noopener" href="http://eci-2ze4q7yfeafl0jdgf4b6.cloudeci1.ichunqiu.com/?me=data://text/plain;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs+">http://eci-2ze4q7yfeafl0jdgf4b6.cloudeci1.ichunqiu.com/?me=data://text/plain;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs+</a></p>
+<h2 id="臭皮的计算机"><a href="#臭皮的计算机" class="headerlink" title="臭皮的计算机"></a>臭皮的计算机</h2><h3 id="思路：-5"><a href="#思路：-5" class="headerlink" title="思路："></a>思路：</h3><p>在源码中看到了python源码，发现了eval（）函数，想到传入命令给eval执行，但是字母被过滤了，寻找只有数字的表示方法。<br>查询资料了解到八进制的转译符是\不包含字母，于是用八进制传入命令，用os.system()函数来执行Linux系统命令.<br>先用ls &#x2F;看看目录，输入</p>
+<pre><code class="s">\157\163\56\163\171\163\164\145\155\50\47\154\163 /\47\51
+</code></pre>
+<p>发现flag文件，直接cat &#x2F;flag,传入</p>
+<pre><code class="s">\157\163\56\163\171\163\164\145\155\50\47\143\141\164\40\57\146\154\141\147\47\51
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2024 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
