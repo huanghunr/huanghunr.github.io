@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>汇编语言初步学习 | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>汇编语言初步学习</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/11/2
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Re基础学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                    Re学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="汇编指令编基础"><a href="#汇编指令编基础" class="headerlink" title="汇编指令编基础"></a>汇编指令编基础</h2><h3 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h3><ul>
+<li>EAX：（针对操作数和结果数据的）累加器(Accumulator)</li>
+<li>EBX：（DS段的数据指针）基址寄存器(Base Register)</li>
+<li>ECX：（字符串和循环操作的）计数器(Count Register)</li>
+<li>EDX：（I&#x2F;O指针）数据寄存器(Data Register)</li>
+</ul>
+<h3 id="用作内存指针的特殊寄存器"><a href="#用作内存指针的特殊寄存器" class="headerlink" title="用作内存指针的特殊寄存器"></a>用作内存指针的特殊寄存器</h3><ul>
+<li>ESI：（字符串操作源指针）源变址寄存器</li>
+<li>EDI：（字符串操作目标指针）目的变址寄存器</li>
+<li>EBP：（SS段中栈内数据指针）扩展基址指针寄存器，即栈底指针寄存器，与rbp相同</li>
+<li>ESP：栈顶指针寄存器与rsp相同</li>
+</ul>
+<h3 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h3><ul>
+<li>CS：代码段寄存器(code s)</li>
+<li>SS：栈段寄存器(stack s)</li>
+<li>DS：数据段寄存器(data s)</li>
+<li>FS：数据段寄存器</li>
+<li>ES：附加数据寄存器</li>
+<li>GS：数据段寄存器</li>
+</ul>
+<h3 id="程序状态与控制寄存器"><a href="#程序状态与控制寄存器" class="headerlink" title="程序状态与控制寄存器"></a>程序状态与控制寄存器</h3><ul>
+<li>EFLAGS：标志寄存器，32个位元的01控制</li>
+<li>ZF(零标志器，运算结果为0时置1)</li>
+<li>CF(进位标志，运算结果向最高位以上进位时置1)</li>
+<li>OF(溢出标志)，如果运算结果有溢出，那么值为1</li>
+<li>AF(辅助进位标志，运算结果在第3位的时候置1)</li>
+<li>SF(符号标志，有符号整型的符号位为1时置1)，正数为0，负数为1</li>
+</ul>
+<h3 id="指令指针寄存器"><a href="#指令指针寄存器" class="headerlink" title="指令指针寄存器"></a>指令指针寄存器</h3><ul>
+<li>EIP &#x2F; RIP：保存CPU要执行的指令地址</li>
+</ul>
+<h3 id="r与e的差别"><a href="#r与e的差别" class="headerlink" title="r与e的差别"></a>r与e的差别</h3><ul>
+<li>rax 是 64 位寄存器，能够存储 64 位（8 字节）的数据。  </li>
+<li>eax 是 rax 的低 32 位部分，能够存储 32 位（4 字节）的数据<br>在某些情况下，使用 eax 只会影响低 32 位数据，而高 32 位将保持不变。</li>
+<li>其他的如rbp和ebp就是64位和32位的区别</li>
+</ul>
+<p>例如，执行 mov eax, 1 会将 rax 的低 32 位设置为 1，而高 32 位会被设置为 0。<br>rax 通常用于需要完整 64 位数据的操作，特别是在调用函数和处理返回值时。<br>在eax赋值给rax时只会赋值在低位，高位还会时原来rax的高位，例如0xffffffff&lt;–0x1111 &#x3D;&#x3D;&gt; 0xffff1111</p>
+<h3 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h3><ul>
+<li><p>cdqe 用于拓展eax的值为更高位32位拓展为rax，64位</p>
+</li>
+<li><p>PUSH&#x2F;POP：压栈&#x2F;出栈</p>
+</li>
+<li><p>PUSHA&#x2F;POPA 、 PUSHAD&#x2F;POPAD</p>
+</li>
+<li><p>MOV&#x2F;CALL&#x2F;RET&#x2F;LEA&#x2F;INT&#x2F;EMD：传送 &#x2F; 调用 &#x2F; 返回 &#x2F; 加载 &#x2F; 中断 &#x2F; 结束</p>
+</li>
+<li><p>CMP&#x2F;TEST：比较&#x2F;测试（结果丢弃，只修改标志位寄存器）</p>
+</li>
+<li><p>JMP系列跳转指令</p>
+</li>
+<li><p>ADD&#x2F;SUB&#x2F;SHL&#x2F;SHR&#x2F;ROL&#x2F;ROR：加 &#x2F; 减 &#x2F; 逻辑左移 &#x2F; 逻辑右移 &#x2F; 循环左移 &#x2F; 循环右移</p>
+</li>
+<li><p>INC&#x2F;DEC ：加一 &#x2F; 减一</p>
+</li>
+<li><p>MUL&#x2F;IMUL：无符号乘法、整数乘法</p>
+</li>
+<li><p>DIV&#x2F;IDIV：无符号除法、整数除法</p>
+</li>
+<li><p>AND&#x2F;XOR&#x2F;OR&#x2F;NOT：与 &#x2F; 异或 &#x2F; 或 &#x2F; 取反</p>
+</li>
+<li><p>movesx 有符号拓展，把要赋值的值进行有符号拓展成更多位，如果原来的值为负数，那么拓展的高位会补1，例如0xffff(负数)–&gt;0xffffffff</p>
+</li>
+<li><p>movezx 无符号拓展，把要赋值的值拓展成更多位，高为补0；例如0xffff–&gt;0x0000ffff</p>
+</li>
+</ul>
+<h3 id="lea获取的差别"><a href="#lea获取的差别" class="headerlink" title="lea获取的差别"></a>lea获取的差别</h3><p>lea rax, [rbp+Str] 中的str是一个偏移量，由栈底的地址加偏移量获取str的地址<br>lea rax, Str 中的str是一个地址，需要str被全局定义或再数据段中被定义</p>
+<h3 id="比较操作"><a href="#比较操作" class="headerlink" title="比较操作"></a>比较操作</h3><blockquote>
+<p>在cmp操作中，有cmp ax,bx<br>其实cmp的操作就是ax-bx,当这个操作为0，即ax&#x3D;&#x3D;bx时zf(zero flag)就会被标志为1,反之为1.<br>下面这些参考就行<br>如果（ax）&#x3D;（bx）则（ax）-（bx）&#x3D; 0，所以：zf &#x3D; 1<br>如果（ax）!&#x3D;（bx）则 （ax）-（bx）!&#x3D; 0，所以：zf !&#x3D; 1；<br>如果（ax）&lt;（bx）则（ax）-（bx）将产生借位，所以：cf &#x3D; 1；<br>如果（ax）&gt;&#x3D;（bx）则（ax）-（bx）将不会产生借位，所以：cf &#x3D; 0；<br>如果（ax）&gt;（bx）则（ax）-（bx）即不借位，结果又不为零，所以：cf &#x3D; 0，zf &#x3D; 0；<br>如果（ax）&lt;&#x3D;（bx）则（ax）-（bx）即可能借位，结果可能为0，所以：cf &#x3D; 1，zf &#x3D; 1；</p>
+</blockquote>
+<ul>
+<li>INC 自增1   increase</li>
+<li>DEC 自减1  decrease</li>
+<li>JGE 前&gt;&#x3D;后  Jump if  greater or equal</li>
+<li>JG 前&gt;后   Jump if  greater</li>
+<li>JLE 前&lt;&#x3D;后  Jump if  less or equal</li>
+<li>JL 前&lt;后  Jump if  less</li>
+<li>JNE 前不等于后  Jump if not equal</li>
+<li>JE 前等于后  Jump if equal</li>
+<li>JZ，JE，jnz，jne 通过判断zf的值进行跳转</li>
+</ul>
+<h3 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h3><p>栈帧就是函数在内存中的一个执行空间，里面存储着函数的信息</p>
+<pre><code>PUSH EBP          ;函数开始
+MOV  EBP,ESP      ;将栈顶地址存入EBP中
+
+....              ;函数执行，期间EBP地址不变
+
+MOV  ESP,EBP      ;基准点地址给到ESP
+POP EBP           ;栈状态恢复，弹出EBP
+RETN              ;函
+</code></pre>
+<blockquote>
+<p>ida汇编分析</p>
+</blockquote>
+<pre><code class="x86asm">
+.text:0000000000401550                 push    rbp    ;栈中压入rbp
+.text:0000000000401551                 mov     rbp, rsp    ;记录栈底指针
+.text:0000000000401554                 sub     rsp, 90h    ;栈顶地址减去90h，即规定栈顶地址，规划栈帧
+.text:000000000040155B                 call    __main    ;调用函数
+.text:0000000000401560                 lea     rcx, Buffer     ; &quot;input your flag:&quot;   ;加载字符串到rcx
+.text:0000000000401567                 call    puts   ;调用函数输出字符串
+.text:000000000040156C                 lea     rax, [rbp+Str]  ;加载一段缓冲区，并把地址加载到rax。这里的str为一个偏移量，那么[rbp+Str]指向的就是栈内的str的开始地址
+.text:0000000000401570                 mov     rdx, rax  ;把rax的地址转到rdx中
+.text:0000000000401573                 lea     rcx, Format     ; &quot;%s&quot;，获取输入类型到rcx
+.text:000000000040157A                 call    scanf  ;调用函数输入
+.text:000000000040157F                 lea     rax, [rbp+Str]  ;再次加载str的缓冲区
+.text:0000000000401583                 mov     rcx, rax        ; Str，把str的地址加载到rax
+.text:0000000000401586                 call    strlen  ;调用strlen函数获取str的长度
+.text:000000000040158B                 cmp     rax, 23h ; 比较str的长度
+.text:000000000040158F                 jz      short loc_40159B ;根据返回zf值进行跳转
+.text:0000000000401591                 mov     eax, 0   ;如果没有跳转那么把返回值设为0，以表示函数返回
+.text:0000000000401596                 jmp     loc_40162B ;跳转到末尾
+.text:000000000040159B ; ---------------------------------------------------------------------------
+.text:000000000040159B
+.text:000000000040159B loc_40159B:                             ; CODE XREF: main+3F↑j
+.text:000000000040159B                 mov     [rbp+var_4], 0 ;[rbp+var_4]即是var_4的开始地址，并把0赋值给var_4
+.text:00000000004015A2
+.text:00000000004015A2 loc_4015A2:                             ; CODE XREF: main+C8↓j
+.text:00000000004015A2                 cmp     [rbp+var_4], 22h ; 这里判断var_4的值是不是等于22h，根据下文了解，估计是一个循环计数器
+.text:00000000004015A6                 jg      short loc_40161A ;如果var_4&gt;34,那么跳转到40161A，输出正确，推测下面代码存在检测，如果检测失败，那么就会跳转到错误。
+.text:00000000004015A8                 mov     eax, [rbp+var_4] ;把var_4的值存入eax
+.text:00000000004015AB                 cdqe  ;把eax拓展成rax
+.text:00000000004015AD                 movzx   eax, [rbp+rax+Str] ;[rbp+rax+Str]可以理解成rbp栈底的地址加上str的索引再加上rax的偏移值，那么就是str[rax]
+.text:00000000004015B2                 xor     eax, 52h ;把eax的值与52h进行异或，异或的结果会存为eax中
+.text:00000000004015B5                 mov     edx, eax  ;把eax中的值赋值给edx
+.text:00000000004015B7                 mov     eax, [rbp+var_4]  ;把Var_4的值赋值给eax,根据下面来看，是要把eax拓展成rax然后作为str的索引
+.text:00000000004015BA                 cdqe  ;把eax拓展成rax
+.text:00000000004015BC                 mov     [rbp+rax+Str], dl  ;把str[rax]赋值为dl,dl就是edx_low即是edx的低八位(一个字符),由上面可知此时的dl为异或后的数据
+.text:00000000004015C0                 mov     eax, [rbp+var_4]  ;把var_4的值赋值给eax
+.text:00000000004015C3                 cdqe   ;老样子
+.text:00000000004015C5                 movzx   eax, [rbp+rax+Str] ;把str[rax]赋值给eax,并无符号拓展(unsigned char)
+.text:00000000004015CA                 add     eax, 5 ;把eax加上5，即str[rax]+5
+.text:00000000004015CD                 mov     edx, eax  ;把处理后的值保存到edx
+.text:00000000004015CF                 mov     eax, [rbp+var_4]  ;再获取var_4的值到eax
+.text:00000000004015D2                 cdqe    ;继续拓展为rax
+.text:00000000004015D4                 mov     [rbp+rax+Str], dl   ;赋值edx的低八位给str[rax],即把加5后的str[rax重新赋值]
+.text:00000000004015D8                 mov     eax, [rbp+var_4] ;获取str[rax]的值到eax
+.text:00000000004015DB                 cdqe   ;继续把eax拓展成rax
+.text:00000000004015DD                 movzx   eax, [rbp+rax+Str]  ;获取str[rax]到eax，并无符号拓展
+.text:00000000004015E2                 movsx   eax, al  ;把eax的低字节拓展为
+.text:00000000004015E5                 mov     edx, [rbp+var_4]  ;再次获取
+var_4的值到edx
+.text:00000000004015E8                 movsxd  rdx, edx  ;带符号拓展为赋值到rdx
+.text:00000000004015EB                 lea     rcx, ds:0[rdx*4]  ;理解ds是一个说明，说明访问的数据段。0[]表示没有额外偏移量，表示从获取到的地址开始rax*4,就是获取rax*4的指针，4为一个数组的字节大小，rax的值就是偏移量，如果rax是1，那么表示的是获取到4索引的指针，即4字节数组的第二个元素。这里rax为0，那么rcx就是0，即rcx记录了一个由var_4决定的指针偏移量
+.text:00000000004015F3                 lea     rdx, res  ;获取res的指针到rdx
+.text:00000000004015FA                 mov     edx, [rcx+rdx]  ;获取res的第一个字节到edx
+.text:00000000004015FD                 cmp     eax, edx  ;把str与res进行比较判断
+.text:00000000004015FF                 jz      short loc_401614  ;相等则进行跳转
+.text:0000000000401601                 lea     rcx, aWrong     ; &quot;Wrong!&quot;
+.text:0000000000401608                 call    puts
+.text:000000000040160D                 mov     eax, 0
+.text:0000000000401612                 jmp     short loc_40162B
+.text:0000000000401614 ; ---------------------------------------------------------------------------
+.text:0000000000401614
+.text:0000000000401614 loc_401614:                             ; CODE XREF: main+AF↑j
+.text:0000000000401614                 add     [rbp+var_4], 1  相等则跳转到这里，把var_4的值加上1，
+.text:0000000000401618                 jmp     short loc_4015A2  ;返回循环起点继续循环
+.text:000000000040161A ; ---------------------------------------------------------------------------
+.text:000000000040161A
+.text:000000000040161A loc_40161A:                             ; CODE XREF: main+56↑j
+.text:000000000040161A                 lea     rcx, aGood      ; &quot;Good!&quot;
+.text:0000000000401621                 call    puts
+.text:0000000000401626                 mov     eax, 0
+.text:000000000040162B
+.text:000000000040162B loc_40162B:                             ; CODE XREF: main+46↑j
+.text:000000000040162B                                         ; main+C2↑j
+.text:000000000040162B                 add     rsp, 90h   ;把栈顶恢复成栈底，回收栈帧
+.text:0000000000401632                 pop     rbp   ;弹出rbp
+.text:0000000000401633                 retn     ;函数返回
+.text:0000000000401633 main            endp     ;函数结束
+
+
+hint = 0x21,0x6,0x6,0x16,0xb,0x19,0x2e,0x65,0x35,0x6a,0x6f,0x38,0x36,0x84,0x70,0x3b,0x39,0x65,0x38,0x35,0x84,0x6f,0x36,0x3c,0x6a,0x38,0x68,0x84,0x66,0x70,0x3b,0x38,0x6a,0x36,0x34,
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2024 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
