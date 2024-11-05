@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     Re学习
                 </a>
             </span>
@@ -296,23 +296,23 @@ RETN              ;函
 <p>ida汇编分析</p>
 </blockquote>
 <pre><code class="x86asm">
-.text:0000000000401550                 push    rbp    ;栈中压入rbp
+.text:0000000000401550                 push    rbp         ;栈中压入rbp
 .text:0000000000401551                 mov     rbp, rsp    ;记录栈底指针
 .text:0000000000401554                 sub     rsp, 90h    ;栈顶地址减去90h，即规定栈顶地址，规划栈帧
-.text:000000000040155B                 call    __main    ;调用函数
-.text:0000000000401560                 lea     rcx, Buffer     ; &quot;input your flag:&quot;   ;加载字符串到rcx
-.text:0000000000401567                 call    puts   ;调用函数输出字符串
+.text:000000000040155B                 call    __main      ;调用函数
+.text:0000000000401560                 lea     rcx, Buffer  ; &quot;input your flag:&quot;   ;加载字符串到rcx
+.text:0000000000401567                 call    puts         ;调用函数输出字符串
 .text:000000000040156C                 lea     rax, [rbp+Str]  ;加载一段缓冲区，并把地址加载到rax。这里的str为一个偏移量，那么[rbp+Str]指向的就是栈内的str的开始地址
-.text:0000000000401570                 mov     rdx, rax  ;把rax的地址转到rdx中
+.text:0000000000401570                 mov     rdx, rax       ;把rax的地址转到rdx中
 .text:0000000000401573                 lea     rcx, Format     ; &quot;%s&quot;，获取输入类型到rcx
-.text:000000000040157A                 call    scanf  ;调用函数输入
+.text:000000000040157A                 call    scanf         ;调用函数输入
 .text:000000000040157F                 lea     rax, [rbp+Str]  ;再次加载str的缓冲区
 .text:0000000000401583                 mov     rcx, rax        ; Str，把str的地址加载到rax
-.text:0000000000401586                 call    strlen  ;调用strlen函数获取str的长度
-.text:000000000040158B                 cmp     rax, 23h ; 比较str的长度
+.text:0000000000401586                 call    strlen         ;调用strlen函数获取str的长度
+.text:000000000040158B                 cmp     rax, 23h       ; 比较str的长度
 .text:000000000040158F                 jz      short loc_40159B ;根据返回zf值进行跳转
-.text:0000000000401591                 mov     eax, 0   ;如果没有跳转那么把返回值设为0，以表示函数返回
-.text:0000000000401596                 jmp     loc_40162B ;跳转到末尾
+.text:0000000000401591                 mov     eax, 0        ;如果没有跳转那么把返回值设为0，以表示函数返回
+.text:0000000000401596                 jmp     loc_40162B     ;跳转到末尾
 .text:000000000040159B ; ---------------------------------------------------------------------------
 .text:000000000040159B
 .text:000000000040159B loc_40159B:                             ; CODE XREF: main+3F↑j
@@ -322,42 +322,42 @@ RETN              ;函
 .text:00000000004015A2                 cmp     [rbp+var_4], 22h ; 这里判断var_4的值是不是等于22h，根据下文了解，估计是一个循环计数器
 .text:00000000004015A6                 jg      short loc_40161A ;如果var_4&gt;34,那么跳转到40161A，输出正确，推测下面代码存在检测，如果检测失败，那么就会跳转到错误。
 .text:00000000004015A8                 mov     eax, [rbp+var_4] ;把var_4的值存入eax
-.text:00000000004015AB                 cdqe  ;把eax拓展成rax
+.text:00000000004015AB                 cdqe                     ;把eax拓展成rax
 .text:00000000004015AD                 movzx   eax, [rbp+rax+Str] ;[rbp+rax+Str]可以理解成rbp栈底的地址加上str的索引再加上rax的偏移值，那么就是str[rax]
-.text:00000000004015B2                 xor     eax, 52h ;把eax的值与52h进行异或，异或的结果会存为eax中
-.text:00000000004015B5                 mov     edx, eax  ;把eax中的值赋值给edx
+.text:00000000004015B2                 xor     eax, 52h          ;把eax的值与52h进行异或，异或的结果会存为eax中
+.text:00000000004015B5                 mov     edx, eax          ;把eax中的值赋值给edx
 .text:00000000004015B7                 mov     eax, [rbp+var_4]  ;把Var_4的值赋值给eax,根据下面来看，是要把eax拓展成rax然后作为str的索引
-.text:00000000004015BA                 cdqe  ;把eax拓展成rax
+.text:00000000004015BA                 cdqe                      ;把eax拓展成rax
 .text:00000000004015BC                 mov     [rbp+rax+Str], dl  ;把str[rax]赋值为dl,dl就是edx_low即是edx的低八位(一个字符),由上面可知此时的dl为异或后的数据
 .text:00000000004015C0                 mov     eax, [rbp+var_4]  ;把var_4的值赋值给eax
-.text:00000000004015C3                 cdqe   ;老样子
+.text:00000000004015C3                 cdqe                      ;老样子
 .text:00000000004015C5                 movzx   eax, [rbp+rax+Str] ;把str[rax]赋值给eax,并无符号拓展(unsigned char)
-.text:00000000004015CA                 add     eax, 5 ;把eax加上5，即str[rax]+5
-.text:00000000004015CD                 mov     edx, eax  ;把处理后的值保存到edx
-.text:00000000004015CF                 mov     eax, [rbp+var_4]  ;再获取var_4的值到eax
-.text:00000000004015D2                 cdqe    ;继续拓展为rax
+.text:00000000004015CA                 add     eax, 5             ;把eax加上5，即str[rax]+5
+.text:00000000004015CD                 mov     edx, eax           ;把处理后的值保存到edx
+.text:00000000004015CF                 mov     eax, [rbp+var_4]   ;再获取var_4的值到eax
+.text:00000000004015D2                 cdqe                       ;继续拓展为rax
 .text:00000000004015D4                 mov     [rbp+rax+Str], dl   ;赋值edx的低八位给str[rax],即把加5后的str[rax重新赋值]
-.text:00000000004015D8                 mov     eax, [rbp+var_4] ;获取str[rax]的值到eax
-.text:00000000004015DB                 cdqe   ;继续把eax拓展成rax
+.text:00000000004015D8                 mov     eax, [rbp+var_4]    ;获取str[rax]的值到eax
+.text:00000000004015DB                 cdqe                        ;继续把eax拓展成rax
 .text:00000000004015DD                 movzx   eax, [rbp+rax+Str]  ;获取str[rax]到eax，并无符号拓展
-.text:00000000004015E2                 movsx   eax, al  ;把eax的低字节拓展为
-.text:00000000004015E5                 mov     edx, [rbp+var_4]  ;再次获取
-var_4的值到edx
-.text:00000000004015E8                 movsxd  rdx, edx  ;带符号拓展为赋值到rdx
-.text:00000000004015EB                 lea     rcx, ds:0[rdx*4]  ;理解ds是一个说明，说明访问的数据段。0[]表示没有额外偏移量，表示从获取到的地址开始rax*4,就是获取rax*4的指针，4为一个数组的字节大小，rax的值就是偏移量，如果rax是1，那么表示的是获取到4索引的指针，即4字节数组的第二个元素。这里rax为0，那么rcx就是0，即rcx记录了一个由var_4决定的指针偏移量
-.text:00000000004015F3                 lea     rdx, res  ;获取res的指针到rdx
-.text:00000000004015FA                 mov     edx, [rcx+rdx]  ;获取res的第一个字节到edx
-.text:00000000004015FD                 cmp     eax, edx  ;把str与res进行比较判断
-.text:00000000004015FF                 jz      short loc_401614  ;相等则进行跳转
-.text:0000000000401601                 lea     rcx, aWrong     ; &quot;Wrong!&quot;
+.text:00000000004015E2                 movsx   eax, al             ;把eax的低字节拓展为
+.text:00000000004015E5                 mov     edx, [rbp+var_4]    ;再次获取var_4的值到edx
+.text:00000000004015E8                 movsxd  rdx, edx            ;带符号拓展为赋值到rdx
+.text:00000000004015EB                 lea     rcx, ds:0[rdx*4]  
+;ds是一个说明，说明访问的数据段。0[]表示没有额外偏移量，表示从获取到的地址开始rax*4,就是获取rax*4的指针，4为一个数组的字节大小，rax的值就是偏移量，如果rax是1，那么表示的是获取到4索引的指针，即4字节数组的第二个元素。这里rax为0，那么rcx就是0，即rcx记录了一个由var_4决定的指针偏移量
+.text:00000000004015F3                 lea     rdx, res           ;获取res的指针到rdx
+.text:00000000004015FA                 mov     edx, [rcx+rdx]     ;获取res的第一个字节到edx
+.text:00000000004015FD                 cmp     eax, edx           ;把str与res进行比较判断
+.text:00000000004015FF                 jz      short loc_401614   ;相等则进行跳转
+.text:0000000000401601                 lea     rcx, aWrong        ; &quot;Wrong!&quot;
 .text:0000000000401608                 call    puts
 .text:000000000040160D                 mov     eax, 0
 .text:0000000000401612                 jmp     short loc_40162B
 .text:0000000000401614 ; ---------------------------------------------------------------------------
 .text:0000000000401614
-.text:0000000000401614 loc_401614:                             ; CODE XREF: main+AF↑j
-.text:0000000000401614                 add     [rbp+var_4], 1  相等则跳转到这里，把var_4的值加上1，
-.text:0000000000401618                 jmp     short loc_4015A2  ;返回循环起点继续循环
+.text:0000000000401614 loc_401614:                                ; CODE XREF: main+AF↑j
+.text:0000000000401614                 add     [rbp+var_4], 1     ;相等则跳转到这里，把var_4的值加上1，
+.text:0000000000401618                 jmp     short loc_4015A2   ;返回循环起点继续循环
 .text:000000000040161A ; ---------------------------------------------------------------------------
 .text:000000000040161A
 .text:000000000040161A loc_40161A:                             ; CODE XREF: main+56↑j
@@ -367,13 +367,44 @@ var_4的值到edx
 .text:000000000040162B
 .text:000000000040162B loc_40162B:                             ; CODE XREF: main+46↑j
 .text:000000000040162B                                         ; main+C2↑j
-.text:000000000040162B                 add     rsp, 90h   ;把栈顶恢复成栈底，回收栈帧
-.text:0000000000401632                 pop     rbp   ;弹出rbp
-.text:0000000000401633                 retn     ;函数返回
-.text:0000000000401633 main            endp     ;函数结束
+.text:000000000040162B                 add     rsp, 90h        ;把栈顶恢复成栈底，回收栈帧
+.text:0000000000401632                 pop     rbp             ;弹出rbp
+.text:0000000000401633                 retn                    ;函数返回
+.text:0000000000401633 main            endp                    ;函数结束
 
 
 hint = 0x21,0x6,0x6,0x16,0xb,0x19,0x2e,0x65,0x35,0x6a,0x6f,0x38,0x36,0x84,0x70,0x3b,0x39,0x65,0x38,0x35,0x84,0x6f,0x36,0x3c,0x6a,0x38,0x68,0x84,0x66,0x70,0x3b,0x38,0x6a,0x36,0x34,
+</code></pre>
+<h4 id="上面汇编的加密逻辑和逆向脚本"><a href="#上面汇编的加密逻辑和逆向脚本" class="headerlink" title="上面汇编的加密逻辑和逆向脚本"></a>上面汇编的加密逻辑和逆向脚本</h4><pre><code class="c">#include &lt;stdio.h&gt;
+
+char str[] = &#123; 0x21,0x6,0x6,0x16,0xb,0x19,0x2e,0x65,
+0x35,0x6a,0x6f,0x38,0x36,0x84,0x70,0x3b,0x39,0x65
+,0x38,0x35,0x84,0x6f,0x36,0x3c,0x6a,0x38,0x68,0x84,
+0x66,0x70,0x3b,0x38,0x6a,0x36,0x34 &#125;;
+
+int enc() &#123;
+    int len = 0x23;
+    for (int i = 0; i &lt; len; i++) &#123;
+        str[i] ^= 0x52;
+        str[i] += 5;
+    &#125;
+    return 0;
+&#125;
+
+int dec() &#123;
+    int len = 0x23;
+    for (int i = 0; i &lt; len; i++) &#123;
+        str[i] -= 5;
+        str[i] ^= 0x52;
+    &#125;
+
+    return 0;
+&#125;
+
+int main() &#123;
+    dec();
+    printf(&quot;%s&quot;, str);
+&#125;
 </code></pre>
 
     </div>
