@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #ff7d73">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #00bcd4">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -202,8 +202,72 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs">(✿･ω･)&#x2F;原题</a></p>
-<h2 id="drink-tea"><a href="#drink-tea" class="headerlink" title="drink_tea"></a>drink_tea</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路:"></a>思路:</h3><p>查壳后丢进ida，在main函数中发现加密函数，密钥和加密后的密文。分析加密函数，发现tea加密的特征deltea值，于是把密钥的值按d变为dd形式的数据，拿到4个密钥，然后提取出密文写脚本解密，把加密过程反过来就行。脚本如下。  </p>
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">Dirty_flowers</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">UPX</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">Ezencrypt</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">4.</span> <span class="post-toc-text">Pangbai泰拉记（1）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">5.</span> <span class="post-toc-text">Ptrace</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link"><span class="post-toc-number"></span> <span class="post-toc-text">Web</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">你能在一秒内打出八句英文吗</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">遗失的拉链</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">pangbai过家家(2)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">思路:</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">4.</span> <span class="post-toc-text">复读机!</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">5.</span> <span class="post-toc-text">谢谢皮蛋plus</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">思路：</span></a></li></ol></li></ol> -->
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#reverse">Reverse</a><ul>
+<li><a href="#drink_tea">drink_tea</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路:</a></li>
+</ul>
+</li>
+<li><a href="#dirty_flowers">Dirty_flowers</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路：</a></li>
+</ul>
+</li>
+<li><a href="#upx">UPX</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-1">思路：</a></li>
+</ul>
+</li>
+<li><a href="#ezencrypt">Ezencrypt</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-2">思路：</a></li>
+</ul>
+</li>
+<li><a href="#pangbai%E6%B3%B0%E6%8B%89%E8%AE%B01">Pangbai泰拉记（1）</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-3">思路：</a></li>
+</ul>
+</li>
+<li><a href="#ptrace">Ptrace</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-4">思路：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#web">Web</a><ul>
+<li><a href="#%E4%BD%A0%E8%83%BD%E5%9C%A8%E4%B8%80%E7%A7%92%E5%86%85%E6%89%93%E5%87%BA%E5%85%AB%E5%8F%A5%E8%8B%B1%E6%96%87%E5%90%97">你能在一秒内打出八句英文吗</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-5">思路：</a></li>
+</ul>
+</li>
+<li><a href="#%E9%81%97%E5%A4%B1%E7%9A%84%E6%8B%89%E9%93%BE">遗失的拉链</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-6">思路：</a></li>
+</ul>
+</li>
+<li><a href="#pangbai%E8%BF%87%E5%AE%B6%E5%AE%B62">pangbai过家家(2)</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-1">思路:</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A4%8D%E8%AF%BB%E6%9C%BA">复读机!</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-7">思路：</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B0%A2%E8%B0%A2%E7%9A%AE%E8%9B%8Bplus">谢谢皮蛋plus</a><ul>
+<li><a href="#%E6%80%9D%E8%B7%AF-8">思路：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+# Reverse
+[(✿･ω･)/原题](https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs)
+## drink_tea
+### 思路:
+查壳后丢进ida，在main函数中发现加密函数，密钥和加密后的密文。分析加密函数，发现tea加密的特征deltea值，于是把密钥的值按d变为dd形式的数据，拿到4个密钥，然后提取出密文写脚本解密，把加密过程反过来就行。脚本如下。  
+
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 int __fastcall dec(unsigned int* input, unsigned int* key_1);
@@ -251,7 +315,7 @@ unsigned int i;
 &#125;  
 </code></pre>
 <hr>
-<h2 id="Dirty-flowers"><a href="#Dirty-flowers" class="headerlink" title="Dirty_flowers"></a>Dirty_flowers</h2><h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>查壳后丢进ida32，提示花指令。发现有两处爆红，发现是以call和ret构造的花指令，直接nop掉，在函数入口处按u后再按p，就可以编译了。在main函数中发现了加密函数和key，于是直接写脚本解密。脚本如下（不知道为什么编译器识别密钥有13位，其实数下来就12位），输出结果就是flag</p>
+<h2><span id="dirty_flowers">Dirty_flowers</span><a href="#dirty_flowers" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>查壳后丢进ida32，提示花指令。发现有两处爆红，发现是以call和ret构造的花指令，直接nop掉，在函数入口处按u后再按p，就可以编译了。在main函数中发现了加密函数和key，于是直接写脚本解密。脚本如下（不知道为什么编译器识别密钥有13位，其实数下来就12位），输出结果就是flag</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 int main() &#123;
@@ -306,7 +370,7 @@ int main() &#123;
 &#125;
 </code></pre>
 <hr>
-<h2 id="UPX"><a href="#UPX" class="headerlink" title="UPX"></a>UPX</h2><h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>用die查看发现带壳，于是用upx脱壳，丢入ida,发现RC4加密函数。还有密钥，发现密文data为空，于是用linux进行调试，在比较处断点，发现data的值，这样就得到了密文。想了一下决定用网站进行解密，于是把密钥先转化成十进制（脚本如下），把输出结果用<a target="_blank" rel="noopener" href="https://gs.jisuanla.com/decimal-to-ascii.html%E8%BD%AC%E5%8C%96%E4%B8%BAascii%E7%A0%81%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8Cbase64%E7%BC%96%E7%A0%81%EF%BC%8C%E6%9C%80%E5%90%8E%E7%94%A8%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86https://www.mklab.cn/utils/rc4%E3%80%82">https://gs.jisuanla.com/decimal-to-ascii.html转化为ascii码，然后进行base64编码，最后用在线网站进行解密https://www.mklab.cn/utils/rc4。</a>  </p>
+<h2><span id="upx">UPX</span><a href="#upx" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>用die查看发现带壳，于是用upx脱壳，丢入ida,发现RC4加密函数。还有密钥，发现密文data为空，于是用linux进行调试，在比较处断点，发现data的值，这样就得到了密文。想了一下决定用网站进行解密，于是把密钥先转化成十进制（脚本如下），把输出结果用<a target="_blank" rel="noopener" href="https://gs.jisuanla.com/decimal-to-ascii.html%E8%BD%AC%E5%8C%96%E4%B8%BAascii%E7%A0%81%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8Cbase64%E7%BC%96%E7%A0%81%EF%BC%8C%E6%9C%80%E5%90%8E%E7%94%A8%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86https://www.mklab.cn/utils/rc4%E3%80%82">https://gs.jisuanla.com/decimal-to-ascii.html转化为ascii码，然后进行base64编码，最后用在线网站进行解密https://www.mklab.cn/utils/rc4。</a>  </p>
 <p>flag{Do_you_know_UPX?}  </p>
 <pre><code class="c">#include&lt;stdio.h&gt;
 
@@ -324,7 +388,7 @@ int main() &#123;
 &#125;
 </code></pre>
 <hr>
-<h2 id="Ezencrypt"><a href="#Ezencrypt" class="headerlink" title="Ezencrypt"></a>Ezencrypt</h2><h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>先找到main函数，发现里面对输入得数据进行了加密。仔细分析，明文tx被Enc函数加密，然后调用enc中得check方法对密文进行检验。在Enc中我们发现明文先是被AES加密再用base64编码，然后在调用check时，加密后的密文又被传入一个位于native的doEncCheck的函数中。所以提取so文件在ida中查看。在ida中我们发现了doEncCheck函数，但是它先调用了一个enc函数与密钥进行了简单的异或，然后enc函数最后又调用了一个encc函数，分析encc函数发现类似于RC4加密，密钥与enc相同，最后再由doEncCheck函数把加密后的密文与正确的密文进行比对返回结果。<br>所以解密顺序就是先解密encc然后是enc再是AES，脚本如下，输出的是被base64编码的被AES加密的密。<br>进行AES解密，能看到密钥被放在了MainActivity.title里面，用(<a target="_blank" rel="noopener" href="https://www.mklab.cn/utils/aes)%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86%EF%BC%8C%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag%E3%80%82">https://www.mklab.cn/utils/aes)进行解密，得到结果就是flag。</a>  </p>
+<h2><span id="ezencrypt">Ezencrypt</span><a href="#ezencrypt" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>先找到main函数，发现里面对输入得数据进行了加密。仔细分析，明文tx被Enc函数加密，然后调用enc中得check方法对密文进行检验。在Enc中我们发现明文先是被AES加密再用base64编码，然后在调用check时，加密后的密文又被传入一个位于native的doEncCheck的函数中。所以提取so文件在ida中查看。在ida中我们发现了doEncCheck函数，但是它先调用了一个enc函数与密钥进行了简单的异或，然后enc函数最后又调用了一个encc函数，分析encc函数发现类似于RC4加密，密钥与enc相同，最后再由doEncCheck函数把加密后的密文与正确的密文进行比对返回结果。<br>所以解密顺序就是先解密encc然后是enc再是AES，脚本如下，输出的是被base64编码的被AES加密的密。<br>进行AES解密，能看到密钥被放在了MainActivity.title里面，用(<a target="_blank" rel="noopener" href="https://www.mklab.cn/utils/aes)%E8%BF%9B%E8%A1%8C%E8%A7%A3%E5%AF%86%EF%BC%8C%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag%E3%80%82">https://www.mklab.cn/utils/aes)进行解密，得到结果就是flag。</a>  </p>
 <p>flag{0hh_U_kn0w_7h15_5ki11}</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
@@ -406,9 +470,9 @@ unsigned long encc(char* key, char* input) &#123;
 &#125;
 </code></pre>
 <hr>
-<h2 id="Pangbai泰拉记（1）"><a href="#Pangbai泰拉记（1）" class="headerlink" title="Pangbai泰拉记（1）"></a>Pangbai泰拉记（1）</h2><h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>Die查壳后丢入ida，看到了一堆混淆，f5查看main函数，分析一下看到提示用调试获得flag，还发现flag与key进行了异或，看了下key和flag的值后直接启动调试，此时再看key的值发生了变化，而flag的值也是假的，尝试用没调试时的key解flag，发现也是不行。<br>想了一下，可能是调试状态的改变使flag和key的值不正确（main函数前面有个检测调试，虽然改变变量的函数没在main里被调用，但是在main函数执行前还有许多的函数会先被调用），所以看异或前两个的值，发现flag的值不变，但是key的值是已经变化了，于是按x找到调用key的函数。<br>发现key在一个main0的函数中被进行了异或操作，在if判断了是否为调试之类的，然后把key与的两种不同的值进行异或。于是在if的jz处下断点，调试到这里发现ZF的值为0，输出的就是一开始调试的key，所以我们改变ZF的值为1，让key为正确的密钥。<br>此时在主函数的结束处下断点便于查看flag的值，运行到此直接查看flag的值，按a转为字符串，这就是真的flag了。</p>
+<h2><span id="pangbai泰拉记1">Pangbai泰拉记（1）</span><a href="#pangbai泰拉记1" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>Die查壳后丢入ida，看到了一堆混淆，f5查看main函数，分析一下看到提示用调试获得flag，还发现flag与key进行了异或，看了下key和flag的值后直接启动调试，此时再看key的值发生了变化，而flag的值也是假的，尝试用没调试时的key解flag，发现也是不行。<br>想了一下，可能是调试状态的改变使flag和key的值不正确（main函数前面有个检测调试，虽然改变变量的函数没在main里被调用，但是在main函数执行前还有许多的函数会先被调用），所以看异或前两个的值，发现flag的值不变，但是key的值是已经变化了，于是按x找到调用key的函数。<br>发现key在一个main0的函数中被进行了异或操作，在if判断了是否为调试之类的，然后把key与的两种不同的值进行异或。于是在if的jz处下断点，调试到这里发现ZF的值为0，输出的就是一开始调试的key，所以我们改变ZF的值为1，让key为正确的密钥。<br>此时在主函数的结束处下断点便于查看flag的值，运行到此直接查看flag的值，按a转为字符串，这就是真的flag了。</p>
 <hr>
-<h2 id="Ptrace"><a href="#Ptrace" class="headerlink" title="Ptrace"></a>Ptrace</h2><h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>题目提示ptrace，发现了father和son两个文件，die查了后用ida分析。<br>先看father，在main函数中我们发现，他先是创建了一个子进程，然后根据fork函数的特性，子进程打开了名为son的可执行文件，而父进程则监控着子进程，并对子进程传入了一个为3的参数，而后父进程就等待子进程的执行完成，程序结束。<br>在子进程中我们发现了一个加密函数，把我们输入的s进行了|运算，并与mm判断是否相等。<br>这时的我们拿到了密文和加密方法，所以直接写脚本解密就行,注意偏移的值是父进程传入的3(猜的)，脚本如下，输出的结果就是flag<br>flag{Do_you_really_know_ptrace?}</p>
+<h2><span id="ptrace">Ptrace</span><a href="#ptrace" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>题目提示ptrace，发现了father和son两个文件，die查了后用ida分析。<br>先看father，在main函数中我们发现，他先是创建了一个子进程，然后根据fork函数的特性，子进程打开了名为son的可执行文件，而父进程则监控着子进程，并对子进程传入了一个为3的参数，而后父进程就等待子进程的执行完成，程序结束。<br>在子进程中我们发现了一个加密函数，把我们输入的s进行了|运算，并与mm判断是否相等。<br>这时的我们拿到了密文和加密方法，所以直接写脚本解密就行,注意偏移的值是父进程传入的3(猜的)，脚本如下，输出的结果就是flag<br>flag{Do_you_really_know_ptrace?}</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 unsigned char m[32] = &#123;
@@ -430,7 +494,7 @@ int main()
 &#125;
 </code></pre>
 <hr>
-<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="你能在一秒内打出八句英文吗"><a href="#你能在一秒内打出八句英文吗" class="headerlink" title="你能在一秒内打出八句英文吗"></a>你能在一秒内打出八句英文吗</h2><h3 id="思路：-5"><a href="#思路：-5" class="headerlink" title="思路："></a>思路：</h3><p>开始是先想着用brup抓时间点的包进行post的，查看了源码后发现它记录的是开始的时间戳，而且一些快捷键被禁用了。所以没有办法只能让虫虫来帮我完成这次任务了。虫虫就在下面。<br>Url1就是开始的页面，url2是在源码中发现的提交时post内容的页面。同时发现提交时的cookie记录了时间戳，所以cookie也要传递到url2。然后在查看源码后定位要输入的英文的位置，获取并以post的方式提交给url2。运行后就可以得到flag。</p>
+<h1><span id="web">Web</span><a href="#web" class="header-anchor">#</a></h1><h2><span id="你能在一秒内打出八句英文吗">你能在一秒内打出八句英文吗</span><a href="#你能在一秒内打出八句英文吗" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>开始是先想着用brup抓时间点的包进行post的，查看了源码后发现它记录的是开始的时间戳，而且一些快捷键被禁用了。所以没有办法只能让虫虫来帮我完成这次任务了。虫虫就在下面。<br>Url1就是开始的页面，url2是在源码中发现的提交时post内容的页面。同时发现提交时的cookie记录了时间戳，所以cookie也要传递到url2。然后在查看源码后定位要输入的英文的位置，获取并以post的方式提交给url2。运行后就可以得到flag。</p>
 <pre><code class="py">import requests
 from bs4 import BeautifulSoup
 
@@ -454,11 +518,11 @@ with requests.Session() as session:
     print(response2.status_code)
 </code></pre>
 <hr>
-<h2 id="遗失的拉链"><a href="#遗失的拉链" class="headerlink" title="遗失的拉链"></a>遗失的拉链</h2><h3 id="思路：-6"><a href="#思路：-6" class="headerlink" title="思路："></a>思路：</h3><p>提示找东西，源代码和请求头看了都没收获，尝试目录扫描，在linux进行扫描，发现网站备份文件<a target="_blank" rel="noopener" href="http://www.zip,直接输入下载到本地,发现有个pizwww.php的文件/">www.zip，直接输入下载到本地，发现有个pizwww.php的文件</a><br>转到piz<a target="_blank" rel="noopener" href="http://www.php目录下,按照下载的php文件进行传参,要求我们get一个new的参数和post一个star的参数,要求两个数据不相等但是shal和md5强相等,直接数组绕过,然后再post参数给cmd让eval()函数执行,同时发现cmd被过滤了flag和cat./">www.php目录下，按照下载的php文件进行传参，要求我们get一个new的参数和post一个star的参数，要求两个数据不相等但是shal和MD5强相等，直接数组绕过，然后再post参数给cmd让eval()函数执行，同时发现cmd被过滤了flag和cat。</a><br>不过先执行ls &#x2F;看一下flag的位置，&#x2F;piz<a target="_blank" rel="noopener" href="http://www.php/?new%5B%5D=2121%EF%BC%8CPOST">www.php/?new[]=2121，POST</a> star[]&#x3D;adssds&amp;cmd&#x3D;system(“ls &#x2F;“);，发现一个flag的文件，想到用tac作为读取命令，用f<em>进行读取POST star[]&#x3D;adssds&amp;cmd&#x3D;system(“tac &#x2F;f</em>“);直接拿到flag。<br>flag{e1b4e109-b24e-4301-b4a0-473153f473c0}</p>
+<h2><span id="遗失的拉链">遗失的拉链</span><a href="#遗失的拉链" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>提示找东西，源代码和请求头看了都没收获，尝试目录扫描，在linux进行扫描，发现网站备份文件<a target="_blank" rel="noopener" href="http://www.zip,直接输入下载到本地,发现有个pizwww.php的文件/">www.zip，直接输入下载到本地，发现有个pizwww.php的文件</a><br>转到piz<a target="_blank" rel="noopener" href="http://www.php目录下,按照下载的php文件进行传参,要求我们get一个new的参数和post一个star的参数,要求两个数据不相等但是shal和md5强相等,直接数组绕过,然后再post参数给cmd让eval()函数执行,同时发现cmd被过滤了flag和cat./">www.php目录下，按照下载的php文件进行传参，要求我们get一个new的参数和post一个star的参数，要求两个数据不相等但是shal和MD5强相等，直接数组绕过，然后再post参数给cmd让eval()函数执行，同时发现cmd被过滤了flag和cat。</a><br>不过先执行ls &#x2F;看一下flag的位置，&#x2F;piz<a target="_blank" rel="noopener" href="http://www.php/?new%5B%5D=2121%EF%BC%8CPOST">www.php/?new[]=2121，POST</a> star[]&#x3D;adssds&amp;cmd&#x3D;system(“ls &#x2F;“);，发现一个flag的文件，想到用tac作为读取命令，用f<em>进行读取POST star[]&#x3D;adssds&amp;cmd&#x3D;system(“tac &#x2F;f</em>“);直接拿到flag。<br>flag{e1b4e109-b24e-4301-b4a0-473153f473c0}</p>
 <hr>
-<h2 id="pangbai过家家-2"><a href="#pangbai过家家-2" class="headerlink" title="pangbai过家家(2)"></a>pangbai过家家(2)</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路:"></a>思路:</h3><p>根据剧情得到提示“泄露”，推测是git泄露，于是先用dirsearch扫描目录，发现了许多git文件，确定是git泄露，于是用githack获取git文件。<br>在目录里也没看到什么东西，git log一下也没看出什么，后面想想直接恢复历史版本看一下有没有不同的文件，执行git stash pop，发现有一个叫 BacKd0or.v2d23AOPpDfEW5Ca.php的文件非常可疑于是把这个文件恢复过来看看。dit add BacKd0or.v2d23AOPpDfEW5Ca.php。<br>打开文件发现这就是剧情中的后门，分析代码，发现需要我们POST一个papa的为TfflxoU0ry7c，后再get一个NewStar_CTF.2024的值不能为Welcome但是正则匹配又要是Welcome，这里想到用换行符进行绕过，同时还要注意因为php的传参规则会把.这类符号转换为下划线导致传参错误，但是在存在”[“时，php只会把”[“转化为”_”，而后面的并不变，所以我们要把第一个下划线改成”[“。<br>在满足上面条件后我们就可以给call_user_func()函数POST两个参数分别是func为要执行的函数名，arry为函数的参数，这里想到system函数来执行linux系统命令。<br>刚开始用ls查看文件硬是没有找到flag。后来问学长得知flag还可能藏在环境变量里于用env查看环境变量，flag就在里面。<br>最终传参：&#x2F;BacKd0or.v2d23AOPpDfEW5Ca.php&#x2F;?NewStar[CTF.2024&#x3D;Welcome%0a<br>POST papa&#x3D;TfflxoU0ry7c&amp;func&#x3D;system&amp;args&#x3D;env<br>flag{528f729b-f0c2-4089-86d5-af868a1b736d}</p>
+<h2><span id="pangbai过家家2">pangbai过家家(2)</span><a href="#pangbai过家家2" class="header-anchor">#</a></h2><h3><span id="思路">思路:</span><a href="#思路" class="header-anchor">#</a></h3><p>根据剧情得到提示“泄露”，推测是git泄露，于是先用dirsearch扫描目录，发现了许多git文件，确定是git泄露，于是用githack获取git文件。<br>在目录里也没看到什么东西，git log一下也没看出什么，后面想想直接恢复历史版本看一下有没有不同的文件，执行git stash pop，发现有一个叫 BacKd0or.v2d23AOPpDfEW5Ca.php的文件非常可疑于是把这个文件恢复过来看看。dit add BacKd0or.v2d23AOPpDfEW5Ca.php。<br>打开文件发现这就是剧情中的后门，分析代码，发现需要我们POST一个papa的为TfflxoU0ry7c，后再get一个NewStar_CTF.2024的值不能为Welcome但是正则匹配又要是Welcome，这里想到用换行符进行绕过，同时还要注意因为php的传参规则会把.这类符号转换为下划线导致传参错误，但是在存在”[“时，php只会把”[“转化为”_”，而后面的并不变，所以我们要把第一个下划线改成”[“。<br>在满足上面条件后我们就可以给call_user_func()函数POST两个参数分别是func为要执行的函数名，arry为函数的参数，这里想到system函数来执行linux系统命令。<br>刚开始用ls查看文件硬是没有找到flag。后来问学长得知flag还可能藏在环境变量里于用env查看环境变量，flag就在里面。<br>最终传参：&#x2F;BacKd0or.v2d23AOPpDfEW5Ca.php&#x2F;?NewStar[CTF.2024&#x3D;Welcome%0a<br>POST papa&#x3D;TfflxoU0ry7c&amp;func&#x3D;system&amp;args&#x3D;env<br>flag{528f729b-f0c2-4089-86d5-af868a1b736d}</p>
 <hr>
-<h2 id="复读机"><a href="#复读机" class="headerlink" title="复读机!"></a>复读机!</h2><h3 id="思路：-7"><a href="#思路：-7" class="headerlink" title="思路："></a>思路：</h3><p>一开始真不知道这是啥玩意，看了官方参考文档，发现是SSTI，尝试输入2，得到2的结果，到此确定是ssti.于是在网上了解了一下并找了一些用内敛函数构成的可以执行系统命令的playload。  </p>
+<h2><span id="复读机">复读机!</span><a href="#复读机" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>一开始真不知道这是啥玩意，看了官方参考文档，发现是SSTI，尝试输入2，得到2的结果，到此确定是ssti.于是在网上了解了一下并找了一些用内敛函数构成的可以执行系统命令的playload。  </p>
 <pre><code class="py">&#123;&#123;"".__class__.__base__.__subclasses__()[142].__init__.__globals__[request.args.arg1](request.args.arg2).read()&#125;&#125;&amp;arg1=popen&amp;arg2=ls
 </code></pre>
 <p>像上面这类的命令好像被过滤了，提示bot不喜欢上课，推测是class不能有，所以去找一下不带class的playload。<br>最后发现</p>
@@ -468,7 +532,7 @@ with requests.Session() as session:
 <pre><code class="py">&#123;&#123;url_for.__globals__['os'].popen('cat /flag').read()&#125;&#125;
 </code></pre>
 <hr>
-<h2 id="谢谢皮蛋plus"><a href="#谢谢皮蛋plus" class="headerlink" title="谢谢皮蛋plus"></a>谢谢皮蛋plus</h2><h3 id="思路：-8"><a href="#思路：-8" class="headerlink" title="思路："></a>思路：</h3><p>先用or来查看包裹数据的情况，输入1可以查询到内容，于是输入-1 or 1 &#x3D;1;#,发现有字符触发了过滤于是用||代替or，还是不行推测可能是空格，所以输入了1 1，发现被过滤，确定就是空格，想到用&#x2F;<strong>&#x2F;代替空格，但是手动输入有点麻烦于是写了个脚本把空格转换为&#x2F;</strong>&#x2F;(脚本如下)，于是输入-1&#x2F;<strong>&#x2F;or&#x2F;</strong>&#x2F;1&#x3D;1;#，发现没有回显结果（估计是没有报错显示），后输入-1”&#x2F;<strong>&#x2F;or&#x2F;</strong>&#x2F;1&#x3D;1;#，发现可以正常查询到结果了，根据返回的两个值看推测查询的是两个列的内容。<br>于是基于此构造联合查询，</p>
+<h2><span id="谢谢皮蛋plus">谢谢皮蛋plus</span><a href="#谢谢皮蛋plus" class="header-anchor">#</a></h2><h3><span id="思路">思路：</span><a href="#思路" class="header-anchor">#</a></h3><p>先用or来查看包裹数据的情况，输入1可以查询到内容，于是输入-1 or 1 &#x3D;1;#,发现有字符触发了过滤于是用||代替or，还是不行推测可能是空格，所以输入了1 1，发现被过滤，确定就是空格，想到用&#x2F;<strong>&#x2F;代替空格，但是手动输入有点麻烦于是写了个脚本把空格转换为&#x2F;</strong>&#x2F;(脚本如下)，于是输入-1&#x2F;<strong>&#x2F;or&#x2F;</strong>&#x2F;1&#x3D;1;#，发现没有回显结果（估计是没有报错显示），后输入-1”&#x2F;<strong>&#x2F;or&#x2F;</strong>&#x2F;1&#x3D;1;#，发现可以正常查询到结果了，根据返回的两个值看推测查询的是两个列的内容。<br>于是基于此构造联合查询，</p>
 <pre><code class="s">-1&quot;/**/UNION/**/SELECT/**/1,GROUP_CONCAT(table_name)/**/FROM/**/information_schema.tables/**/WHERE/**/TABLE_SCHEMA=database();#
 </code></pre>
 <p>查到Fl4g的表名</p>

@@ -202,8 +202,34 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs">(・∀・)つ原题</a> </p>
-<h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><h2 id="simpleAndroid"><a href="#simpleAndroid" class="headerlink" title="simpleAndroid"></a>simpleAndroid</h2><h3 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h3><p>打开后发现了一个checkActivity的文件里发现我们输入的字符串被传到了so文件里加密，于是解压出so文件丢入ida分析，找到了一个datacheck函数，一进去就发现了一个base64编码和编码密钥。<br>加密代码看似很多其实总共就两次，一次是反转，还有一次是一个”|”和”&amp;”运算，把反转后的字符串逐个进行运算，最后和密文进行比较。<br>直接抄下来就行，解密脚本反一下就行，先运算后反转（脚本如下）<br>最后用密钥在赛博厨师解base64编码就行。</p>
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">simpleAndroid</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">取啥名字好呢？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">flowering_shrubs</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">4.</span> <span class="post-toc-text">SMc_math</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">5.</span> <span class="post-toc-text">SecretsOfKawaii</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link"><span class="post-toc-number"></span> <span class="post-toc-text">Web</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">PangBai 过家家（3）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">Include Me</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">臭皮的计算机</span></a></li></ol> -->
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#reverse">Reverse</a><ul>
+<li><a href="#simpleandroid">simpleAndroid</a></li>
+<li><a href="#%E5%8F%96%E5%95%A5%E5%90%8D%E5%AD%97%E5%A5%BD%E5%91%A2">取啥名字好呢？</a></li>
+<li><a href="#flowering_shrubs">flowering_shrubs</a></li>
+<li><a href="#smc_math">SMc_math</a></li>
+<li><a href="#secretsofkawaii">SecretsOfKawaii</a></li>
+</ul>
+</li>
+<li><a href="#web">Web</a><ul>
+<li><a href="#pangbai-%E8%BF%87%E5%AE%B6%E5%AE%B63">PangBai 过家家（3）</a></li>
+<li><a href="#include-me">Include Me</a></li>
+<li><a href="#%E8%87%AD%E7%9A%AE%E7%9A%84%E8%AE%A1%E7%AE%97%E6%9C%BA">臭皮的计算机</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+# Reverse
+[(・∀・)つ原题](https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs) 
+
+<h2><span id="simpleandroid">simpleAndroid</span><a href="#simpleandroid" class="header-anchor">#</a></h2><p>打开后发现了一个checkActivity的文件里发现我们输入的字符串被传到了so文件里加密，于是解压出so文件丢入ida分析，找到了一个datacheck函数，一进去就发现了一个base64编码和编码密钥。<br>加密代码看似很多其实总共就两次，一次是反转，还有一次是一个”|”和”&amp;”运算，把反转后的字符串逐个进行运算，最后和密文进行比较。<br>直接抄下来就行，解密脚本反一下就行，先运算后反转（脚本如下）<br>最后用密钥在赛博厨师解base64编码就行。</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
 
@@ -238,7 +264,7 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
-<h2 id="取啥名字好呢？"><a href="#取啥名字好呢？" class="headerlink" title="取啥名字好呢？"></a>取啥名字好呢？</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路:"></a>思路:</h3><p>Ida分析发现main函数里套了许多的signal函数，查询了一下发现是收集异常的函数，然后在第一个signal（注意到报错是8，也就是SIGFPE）函数里找到了一段加密代码，大概就是异或下标吧，之后会把密文比较判断。<br>打算先猜一手，先提取出密文，写出异或解密脚本后发现不正确，于是用动调看input的值的变化，发现input的所有值在第一次报错8之前被统一更改了，后面就是正常地报错8，进行异或下标加密。<br>输入不同的字符发现改变前后的差是统一的，当我输入0x31时发现数据被转成0xa1,那么就是我输入的字符被减去了0x17,所以写出脚本，输出的就是flag.</p>
+<h2><span id="取啥名字好呢">取啥名字好呢？</span><a href="#取啥名字好呢" class="header-anchor">#</a></h2><p>Ida分析发现main函数里套了许多的signal函数，查询了一下发现是收集异常的函数，然后在第一个signal（注意到报错是8，也就是SIGFPE）函数里找到了一段加密代码，大概就是异或下标吧，之后会把密文比较判断。<br>打算先猜一手，先提取出密文，写出异或解密脚本后发现不正确，于是用动调看input的值的变化，发现input的所有值在第一次报错8之前被统一更改了，后面就是正常地报错8，进行异或下标加密。<br>输入不同的字符发现改变前后的差是统一的，当我输入0x31时发现数据被转成0xa1,那么就是我输入的字符被减去了0x17,所以写出脚本，输出的就是flag.</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 unsigned char m[23] = &#123;
@@ -253,7 +279,7 @@ int main() &#123;
     &#125;
 &#125;
 </code></pre>
-<h2 id="flowering-shrubs"><a href="#flowering-shrubs" class="headerlink" title="flowering_shrubs"></a>flowering_shrubs</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路:"></a>思路:</h3><p>die发现是fle64文件，ida分析天崩开局全是花，不会用pythonida脚本去画捏，手动去花，nop掉push和ret之前的内容(包含有call $+5),识别成函数后就是正常内容。分析函数，加密过程大概就是把明文字符四个一组然后在组内分别与key中的一个字符进行异或和运算加密，而加密的顺序据取决于一个随机数生成的下标，这决定了一个组的密钥。  分析随机数的生成，种子是0，但是是在Linux的文件，因为wind和linux的随机数生成不同，我们要写一份生成随机数的代码到Linux进行生成（脚本1）。<br>在生成随机数时会舍弃掉一次生成的第一个数，之后若生成与之前相同的数就会重复生成直到不重复（在这个过程中不会跳过第一个生成的数），不知道为什么在winds写的代码在Linux里面运行有问题，无奈把随机数全部生成（200个）然后用上面的逻辑，自己手动整理，最后得到的就是加密的下标顺序（index）。<br>有了每个的加密顺序就直接反向解密就行。（脚本2）</p>
+<h2><span id="flowering_shrubs">flowering_shrubs</span><a href="#flowering_shrubs" class="header-anchor">#</a></h2><p>die发现是fle64文件，ida分析天崩开局全是花，不会用pythonida脚本去画捏，手动去花，nop掉push和ret之前的内容(包含有call $+5),识别成函数后就是正常内容。分析函数，加密过程大概就是把明文字符四个一组然后在组内分别与key中的一个字符进行异或和运算加密，而加密的顺序据取决于一个随机数生成的下标，这决定了一个组的密钥。  分析随机数的生成，种子是0，但是是在Linux的文件，因为wind和linux的随机数生成不同，我们要写一份生成随机数的代码到Linux进行生成（脚本1）。<br>在生成随机数时会舍弃掉一次生成的第一个数，之后若生成与之前相同的数就会重复生成直到不重复（在这个过程中不会跳过第一个生成的数），不知道为什么在winds写的代码在Linux里面运行有问题，无奈把随机数全部生成（200个）然后用上面的逻辑，自己手动整理，最后得到的就是加密的下标顺序（index）。<br>有了每个的加密顺序就直接反向解密就行。（脚本2）</p>
 <pre><code class="c">//脚本1
 #include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
@@ -303,7 +329,7 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
-<h2 id="SMc-math"><a href="#SMc-math" class="headerlink" title="SMc_math"></a>SMc_math</h2><h3 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h3><p>Ida分析发现里面代码就是一坨，看题目是smc，于是先寻找解密代码，发现在调用加密函数前，有一个for循环对加密函数进行了异或运算，这估计就是解密加密函数的代码，于是在调用处断点。<br>进行动调，到断点处用快捷键恢复函数，这样就可以看到加密函数的内容了。<br>分析函数，就是一个七元一次方程，查找资料想到用z3库来解密，脚本如下。<br>因为加密时以int转入，解方程后的结果应该是4字节数据16进制转化成了数字表示，因为数据是4字节小端序存储，所以我们要用小端序读取并转成字符就可以了（脚本如下）。</p>
+<h2><span id="smc_math">SMc_math</span><a href="#smc_math" class="header-anchor">#</a></h2><p>Ida分析发现里面代码就是一坨，看题目是smc，于是先寻找解密代码，发现在调用加密函数前，有一个for循环对加密函数进行了异或运算，这估计就是解密加密函数的代码，于是在调用处断点。<br>进行动调，到断点处用快捷键恢复函数，这样就可以看到加密函数的内容了。<br>分析函数，就是一个七元一次方程，查找资料想到用z3库来解密，脚本如下。<br>因为加密时以int转入，解方程后的结果应该是4字节数据16进制转化成了数字表示，因为数据是4字节小端序存储，所以我们要用小端序读取并转成字符就可以了（脚本如下）。</p>
 <pre><code class="py">from z3 import *
 
 v2, v3, v4, v5, v6, v7, v8 = Ints(&#39;v2 v3 v4 v5 v6 v7 v8&#39;)
@@ -331,7 +357,7 @@ for i in m:
 
 print(flag)
 </code></pre>
-<h2 id="SecretsOfKawaii"><a href="#SecretsOfKawaii" class="headerlink" title="SecretsOfKawaii"></a>SecretsOfKawaii</h2><h3 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h3><p>Jeb解混淆，在mainacticity里面发现了加密代码，在这里主要逻辑就是把明文rc4加密（密钥就在旁边），然后base64编码后交到so层check方法处理。<br>提取出so文件，查壳发现带壳，后用upx脱壳，然后丢进ida分析。找到一个带check的函数，里面有一个btea函数和密钥，分析btea函数，是一个xxtea加密和密文，把密文用ida提取。<br>和网上的xxtea加密对比发现delta被修改了，把在网上找到的解密代码的delta进行修改，就可以写出解密脚本（脚本如下）。<br>把解密后的字符串进行base64编码再rc4解密，密钥是rc4k4y，(<a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrc4)%EF%BC%8C%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5base64%E7%BC%96%E7%A0%81%E5%B0%B1%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%AF%86%E5%87%BA%E7%BB%93%E6%9E%9C%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag">http://tool.chacuo.net/cryptrc4)，直接输入base64编码就可以解密出结果，结果就是flag</a></p>
+<h2><span id="secretsofkawaii">SecretsOfKawaii</span><a href="#secretsofkawaii" class="header-anchor">#</a></h2><p>Jeb解混淆，在mainacticity里面发现了加密代码，在这里主要逻辑就是把明文rc4加密（密钥就在旁边），然后base64编码后交到so层check方法处理。<br>提取出so文件，查壳发现带壳，后用upx脱壳，然后丢进ida分析。找到一个带check的函数，里面有一个btea函数和密钥，分析btea函数，是一个xxtea加密和密文，把密文用ida提取。<br>和网上的xxtea加密对比发现delta被修改了，把在网上找到的解密代码的delta进行修改，就可以写出解密脚本（脚本如下）。<br>把解密后的字符串进行base64编码再rc4解密，密钥是rc4k4y，(<a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrc4)%EF%BC%8C%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5base64%E7%BC%96%E7%A0%81%E5%B0%B1%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%AF%86%E5%87%BA%E7%BB%93%E6%9E%9C%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%B0%B1%E6%98%AFflag">http://tool.chacuo.net/cryptrc4)，直接输入base64编码就可以解密出结果，结果就是flag</a></p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 
 unsigned char secrets[48] = &#123;
@@ -383,7 +409,7 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
-<h2 id="PangBai-过家家（3）"><a href="#PangBai-过家家（3）" class="headerlink" title="PangBai 过家家（3）"></a>PangBai 过家家（3）</h2><h3 id="思路：-4"><a href="#思路：-4" class="headerlink" title="思路："></a>思路：</h3><p>用pyinstxtractor进行解包exe文件，再用pycdc提取NotNormalExe.pyc文件，发现代码逻辑不完整并有提示WARNING: Decompyle incomplete，可能是编译不了，于是想到去查看字节码，找ai帮我写了一个用pythondis库查看字节码的脚本（脚本1），看不懂py的字节码，于是丢给ai让它帮我反汇编成代码，这下看到了源码就是完整的了，加密逻辑比较简单就是普通的异或，直接写出脚本就可以解密成功了（脚本2）。</p>
+<h1><span id="web">Web</span><a href="#web" class="header-anchor">#</a></h1><h2><span id="pangbai-过家家3">PangBai 过家家（3）</span><a href="#pangbai-过家家3" class="header-anchor">#</a></h2><p>：<br>用pyinstxtractor进行解包exe文件，再用pycdc提取NotNormalExe.pyc文件，发现代码逻辑不完整并有提示WARNING: Decompyle incomplete，可能是编译不了，于是想到去查看字节码，找ai帮我写了一个用pythondis库查看字节码的脚本（脚本1），看不懂py的字节码，于是丢给ai让它帮我反汇编成代码，这下看到了源码就是完整的了，加密逻辑比较简单就是普通的异或，直接写出脚本就可以解密成功了（脚本2）。</p>
 <pre><code class="py"># 脚本1
 import marshal
 import dis
@@ -414,8 +440,8 @@ for x in enc:
     flag += re.decode(&#39;utf-8&#39;)
 print(flag)
 </code></pre>
-<h2 id="Include-Me"><a href="#Include-Me" class="headerlink" title="Include Me"></a>Include Me</h2><h3 id="思路：-5"><a href="#思路：-5" class="headerlink" title="思路："></a>思路：</h3><p>Php伪协议，发现很多东西都被过滤了，查了资料看到data协议没有被过滤，至于执行命令可以用base64编码，想用&lt;?php system(“ls &#x2F;“);&gt;查看目录但发现&#x3D;被过滤了，所以尝试在base64编码下不含等号的命令。<br>注意到flag被过滤了，推测flag的文件名就是flag，就尝试直接cat &#x2F;flag，构造&lt;?php system(“cat &#x2F;flag”);&gt;，刚好编码后又没有含有&#x3D;，直接执行，<a target="_blank" rel="noopener" href="http://eci-2ze4q7yfeafl0jdgf4b6.cloudeci1.ichunqiu.com/?me=data://text/plain;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs+">http://eci-2ze4q7yfeafl0jdgf4b6.cloudeci1.ichunqiu.com/?me=data://text/plain;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs+</a></p>
-<h2 id="臭皮的计算机"><a href="#臭皮的计算机" class="headerlink" title="臭皮的计算机"></a>臭皮的计算机</h2><h3 id="思路：-6"><a href="#思路：-6" class="headerlink" title="思路："></a>思路：</h3><p>在源码中看到了python源码，发现了eval（）函数，想到传入命令给eval执行，但是字母被过滤了，寻找只有数字的表示方法。<br>查询资料了解到八进制的转译符是\不包含字母，于是用八进制传入命令，用os.system()函数来执行Linux系统命令.<br>先用ls &#x2F;看看目录，输入</p>
+<h2><span id="include-me">Include Me</span><a href="#include-me" class="header-anchor">#</a></h2><p>Php伪协议，发现很多东西都被过滤了，查了资料看到data协议没有被过滤，至于执行命令可以用base64编码，想用&lt;?php system(“ls &#x2F;“);&gt;查看目录但发现&#x3D;被过滤了，所以尝试在base64编码下不含等号的命令。<br>注意到flag被过滤了，推测flag的文件名就是flag，就尝试直接cat &#x2F;flag，构造&lt;?php system(“cat &#x2F;flag”);&gt;，刚好编码后又没有含有&#x3D;，直接执行，<a target="_blank" rel="noopener" href="http://eci-2ze4q7yfeafl0jdgf4b6.cloudeci1.ichunqiu.com/?me=data://text/plain;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs+">http://eci-2ze4q7yfeafl0jdgf4b6.cloudeci1.ichunqiu.com/?me=data://text/plain;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs+</a></p>
+<h2><span id="臭皮的计算机">臭皮的计算机</span><a href="#臭皮的计算机" class="header-anchor">#</a></h2><p>在源码中看到了python源码，发现了eval（）函数，想到传入命令给eval执行，但是字母被过滤了，寻找只有数字的表示方法。<br>查询资料了解到八进制的转译符是\不包含字母，于是用八进制传入命令，用os.system()函数来执行Linux系统命令.<br>先用ls &#x2F;看看目录，输入</p>
 <pre><code class="s">\157\163\56\163\171\163\164\145\155\50\47\154\163 /\47\51
 </code></pre>
 <p>发现flag文件，直接cat &#x2F;flag,传入</p>

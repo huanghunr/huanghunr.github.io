@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     Re学习
                 </a>
             </span>
@@ -202,19 +202,47 @@
     </div>
     
     <div class="content" v-pre>
-        <h2 id="汇编指令编基础"><a href="#汇编指令编基础" class="headerlink" title="汇编指令编基础"></a>汇编指令编基础</h2><h3 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h3><ul>
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">通用寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">用作内存指针的特殊寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">段寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.</span> <span class="post-toc-text">程序状态与控制寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.</span> <span class="post-toc-text">指令指针寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">6.</span> <span class="post-toc-text">r与e的差别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.</span> <span class="post-toc-text">常用指令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.</span> <span class="post-toc-text">lea获取的差别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.</span> <span class="post-toc-text">比较操作</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.</span> <span class="post-toc-text">栈帧</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">10.1.</span> <span class="post-toc-text">上面汇编的加密逻辑和逆向脚本</span></a></li></ol></li></ol> -->
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E7%BC%96%E5%9F%BA%E7%A1%80">汇编指令编基础</a><ul>
+<li><a href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8">通用寄存器</a></li>
+<li><a href="#%E7%94%A8%E4%BD%9C%E5%86%85%E5%AD%98%E6%8C%87%E9%92%88%E7%9A%84%E7%89%B9%E6%AE%8A%E5%AF%84%E5%AD%98%E5%99%A8">用作内存指针的特殊寄存器</a></li>
+<li><a href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8">段寄存器</a></li>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E7%8A%B6%E6%80%81%E4%B8%8E%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8">程序状态与控制寄存器</a></li>
+<li><a href="#%E6%8C%87%E4%BB%A4%E6%8C%87%E9%92%88%E5%AF%84%E5%AD%98%E5%99%A8">指令指针寄存器</a></li>
+<li><a href="#r%E4%B8%8Ee%E7%9A%84%E5%B7%AE%E5%88%AB">r与e的差别</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4">常用指令</a></li>
+<li><a href="#lea%E8%8E%B7%E5%8F%96%E7%9A%84%E5%B7%AE%E5%88%AB">lea获取的差别</a></li>
+<li><a href="#%E6%AF%94%E8%BE%83%E6%93%8D%E4%BD%9C">比较操作</a></li>
+<li><a href="#%E6%A0%88%E5%B8%A7">栈帧</a><ul>
+<li><a href="#%E4%B8%8A%E9%9D%A2%E6%B1%87%E7%BC%96%E7%9A%84%E5%8A%A0%E5%AF%86%E9%80%BB%E8%BE%91%E5%92%8C%E9%80%86%E5%90%91%E8%84%9A%E6%9C%AC">上面汇编的加密逻辑和逆向脚本</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+## 汇编指令编基础
+
+<h3><span id="通用寄存器">通用寄存器</span><a href="#通用寄存器" class="header-anchor">#</a></h3><ul>
 <li>EAX：（针对操作数和结果数据的）累加器(Accumulator)</li>
 <li>EBX：（DS段的数据指针）基址寄存器(Base Register)</li>
 <li>ECX：（字符串和循环操作的）计数器(Count Register)</li>
 <li>EDX：（I&#x2F;O指针）数据寄存器(Data Register)</li>
 </ul>
-<h3 id="用作内存指针的特殊寄存器"><a href="#用作内存指针的特殊寄存器" class="headerlink" title="用作内存指针的特殊寄存器"></a>用作内存指针的特殊寄存器</h3><ul>
+<h3><span id="用作内存指针的特殊寄存器">用作内存指针的特殊寄存器</span><a href="#用作内存指针的特殊寄存器" class="header-anchor">#</a></h3><ul>
 <li>ESI：（字符串操作源指针）源变址寄存器</li>
 <li>EDI：（字符串操作目标指针）目的变址寄存器</li>
 <li>EBP：（SS段中栈内数据指针）扩展基址指针寄存器，即栈底指针寄存器，与rbp相同</li>
 <li>ESP：栈顶指针寄存器与rsp相同</li>
 </ul>
-<h3 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h3><ul>
+<h3><span id="段寄存器">段寄存器</span><a href="#段寄存器" class="header-anchor">#</a></h3><ul>
 <li>CS：代码段寄存器(code s)</li>
 <li>SS：栈段寄存器(stack s)</li>
 <li>DS：数据段寄存器(data s)</li>
@@ -222,7 +250,7 @@
 <li>ES：附加数据寄存器</li>
 <li>GS：数据段寄存器</li>
 </ul>
-<h3 id="程序状态与控制寄存器"><a href="#程序状态与控制寄存器" class="headerlink" title="程序状态与控制寄存器"></a>程序状态与控制寄存器</h3><ul>
+<h3><span id="程序状态与控制寄存器">程序状态与控制寄存器</span><a href="#程序状态与控制寄存器" class="header-anchor">#</a></h3><ul>
 <li>EFLAGS：标志寄存器，32个位元的01控制</li>
 <li>ZF(零标志器，运算结果为0时置1)</li>
 <li>CF(进位标志，运算结果向最高位以上进位时置1)</li>
@@ -230,16 +258,16 @@
 <li>AF(辅助进位标志，运算结果在第3位的时候置1)</li>
 <li>SF(符号标志，有符号整型的符号位为1时置1)，正数为0，负数为1</li>
 </ul>
-<h3 id="指令指针寄存器"><a href="#指令指针寄存器" class="headerlink" title="指令指针寄存器"></a>指令指针寄存器</h3><ul>
+<h3><span id="指令指针寄存器">指令指针寄存器</span><a href="#指令指针寄存器" class="header-anchor">#</a></h3><ul>
 <li>EIP &#x2F; RIP：保存CPU要执行的指令地址</li>
 </ul>
-<h3 id="r与e的差别"><a href="#r与e的差别" class="headerlink" title="r与e的差别"></a>r与e的差别</h3><ul>
+<h3><span id="r与e的差别">r与e的差别</span><a href="#r与e的差别" class="header-anchor">#</a></h3><ul>
 <li>rax 是 64 位寄存器，能够存储 64 位（8 字节）的数据。  </li>
 <li>eax 是 rax 的低 32 位部分，能够存储 32 位（4 字节）的数据<br>在某些情况下，使用 eax 只会影响低 32 位数据，而高 32 位将保持不变。</li>
 <li>其他的如rbp和ebp就是64位和32位的区别</li>
 </ul>
 <p>例如，执行 mov eax, 1 会将 rax 的低 32 位设置为 1，而高 32 位会被设置为 0。<br>rax 通常用于需要完整 64 位数据的操作，特别是在调用函数和处理返回值时。<br>在eax赋值给rax时只会赋值在低位，高位还会时原来rax的高位，例如0xffffffff&lt;–0x1111 &#x3D;&#x3D;&gt; 0xffff1111</p>
-<h3 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h3><ul>
+<h3><span id="常用指令">常用指令</span><a href="#常用指令" class="header-anchor">#</a></h3><ul>
 <li><p>cdqe 用于拓展eax的值为更高位32位拓展为rax，64位</p>
 </li>
 <li><p>PUSH&#x2F;POP：压栈&#x2F;出栈</p>
@@ -267,8 +295,8 @@
 <li><p>movezx 无符号拓展，把要赋值的值拓展成更多位，高为补0；例如0xffff–&gt;0x0000ffff</p>
 </li>
 </ul>
-<h3 id="lea获取的差别"><a href="#lea获取的差别" class="headerlink" title="lea获取的差别"></a>lea获取的差别</h3><p>lea rax, [rbp+Str] 中的str是一个偏移量，由栈底的地址加偏移量获取str的地址<br>lea rax, Str 中的str是一个地址，需要str被全局定义或再数据段中被定义</p>
-<h3 id="比较操作"><a href="#比较操作" class="headerlink" title="比较操作"></a>比较操作</h3><blockquote>
+<h3><span id="lea获取的差别">lea获取的差别</span><a href="#lea获取的差别" class="header-anchor">#</a></h3><p>lea rax, [rbp+Str] 中的str是一个偏移量，由栈底的地址加偏移量获取str的地址<br>lea rax, Str 中的str是一个地址，需要str被全局定义或再数据段中被定义</p>
+<h3><span id="比较操作">比较操作</span><a href="#比较操作" class="header-anchor">#</a></h3><blockquote>
 <p>在cmp操作中，有cmp ax,bx<br>其实cmp的操作就是ax-bx,当这个操作为0，即ax&#x3D;&#x3D;bx时zf(zero flag)就会被标志为1,反之为1.<br>下面这些参考就行<br>如果（ax）&#x3D;（bx）则（ax）-（bx）&#x3D; 0，所以：zf &#x3D; 1<br>如果（ax）!&#x3D;（bx）则 （ax）-（bx）!&#x3D; 0，所以：zf !&#x3D; 1；<br>如果（ax）&lt;（bx）则（ax）-（bx）将产生借位，所以：cf &#x3D; 1；<br>如果（ax）&gt;&#x3D;（bx）则（ax）-（bx）将不会产生借位，所以：cf &#x3D; 0；<br>如果（ax）&gt;（bx）则（ax）-（bx）即不借位，结果又不为零，所以：cf &#x3D; 0，zf &#x3D; 0；<br>如果（ax）&lt;&#x3D;（bx）则（ax）-（bx）即可能借位，结果可能为0，所以：cf &#x3D; 1，zf &#x3D; 1；</p>
 </blockquote>
 <ul>
@@ -282,7 +310,7 @@
 <li>JE 前等于后  Jump if equal</li>
 <li>JZ，JE，jnz，jne 通过判断zf的值进行跳转</li>
 </ul>
-<h3 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h3><p>栈帧就是函数在内存中的一个执行空间，里面存储着函数的信息</p>
+<h3><span id="栈帧">栈帧</span><a href="#栈帧" class="header-anchor">#</a></h3><p>栈帧就是函数在内存中的一个执行空间，里面存储着函数的信息</p>
 <pre><code>PUSH EBP          ;函数开始
 MOV  EBP,ESP      ;将栈顶地址存入EBP中
 
@@ -375,7 +403,7 @@ RETN              ;函
 
 hint = 0x21,0x6,0x6,0x16,0xb,0x19,0x2e,0x65,0x35,0x6a,0x6f,0x38,0x36,0x84,0x70,0x3b,0x39,0x65,0x38,0x35,0x84,0x6f,0x36,0x3c,0x6a,0x38,0x68,0x84,0x66,0x70,0x3b,0x38,0x6a,0x36,0x34,
 </code></pre>
-<h4 id="上面汇编的加密逻辑和逆向脚本"><a href="#上面汇编的加密逻辑和逆向脚本" class="headerlink" title="上面汇编的加密逻辑和逆向脚本"></a>上面汇编的加密逻辑和逆向脚本</h4><pre><code class="c">#include &lt;stdio.h&gt;
+<h4><span id="上面汇编的加密逻辑和逆向脚本">上面汇编的加密逻辑和逆向脚本</span><a href="#上面汇编的加密逻辑和逆向脚本" class="header-anchor">#</a></h4><pre><code class="c">#include &lt;stdio.h&gt;
 
 char str[] = &#123; 0x21,0x6,0x6,0x16,0xb,0x19,0x2e,0x65,
 0x35,0x6a,0x6f,0x38,0x36,0x84,0x70,0x3b,0x39,0x65
