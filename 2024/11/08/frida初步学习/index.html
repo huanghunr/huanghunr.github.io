@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>Tags: 学习资料-答案 | huanghunr&#39;s Blog</title>
+    <title>frida的初步学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -158,118 +162,154 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
+            <div class="article">
+    <div>
+        <h1>frida的初步学习</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/11/8
+        </span>
         
-        
-        
-        <span>
-            <a href="/tags/CtfNewStar-Writeup/" style="background: #00a596">
+        <span class="category">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                CtfNewStar Writeup
+                Re基础学习
             </a>
         </span>
         
         
-        
-        <span>
-            <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-%E7%AD%94%E6%A1%88/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                学习资料-答案
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                    Re学习
+                </a>
+            </span>
+            
         </span>
-        
-        
-        
-        
-        
-        <span>
-            <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                Re学习
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-%E9%A2%98%E5%BA%93/" style="background: #03a9f4">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                学习资料-题库
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/tags/%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/" style="background: #ffa2c4">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                实用小技巧
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B%E5%86%B3%E8%B5%9B-Writeup/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                2024浙江省省赛决赛 Writeup
-            </a>
-        </span>
-        
         
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2024/10/26</div>
-            <a href="/2024/10/26/%E5%86%9B%E4%BA%8B%E7%90%86%E8%AE%BA%E8%AF%BE%E5%90%8E%E6%B5%8B%E8%AF%95%E7%AD%94%E6%A1%88/">
-                <h3>军事理论课后测试答案</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        学习资料
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-%E7%AD%94%E6%A1%88/" style="color: #00a596">
-                            学习资料-答案
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    <div class="content" v-pre>
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">运行frida常用命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">运行</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">hookjs</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">对fridahook脚本的一点理解</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">对hook脚本的初步解析</span></a></li></ol></li></ol> -->
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#%E8%BF%90%E8%A1%8Cfrida%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">运行frida常用命令</a><ul>
+<li><a href="#%E8%BF%90%E8%A1%8C">运行</a></li>
+</ul>
+</li>
+<li><a href="#hookjs">hookjs</a><ul>
+<li><a href="#%E5%AF%B9fridahook%E8%84%9A%E6%9C%AC%E7%9A%84%E4%B8%80%E7%82%B9%E7%90%86%E8%A7%A3">对fridahook脚本的一点理解</a></li>
+<li><a href="#%E5%AF%B9hook%E8%84%9A%E6%9C%AC%E7%9A%84%E5%88%9D%E6%AD%A5%E8%A7%A3%E6%9E%90">对hook脚本的初步解析</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h2><span id="运行frida常用命令">运行frida常用命令</span></h2><h3><span id="运行">运行</span></h3><pre><code class="s">adb push 名 /data/local/tmp
+adb root
+adb shell chmod +x /data/local/tmp/fridaad64
+adb shell /data/local/tmp/frida-server -l 0.0.0.0:127042 #默认27042端口
+adb forward tcp:27042 tcp:27042
+</code></pre>
+<pre><code class="s">Frida -U -f 包 -l hookbool.js
+</code></pre>
+<p>-U 指定USB设备</p>
+<p>-f 用app包名spwn方式启动</p>
+<p>-P 指定APP的pid,先要自行启动</p>
+<p>-pause 暂停</p>
+<p>-l 加载hook脚本</p>
+<h2><span id="hookjs">hookjs</span></h2><h3><span id="对fridahook脚本的一点理解">对fridahook脚本的一点理解</span></h3><p>我们用fridahook一个函数时可以说是我们从apk里面钩住了一个函数，我们可以替换这个函数的任何内容。也可以说我们建立了一个管道在这个函数方法上，代码执行就像是一个水流，当水流到这个函数时，我们把水引到了我们的js这里，让它流经我们想要流过的地方。</p>
+<h3><span id="对hook脚本的初步解析">对hook脚本的初步解析</span></h3><pre><code class="js">Java.perform(function()&#123;  //在启动时就被hook的方法，通常用于绕过反调试
+    let MainActivity = Java.use(&quot;work.pangbai.debugme.MainActivity&quot;);
+    MainActivity[&quot;isEmu&quot;].implementation = function () &#123;
+        console.log(`MainActivity.isEmu is called`);
+       let result = this[&quot;isEmu&quot;]();
+       console.log(`MainActivity.isEmu result=$&#123;result&#125;`);
+        return 0;
+    &#125;;
+    &#125;)
+
+ 
+
+function hook() &#123;   //把方法封装为一个函数，在运行起来后可以直接调用执行
+
+    MainActivity[&quot;g4tk4y&quot;].implementation = function () &#123;
+        console.log(`MainActivity.g4tk4y is called`);
+        let result = this[&quot;g4tk4y&quot;]();
+        console.log(`MainActivity.g4tk4y result=$&#123;result&#125;`);
+        return result;
+    &#125;;
+&#125;;
+
+(function () &#123;    //（function()&#123;..&#125;)();这样的形式会直接执行函数，  
+                  //以下函数用dia提取，用于hookso层的函数
+
+    // @ts-ignore
+    function print_arg(addr) &#123;
+        try &#123;
+            var module = Process.findRangeByAddress(addr);
+            if (module != null) return &quot;\n&quot;+hexdump(addr) + &quot;\n&quot;;
+            return ptr(addr) + &quot;\n&quot;;
+        &#125; catch (e) &#123;
+            return addr + &quot;\n&quot;;
+        &#125;
+    &#125;
+
+    // @ts-ignore
+    function hook_native_addr(funcPtr, paramsNum) &#123;
+        var module = Process.findModuleByAddress(funcPtr);
+        try &#123;
+            Interceptor.attach(funcPtr, &#123;
+                onEnter: function (args) &#123;
+                    this.logs = &quot;&quot;;
+                    this.params = [];
+                    // @ts-ignore
+                    this.logs=this.logs.concat(&quot;So: &quot; + module.name + &quot;  Method: Java_work_pangbai_debugme_MainActivity_g4tk4y offset: &quot; + ptr(funcPtr).sub(module.base) + &quot;\n&quot;);
+                    for (let i = 0; i &lt; paramsNum; i++) &#123;
+                        this.params.push(args[i]);
+                        this.logs=this.logs.concat(&quot;this.args&quot; + i + &quot; onEnter: &quot; + print_arg(args[i]));
+                    &#125;
+                &#125;, onLeave: function (retval) &#123;
+                    for (let i = 0; i &lt; paramsNum; i++) &#123;
+                        this.logs=this.logs.concat(&quot;this.args&quot; + i + &quot; onLeave: &quot; + print_arg(this.params[i]));
+                    &#125;
+                    this.logs=this.logs.concat(&quot;retval onLeave: &quot; + print_arg(retval) + &quot;\n&quot;);
+                    console.log(this.logs);
+                &#125;
+            &#125;);
+        &#125; catch (e) &#123;
+            console.log(e);
+        &#125;
+    &#125;
+    // @ts-ignore
+    hook_native_addr(Module.findBaseAddress(&quot;libdebugme.so&quot;).add(0xff0), 0x1);
+&#125;)();
+</code></pre>
+
     </div>
+    
+    
+    
+    
+    
+    
     
 </div>
 
@@ -301,6 +341,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>

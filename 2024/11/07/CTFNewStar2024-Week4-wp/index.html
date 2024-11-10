@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #03a9f4">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #ffa2c4">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -302,7 +302,9 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
+<hr>
 <h2><span id="洞ovo">洞OVO</span></h2><p>看提示，函数的修改之处是新增了3行汇编代码，想到用bindffi对比分析，去网上查找资料，发现修复版本是6.23，于是下载安装6.23然后提取出WinRAR.exe.与附件中的进行对比.<br>想先猜猜看，以相似度排序就在第二个相似度为0.99的sub_1400EF508函数发现了不同刚好是三行汇编，于是直接输入函数的地址<br>flag{00000001400EF508}</p>
+<hr>
 <h2><span id="easygui">Easygui</span></h2><p>先查看winmain函数，发现窗口在收到输入的数据时会调用WndClass.lpfnWndProc方法，然后调用加密函数，分析第一层加密函数，最上面是一个反调试的检测，下面调用了真正的加密函数，后面是把密文逐一对比判断，很显然这就是密文，手动提取下来。<br>分析真正的加密函数，首先是把输入的值赋给了src，然后以src的元素作为下标在初始盒中映射，然后把src进行位运算，后面再初始化一个ascii的码表盒，进行rc4加密。<br>那么解密思路就是，先进行rc4解密，然后反向进行位运算，再把元素与初始盒映射为下标。<br>Tips：提取初始盒注意顺序，显示的顺序不一定是索引顺序。这里key的使用在ida中的代码让人疑惑，因为他存储的位置是src的长度之外，推测是存到了别的内存，于是进行动调，先在if ( !IsDebuggerPresent() )的jz处下断点，然后修改zf的值跳过反调试，然后观察src的值，发现末尾就是一大串key的值，看了一下其他的数组，发现就是v13的值，所以key被存到了v13里，这里我直接ida提取出来了。<br>按思路解密就行，脚本如下。</p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 

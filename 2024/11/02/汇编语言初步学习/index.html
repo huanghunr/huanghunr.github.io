@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     Re学习
                 </a>
             </span>
@@ -295,6 +295,8 @@
 <li><p>movezx 无符号拓展，把要赋值的值拓展成更多位，高为补0；例如0xffff–&gt;0x0000ffff</p>
 </li>
 <li><p>byte ptr：表示操作的数据类型是字节</p>
+</li>
+<li><p>rep stosd 会重复执行 stosd 指令，ecx 寄存器中的值决定了重复次数。<br>每次执行 stosd，它会将 eax 中的值存储到 edi 寄存器指向的地址，并将 edi 加 4（指向下一个双字位置）。然后 ecx 会减 1，直到 ecx 为 0。</p>
 </li>
 </ul>
 <h3><span id="lea获取的差别">lea获取的差别</span></h3><p>lea rax, [rbp+Str] 中的str是一个偏移量，由栈底的地址加偏移量获取str的地址<br>lea rax, Str 中的str是一个地址，需要str被全局定义或再数据段中被定义</p>
