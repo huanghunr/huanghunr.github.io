@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #00bcd4">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #00a596">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -202,7 +202,7 @@
     </div>
     
     <div class="content" v-pre>
-        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">Reverse</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">MazE</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">洞OVO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Easygui</span></a></li></ol></li></ol> -->
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">Reverse</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">MazE</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">洞OVO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Easygui</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">PLZdebugme</span></a></li></ol></li></ol> -->
         <div class="toc">
 
 <!-- toc -->
@@ -212,6 +212,7 @@
 <li><a href="#maze">MazE</a></li>
 <li><a href="#%E6%B4%9Eovo">洞OVO</a></li>
 <li><a href="#easygui">Easygui</a></li>
+<li><a href="#plzdebugme">PLZdebugme</a></li>
 </ul>
 </li>
 </ul>
@@ -425,6 +426,120 @@ int main() &#123;
     dec3(box0, Src);
     dealboxdec(Src, box, len); //反向位运算和与盒的下标映射
     print((unsigned char*)Src);
+    return 0;
+&#125;
+</code></pre>
+<h2><span id="plzdebugme">PLZdebugme</span></h2><p>有虚拟机检测，启动frida调试。<br>先hook虚拟机检测函数，修改返回值绕过。脚本如下。在mainactivity有一个Blowfish加密，然后有一个获得密钥的方法g4tk4y在点击按钮时被调用,于是hook方法获取key。在写完两个hook后我们发现运行脚本是报错的<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week4/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-11-15%20220231.png"></p>
+<p>问题就在run这个方法里，我们到run中查看，是一个执行杀死进程的方法，判断GetPPid()是否为0；不多说，我们直接hook下来把，返回值改为0；然后在点击一下提交按钮，这样我们就获得了密钥jRLgC&#x2F;Pi。<br>接下来就是分析so里面的check函数，是一个移位加密，直接写出解密脚本获得base64编码的密文，拿着密钥解密去cy解密就行,注意有个偏移量要设为0.<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/ctfnewstar2024%20reverse/week4/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-11-15%20223211.png"></p>
+<pre><code class="js">Java.perform(function()&#123;
+let App = Java.use(&quot;work.pangbai.tool.App&quot;);
+App[&quot;GetPPid&quot;].implementation = function () &#123;
+    console.log(`App.GetPPid is called`);
+  //  let result = this[&quot;GetPPid&quot;]();
+    console.log(`App.GetPPid result=`);
+    return &quot;0&quot;;
+&#125;;
+&#125;);
+
+
+
+
+
+Java.perform(function()&#123;
+let MainActivity = Java.use(&quot;work.pangbai.debugme.MainActivity&quot;);
+MainActivity[&quot;isEmu&quot;].implementation = function () &#123;
+    console.log(`MainActivity.isEmu is called`);
+    return false;
+&#125;;
+
+
+MainActivity[&quot;g4tk4y&quot;].implementation = function () &#123;
+    console.log(`MainActivity.g4tk4y is called`);
+    let result = this[&quot;g4tk4y&quot;]();
+    console.log(`MainActivity.g4tk4y result=$&#123;result&#125;`);
+    return result;
+&#125;;
+&#125;)
+</code></pre>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+
+void dec1(unsigned int* input,int v6) &#123;
+    int v11,index,len;
+    char v15;
+    unsigned int v16,v1213,v16q,v16h;
+    len = 12;
+    index = len -1;
+    v11 = 11;
+    
+    do
+    &#123;
+        v15 = 32 - v11;
+        v1213 = input[index] ^ input[index - 1];
+        if (v6)
+        &#123;
+            v16h = v1213 &gt;&gt; v15;
+            v16q = v1213 &lt;&lt; index;
+        &#125;
+        else
+        &#123;
+            v16h = v1213 &lt;&lt; v15;
+            v16q = v1213 &gt;&gt; index;
+        &#125;
+        v16 = v16q | v16h;
+        input[index] = v16 ^ input[index-1];
+        index--;
+        v11--;
+        
+        
+    &#125; while (index != 0);
+&#125;
+
+int dec2(unsigned int*input,int v6) &#123;
+    unsigned int index,v21;
+
+    unsigned int v17,v17q,v17h;
+    char v18;
+    int len;
+    len = 12;
+    v18 = 32 - len;
+    index = 11;
+    v21 = input[0] ^ input[index];  //注意v21的数据类型不能是char,会变成负数影响下面的操作
+    if (v6)
+    &#123;
+        v17h = v21 &gt;&gt; v18;
+        v17q = v21 &lt;&lt; len;
+    &#125;
+    else
+    &#123;
+        v17h = v21 &lt;&lt; v18;
+        v17q = v21 &gt;&gt; len;
+    &#125;
+    v17 = v17q | v17h;
+    input[0] = v17 ^ input[index];
+    return 0;
+&#125;
+
+void print(unsigned char* a) &#123;
+    for (int x = 0; x &lt; 48; x++) &#123;
+        printf(&quot;%c&quot;, a[x]);
+    &#125;
+&#125;
+
+unsigned int cc[12] = &#123;
+    0x9C5F5508, 0x40561970, 0x58676904, 0xC13E5285, 0x75DC2D4C, 0x06F06EAF, 0x6E7B5DA5, 0xE37EAE2A,
+    0xF1B9FEFD, 0x06966BAC, 0x4A21BF43, 0x47DBF512
+&#125;;
+
+int main() &#123;
+    int v6;
+    v6 = 0;
+    dec2((unsigned int*)cc,v6);
+    dec1((unsigned int*)cc,v6);
+    printf(&quot;\n&quot;);
+    print((unsigned char*)cc);
+    //printf(&quot;%s&quot;, cc);
+
     return 0;
 &#125;
 </code></pre>
