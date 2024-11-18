@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     Re学习
                 </a>
             </span>
@@ -202,7 +202,7 @@
     </div>
     
     <div class="content" v-pre>
-        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">运行frida常用命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">运行</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">hookjs</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">对fridahook脚本的一点理解</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">对hook脚本的初步解析</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">一些常见错误</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">关于雷电模拟器spawn启动时卡在waitdebug界面的的原因解决方案</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">关于frida调试应用闪退的解决方案</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">脚本运行过程中报错</span></a></li></ol></li></ol> -->
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">运行frida常用命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">运行</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">hookjs</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">对fridahook脚本的一点理解</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">一些frida方法的收集</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">对hook脚本的初步解析</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">4.</span> <span class="post-toc-text">一些常见错误</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">关于雷电模拟器spawn启动时卡在waitdebug界面的的原因解决方案</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">关于frida调试应用闪退的解决方案</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">脚本运行过程中报错</span></a></li></ol></li></ol> -->
         <div class="toc">
 
 <!-- toc -->
@@ -214,6 +214,9 @@
 </li>
 <li><a href="#hookjs">hookjs</a><ul>
 <li><a href="#%E5%AF%B9fridahook%E8%84%9A%E6%9C%AC%E7%9A%84%E4%B8%80%E7%82%B9%E7%90%86%E8%A7%A3">对fridahook脚本的一点理解</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E4%BA%9Bfrida%E6%96%B9%E6%B3%95%E7%9A%84%E6%94%B6%E9%9B%86">一些frida方法的收集</a><ul>
 <li><a href="#%E5%AF%B9hook%E8%84%9A%E6%9C%AC%E7%9A%84%E5%88%9D%E6%AD%A5%E8%A7%A3%E6%9E%90">对hook脚本的初步解析</a></li>
 </ul>
 </li>
@@ -242,22 +245,47 @@ adb forward tcp:27042 tcp:27043
 <p>-pause 暂停</p>
 <p>-l 加载hook脚本</p>
 <h2><span id="hookjs">hookjs</span></h2><h3><span id="对fridahook脚本的一点理解">对fridahook脚本的一点理解</span></h3><p>我们用fridahook一个函数时可以说是我们从apk里面钩住了一个函数，我们可以替换这个函数的任何内容。也可以说我们建立了一个管道在这个函数方法上，代码执行就像是一个水流，当水流到这个函数时，我们把水引到了我们的js这里，让它流经我们想要流过的地方。</p>
-<h3><span id="对hook脚本的初步解析">对hook脚本的初步解析</span></h3><pre><code class="js">Java.perform(function()&#123;  
-    //在启动时就被hook的方法，通常用于绕过反调试，java.perform()是一个frida的接口
-    //几乎一切操作都在这个函数执行
+<h2><span id="一些frida方法的收集">一些frida方法的收集</span></h2><pre><code class="js">send(); //发送信息到控制台.
+</code></pre>
+<h3><span id="对hook脚本的初步解析">对hook脚本的初步解析</span></h3><pre><code class="js">//在启动时就被hook的方法，通常用于绕过反调试，java.perform()是一个frida的接口
+//几乎一切操作都在这个函数执行
+Java.perform(function()&#123;  
     let MainActivity = Java.use(&quot;packname.MainActivity&quot;); //实例化一个类
     MainActivity[&quot;isEmu&quot;].implementation = function () &#123;
         console.log(`MainActivity.isEmu is called`);
         let result = this[&quot;isEmu&quot;]();
         console.log(`MainActivity.isEmu result=$&#123;result&#125;`);
-        return 0;  //一般可以修改返回值如果报错用false
+        return 0;  //一般可以修改返回值如果报错用false，修改返回值
     &#125;;
+    //调用方法并返回值。
     MainActivity[&quot;g4tk4y&quot;].implementation = function () &#123;
     console.log(`MainActivity.g4tk4y is called`);
     let result = this[&quot;g4tk4y&quot;]();
     console.log(`MainActivity.g4tk4y result=$&#123;result&#125;`);
-    return result;
+    return result; //修改返回值
 &#125;;
+//java.choose会遍历类的实例，调用方法，用于无法获得实例时动态引用，
+//修改成员变量。我的理解是寻找一个系统自己的实例，而不是我们自己去实例化。
+ Java.choose(&quot;packname.MainActivity&quot;,&#123;  
+        onMatch:
+        function(x)&#123;
+            console.log(&quot;ok&quot; + x);
+            let result = x.g4tk4y();
+            console.log(result);
+        &#125;,
+        onComplete: function () &#123;
+            console.log(&quot;end&quot;);
+        &#125;
+
+&#125;);
+var MainActivity = Java.use(&quot;packname.MainActivity&quot;);
+        //overload 选择被重载的对象，funname是方法名,int是要重载的类型
+        MainActivity.funname.overload(&#39;int&#39;)implementation = function (x) &#123;
+            console.log(&quot;ok&quot; + x);
+            //可修改结果，另一种修改返回值的方法
+            var result = &quot;&quot;;
+            return result;
+        &#125;;
 &#125;)
 
  
