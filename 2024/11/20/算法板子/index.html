@@ -380,7 +380,7 @@
 
 <h2><span id="scarlett-的-板子">Scarlett 的 板子</span></h2><p>板子</p>
 <p>Scarlett‘s boy的板子</p>
-<pre><code class="c++">#include &quot;bits/stdc++.h&quot;
+<pre><code class="c++c++">#include &quot;bits/stdc++.h&quot;
 
 #define IOS std::ios::sync_with_stdio(false);std::cin.tie(nullptr)
 #pragma GCC optimize(3)
@@ -450,7 +450,7 @@ void init() &#123;
 */
 </code></pre>
 <h2><span id="一-杂乱的总结">一、杂乱的总结</span></h2><h3><span id="1快速幂">1.快速幂</span></h3><p>说明：快速幂用于求a的b次模p的结果，但是局限于求单个底数的情况，求多个不同的a的b次可以尝试一下预处理。</p>
-<pre><code class="c++">long long powmod(long long a,long long b,long long p)&#123;
+<pre><code class="c++c++">long long powmod(long long a,long long b,long long p)&#123;
     long long re=1;
     while (b&gt;0)&#123;
         if(b%2==1) re=re*a%p;
@@ -461,7 +461,7 @@ void init() &#123;
 &#125;
 </code></pre>
 <h3><span id="2素数筛">2.素数筛</span></h3><p>说明：素数筛可以找到第几个素数是多少，同时可以询问一个数是否为素数。</p>
-<pre><code class="c++">int pri[1000010];
+<pre><code class="c++c++">int pri[1000010];
 int vis[1000010];
 int cnt = 0;
 void init() &#123;
@@ -474,7 +474,7 @@ void init() &#123;
     &#125;
 &#125;
 </code></pre>
-<pre><code>int v[1000010];
+<pre><code class="c++">int v[1000010];
 int prime[1000010];
 int cnt=0;
 for (int i=2;i&lt;=n;i++)&#123;
@@ -493,7 +493,7 @@ for (int i=2;i&lt;=n;i++)&#123;
 <li>采用考虑局部的情况去贪心，仅考虑两个数之间的关系，再证明两个数之间的关系即为全部之间的关系，即可自定义comp来排序完成贪心。</li>
 <li>可以尝试寻找与二进制之间的关系。</li>
 </ol>
-<h3><span id="5快读">5.快读</span></h3><pre><code>inline void read(int &amp;x) &#123;
+<h3><span id="5快读">5.快读</span></h3><pre><code class="c++">inline void read(int &amp;x) &#123;
     x = 0;int f = 1;
     char ch = getchar();
     while(ch &lt; &#39;0&#39; || ch &gt; &#39;9&#39;) &#123;
@@ -520,7 +520,7 @@ inline void read(ll &amp;x) &#123;
     x*=f;
 &#125;
 </code></pre>
-<h3><span id="6快速乘龟速乘">6.快速乘（龟速乘）</span></h3><pre><code>ll powand(ll a,ll b,ll p) // a*b  mod p 
+<h3><span id="6快速乘龟速乘">6.快速乘（龟速乘）</span></h3><pre><code class="c++">ll powand(ll a,ll b,ll p) // a*b  mod p 
 &#123;
     ll re=0;
     while(b)
@@ -532,7 +532,7 @@ inline void read(ll &amp;x) &#123;
     return re;
 &#125;
 </code></pre>
-<h3><span id="7__int128">7.__int128</span></h3><pre><code>inline void print(__int128 x) &#123;
+<h3><span id="7__int128">7.__int128</span></h3><pre><code class="c++">inline void print(__int128 x) &#123;
     if(x&lt;0)&#123;
         putchar(&#39;-&#39;);
         x=-x;
@@ -548,7 +548,7 @@ inline void scan(__int128 &amp;x)//输入
     x*=f;
 &#125;
 </code></pre>
-<h3><span id="8并查集">8.并查集</span></h3><pre><code>struct DSU &#123;
+<h3><span id="8并查集">8.并查集</span></h3><pre><code class="c++">struct DSU &#123;
     vector&lt;int&gt; fa, siz;
 
     DSU(int M) : fa(M + 1), siz(M + 1, 1) &#123;
@@ -570,7 +570,7 @@ inline void scan(__int128 &amp;x)//输入
     &#125;
 &#125;;
 </code></pre>
-<h3><span id="9快读">9.快读</span></h3><pre><code>char nc() &#123;
+<h3><span id="9快读">9.快读</span></h3><pre><code class="c++">char nc() &#123;
     static char buf[1000000], *p = buf, *q = buf;
     return p == q &amp;&amp; (q = (p = buf) + fread(buf, 1, 1000000, stdin), p == q) ? EOF : *p++;
 &#125;
@@ -588,7 +588,7 @@ inline int read() &#123;
     return x * f;
 &#125;
 </code></pre>
-<pre><code>namespace Fast_IO&#123; ///orz laofu
+<pre><code class="c++">namespace Fast_IO&#123; ///orz laofu
     const int MAXL((1 &lt;&lt; 18) + 1);int iof, iotp;
     char ioif[MAXL], *ioiS, *ioiT, ioof[MAXL],*iooS=ioof,*iooT=ioof+MAXL-1,ioc,iost[55];
     char Getchar()&#123;
@@ -628,7 +628,7 @@ inline int read() &#123;
 &#125; // namespace Fast_IO
 using namespace Fast_IO;
 </code></pre>
-<h3><span id="10大数">10.大数</span></h3><pre><code>string build(ll x)&#123;
+<h3><span id="10大数">10.大数</span></h3><pre><code class="c++">string build(ll x)&#123;
     string ans=&quot;&quot;;
     if(x==0)&#123;
         ans=&quot;0&quot;;return ans;
@@ -672,14 +672,14 @@ string mul(string a,string b)//高精度乘法a,b,均为非负整数
     return s;
 &#125;
 </code></pre>
-<h3><span id="11取模优化卡常">11.取模优化卡常</span></h3><pre><code>inline void add(int &amp;a, int b) &#123;
+<h3><span id="11取模优化卡常">11.取模优化卡常</span></h3><pre><code class="c++">inline void add(int &amp;a, int b) &#123;
     a = (a + b) &gt;= mod ? (a + b - mod) : (a + b);
 &#125;
 inline void sub(int &amp;a, int b) &#123;
     a = (a - b) &lt; 0 ? (a - b + mod) : (a - b);
 &#125;
 </code></pre>
-<h3><span id="12自动取模">12.自动取模</span></h3><pre><code>int norm(int x) &#123;
+<h3><span id="12自动取模">12.自动取模</span></h3><pre><code class="c++">int norm(int x) &#123;
     if (x &lt; 0) &#123;
         x += mod;
     &#125;
@@ -756,7 +756,7 @@ struct Z &#123;
     &#125;
 &#125;;
 </code></pre>
-<h2><span id="二-排序">二、排序</span></h2><h3><span id="1快速排序">1.快速排序</span></h3><pre><code>int a[N],n;
+<h2><span id="二-排序">二、排序</span></h2><h3><span id="1快速排序">1.快速排序</span></h3><pre><code class="c++">int a[N],n;
 void quick_sort(int l, int r)&#123;
     int i = l, j = r;
     int mid = (l + r) / 2;
@@ -774,7 +774,7 @@ void quick_sort(int l, int r)&#123;
     &#125;
 &#125;
 </code></pre>
-<h3><span id="2归并排序求逆序数">2.归并排序（求逆序数）</span></h3><pre><code>int a[N],n;
+<h3><span id="2归并排序求逆序数">2.归并排序（求逆序数）</span></h3><pre><code class="c++">int a[N],n;
 int b[N],cnt=0;   // cnt可用于计算逆序数 
 void hebin(int l,int r)&#123;
     int mid = ( l + r ) / 2;
@@ -801,7 +801,7 @@ void merge_sort (int l , int r )&#123;
     hebin(l,r);
 &#125;
 </code></pre>
-<h2><span id="三-二分法">三、二分法</span></h2><h3><span id="1二分">1.二分</span></h3><pre><code>int l = 1 , r = N;
+<h2><span id="三-二分法">三、二分法</span></h2><h3><span id="1二分">1.二分</span></h3><pre><code class="c++">int l = 1 , r = N;
 while (l &lt;= r)&#123;
     int mid = (l + r) / 2;
     if(deal(mid)) l = mid + 1; 
@@ -810,14 +810,14 @@ while (l &lt;= r)&#123;
 &#125;
 int ans = l + 1;
 </code></pre>
-<h3><span id="2尺取法">2.尺取法</span></h3><pre><code>int l = 1 , r = 1;
+<h3><span id="2尺取法">2.尺取法</span></h3><pre><code class="c++">int l = 1 , r = 1;
 while (l&lt;=n)&#123;
     if(deal() &amp;&amp; l &lt; r) r++;
     else l++;
 &#125;
 </code></pre>
 <h2><span id="四-数据结构">四、数据结构</span></h2><h3><span id="1树状数组">1.树状数组</span></h3><p>说明：</p>
-<pre><code>int d[N]; 
+<pre><code class="c++">int d[N]; 
 int lowbit(int x)&#123;//获取最后一位的1 
     return x&amp;(-x);
 &#125;
@@ -841,7 +841,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="2线段树">2.线段树</span></h3><pre><code>struct Segment_Tree &#123;
+<h3><span id="2线段树">2.线段树</span></h3><pre><code class="c++">struct Segment_Tree &#123;
     vector&lt;int&gt; tag, sum, A;
     int Mi = 1, Ma = 1e9;
 
@@ -901,7 +901,7 @@ int main()&#123;
 &#125;;
 </code></pre>
 <h3><span id="3莫队">3.莫队</span></h3><p>对区间分块 每组再按照右端点排序</p>
-<pre><code>const int N = 1e6 + 10;
+<pre><code class="c++">const int N = 1e6 + 10;
 int n,m;int a[N],beg[N];
 int in[N];
 struct ty&#123;
@@ -935,7 +935,7 @@ int main()&#123;
 &#125; 
 </code></pre>
 <h3><span id="4主席树">4.主席树</span></h3><p>维护区间第k大</p>
-<pre><code>#include&lt;bits/stdc++.h&gt; 
+<pre><code class="c++">#include&lt;bits/stdc++.h&gt; 
 using namespace std;
 const int N = 1e5 + 10;
 struct ty&#123;
@@ -989,7 +989,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="5st表">5.ST表</span></h3><pre><code>const int N = 1e6 + 10;
+<h3><span id="5st表">5.ST表</span></h3><pre><code class="c++">const int N = 1e6 + 10;
 int A[N];
 struct ST &#123;
     vector&lt;vector&lt;int&gt;&gt; Mi, Ma;
@@ -1022,7 +1022,7 @@ struct ST &#123;
     &#125;
 &#125;;
 </code></pre>
-<h3><span id="6可持久化线段树">6.可持久化线段树</span></h3><pre><code>#include&lt;bits/stdc++.h&gt;
+<h3><span id="6可持久化线段树">6.可持久化线段树</span></h3><pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 using namespace std;
 const int maxn = 1e5;  // 数据范围
 int tot, n, m;
@@ -1083,7 +1083,7 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="7分块算法">7.分块算法</span></h3><pre><code>int len;
+<h3><span id="7分块算法">7.分块算法</span></h3><pre><code class="c++">int len;
 int fir[N],sec[N],sz[N],blo[N];
 ll sum[N],lazy[N],a[N]; 
 void pre(int n)&#123;
@@ -1141,7 +1141,7 @@ ll query(int x,int y)&#123;
     return res;
 &#125;
 </code></pre>
-<h3><span id="8笛卡尔树">8.笛卡尔树</span></h3><pre><code>const int N = 1e7 + 10;
+<h3><span id="8笛卡尔树">8.笛卡尔树</span></h3><pre><code class="c++">const int N = 1e7 + 10;
 int a[N];
 stack&lt;int&gt;st;
 int ls[N],rs[N]; 
@@ -1166,7 +1166,7 @@ int main()&#123;
 </blockquote>
 <p>这道题你可 DP，可单调栈，但你万万没想到的是它也可以笛卡尔树！具体地，我们把下标作为键值 k， hi 作为键值 w满足小根堆性质，构建一棵(i,hi)的笛卡尔树。</p>
 <p>这样我们枚举每个结点u ，把 Uw（即结点 u的高度键值 h）作为最大子矩阵的高度。由于我们建立的笛卡尔树满足小根堆性质，因此u 的子树内的结点的高度都大于等于u 。而我们又知道 u子树内的下标是一段连续的区间。于是我们只需要知道子树的大小，然后就可以算这个区间的最大子矩阵的面积了。用每一个点计算出来的值更新答案即可。显然这个可以一次 DFS 完成，因此复杂度仍是O(n)的。</p>
-<pre><code>#include&lt;bits/stdc++.h&gt;
+<pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 #define ll long long
 using namespace std;
 const int N = 1e6 + 10;
@@ -1211,7 +1211,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="9珂朵莉树">9.珂朵莉树</span></h3><pre><code>int n;
+<h3><span id="9珂朵莉树">9.珂朵莉树</span></h3><pre><code class="c++">int n;
 struct Node_t &#123;
     int l, r;
     mutable int v;
@@ -1242,7 +1242,7 @@ void performance(int l, int r) &#123;
     &#125;
 &#125;
 </code></pre>
-<h3><span id="10线段树动态开点">10.线段树动态开点</span></h3><pre><code>struct Tree &#123;
+<h3><span id="10线段树动态开点">10.线段树动态开点</span></h3><pre><code class="c++">struct Tree &#123;
 #define LOG 30
     int root, cnt, Mi, Ma;
     vector&lt;int&gt; ls, rs, sum;
@@ -1281,7 +1281,7 @@ void performance(int l, int r) &#123;
     inline int query(int l, int r) &#123; return query(root, Mi, Ma, l, r); &#125;
 &#125;;
 </code></pre>
-<h3><span id="11吉老师线段树">11.吉老师线段树</span></h3><pre><code>int a[N];
+<h3><span id="11吉老师线段树">11.吉老师线段树</span></h3><pre><code class="c++">int a[N];
 struct Tree &#123;
     ll SUM[N &lt;&lt; 2], MAX[N &lt;&lt; 2], C_MAX[N &lt;&lt; 2], CNT[N &lt;&lt; 2];
     ll lazy[N &lt;&lt; 2];
@@ -1365,7 +1365,7 @@ struct Tree &#123;
     &#125;
 &#125; tr;
 </code></pre>
-<h3><span id="12线段树二分">12.线段树二分</span></h3><pre><code>struct Tree &#123;
+<h3><span id="12线段树二分">12.线段树二分</span></h3><pre><code class="c++">struct Tree &#123;
     int sum[N], lazy[N];
 
     void pushup(int p, int l, int r) &#123;
@@ -1417,7 +1417,7 @@ struct Tree &#123;
     &#125;
 &#125; tr;
 </code></pre>
-<h3><span id="13左偏树">13.左偏树</span></h3><pre><code>const int N = 1e5 + 10;
+<h3><span id="13左偏树">13.左偏树</span></h3><pre><code class="c++">const int N = 1e5 + 10;
 /*
  * 左偏树
  * dis[x] 表示 x 到离他最近的叶子结点的距离 , 由于左偏性质 dis[x.lc] &gt;= dis[x.rc]
@@ -1472,7 +1472,7 @@ void solve() &#123;
         &#125;
 &#125;
 </code></pre>
-<h3><span id="14平衡树">14.平衡树</span></h3><pre><code>const int N = 1e6 + 10;
+<h3><span id="14平衡树">14.平衡树</span></h3><pre><code class="c++">const int N = 1e6 + 10;
 
 /* 普通平衡树
  * 利用BST性质查询和修改，利用随机和堆优先级来保持平衡，把树的深度控制在log N，保证了操作效率
@@ -1594,7 +1594,7 @@ void solve() &#123;
     &#125;
 &#125;
 </code></pre>
-<h3><span id="15扫描线">15.扫描线</span></h3><pre><code>const int N = 1e5 + 10;
+<h3><span id="15扫描线">15.扫描线</span></h3><pre><code class="c++">const int N = 1e5 + 10;
 int X[N &lt;&lt; 1];
 
 struct Line &#123;
@@ -1659,7 +1659,7 @@ void solve() &#123;
     printf(&quot;%lld\n&quot;, Ans);
 &#125;
 </code></pre>
-<h2><span id="五-动态规划">五、动态规划</span></h2><h3><span id="1求最大子段子矩阵的和">1.求最大子段（子矩阵）的和</span></h3><h4><span id="i最大字段和">I.最大字段和</span></h4><pre><code>ll a[N],dp[N];
+<h2><span id="五-动态规划">五、动态规划</span></h2><h3><span id="1求最大子段子矩阵的和">1.求最大子段（子矩阵）的和</span></h3><h4><span id="i最大字段和">I.最大字段和</span></h4><pre><code class="c++">ll a[N],dp[N];
 ll ans=-inf;
 int main()&#123;
     int n=read();
@@ -1669,7 +1669,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h4><span id="ii最大子矩阵">II.最大子矩阵</span></h4><pre><code>#include&lt;bits/stdc++.h&gt;
+<h4><span id="ii最大子矩阵">II.最大子矩阵</span></h4><pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 using namespace std;
 const int N = 500+10;
 int a[N][N],b[N][N],dp[N];//b[j][k]表示从i行加到j行 第k列值的大小，将二维转为一维 
@@ -1701,7 +1701,7 @@ int main()&#123;
     return 0;
 &#125; 
 </code></pre>
-<h3><span id="2求最长上升下降子序列">2.求最长上升（下降）子序列</span></h3><pre><code>int a[N],dp[N];//dp[i]长度为i的子序列的末端最小值 
+<h3><span id="2求最长上升下降子序列">2.求最长上升（下降）子序列</span></h3><pre><code class="c++">int a[N],dp[N];//dp[i]长度为i的子序列的末端最小值 
 int len=0;
 int find(int x)&#123;
     int l=1,r=len,mid;
@@ -1747,7 +1747,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="3最长公共子序列">3.最长公共子序列</span></h3><pre><code>char a[5010],b[5010];
+<h3><span id="3最长公共子序列">3.最长公共子序列</span></h3><pre><code class="c++">char a[5010],b[5010];
 int dp[5010][5010];
 int dpp[5010][5010];
 //dp[i][j]表示字符串A的前i个字符和字符串b的前j个字符的LCS(最长公共子序列的长度) 
@@ -1791,7 +1791,7 @@ int main()
     return 0;
 &#125;
 </code></pre>
-<h3><span id="4背包问题">4.背包问题</span></h3><h4><span id="i">I.</span></h4><h4><span id="ii">II.</span></h4><h3><span id="5换根dp">5.换根dp</span></h3><pre><code>vector&lt;int&gt;G[N];
+<h3><span id="4背包问题">4.背包问题</span></h3><h4><span id="i">I.</span></h4><h4><span id="ii">II.</span></h4><h3><span id="5换根dp">5.换根dp</span></h3><pre><code class="c++">vector&lt;int&gt;G[N];
 int siz[N],dep[N],n;
 ll dp[N],ans;
 void dfs1(int x,int fa)&#123;
@@ -1828,7 +1828,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h2><span id="六-数学">六、数学</span></h2><h3><span id="1拓展欧几里得算法">1.拓展欧几里得算法</span></h3><pre><code>ll ext_gcd(ll a,ll b,ll&amp; x,ll&amp; y)&#123;
+<h2><span id="六-数学">六、数学</span></h2><h3><span id="1拓展欧几里得算法">1.拓展欧几里得算法</span></h3><pre><code class="c++">ll ext_gcd(ll a,ll b,ll&amp; x,ll&amp; y)&#123;
     ll d =a;
     if(!b)&#123;
         x=1;y=0;
@@ -1839,7 +1839,7 @@ int main()&#123;
     return d;
 &#125;
 </code></pre>
-<h3><span id="2中国剩余定理孙子定理">2.中国剩余定理（孙子定理）</span></h3><pre><code>ll sunzi(ll *m,ll *a,int len)&#123;
+<h3><span id="2中国剩余定理孙子定理">2.中国剩余定理（孙子定理）</span></h3><pre><code class="c++">ll sunzi(ll *m,ll *a,int len)&#123;
     ll lcm=1;
     ll ans=0;
     for (int i=0;i&lt;len;i++)&#123;
@@ -1856,7 +1856,7 @@ int main()&#123;
     return ans;
 &#125;
 </code></pre>
-<h3><span id="3组合数">3.组合数</span></h3><pre><code>struct Combinatorial_mathematics &#123;
+<h3><span id="3组合数">3.组合数</span></h3><pre><code class="c++">struct Combinatorial_mathematics &#123;
     vector&lt;int&gt; fac, inv;
 
     inline int add(int &amp;x, int y) &#123; return x + y &gt;= mod ? x + y - mod : x + y; &#125;
@@ -1891,7 +1891,7 @@ int main()&#123;
 &#125;;
 </code></pre>
 <h3><span id="4bsgs">4.BSGS</span></h3><p>用来求a的x次方与b同余mod p 的最小根</p>
-<pre><code>ll bsgs(ll a, ll b, ll Mod) &#123;
+<pre><code class="c++">ll bsgs(ll a, ll b, ll Mod) &#123;
     map&lt;ll, ll&gt; mp;
     ll cur = 1, t = sqrt(Mod) + 1;
     for (int B = 1; B &lt;= t; B++) &#123;
@@ -1907,7 +1907,7 @@ int main()&#123;
 &#125;
 </code></pre>
 <h3><span id="5矩阵快速幂">5.矩阵快速幂</span></h3><p>求斐波那契数列</p>
-<pre><code>#include&lt;bits/stdc++.h&gt;
+<pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 #define ll long long
 using namespace std;
 const int mod = 1e9 + 7;
@@ -1960,7 +1960,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<pre><code>f[n]=a*f[n-1]+b*f[n-2]+c
+<pre><code class="c++">f[n]=a*f[n-1]+b*f[n-2]+c
 |a b 1|   |f[n-1]|   | f[n]  |
 |1 0 1| * |f[n-2]| = | f[n-1]|
 |0 0 1|   |   c  |   |   c   |
@@ -1970,7 +1970,7 @@ f[n]=c^n -f[n-1]
 |0  c|		| n-1  |   | n  |
 </code></pre>
 <h3><span id="6多项式">6.多项式</span></h3><h4><span id="ifft-快速傅里叶变换">I.FFT 快速傅里叶变换</span></h4><h5><span id="1复数运算重载运算符">1.复数运算，重载运算符</span></h5><p>对于多项式f(x) 与 g(x) 求 f(x)*g(x) 的各项系数</p>
-<pre><code>const double Pi=acos(-1.0);
+<pre><code class="c++">const double Pi=acos(-1.0);
 struct Complex&#123;
     double x,y;
     Complex (double xx=0,double yy=0)&#123;x=xx,y=yy;&#125;
@@ -2006,7 +2006,7 @@ void mul()&#123;
 &#125;
 </code></pre>
 <h4><span id="iintt-快速数论变换">II.NTT 快速数论变换</span></h4><p>对于多项式f(x) 与 g(x) 求 f(x)*g(x) 的各项系数 &#x2F;&#x2F; 优化大数乘法</p>
-<pre><code>#include&lt;bits/stdc++.h&gt;
+<pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 #define ll long long
 using namespace std;
 const int N=1e6+10;
@@ -2056,7 +2056,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<pre><code>#include&lt;bits/stdc++.h&gt;
+<pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 #define Poly vector&lt;int&gt;
 #define ll long long
 using namespace std;
@@ -2171,7 +2171,7 @@ int main()&#123;
     return 0;
 &#125; 
 </code></pre>
-<h4><span id="iiintt维护01背包">III.NTT维护01背包</span></h4><pre><code>const int N = 1e6 + 10;
+<h4><span id="iiintt维护01背包">III.NTT维护01背包</span></h4><pre><code class="c++">const int N = 1e6 + 10;
 const int inf = 0x3f3f3f3f;
 inline ll read()&#123;ll x = 0, f = 1;char ch = getchar();while(ch &lt; &#39;0&#39; || ch &gt; &#39;9&#39;)&#123;if (ch == &#39;-&#39;)f = -1 ;ch = getchar();&#125;while(ch &gt;= &#39;0&#39; &amp;&amp; ch &lt;= &#39;9&#39;)&#123;  x = (x&lt;&lt;1) + (x&lt;&lt;3) + (ch^48);ch = getchar();&#125;return x * f;&#125;
 int k[N],n,limit,l,r[N],m;
@@ -2234,7 +2234,7 @@ void solve()&#123;
     &#125;
 &#125;
 </code></pre>
-<h4><span id="iv">IV.</span></h4><pre><code>const int P = 1e9 + 7;
+<h4><span id="iv">IV.</span></h4><pre><code class="c++">const int P = 1e9 + 7;
 struct FWT &#123;
     void add(int &amp;x, int y) &#123;(x += y) &gt;= P &amp;&amp; (x -= P);&#125;
     void sub(int &amp;x, int y) &#123;(x -= y) &lt; 0 &amp;&amp; (x += P);&#125;
@@ -2308,7 +2308,7 @@ struct FWT &#123;
     &#125;
 &#125; fwt;
 </code></pre>
-<pre><code>#define inc(a, b) (((a) += (b)) &gt;= P ? (a) -= P : 0)
+<pre><code class="c++">#define inc(a, b) (((a) += (b)) &gt;= P ? (a) -= P : 0)
 #define dec(a, b) (((a) -= (b)) &lt; 0 ? (a) += P : 0)
 #define mul(a, b) (ll(a) * (b) % P)
 
@@ -2607,7 +2607,7 @@ Poly compoundInv(Poly g) &#123; //
     return f ^ Poly(inv, inv + N);
 &#125;
 </code></pre>
-<h3><span id="7扩展卢卡斯">7.扩展卢卡斯</span></h3><pre><code>ll n, m, p;// C(n,m) mod p (p为任意数)
+<h3><span id="7扩展卢卡斯">7.扩展卢卡斯</span></h3><pre><code class="c++">ll n, m, p;// C(n,m) mod p (p为任意数)
 ll exgcd(ll a, ll b, ll &amp;x, ll &amp;y)&#123;
     if(!b)&#123;
         x = 1, y = 0;
@@ -2673,11 +2673,11 @@ ll exlucas()&#123;
     return ans%p;
 &#125;
 </code></pre>
-<h3><span id="8莫比乌斯反演">8.莫比乌斯反演</span></h3><h4><span id="i求莫比乌斯函数前缀和与欧拉函数前缀和">I.求莫比乌斯函数前缀和与欧拉函数前缀和</span></h4><pre><code>mu[x]=1 如果x=1
+<h3><span id="8莫比乌斯反演">8.莫比乌斯反演</span></h3><h4><span id="i求莫比乌斯函数前缀和与欧拉函数前缀和">I.求莫比乌斯函数前缀和与欧拉函数前缀和</span></h4><pre><code class="c++">mu[x]=1 如果x=1
 mu[x]=0 如果存在素数p使得 x%(p*p)=0
 mu[x]=(-1)^k ,k为n的本质不同质因子个数 
 </code></pre>
-<pre><code>struct Math_Product_functions/*积性函数*/&#123;
+<pre><code class="c++">struct Math_Product_functions/*积性函数*/&#123;
     #define M 2000005
     #define mod 1000000007
     int pri[M],p[M],tot=0,cnt=0;
@@ -2753,7 +2753,7 @@ mu[x]=(-1)^k ,k为n的本质不同质因子个数
     &#125;
 &#125;Math;
 </code></pre>
-<h3><span id="9矩阵行列式">9.矩阵行列式</span></h3><pre><code>struct Mat &#123;
+<h3><span id="9矩阵行列式">9.矩阵行列式</span></h3><pre><code class="c++">struct Mat &#123;
     double a[MAX][MAX];
 #define EPS (1e-6)
     double Det() &#123;
@@ -2778,7 +2778,7 @@ mu[x]=(-1)^k ,k为n的本质不同质因子个数
     &#125;
 &#125;;
 </code></pre>
-<h3><span id="10高斯消元">10.高斯消元</span></h3><pre><code>struct Mat &#123;
+<h3><span id="10高斯消元">10.高斯消元</span></h3><pre><code class="c++">struct Mat &#123;
     double a[MAX][MAX];
 #define EPS (1e-6)
     bool Gauss() &#123;
@@ -2804,7 +2804,7 @@ mu[x]=(-1)^k ,k为n的本质不同质因子个数
     &#125;
 &#125;;
 </code></pre>
-<h3><span id="11bm">11.BM</span></h3><pre><code>namespace Linear_seq &#123;
+<h3><span id="11bm">11.BM</span></h3><pre><code class="c++">namespace Linear_seq &#123;
     typedef long long LL;
     LL mod;
 #define SZ(x) ((int)(x).size())
@@ -2898,7 +2898,7 @@ mu[x]=(-1)^k ,k为n的本质不同质因子个数
 &#125;;
 //using namespace Linear_seq;
 </code></pre>
-<h2><span id="八-图论">八、图论</span></h2><h3><span id="1读入图">1.读入图</span></h3><h4><span id="i邻接矩阵-二维数组">Ⅰ.邻接矩阵 二维数组</span></h4><h4><span id="iivector">Ⅱ.vector</span></h4><h4><span id="iii邻接表">Ⅲ.邻接表</span></h4><h4><span id="iv伪邻接表链式前向星">Ⅳ.伪邻接表（链式前向星）</span></h4><h3><span id="2最短路算法">2.最短路算法：</span></h3><h4><span id="idijkstra算法">Ⅰ.dijkstra算法</span></h4><pre><code>struct dijkstra &#123;
+<h2><span id="八-图论">八、图论</span></h2><h3><span id="1读入图">1.读入图</span></h3><h4><span id="i邻接矩阵-二维数组">Ⅰ.邻接矩阵 二维数组</span></h4><h4><span id="iivector">Ⅱ.vector</span></h4><h4><span id="iii邻接表">Ⅲ.邻接表</span></h4><h4><span id="iv伪邻接表链式前向星">Ⅳ.伪邻接表（链式前向星）</span></h4><h3><span id="2最短路算法">2.最短路算法：</span></h3><h4><span id="idijkstra算法">Ⅰ.dijkstra算法</span></h4><pre><code class="c++">struct dijkstra &#123;
     vector&lt;vector&lt;pair&lt;int, int&gt;&gt;&gt; G;
     vector&lt;int&gt; dis, vis;
     int n;
@@ -2947,7 +2947,7 @@ mu[x]=(-1)^k ,k为n的本质不同质因子个数
 </code></pre>
 <h4><span id="iibellman-ford算法">Ⅱ.<strong>b</strong>ellman-ford算法</span></h4><p>（权值允许是负数，但不能出现负环，且一次只求一对距离）</p>
 <h4><span id="iiispfa算法">Ⅲ.SPFA算法</span></h4><p>（权值允许是负数，但不能出现负环，且一次只求一对距离）</p>
-<pre><code>int n,m,s,t,cnt=0;
+<pre><code class="c++">int n,m,s,t,cnt=0;
 struct ty
 &#123;
     int to,len,next;
@@ -3005,7 +3005,7 @@ int main()
 &#125;
 </code></pre>
 <h4><span id="ivfloyd算法">Ⅳ.floyd算法</span></h4><p>（可以求多源点路最短路）</p>
-<pre><code>int f[N][N],n,m; 
+<pre><code class="c++">int f[N][N],n,m; 
 void floyd()
 &#123;
     for (int k=1;k&lt;=n;k++)
@@ -3032,7 +3032,7 @@ int main()
 &#125;
 </code></pre>
 <h3><span id="3最小生成树">3.最小生成树</span></h3><h4><span id="iprim算法">Ⅰ.prim算法</span></h4><p>（对于每一个点，都取一条边让它进去最小生成树，贪心一下就是取与这个点相连的最小边）</p>
-<pre><code>struct ty
+<pre><code class="c++">struct ty
 &#123;
     int to,len,next;
 &#125;edge[N];
@@ -3095,7 +3095,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h4><span id="iikruskal算法">Ⅱ.Kruskal算法</span></h4><pre><code>struct ty&#123;
+<h4><span id="iikruskal算法">Ⅱ.Kruskal算法</span></h4><pre><code class="c++">struct ty&#123;
     int x,y,z;
 &#125;edge[N];
 int fa[N];
@@ -3123,7 +3123,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h4><span id="iiikruskal重构树">III.Kruskal重构树</span></h4><pre><code>struct ty&#123;
+<h4><span id="iiikruskal重构树">III.Kruskal重构树</span></h4><pre><code class="c++">struct ty&#123;
     int x,y,z;
 &#125;edge[N];
 int fa[N];
@@ -3166,7 +3166,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h4><span id="ivboruvka-算法">IV.Boruvka 算法</span></h4><h3><span id="4lca">4.LCA</span></h3><h4><span id="i树上倍增">I.树上倍增</span></h4><pre><code>int f[N][30],lg[N];//f[i][j]表示点i向上2^j层的祖先是哪个点
+<h4><span id="ivboruvka-算法">IV.Boruvka 算法</span></h4><h3><span id="4lca">4.LCA</span></h3><h4><span id="i树上倍增">I.树上倍增</span></h4><pre><code class="c++">int f[N][30],lg[N];//f[i][j]表示点i向上2^j层的祖先是哪个点
 //f[i][0]=fa[i]
 //f[i][j]=f[f[i][j-1][j-1]
 int dep[N];//表示每一个点的深度
@@ -3201,7 +3201,7 @@ inline void Init()&#123;
 &#125;
 </code></pre>
 <h4><span id="ii-rmqst表">II RMQ+ST表</span></h4><p>（DFS序+RMQ+ST表）</p>
-<pre><code>vector&lt;int&gt;G[N];
+<pre><code class="c++">vector&lt;int&gt;G[N];
 int f[N],fir[N];
 int dp[N][40];
 int num=0,cnt=0;
@@ -3239,7 +3239,7 @@ inline int LCA(int a,int b)&#123;
     return f[k];
 &#125;
 </code></pre>
-<h4><span id="iii树链剖分">Ⅲ.树链剖分</span></h4><pre><code>// 第一遍dfs维护每个点的重儿子,父亲，深度 
+<h4><span id="iii树链剖分">Ⅲ.树链剖分</span></h4><pre><code class="c++">// 第一遍dfs维护每个点的重儿子,父亲，深度 
 // 第二遍dfs对每个点重新编号 并且记录 
 // 记录每个点所在重链的最上面一个点是哪一个 top[x] 
 int fa[N],siz[N],dep[N],top[N],son[N];
@@ -3277,7 +3277,7 @@ inline int LCA(int x,int y)&#123;
     return y;
 &#125;
 </code></pre>
-<h4><span id="ivtrajan">Ⅳ.trajan</span></h4><pre><code>int n,m,s,dep[N],fa[N];
+<h4><span id="ivtrajan">Ⅳ.trajan</span></h4><pre><code class="c++">int n,m,s,dep[N],fa[N];
 bool vis[N];
 struct query&#123;
     int id,x,y,lca;
@@ -3330,7 +3330,7 @@ int main()&#123;
     &#125;
 &#125;
 </code></pre>
-<h3><span id="5网络流">5.网络流</span></h3><h4><span id="i最大流">I.最大流</span></h4><h5><span id="1dinic-算法">1.Dinic 算法</span></h5><pre><code>#include &lt;bits/stdc++.h&gt;
+<h3><span id="5网络流">5.网络流</span></h3><h4><span id="i最大流">I.最大流</span></h4><h5><span id="1dinic-算法">1.Dinic 算法</span></h5><pre><code class="c++">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 const int inf=0x3f3f3f3f;
 const int N = 5e5 + 10;
@@ -3396,7 +3396,7 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="6强连通分量">6.强连通分量</span></h3><h4><span id="itarjan">I.tarjan</span></h4><pre><code>const int N = 1e6 + 10;
+<h3><span id="6强连通分量">6.强连通分量</span></h3><h4><span id="itarjan">I.tarjan</span></h4><pre><code class="c++">const int N = 1e6 + 10;
 vector&lt;int&gt;G[N];
 int dfn[N],low[N],dfncnt,s[N],in_stack[N],tp;
 int scc[N],sc;// 结点 i 所在 SCC 的编号
@@ -3422,7 +3422,7 @@ void tarjan(int x)&#123;
     &#125;
 &#125;
 </code></pre>
-<h4><span id="iikosaraju-算法">II.Kosaraju 算法</span></h4><h3><span id="7斯坦纳树">7.斯坦纳树</span></h3><pre><code>#define mp make_pair
+<h4><span id="iikosaraju-算法">II.Kosaraju 算法</span></h4><h3><span id="7斯坦纳树">7.斯坦纳树</span></h3><pre><code class="c++">#define mp make_pair
 typedef pair&lt;int, int&gt; P;
 typedef pair&lt;P, int&gt; PP;
 const int INF = 0x3f3f3f3f;
@@ -3515,7 +3515,7 @@ int main() &#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="8二分图匹配匈牙利算法">8.二分图匹配，匈牙利算法</span></h3><pre><code>bool f[N][N], used[N];//f 表示图，used 表示右边的某个数是否用过
+<h3><span id="8二分图匹配匈牙利算法">8.二分图匹配，匈牙利算法</span></h3><pre><code class="c++">bool f[N][N], used[N];//f 表示图，used 表示右边的某个数是否用过
 int match[N];// match 表示右边的数连接到左边哪一个
 int n, m, e;
 
@@ -3541,7 +3541,7 @@ int Hungarian_Algorithm() &#123;
     return Ans;
 &#125;
 </code></pre>
-<h3><span id="9树分治">9.树分治</span></h3><pre><code>vector&lt;int&gt; G[N];
+<h3><span id="9树分治">9.树分治</span></h3><pre><code class="c++">vector&lt;int&gt; G[N];
 int A[N];
 int siz[N], dep[N], Max[N], vis[N], bel[N];
 int root, ans, m, allsize;
@@ -3619,7 +3619,7 @@ void solve() &#123;
 <li>线性基中每个元素的异或方案唯一，也就是说，线性基中不同的异或组合异或出的数都是不一样的。</li>
 <li>线性基中每个元素的二进制最高位互不相同。</li>
 </ul>
-<h3><span id="2构造线性基">2.构造线性基</span></h3><pre><code>void build(ll x)
+<h3><span id="2构造线性基">2.构造线性基</span></h3><pre><code class="c++">void build(ll x)
 &#123;
     for(int i = 62; i &gt;= 0; i--)
     &#123;
@@ -3634,7 +3634,7 @@ void solve() &#123;
 &#125;
 </code></pre>
 <h3><span id="3查询一个元素是否可以被异或出来">3.查询一个元素是否可以被异或出来</span></h3><p>从高到低，如果这一位为1就异或上这一位的线性基，把11消去，根据性质一，如果最后得到了0，那这个数就可以表示出来。</p>
-<pre><code>bool ask(ll x)
+<pre><code class="c++">bool ask(ll x)
 &#123;
     for(int i=62;i&gt;=0;i--) 
         if(x&amp;(1LL&lt;&lt;i)) x^=p[i];
@@ -3642,7 +3642,7 @@ void solve() &#123;
 &#125;
 </code></pre>
 <h3><span id="4查询异或最大值">4.查询异或最大值</span></h3><p>按位贪心</p>
-<pre><code>ll ask_max()
+<pre><code class="c++">ll ask_max()
 &#123;
     ll ans=0;
     for(int i=62;i&gt;=0;i--)
@@ -3651,7 +3651,7 @@ void solve() &#123;
 &#125;
 </code></pre>
 <h3><span id="5查询异或最小值">5.查询异或最小值</span></h3><p>其实异或的最小值一般来说就是线性基里的最小元素，因为插入这个元素的时候我们总是尽量让它的高位为0才来插入这一位。但是为什么是“一般”呢？因为有可能会有出现0，得要在插入的时候记下个标记来特判才行。</p>
-<pre><code>ll ask_min()
+<pre><code class="c++">ll ask_min()
 &#123;
     ll ans=0;
     for(int i=0;i&lt;=62;i++)
@@ -3660,7 +3660,7 @@ void solve() &#123;
 </code></pre>
 <h3><span id="6查询异或第k小">6.查询异或第k小</span></h3><p>首先考虑，要是每一位的选择都不会影响下一位的话，那就可以直接从高到低按位去选择就行了，就类似于二叉树求rank的玩法。</p>
 <p>重构一个数组 d[i] 来解决问题</p>
-<pre><code>void rebuild() 
+<pre><code class="c++">void rebuild() 
 &#123;
     cnt=0;top=0;
     for(int i=MB;i&gt;=0;i--)
@@ -3670,7 +3670,7 @@ void solve() &#123;
 &#125;
 </code></pre>
 <p>查询第k小的值</p>
-<pre><code>ll aks_kth(int k)
+<pre><code class="c++">ll aks_kth(int k)
 &#123;
     if(k&gt;=(1ll&lt;&lt;cnt)) return -1;
     ll ans=0;
@@ -3679,7 +3679,7 @@ void solve() &#123;
     return ans;
 &#125;
 </code></pre>
-<h3><span id="7查询排名">7.查询排名</span></h3><pre><code>int rank(ll x)
+<h3><span id="7查询排名">7.查询排名</span></h3><pre><code class="c++">int rank(ll x)
 &#123;
     int ans=0;
     for (int i=cnt-1;i&gt;=0;i--)
@@ -3693,7 +3693,7 @@ void solve() &#123;
     return ans;
 &#125;
 </code></pre>
-<h2><span id="十-字符串">十、字符串</span></h2><pre><code>S= &quot; 字符串 &quot;
+<h2><span id="十-字符串">十、字符串</span></h2><pre><code class="c++">S= &quot; 字符串 &quot;
 Border：表示 前缀字符串 和 后缀字符串 相同
 Preffix[i] 前缀
 
@@ -3725,13 +3725,13 @@ Border 树:
     3.求两个前缀的公共 Border 等价于求 LCA
 </code></pre>
 <h3><span id="1kmp-new">1.KMP —— NEW</span></h3><h4><span id="inext数组">I.next数组</span></h4><p>nxt[i] 表示的是 Preffix[i] 的非平凡的最大 Border</p>
-<pre><code>for(int i=2;i&lt;=len;i++)&#123;
+<pre><code class="c++">for(int i=2;i&lt;=len;i++)&#123;
     nxt[i]=nxt[i-1];
     while(nxt[i]&amp;&amp;s[i]!=s[nxt[i]+1]) nxt[i]=nxt[nxt[i]];
     nxt[i] += (s[i]==s[nxt[i]+1]);
 &#125;
 </code></pre>
-<h4><span id="ii计算-s2-串在-s1-串-出现的位置和次数">II.计算 S2 串在 S1 串 出现的位置和次数</span></h4><pre><code>// cnt 表示个数 
+<h4><span id="ii计算-s2-串在-s1-串-出现的位置和次数">II.计算 S2 串在 S1 串 出现的位置和次数</span></h4><pre><code class="c++">// cnt 表示个数 
 for(int i=1,j=0;i&lt;=len1;i++)&#123;
     while( j &amp;&amp; s1[i]!=s2[j+1]) j=nxt[j];
     j+=(s1[i]==s2[j+1]);
@@ -3741,7 +3741,7 @@ for(int i=1,j=0;i&lt;=len1;i++)&#123;
     &#125;
 &#125;
 </code></pre>
-<h3><span id="3manacher">3.Manacher</span></h3><pre><code>const int MAX = 2e5+10000;
+<h3><span id="3manacher">3.Manacher</span></h3><pre><code class="c++">const int MAX = 2e5+10000;
 char s[MAX],ch[MAX];
 int lc[MAX];// 每个点的回文半径 
 int N;
@@ -3769,7 +3769,7 @@ void manacher()&#123;
 </code></pre>
 <h3><span id="4sa-后缀数组">4.SA 后缀数组</span></h3><p>关于清空，需要清空两倍数组。</p>
 <p>LCP 最长公共前缀</p>
-<h4><span id="i倍增">I.倍增</span></h4><pre><code>// 后缀排序：将所有的后缀s[i]看作独立的串，放在一起按照字典序进行升序排序
+<h4><span id="i倍增">I.倍增</span></h4><pre><code class="c++">// 后缀排序：将所有的后缀s[i]看作独立的串，放在一起按照字典序进行升序排序
 // 后缀排名：rk[i]: 表示后缀s[i]在后缀排序中的排名，即他第几小的后缀
 // 后缀数组: sa[i]: 表示排名第i小的后缀
 // rk[sa[i]]=i
@@ -3843,7 +3843,7 @@ struct Suffix_Array&#123;
     &#125;
 &#125;;
 </code></pre>
-<h3><span id="5trie树">5.Trie树</span></h3><pre><code>#include&lt;bits/stdc++.h&gt;
+<h3><span id="5trie树">5.Trie树</span></h3><pre><code class="c++">#include&lt;bits/stdc++.h&gt;
 using namespace std;
 const int N = 1e6 + 10;
 struct Trie &#123;
@@ -3874,7 +3874,7 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
-<h3><span id="6acam">6.ACAM</span></h3><pre><code>const int N = 1e6 + 10;
+<h3><span id="6acam">6.ACAM</span></h3><pre><code class="c++">const int N = 1e6 + 10;
 struct ACAM &#123;
     int tr[N][26],tag[N],fail[N],tot;
     queue&lt;int&gt; q;
@@ -3913,7 +3913,7 @@ struct ACAM &#123;
 &#125;;
 ACAM Tr; 
 </code></pre>
-<h3><span id="7sam-后缀自动机">7.SAM 后缀自动机</span></h3><pre><code>const int N = 1e6 + 10;
+<h3><span id="7sam-后缀自动机">7.SAM 后缀自动机</span></h3><pre><code class="c++">const int N = 1e6 + 10;
 char s[N];int n,m;
 struct Suffix_Auto_Maton&#123;
     // ch[i][j] 表示后缀链接 ------ 即第i个字符为j的编号为多少 
@@ -3996,7 +3996,7 @@ L[1]=0   L[2]=1   L[3]=2   L[4]=3   L[5]=4   L[6]=1   L[7]=5   L[8]=2
 siz[1]=5 siz[2]=1 siz[3]=1 siz[4]=1 siz[5]=1 siz[6]=2 siz[7]=1 siz[8]=2
 */
 </code></pre>
-<h2><span id="十一-计算几何">十一、计算几何</span></h2><h3><span id="1二维几何通用板子">1.二维几何通用板子</span></h3><pre><code>struct Point&#123;
+<h2><span id="十一-计算几何">十一、计算几何</span></h2><h3><span id="1二维几何通用板子">1.二维几何通用板子</span></h3><pre><code class="c++">struct Point&#123;
     #define INF 1e18
     #define eps 1e-11
     #define PI 3.14159265358979323846
@@ -4066,7 +4066,7 @@ inline double circumradius(Point&amp;a,Point&amp;b,Point&amp;c)&#123;//外接圆
     return sqrt(p12.r2()*p23.r2())/(2*fabs(p12*p23));
 &#125;
 </code></pre>
-<pre><code>struct Line &#123;
+<pre><code class="c++">struct Line &#123;
     Point X, Y;
     double A, B, C;
 
@@ -4099,7 +4099,7 @@ inline Point Line_Line(Line &amp;X, Line &amp;Y) &#123;//线线交点
     return &#123;(-B2 * C1 + B1 * C2) / (A1 * B2 - A2 * B1), (-A1 * C2 + C1 * A2) / (A1 * B2 - A2 * B1)&#125;;
 &#125;
 </code></pre>
-<h3><span id="2求凸包">2.求凸包</span></h3><pre><code>Point base;
+<h3><span id="2求凸包">2.求凸包</span></h3><pre><code class="c++">Point base;
 inline int Left(const Point &amp;a, const Point &amp;b, const Point &amp;c) &#123;
     return ((b - a) * (c - a)) &gt;= 0;
 &#125;
@@ -4131,7 +4131,7 @@ inline vector&lt;Point&gt; Convex(vector&lt;Point&gt;a) &#123;
     return res;
 &#125;
 </code></pre>
-<h3><span id="3最小圆覆盖">3.最小圆覆盖</span></h3><pre><code>inline Point incenter(Point &amp;A, Point &amp;B, Point &amp;C) &#123;//内心
+<h3><span id="3最小圆覆盖">3.最小圆覆盖</span></h3><pre><code class="c++">inline Point incenter(Point &amp;A, Point &amp;B, Point &amp;C) &#123;//内心
     Line X = Midperpandicular(A, B), Y = Midperpandicular(B, C);
     return Line_Line(X, Y);
 &#125;
