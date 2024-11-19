@@ -1,0 +1,4214 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>Scarlett 大佬的算法板子 | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>Scarlett 大佬的算法板子</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/11/20
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E7%AE%97%E6%B3%95/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                算法
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E7%AE%97%E6%B3%95/" style="color: #00a596">
+                    算法
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">Scarlett 的 板子</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">2.</span> <span class="post-toc-text">一、杂乱的总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1.快速幂</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2.素数筛</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3.前缀和（一阶，二阶）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">4.贪心小技巧</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">5.快读</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">6.快速乘（龟速乘）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">7.__int128</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">8.并查集</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.9.</span> <span class="post-toc-text">9.快读</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.10.</span> <span class="post-toc-text">10.大数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.11.</span> <span class="post-toc-text">11.取模优化卡常</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">2.12.</span> <span class="post-toc-text">12.自动取模</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">3.</span> <span class="post-toc-text">二、排序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1.快速排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2.归并排序（求逆序数）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">4.</span> <span class="post-toc-text">三、二分法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">1.二分</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">2.尺取法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">5.</span> <span class="post-toc-text">四、数据结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">1.树状数组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">2.线段树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">3.莫队</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">4.主席树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">5.ST表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.6.</span> <span class="post-toc-text">6.可持久化线段树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.7.</span> <span class="post-toc-text">7.分块算法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.8.</span> <span class="post-toc-text">8.笛卡尔树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.9.</span> <span class="post-toc-text">9.珂朵莉树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.10.</span> <span class="post-toc-text">10.线段树动态开点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.11.</span> <span class="post-toc-text">11.吉老师线段树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.12.</span> <span class="post-toc-text">12.线段树二分</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.13.</span> <span class="post-toc-text">13.左偏树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.14.</span> <span class="post-toc-text">14.平衡树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">5.15.</span> <span class="post-toc-text">15.扫描线</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">6.</span> <span class="post-toc-text">五、动态规划</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">1.求最大子段（子矩阵）的和</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">6.1.1.</span> <span class="post-toc-text">I.最大字段和</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">6.1.2.</span> <span class="post-toc-text">II.最大子矩阵</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">2.求最长上升（下降）子序列</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">3.最长公共子序列</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">6.4.</span> <span class="post-toc-text">4.背包问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">6.4.1.</span> <span class="post-toc-text">I.</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">6.4.2.</span> <span class="post-toc-text">II.</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">6.5.</span> <span class="post-toc-text">5.换根dp</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">7.</span> <span class="post-toc-text">六、数学</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">1.拓展欧几里得算法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">2.中国剩余定理（孙子定理）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">3.组合数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.4.</span> <span class="post-toc-text">4.BSGS</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.5.</span> <span class="post-toc-text">5.矩阵快速幂</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.6.</span> <span class="post-toc-text">6.多项式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">7.6.1.</span> <span class="post-toc-text">I.FFT 快速傅里叶变换</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link"><span class="post-toc-number">7.6.1.1.</span> <span class="post-toc-text">1.复数运算，重载运算符</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">7.6.2.</span> <span class="post-toc-text">II.NTT 快速数论变换</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">7.6.3.</span> <span class="post-toc-text">III.NTT维护01背包</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">7.6.4.</span> <span class="post-toc-text">IV.</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.7.</span> <span class="post-toc-text">7.扩展卢卡斯</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.8.</span> <span class="post-toc-text">8.莫比乌斯反演</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">7.8.1.</span> <span class="post-toc-text">I.求莫比乌斯函数前缀和与欧拉函数前缀和</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.9.</span> <span class="post-toc-text">9.矩阵行列式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.10.</span> <span class="post-toc-text">10.高斯消元</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">7.11.</span> <span class="post-toc-text">11.BM</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">8.</span> <span class="post-toc-text">八、图论</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">1.读入图</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.1.1.</span> <span class="post-toc-text">Ⅰ.邻接矩阵 二维数组</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.1.2.</span> <span class="post-toc-text">Ⅱ.vector</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.1.3.</span> <span class="post-toc-text">Ⅲ.邻接表</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.1.4.</span> <span class="post-toc-text">Ⅳ.伪邻接表（链式前向星）</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.2.</span> <span class="post-toc-text">2.最短路算法：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.2.1.</span> <span class="post-toc-text">Ⅰ.dijkstra算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.2.2.</span> <span class="post-toc-text">Ⅱ.bellman-ford算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.2.3.</span> <span class="post-toc-text">Ⅲ.SPFA算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.2.4.</span> <span class="post-toc-text">Ⅳ.floyd算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.3.</span> <span class="post-toc-text">3.最小生成树</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.3.1.</span> <span class="post-toc-text">Ⅰ.prim算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.3.2.</span> <span class="post-toc-text">Ⅱ.Kruskal算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.3.3.</span> <span class="post-toc-text">III.Kruskal重构树</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.3.4.</span> <span class="post-toc-text">IV.Boruvka 算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.4.</span> <span class="post-toc-text">4.LCA</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.4.1.</span> <span class="post-toc-text">I.树上倍增</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.4.2.</span> <span class="post-toc-text">II RMQ+ST表</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.4.3.</span> <span class="post-toc-text">Ⅲ.树链剖分</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.4.4.</span> <span class="post-toc-text">Ⅳ.trajan</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.5.</span> <span class="post-toc-text">5.网络流</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.5.1.</span> <span class="post-toc-text">I.最大流</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link"><span class="post-toc-number">8.5.1.1.</span> <span class="post-toc-text">1.Dinic 算法</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.6.</span> <span class="post-toc-text">6.强连通分量</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.6.1.</span> <span class="post-toc-text">I.tarjan</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">8.6.2.</span> <span class="post-toc-text">II.Kosaraju 算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.7.</span> <span class="post-toc-text">7.斯坦纳树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.8.</span> <span class="post-toc-text">8.二分图匹配，匈牙利算法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">8.9.</span> <span class="post-toc-text">9.树分治</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">9.</span> <span class="post-toc-text">九、线性基</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">1.线性基含义</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.2.</span> <span class="post-toc-text">2.构造线性基</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.3.</span> <span class="post-toc-text">3.查询一个元素是否可以被异或出来</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.4.</span> <span class="post-toc-text">4.查询异或最大值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.5.</span> <span class="post-toc-text">5.查询异或最小值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.6.</span> <span class="post-toc-text">6.查询异或第k小</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">9.7.</span> <span class="post-toc-text">7.查询排名</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">10.</span> <span class="post-toc-text">十、字符串</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.1.</span> <span class="post-toc-text">1.KMP —— NEW</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">10.1.1.</span> <span class="post-toc-text">I.next数组</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">10.1.2.</span> <span class="post-toc-text">II.计算 S2 串在 S1 串 出现的位置和次数</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.2.</span> <span class="post-toc-text">3.Manacher</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.3.</span> <span class="post-toc-text">4.SA 后缀数组</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link"><span class="post-toc-number">10.3.1.</span> <span class="post-toc-text">I.倍增</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.4.</span> <span class="post-toc-text">5.Trie树</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.5.</span> <span class="post-toc-text">6.ACAM</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">10.6.</span> <span class="post-toc-text">7.SAM 后缀自动机</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">11.</span> <span class="post-toc-text">十一、计算几何</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">11.1.</span> <span class="post-toc-text">1.二维几何通用板子</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">11.2.</span> <span class="post-toc-text">2.求凸包</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link"><span class="post-toc-number">11.3.</span> <span class="post-toc-text">3.最小圆覆盖</span></a></li></ol></li></ol> -->
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#scarlett-%E7%9A%84-%E6%9D%BF%E5%AD%90">Scarlett 的 板子</a></li>
+<li><a href="#%E4%B8%80-%E6%9D%82%E4%B9%B1%E7%9A%84%E6%80%BB%E7%BB%93">一、杂乱的总结</a><ul>
+<li><a href="#1%E5%BF%AB%E9%80%9F%E5%B9%82">1.快速幂</a></li>
+<li><a href="#2%E7%B4%A0%E6%95%B0%E7%AD%9B">2.素数筛</a></li>
+<li><a href="#3%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%80%E9%98%B6%E4%BA%8C%E9%98%B6">3.前缀和（一阶，二阶）</a></li>
+<li><a href="#4%E8%B4%AA%E5%BF%83%E5%B0%8F%E6%8A%80%E5%B7%A7">4.贪心小技巧</a></li>
+<li><a href="#5%E5%BF%AB%E8%AF%BB">5.快读</a></li>
+<li><a href="#6%E5%BF%AB%E9%80%9F%E4%B9%98%E9%BE%9F%E9%80%9F%E4%B9%98">6.快速乘（龟速乘）</a></li>
+<li><a href="#7__int128">7.__int128</a></li>
+<li><a href="#8%E5%B9%B6%E6%9F%A5%E9%9B%86">8.并查集</a></li>
+<li><a href="#9%E5%BF%AB%E8%AF%BB">9.快读</a></li>
+<li><a href="#10%E5%A4%A7%E6%95%B0">10.大数</a></li>
+<li><a href="#11%E5%8F%96%E6%A8%A1%E4%BC%98%E5%8C%96%E5%8D%A1%E5%B8%B8">11.取模优化卡常</a></li>
+<li><a href="#12%E8%87%AA%E5%8A%A8%E5%8F%96%E6%A8%A1">12.自动取模</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E6%8E%92%E5%BA%8F">二、排序</a><ul>
+<li><a href="#1%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">1.快速排序</a></li>
+<li><a href="#2%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%B1%82%E9%80%86%E5%BA%8F%E6%95%B0">2.归并排序（求逆序数）</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E4%BA%8C%E5%88%86%E6%B3%95">三、二分法</a><ul>
+<li><a href="#1%E4%BA%8C%E5%88%86">1.二分</a></li>
+<li><a href="#2%E5%B0%BA%E5%8F%96%E6%B3%95">2.尺取法</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">四、数据结构</a><ul>
+<li><a href="#1%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84">1.树状数组</a></li>
+<li><a href="#2%E7%BA%BF%E6%AE%B5%E6%A0%91">2.线段树</a></li>
+<li><a href="#3%E8%8E%AB%E9%98%9F">3.莫队</a></li>
+<li><a href="#4%E4%B8%BB%E5%B8%AD%E6%A0%91">4.主席树</a></li>
+<li><a href="#5st%E8%A1%A8">5.ST表</a></li>
+<li><a href="#6%E5%8F%AF%E6%8C%81%E4%B9%85%E5%8C%96%E7%BA%BF%E6%AE%B5%E6%A0%91">6.可持久化线段树</a></li>
+<li><a href="#7%E5%88%86%E5%9D%97%E7%AE%97%E6%B3%95">7.分块算法</a></li>
+<li><a href="#8%E7%AC%9B%E5%8D%A1%E5%B0%94%E6%A0%91">8.笛卡尔树</a></li>
+<li><a href="#9%E7%8F%82%E6%9C%B5%E8%8E%89%E6%A0%91">9.珂朵莉树</a></li>
+<li><a href="#10%E7%BA%BF%E6%AE%B5%E6%A0%91%E5%8A%A8%E6%80%81%E5%BC%80%E7%82%B9">10.线段树动态开点</a></li>
+<li><a href="#11%E5%90%89%E8%80%81%E5%B8%88%E7%BA%BF%E6%AE%B5%E6%A0%91">11.吉老师线段树</a></li>
+<li><a href="#12%E7%BA%BF%E6%AE%B5%E6%A0%91%E4%BA%8C%E5%88%86">12.线段树二分</a></li>
+<li><a href="#13%E5%B7%A6%E5%81%8F%E6%A0%91">13.左偏树</a></li>
+<li><a href="#14%E5%B9%B3%E8%A1%A1%E6%A0%91">14.平衡树</a></li>
+<li><a href="#15%E6%89%AB%E6%8F%8F%E7%BA%BF">15.扫描线</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92">五、动态规划</a><ul>
+<li><a href="#1%E6%B1%82%E6%9C%80%E5%A4%A7%E5%AD%90%E6%AE%B5%E5%AD%90%E7%9F%A9%E9%98%B5%E7%9A%84%E5%92%8C">1.求最大子段（子矩阵）的和</a><ul>
+<li><a href="#i%E6%9C%80%E5%A4%A7%E5%AD%97%E6%AE%B5%E5%92%8C">I.最大字段和</a></li>
+<li><a href="#ii%E6%9C%80%E5%A4%A7%E5%AD%90%E7%9F%A9%E9%98%B5">II.最大子矩阵</a></li>
+</ul>
+</li>
+<li><a href="#2%E6%B1%82%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E4%B8%8B%E9%99%8D%E5%AD%90%E5%BA%8F%E5%88%97">2.求最长上升（下降）子序列</a></li>
+<li><a href="#3%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97">3.最长公共子序列</a></li>
+<li><a href="#4%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98">4.背包问题</a><ul>
+<li><a href="#i">I.</a></li>
+<li><a href="#ii">II.</a></li>
+</ul>
+</li>
+<li><a href="#5%E6%8D%A2%E6%A0%B9dp">5.换根dp</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD-%E6%95%B0%E5%AD%A6">六、数学</a><ul>
+<li><a href="#1%E6%8B%93%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95">1.拓展欧几里得算法</a></li>
+<li><a href="#2%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86%E5%AD%99%E5%AD%90%E5%AE%9A%E7%90%86">2.中国剩余定理（孙子定理）</a></li>
+<li><a href="#3%E7%BB%84%E5%90%88%E6%95%B0">3.组合数</a></li>
+<li><a href="#4bsgs">4.BSGS</a></li>
+<li><a href="#5%E7%9F%A9%E9%98%B5%E5%BF%AB%E9%80%9F%E5%B9%82">5.矩阵快速幂</a></li>
+<li><a href="#6%E5%A4%9A%E9%A1%B9%E5%BC%8F">6.多项式</a><ul>
+<li><a href="#ifft-%E5%BF%AB%E9%80%9F%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2">I.FFT 快速傅里叶变换</a><ul>
+<li><a href="#1%E5%A4%8D%E6%95%B0%E8%BF%90%E7%AE%97%E9%87%8D%E8%BD%BD%E8%BF%90%E7%AE%97%E7%AC%A6">1.复数运算，重载运算符</a></li>
+</ul>
+</li>
+<li><a href="#iintt-%E5%BF%AB%E9%80%9F%E6%95%B0%E8%AE%BA%E5%8F%98%E6%8D%A2">II.NTT 快速数论变换</a></li>
+<li><a href="#iiintt%E7%BB%B4%E6%8A%A401%E8%83%8C%E5%8C%85">III.NTT维护01背包</a></li>
+<li><a href="#iv">IV.</a></li>
+</ul>
+</li>
+<li><a href="#7%E6%89%A9%E5%B1%95%E5%8D%A2%E5%8D%A1%E6%96%AF">7.扩展卢卡斯</a></li>
+<li><a href="#8%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94">8.莫比乌斯反演</a><ul>
+<li><a href="#i%E6%B1%82%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%87%BD%E6%95%B0%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E5%89%8D%E7%BC%80%E5%92%8C">I.求莫比乌斯函数前缀和与欧拉函数前缀和</a></li>
+</ul>
+</li>
+<li><a href="#9%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F">9.矩阵行列式</a></li>
+<li><a href="#10%E9%AB%98%E6%96%AF%E6%B6%88%E5%85%83">10.高斯消元</a></li>
+<li><a href="#11bm">11.BM</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AB-%E5%9B%BE%E8%AE%BA">八、图论</a><ul>
+<li><a href="#1%E8%AF%BB%E5%85%A5%E5%9B%BE">1.读入图</a><ul>
+<li><a href="#i%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84">Ⅰ.邻接矩阵 二维数组</a></li>
+<li><a href="#iivector">Ⅱ.vector</a></li>
+<li><a href="#iii%E9%82%BB%E6%8E%A5%E8%A1%A8">Ⅲ.邻接表</a></li>
+<li><a href="#iv%E4%BC%AA%E9%82%BB%E6%8E%A5%E8%A1%A8%E9%93%BE%E5%BC%8F%E5%89%8D%E5%90%91%E6%98%9F">Ⅳ.伪邻接表（链式前向星）</a></li>
+</ul>
+</li>
+<li><a href="#2%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95">2.最短路算法：</a><ul>
+<li><a href="#idijkstra%E7%AE%97%E6%B3%95">Ⅰ.dijkstra算法</a></li>
+<li><a href="#iibellman-ford%E7%AE%97%E6%B3%95">Ⅱ.<strong>b</strong>ellman-ford算法</a></li>
+<li><a href="#iiispfa%E7%AE%97%E6%B3%95">Ⅲ.SPFA算法</a></li>
+<li><a href="#ivfloyd%E7%AE%97%E6%B3%95">Ⅳ.floyd算法</a></li>
+</ul>
+</li>
+<li><a href="#3%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91">3.最小生成树</a><ul>
+<li><a href="#iprim%E7%AE%97%E6%B3%95">Ⅰ.prim算法</a></li>
+<li><a href="#iikruskal%E7%AE%97%E6%B3%95">Ⅱ.Kruskal算法</a></li>
+<li><a href="#iiikruskal%E9%87%8D%E6%9E%84%E6%A0%91">III.Kruskal重构树</a></li>
+<li><a href="#ivboruvka-%E7%AE%97%E6%B3%95">IV.Boruvka 算法</a></li>
+</ul>
+</li>
+<li><a href="#4lca">4.LCA</a><ul>
+<li><a href="#i%E6%A0%91%E4%B8%8A%E5%80%8D%E5%A2%9E">I.树上倍增</a></li>
+<li><a href="#ii-rmqst%E8%A1%A8">II RMQ+ST表</a></li>
+<li><a href="#iii%E6%A0%91%E9%93%BE%E5%89%96%E5%88%86">Ⅲ.树链剖分</a></li>
+<li><a href="#ivtrajan">Ⅳ.trajan</a></li>
+</ul>
+</li>
+<li><a href="#5%E7%BD%91%E7%BB%9C%E6%B5%81">5.网络流</a><ul>
+<li><a href="#i%E6%9C%80%E5%A4%A7%E6%B5%81">I.最大流</a><ul>
+<li><a href="#1dinic-%E7%AE%97%E6%B3%95">1.Dinic 算法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6%E5%BC%BA%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F">6.强连通分量</a><ul>
+<li><a href="#itarjan">I.tarjan</a></li>
+<li><a href="#iikosaraju-%E7%AE%97%E6%B3%95">II.Kosaraju 算法</a></li>
+</ul>
+</li>
+<li><a href="#7%E6%96%AF%E5%9D%A6%E7%BA%B3%E6%A0%91">7.斯坦纳树</a></li>
+<li><a href="#8%E4%BA%8C%E5%88%86%E5%9B%BE%E5%8C%B9%E9%85%8D%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95">8.二分图匹配，匈牙利算法</a></li>
+<li><a href="#9%E6%A0%91%E5%88%86%E6%B2%BB">9.树分治</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B9%9D-%E7%BA%BF%E6%80%A7%E5%9F%BA">九、线性基</a><ul>
+<li><a href="#1%E7%BA%BF%E6%80%A7%E5%9F%BA%E5%90%AB%E4%B9%89">1.线性基含义</a></li>
+<li><a href="#2%E6%9E%84%E9%80%A0%E7%BA%BF%E6%80%A7%E5%9F%BA">2.构造线性基</a></li>
+<li><a href="#3%E6%9F%A5%E8%AF%A2%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E8%A2%AB%E5%BC%82%E6%88%96%E5%87%BA%E6%9D%A5">3.查询一个元素是否可以被异或出来</a></li>
+<li><a href="#4%E6%9F%A5%E8%AF%A2%E5%BC%82%E6%88%96%E6%9C%80%E5%A4%A7%E5%80%BC">4.查询异或最大值</a></li>
+<li><a href="#5%E6%9F%A5%E8%AF%A2%E5%BC%82%E6%88%96%E6%9C%80%E5%B0%8F%E5%80%BC">5.查询异或最小值</a></li>
+<li><a href="#6%E6%9F%A5%E8%AF%A2%E5%BC%82%E6%88%96%E7%AC%ACk%E5%B0%8F">6.查询异或第k小</a></li>
+<li><a href="#7%E6%9F%A5%E8%AF%A2%E6%8E%92%E5%90%8D">7.查询排名</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8D%81-%E5%AD%97%E7%AC%A6%E4%B8%B2">十、字符串</a><ul>
+<li><a href="#1kmp-new">1.KMP —— NEW</a><ul>
+<li><a href="#inext%E6%95%B0%E7%BB%84">I.next数组</a></li>
+<li><a href="#ii%E8%AE%A1%E7%AE%97-s2-%E4%B8%B2%E5%9C%A8-s1-%E4%B8%B2-%E5%87%BA%E7%8E%B0%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%92%8C%E6%AC%A1%E6%95%B0">II.计算 S2 串在 S1 串 出现的位置和次数</a></li>
+</ul>
+</li>
+<li><a href="#3manacher">3.Manacher</a></li>
+<li><a href="#4sa-%E5%90%8E%E7%BC%80%E6%95%B0%E7%BB%84">4.SA 后缀数组</a><ul>
+<li><a href="#i%E5%80%8D%E5%A2%9E">I.倍增</a></li>
+</ul>
+</li>
+<li><a href="#5trie%E6%A0%91">5.Trie树</a></li>
+<li><a href="#6acam">6.ACAM</a></li>
+<li><a href="#7sam-%E5%90%8E%E7%BC%80%E8%87%AA%E5%8A%A8%E6%9C%BA">7.SAM 后缀自动机</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8D%81%E4%B8%80-%E8%AE%A1%E7%AE%97%E5%87%A0%E4%BD%95">十一、计算几何</a><ul>
+<li><a href="#1%E4%BA%8C%E7%BB%B4%E5%87%A0%E4%BD%95%E9%80%9A%E7%94%A8%E6%9D%BF%E5%AD%90">1.二维几何通用板子</a></li>
+<li><a href="#2%E6%B1%82%E5%87%B8%E5%8C%85">2.求凸包</a></li>
+<li><a href="#3%E6%9C%80%E5%B0%8F%E5%9C%86%E8%A6%86%E7%9B%96">3.最小圆覆盖</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+
+<h2><span id="scarlett-的-板子">Scarlett 的 板子</span></h2><p>板子</p>
+<p>Scarlett‘s boy的板子</p>
+<pre><code class="c++">#include &quot;bits/stdc++.h&quot;
+
+#define IOS std::ios::sync_with_stdio(false);std::cin.tie(nullptr)
+#pragma GCC optimize(3)
+typedef long long ll;
+typedef unsigned long long ull;
+using namespace std;
+const int MOD[2] = &#123;1000000007, 998244353&#125;;
+
+inline ll powmod(ll a, ll b, ll Mod) &#123;
+    ll res = 1;
+    a = (a % Mod + Mod) % Mod;
+    while (b) &#123;
+        if (b &amp; 1) res = 1ll * res * a % Mod;
+        b &gt;&gt;= 1;
+        a = 1ll * a * a % Mod;
+    &#125;
+    return res;
+&#125;
+
+#define debug(x...)\
+    do &#123;\
+        cout &lt;&lt; #x &lt;&lt; &quot; -&gt; &quot;;\
+        err(x);\
+    &#125; while (0)
+
+void err() &#123;
+    cout &lt;&lt; endl;
+&#125;
+
+template&lt;class T, class... Ts&gt;
+void err(const T &amp;arg, const Ts &amp;... args) &#123;
+    cout &lt;&lt; arg &lt;&lt; &#39; &#39;;
+    err(args...);
+&#125;
+
+void init();
+
+const int inf = 0x3f3f3f3f;
+const int mod = MOD[1];
+const int N = 3e5 + 10;
+
+void solve() &#123;
+    int n;
+    cin &gt;&gt; n;
+    vector&lt;int&gt; A(n);
+    for (int i = 0; i &lt; n; i++) cin &gt;&gt; A[i];
+
+&#125;
+
+signed main() &#123;
+    init();
+    IOS;
+    int _ = 1;
+    cin &gt;&gt; _;
+    while (_--)
+        solve();
+    return 0;
+&#125;
+
+void init() &#123;
+
+&#125;
+
+/*
+
+
+*/
+</code></pre>
+<h2><span id="一-杂乱的总结">一、杂乱的总结</span></h2><h3><span id="1快速幂">1.快速幂</span></h3><p>说明：快速幂用于求a的b次模p的结果，但是局限于求单个底数的情况，求多个不同的a的b次可以尝试一下预处理。</p>
+<pre><code class="c++">long long powmod(long long a,long long b,long long p)&#123;
+    long long re=1;
+    while (b&gt;0)&#123;
+        if(b%2==1) re=re*a%p;
+        b/=2;
+        a=a*a%p;
+    &#125;
+    return re;
+&#125;
+</code></pre>
+<h3><span id="2素数筛">2.素数筛</span></h3><p>说明：素数筛可以找到第几个素数是多少，同时可以询问一个数是否为素数。</p>
+<pre><code class="c++">int pri[1000010];
+int vis[1000010];
+int cnt = 0;
+void init() &#123;
+    for (int i = 2; i &lt;= 1000000; i++) &#123;
+        if (vis[i] == 0) pri[++cnt] = i;
+        for (int j = 1; j &lt;= cnt &amp;&amp; i * pri[j] &lt;= 1000000; j++) &#123;
+            vis[i * pri[j]] = 1;
+            if (i % pri[j] == 0) break;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<pre><code>int v[1000010];
+int prime[1000010];
+int cnt=0;
+for (int i=2;i&lt;=n;i++)&#123;
+    if(v[i]==0)&#123;
+        v[i]=i;
+        prime[++cnt]=i;
+    &#125;
+    for (int j=1;j&lt;=cnt;j++)&#123;
+        if(prime[j]&gt;v[i] || i*prime[j]&gt;n) break;
+        v[i*prime[j]] = prime[j];
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="3前缀和一阶二阶">3.前缀和（一阶，二阶）</span></h3><p>一阶可以直接一边循环得到，对于二阶的前缀和，可以用f（i，j）&#x3D;f（i-1，j）+f（i，j-1）-f（i-1，j-1）得到。</p>
+<h3><span id="4贪心小技巧">4.贪心小技巧</span></h3><ol>
+<li>采用考虑局部的情况去贪心，仅考虑两个数之间的关系，再证明两个数之间的关系即为全部之间的关系，即可自定义comp来排序完成贪心。</li>
+<li>可以尝试寻找与二进制之间的关系。</li>
+</ol>
+<h3><span id="5快读">5.快读</span></h3><pre><code>inline void read(int &amp;x) &#123;
+    x = 0;int f = 1;
+    char ch = getchar();
+    while(ch &lt; &#39;0&#39; || ch &gt; &#39;9&#39;) &#123;
+        if (ch == &#39;-&#39;)f = -1 ;
+        ch = getchar();
+    &#125;
+    while(ch &gt;= &#39;0&#39; &amp;&amp; ch &lt;= &#39;9&#39;) &#123;
+        x = (x&lt;&lt;1) + (x&lt;&lt;3) + (ch^48);
+        ch = getchar();
+    &#125;
+    x*=f;
+&#125;
+inline void read(ll &amp;x) &#123;
+    x = 0;int f = 1;
+    char ch = getchar();
+    while(ch &lt; &#39;0&#39; || ch &gt; &#39;9&#39;) &#123;
+        if (ch == &#39;-&#39;)f = -1 ;
+        ch = getchar();
+    &#125;
+    while(ch &gt;= &#39;0&#39; &amp;&amp; ch &lt;= &#39;9&#39;) &#123;
+        x = (x&lt;&lt;1) + (x&lt;&lt;3) + (ch^48);
+        ch = getchar();
+    &#125;
+    x*=f;
+&#125;
+</code></pre>
+<h3><span id="6快速乘龟速乘">6.快速乘（龟速乘）</span></h3><pre><code>ll powand(ll a,ll b,ll p) // a*b  mod p 
+&#123;
+    ll re=0;
+    while(b)
+    &#123;
+        if(b&amp;1) re=(re+a)%p;
+        a=(a&lt;&lt;1)%p;
+        b&gt;&gt;=1;
+    &#125;
+    return re;
+&#125;
+</code></pre>
+<h3><span id="7__int128">7.__int128</span></h3><pre><code>inline void print(__int128 x) &#123;
+    if(x&lt;0)&#123;
+        putchar(&#39;-&#39;);
+        x=-x;
+    &#125;
+    if(x&gt;9) print(x/10); 
+    putchar(x%10+&#39;0&#39;);
+&#125;
+inline void scan(__int128 &amp;x)//输入
+&#123;
+    x=0;int f=1;char ch=getchar();
+    while (!isdigit(ch))&#123;if (ch==&#39;-&#39;)f=-1;ch=getchar();&#125;
+    while(isdigit(ch))&#123;x=x*10+ch-48;ch=getchar();&#125;
+    x*=f;
+&#125;
+</code></pre>
+<h3><span id="8并查集">8.并查集</span></h3><pre><code>struct DSU &#123;
+    vector&lt;int&gt; fa, siz;
+
+    DSU(int M) : fa(M + 1), siz(M + 1, 1) &#123;
+        for (int i = 0; i &lt;= M; i++) fa[i] = i;
+    &#125;
+
+    inline int find(int x) &#123; return fa[x] == x ? x : fa[x] = find(fa[x]); &#125;
+
+    inline bool equal(int x, int y) &#123; return find(x) == find(y); &#125;
+
+    inline void merge(int x, int y) &#123;
+        int fx = find(x), fy = find(y);
+        if (fx != fy) &#123;
+            if (siz[fx] &gt; siz[fy]) swap(fx, fy);
+            fa[fx] = fy;
+            siz[fy] += siz[fx];
+            siz[fx] = 0;
+        &#125;
+    &#125;
+&#125;;
+</code></pre>
+<h3><span id="9快读">9.快读</span></h3><pre><code>char nc() &#123;
+    static char buf[1000000], *p = buf, *q = buf;
+    return p == q &amp;&amp; (q = (p = buf) + fread(buf, 1, 1000000, stdin), p == q) ? EOF : *p++;
+&#125;
+inline int read() &#123;
+    int x = 0,f = 1;
+    char ch = nc();
+    while (!isdigit(ch)) &#123;
+        if (ch == &#39;-&#39;)f = -1;
+        ch = nc();
+    &#125;
+    while (isdigit(ch)) &#123;
+        x = (x &lt;&lt; 1) + (x &lt;&lt; 3) + (ch ^ 48);
+        ch = nc();
+    &#125;
+    return x * f;
+&#125;
+</code></pre>
+<pre><code>namespace Fast_IO&#123; ///orz laofu
+    const int MAXL((1 &lt;&lt; 18) + 1);int iof, iotp;
+    char ioif[MAXL], *ioiS, *ioiT, ioof[MAXL],*iooS=ioof,*iooT=ioof+MAXL-1,ioc,iost[55];
+    char Getchar()&#123;
+        if (ioiS == ioiT)&#123;
+            ioiS=ioif;ioiT=ioiS+fread(ioif,1,MAXL,stdin);return (ioiS == ioiT ? EOF : *ioiS++);
+        &#125;else return (*ioiS++);
+    &#125;
+    void Write()&#123;fwrite(ioof,1,iooS-ioof,stdout);iooS=ioof;&#125;
+    void Putchar(char x)&#123;*iooS++ = x;if (iooS == iooT)Write();&#125;
+    inline int read()&#123;
+        int x=0;for(iof=1,ioc=Getchar();(ioc&lt;&#39;0&#39;||ioc&gt;&#39;9&#39;)&amp;&amp;ioc!=EOF;)iof=ioc==&#39;-&#39;?-1:1,ioc=Getchar();
+        if(ioc==EOF)exit(0);
+        for(x=0;ioc&lt;=&#39;9&#39;&amp;&amp;ioc&gt;=&#39;0&#39;;ioc=Getchar())x=(x&lt;&lt;3)+(x&lt;&lt;1)+(ioc^48);return x*iof;
+    &#125;
+    inline long long read_ll()&#123;
+        long long x=0;for(iof=1,ioc=Getchar();(ioc&lt;&#39;0&#39;||ioc&gt;&#39;9&#39;)&amp;&amp;ioc!=EOF;)iof=ioc==&#39;-&#39;?-1:1,ioc=Getchar();
+        if(ioc==EOF)exit(0);
+        for(x=0;ioc&lt;=&#39;9&#39;&amp;&amp;ioc&gt;=&#39;0&#39;;ioc=Getchar())x=(x&lt;&lt;3)+(x&lt;&lt;1)+(ioc^48);return x*iof;
+    &#125;
+    /**
+    #define lll __int128
+    inline lll read_lll()&#123;
+        lll x=0;for(iof=1,ioc=Getchar();(ioc&lt;&#39;0&#39;||ioc&gt;&#39;9&#39;)&amp;&amp;ioc!=EOF;)iof=ioc==&#39;-&#39;?-1:1,ioc=Getchar();
+        if(ioc==EOF)exit(0);
+        for(x=0;ioc&lt;=&#39;9&#39;&amp;&amp;ioc&gt;=&#39;0&#39;;ioc=Getchar())x=(x&lt;&lt;3)+(x&lt;&lt;1)+(ioc^48);return x*iof;
+    &#125;*/
+    template &lt;class Int&gt;void Print(Int x, char ch = &#39;\0&#39;)&#123;
+        if(!x)Putchar(&#39;0&#39;);if(x&lt;0)Putchar(&#39;-&#39;),x=-x;while(x)iost[++iotp]=x%10+&#39;0&#39;,x/=10;
+        while(iotp)Putchar(iost[iotp--]);if (ch)Putchar(ch);
+    &#125;
+    void Getstr(char *s, int &amp;l)&#123;
+        for(ioc=Getchar();ioc==&#39; &#39;||ioc==&#39;\n&#39;||ioc==&#39;\t&#39;;)ioc=Getchar();
+        if(ioc==EOF)exit(0);
+        for(l=0;!(ioc==&#39; &#39;||ioc==&#39;\n&#39;||ioc==&#39;\t&#39;||ioc==EOF);ioc=Getchar())s[l++]=ioc;s[l] = 0;
+    &#125;
+    void Putstr(const char *s)&#123;for(int i=0,n=strlen(s);i&lt;n;++i)Putchar(s[i]);&#125;
+&#125; // namespace Fast_IO
+using namespace Fast_IO;
+</code></pre>
+<h3><span id="10大数">10.大数</span></h3><pre><code>string build(ll x)&#123;
+    string ans=&quot;&quot;;
+    if(x==0)&#123;
+        ans=&quot;0&quot;;return ans;
+    &#125;
+    while(x)&#123;
+        char c=&#39;0&#39;+(x%10);
+        x/=10;
+        ans=c+ans;
+    &#125;
+    return ans;
+&#125;
+string add(string a,string b)//只限两个非负整数相加
+&#123;
+    string ans;
+    int na[L]=&#123;0&#125;,nb[L]=&#123;0&#125;;
+    int la=a.size(),lb=b.size();
+    for(int i=0;i&lt;la;i++) na[la-1-i]=a[i]-&#39;0&#39;;
+    for(int i=0;i&lt;lb;i++) nb[lb-1-i]=b[i]-&#39;0&#39;;
+    int lmax=la&gt;lb?la:lb;
+    for(int i=0;i&lt;lmax;i++) na[i]+=nb[i],na[i+1]+=na[i]/10,na[i]%=10;
+    if(na[lmax]) lmax++;
+    for(int i=lmax-1;i&gt;=0;i--) ans+=na[i]+&#39;0&#39;;
+    return ans;
+&#125;
+
+string mul(string a,string b)//高精度乘法a,b,均为非负整数
+&#123;
+    string s;
+    int na[L],nb[L],nc[L],La=a.size(),Lb=b.size();//na存储被乘数，nb存储乘数，nc存储积
+    fill(na,na+L,0);fill(nb,nb+L,0);fill(nc,nc+L,0);//将na,nb,nc都置为0
+    for(int i=La-1;i&gt;=0;i--) na[La-i]=a[i]-&#39;0&#39;;//将字符串表示的大整形数转成i整形数组表示的大整形数
+    for(int i=Lb-1;i&gt;=0;i--) nb[Lb-i]=b[i]-&#39;0&#39;;
+    for(int i=1;i&lt;=La;i++)
+        for(int j=1;j&lt;=Lb;j++)
+        nc[i+j-1]+=na[i]*nb[j];//a的第i位乘以b的第j位为积的第i+j-1位（先不考虑进位）
+    for(int i=1;i&lt;=La+Lb;i++)
+        nc[i+1]+=nc[i]/10,nc[i]%=10;//统一处理进位
+    if(nc[La+Lb]) s+=nc[La+Lb]+&#39;0&#39;;//判断第i+j位上的数字是不是0
+    for(int i=La+Lb-1;i&gt;=1;i--)
+        s+=nc[i]+&#39;0&#39;;//将整形数组转成字符串
+    return s;
+&#125;
+</code></pre>
+<h3><span id="11取模优化卡常">11.取模优化卡常</span></h3><pre><code>inline void add(int &amp;a, int b) &#123;
+    a = (a + b) &gt;= mod ? (a + b - mod) : (a + b);
+&#125;
+inline void sub(int &amp;a, int b) &#123;
+    a = (a - b) &lt; 0 ? (a - b + mod) : (a - b);
+&#125;
+</code></pre>
+<h3><span id="12自动取模">12.自动取模</span></h3><pre><code>int norm(int x) &#123;
+    if (x &lt; 0) &#123;
+        x += mod;
+    &#125;
+    if (x &gt;= mod) &#123;
+        x -= mod;
+    &#125;
+    return x;
+&#125;
+template&lt;class T&gt;
+T power(T aa, long long bb) &#123;
+    T res = 1;
+    for (; bb; bb /= 2, aa *= aa)
+        if (bb % 2)
+            res *= aa;
+    return res;
+&#125;
+struct Z &#123;
+    int x;
+    Z(int x = 0) : x(norm(x)) &#123;&#125;
+    // Z(long long x) : x(norm(x % mod)) &#123;&#125;
+    int val() const &#123;
+        return x;
+    &#125;
+    Z operator-() const &#123;
+        return Z(norm(mod - x));
+    &#125;
+    Z inv() const &#123;
+        assert(x != 0);
+        return power(*this, mod - 2);
+    &#125;
+    Z &amp;operator*=(const Z &amp;rhs) &#123;
+        x = 1ull * x * rhs.x % mod;
+        return *this;
+    &#125;
+    Z &amp;operator+=(const Z &amp;rhs) &#123;
+        x = norm(x + rhs.x);
+        return *this;
+    &#125;
+    Z &amp;operator-=(const Z &amp;rhs) &#123;
+        x = norm(x - rhs.x);
+        return *this;
+    &#125;
+    Z &amp;operator/=(const Z &amp;rhs) &#123;
+        return *this *= rhs.inv();
+    &#125;
+    friend Z operator*(const Z &amp;lhs, const Z &amp;rhs) &#123;
+        Z res = lhs;
+        res *= rhs;
+        return res;
+    &#125;
+    friend Z operator+(const Z &amp;lhs, const Z &amp;rhs) &#123;
+        Z res = lhs;
+        res += rhs;
+        return res;
+    &#125;
+    friend Z operator-(const Z &amp;lhs, const Z &amp;rhs) &#123;
+        Z res = lhs;
+        res -= rhs;
+        return res;
+    &#125;
+    friend Z operator/(const Z &amp;lhs, const Z &amp;rhs) &#123;
+        Z res = lhs;
+        res /= rhs;
+        return res;
+    &#125;
+    friend std::istream &amp;operator&gt;&gt;(std::istream &amp;is, Z &amp;a) &#123;
+        int v;
+        is &gt;&gt; v;
+        a = Z(v);
+        return is;
+    &#125;
+    friend std::ostream &amp;operator&lt;&lt;(std::ostream &amp;os, const Z &amp;a) &#123;
+        return os &lt;&lt; a.val();
+    &#125;
+&#125;;
+</code></pre>
+<h2><span id="二-排序">二、排序</span></h2><h3><span id="1快速排序">1.快速排序</span></h3><pre><code>int a[N],n;
+void quick_sort(int l, int r)&#123;
+    int i = l, j = r;
+    int mid = (l + r) / 2;
+    int x = a[mid] ;
+    while (i &lt;= j)&#123;
+        while (a[i] &lt; x) i++;
+        while (a[j] &gt; x) j--;
+        if( i &lt;= j )&#123;
+            swap (a[i],a[j]);
+            i++;
+            j--;
+        &#125;
+        if (l &lt; j) quick_sort(l,j);
+        if (i &lt; r) quick_sort(i,r);
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="2归并排序求逆序数">2.归并排序（求逆序数）</span></h3><pre><code>int a[N],n;
+int b[N],cnt=0;   // cnt可用于计算逆序数 
+void hebin(int l,int r)&#123;
+    int mid = ( l + r ) / 2;
+    int p = l , q = mid + 1;
+    for (int i = l ; i &lt;= r ; i++)	&#123;
+        if ( (q &gt; r ) || (p &lt;= mid &amp;&amp; a[p] &lt;= a[q] ))&#123;
+            b[i] = a[p++];
+        &#125;
+        else&#123;
+            b[i] = a[q++];
+            cnt += mid - p + 1; 
+        &#125;
+    &#125;
+    for (int i=l ; i&lt;= r ; i++)	&#123;
+        a[i] = b[i];
+    &#125;
+&#125; 
+
+void merge_sort (int l , int r )&#123;
+    if (l == r) return ;
+    int mid = ( l + r ) / 2;
+    merge_sort(l,mid);
+    merge_sort(mid+1,r);
+    hebin(l,r);
+&#125;
+</code></pre>
+<h2><span id="三-二分法">三、二分法</span></h2><h3><span id="1二分">1.二分</span></h3><pre><code>int l = 1 , r = N;
+while (l &lt;= r)&#123;
+    int mid = (l + r) / 2;
+    if(deal(mid)) l = mid + 1; 
+    // deal（）用于判断是否可行
+    else r = mid - 1;
+&#125;
+int ans = l + 1;
+</code></pre>
+<h3><span id="2尺取法">2.尺取法</span></h3><pre><code>int l = 1 , r = 1;
+while (l&lt;=n)&#123;
+    if(deal() &amp;&amp; l &lt; r) r++;
+    else l++;
+&#125;
+</code></pre>
+<h2><span id="四-数据结构">四、数据结构</span></h2><h3><span id="1树状数组">1.树状数组</span></h3><p>说明：</p>
+<pre><code>int d[N]; 
+int lowbit(int x)&#123;//获取最后一位的1 
+    return x&amp;(-x);
+&#125;
+
+int query(int x)&#123; // 询问1-x的和。 
+    int ans=0;
+    while (x)&#123;
+        ans+=d[x];
+        x-=lowbit(x);
+    &#125;
+    return ans;
+&#125; 
+
+void add(int i,int k ) &#123;// 修改单点值 
+    while (i&lt;=n)&#123;
+        d[i]+=k;
+        i+=lowbit(i);
+    &#125;
+&#125;
+int main()&#123;
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="2线段树">2.线段树</span></h3><pre><code>struct Segment_Tree &#123;
+    vector&lt;int&gt; tag, sum, A;
+    int Mi = 1, Ma = 1e9;
+
+    Segment_Tree(int M) : tag((M + 1) * 4, 0), sum((M + 1) * 4, 0), A(M + 1, 0) &#123; Ma = M; &#125;
+
+    inline void pushup(int &amp;p) &#123;
+        sum[p] = sum[p &lt;&lt; 1] + sum[p &lt;&lt; 1 | 1];
+    &#125;
+
+    inline void pushdown(int &amp;p, int &amp;l, int &amp;r, int &amp;mid) &#123;
+        if (tag[p]) &#123;
+            int &amp;W = tag[p];
+            sum[p &lt;&lt; 1] += (mid - l + 1) * W, sum[p &lt;&lt; 1 | 1] += (r - mid) * W;
+            tag[p &lt;&lt; 1] += W, tag[p &lt;&lt; 1 | 1] += W;
+            W = 0;
+        &#125;
+    &#125;
+
+    inline void build(int p, int l, int r) &#123;
+        if (l == r) &#123;
+            sum[p] = A[l];
+            return;
+        &#125;
+        int mid = l + r &gt;&gt; 1;
+        build(p &lt;&lt; 1, l, mid);
+        build(p &lt;&lt; 1 | 1, mid + 1, r);
+        pushup(p);
+    &#125;
+
+    inline void build() &#123; build(1, Mi, Ma); &#125;
+
+    inline void add(int p, int l, int r, int x, int y, int w) &#123;
+        if (x &lt;= l &amp;&amp; r &lt;= y) &#123;
+            sum[p] += w * (r - l + 1);
+            tag[p] += w;
+            return;
+        &#125;
+        int mid = l + r &gt;&gt; 1;
+        pushdown(p, l, r, mid);
+        if (x &lt;= mid) add(p &lt;&lt; 1, l, mid, x, y, w);
+        if (y &gt; mid) add(p &lt;&lt; 1 | 1, mid + 1, r, x, y, w);
+        pushup(p);
+    &#125;
+
+    inline void add(int x, int y, int w) &#123; add(1, Mi, Ma, x, y, w); &#125;
+
+    inline int query(int p, int l, int r, int x, int y) &#123;
+        if (x &lt;= l &amp;&amp; r &lt;= y) return sum[p];
+        int mid = l + r &gt;&gt; 1, Ans = 0;
+        pushdown(p, l, r, mid);
+        if (x &lt;= mid) Ans += query(p &lt;&lt; 1, l, mid, x, y);
+        if (y &gt; mid) Ans += query(p &lt;&lt; 1 | 1, mid + 1, r, x, y);
+        return Ans;
+    &#125;
+
+    inline int query(int l, int r) &#123; return query(1, Mi, Ma, l, r); &#125;
+&#125;;
+</code></pre>
+<h3><span id="3莫队">3.莫队</span></h3><p>对区间分块 每组再按照右端点排序</p>
+<pre><code>const int N = 1e6 + 10;
+int n,m;int a[N],beg[N];
+int in[N];
+struct ty&#123;
+    int l,r,id;
+&#125;s[N];
+bool cmp(ty A, ty B) &#123;
+    return beg[A.l] == beg[B.l] ? A.r &lt; B.r : beg[A.l] &lt; beg[B.l];
+&#125;
+int qes[N];
+int ans=0;
+int main()&#123;
+    read(n);
+    for(int i = 1; i &lt;= ceil((double) n / sqrt(n)); ++ i)
+        for(int j = (i - 1) * sqrt(n) + 1; j &lt;= i * sqrt(n); ++ j)
+            beg[j] = i;//这是分的块 
+    for(int i=1;i&lt;=n;i++) read(a[i]);
+    read(m);
+    for(int i=1;i&lt;=m;i++)&#123;
+        read(s[i].l);read(s[i].r);s[i].id=i;
+    &#125;
+    sort(s+1,s+1+m,cmp);
+    for(int i=1,l=1,r=0;i&lt;=m;i++)&#123;
+        while(r&lt;s[i].r) if(++in[a[++r]]==1) ans++;
+        while(r&gt;s[i].r) if(--in[a[r--]]==0) ans--;
+        while(l&lt;s[i].l) if(--in[a[l++]]==0) ans--;
+        while(l&gt;s[i].l) if(++in[a[--l]]==1) ans++;
+        qes[s[i].id]=ans;
+    &#125;
+    for(int i=1;i&lt;=m;i++) printf(&quot;%d\n&quot;,qes[i]);
+    return 0;
+&#125; 
+</code></pre>
+<h3><span id="4主席树">4.主席树</span></h3><p>维护区间第k大</p>
+<pre><code>#include&lt;bits/stdc++.h&gt; 
+using namespace std;
+const int N = 1e5 + 10;
+struct ty&#123;
+    int l,r,sum;
+&#125;tree[N&lt;&lt;5];
+int a[N],number[N],root[N],node_num;
+void build(int l,int r,int &amp;node)&#123;
+    node=++node_num;
+    if(l==r)return;
+    int mid=(l+r)&gt;&gt;1;
+    build(l,mid,tree[node].l);
+    build(mid+1,r,tree[node].r);
+&#125;
+void add(int l,int r,int &amp;node,int pre,int pos)&#123;
+    node=++node_num;
+    tree[node]=tree[pre];
+    tree[node].sum++;
+    if(l==r)return;
+    int mid=(l+r)&gt;&gt;1;
+    if(pos&lt;=mid) add(l,mid,tree[node].l,tree[pre].l,pos);
+    else add(mid+1,r,tree[node].r,tree[pre].r,pos);
+&#125;
+int query(int l,int r,int node,int pre,int k)&#123;
+    if(l==r)return l;
+    int chal=tree[tree[node].l].sum-tree[tree[pre].l].sum;
+    int mid=(l+r)&gt;&gt;1;
+    if(k&lt;=chal)return query(l,mid,tree[node].l,tree[pre].l,k);
+    else return query(mid+1,r,tree[node].r,tree[pre].r,k-chal);
+&#125;
+int main()&#123;
+    int n,m;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+    for(int i=1;i&lt;=n;i++)&#123;
+        scanf(&quot;%d&quot;,&amp;a[i]);
+        number[i]=a[i];
+    &#125;
+    sort(number+1,number+1+n);
+    int num=unique(number+1,number+1+n)-number-1;
+    node_num=0;
+    build(1,num,root[0]);
+    for(int i=1;i&lt;=n;i++)&#123;
+        int pos=lower_bound(number+1,number+1+num,a[i])-number;
+        add(1,num,root[i],root[i-1],pos);
+    &#125;
+    int l,r,k;
+    while(m--)&#123;
+        scanf(&quot;%d%d%d&quot;,&amp;l,&amp;r,&amp;k);
+        int pos=query(1,num,root[r],root[l-1],k);
+        printf(&quot;%d\n&quot;,number[pos]);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="5st表">5.ST表</span></h3><pre><code>const int N = 1e6 + 10;
+int A[N];
+struct ST &#123;
+    vector&lt;vector&lt;int&gt;&gt; Mi, Ma;
+    vector&lt;int&gt; Lg;
+    int n;
+
+    ST(int M) : Mi(M + 1, vector&lt;int&gt;(21)), Ma(M + 1, vector&lt;int&gt;(21)), Lg(M + 1) &#123;
+        n = M;
+        for (int i = 1; i &lt;= n; i++) Ma[i][0] = Mi[i][0] = A[i];
+        for (int j = 1; j &lt;= 20; j++) &#123;
+            for (int i = 1; i &lt;= n - (1 &lt;&lt; j) + 1; i++) &#123;
+                Ma[i][j] = max(Ma[i][j - 1], Ma[i + (1 &lt;&lt; (j - 1))][j - 1]);
+                Mi[i][j] = min(Mi[i][j - 1], Mi[i + (1 &lt;&lt; (j - 1))][j - 1]);
+            &#125;
+        &#125;
+        Lg[0] = -1;
+        for (int i = 1; i &lt;= n; i++) &#123;
+            Lg[i] = Lg[i &gt;&gt; 1] + 1;
+        &#125;
+    &#125;
+
+    inline int query_Min(int l, int r) &#123;
+        int k = Lg[r - l + 1];
+        return min(Mi[l][k], Mi[r - (1 &lt;&lt; k) + 1][k]);
+    &#125;
+
+    inline int query_Max(int l, int r) &#123;
+        int k = Lg[r - l + 1];
+        return max(Ma[l][k], Ma[r - (1 &lt;&lt; k) + 1][k]);
+    &#125;
+&#125;;
+</code></pre>
+<h3><span id="6可持久化线段树">6.可持久化线段树</span></h3><pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int maxn = 1e5;  // 数据范围
+int tot, n, m;
+int sum[(maxn &lt;&lt; 5) + 10],rt[maxn + 10], ls[(maxn &lt;&lt; 5) + 10],rs[(maxn &lt;&lt; 5) + 10];
+int a[maxn + 10], ind[maxn + 10], len;
+
+inline int getid(const int &amp;val) &#123;  // 离散化
+    return lower_bound(ind + 1, ind + len + 1, val) - ind;
+&#125;
+int build(int l, int r) &#123;  // 建树
+    int root = ++tot;
+    if (l == r) return root;
+    int mid = l + r &gt;&gt; 1;
+    ls[root] = build(l, mid);
+    rs[root] = build(mid + 1, r);
+    return root;  // 返回该子树的根节点
+&#125;
+int update(int k, int l, int r, int root) &#123;  // 插入操作
+    int dir = ++tot;
+    ls[dir] = ls[root], rs[dir] = rs[root], sum[dir] = sum[root] + 1;
+    if (l == r) return dir;
+    int mid = l + r &gt;&gt; 1;
+    if (k &lt;= mid) ls[dir] = update(k, l, mid, ls[dir]);
+    else rs[dir] = update(k, mid + 1, r, rs[dir]);
+    return dir;
+&#125;
+
+int query(int u, int v, int l, int r, int k) &#123;  // 查询操作
+    int mid = l + r &gt;&gt; 1,
+        x = sum[ls[v]] - sum[ls[u]];  // 通过区间减法得到左儿子中所存储的数值个数
+    if (l == r) return l;
+    if (k &lt;= x)  // 若 k 小于等于 x ，则说明第 k 小的数字存储在在左儿子中
+        return query(ls[u], ls[v], l, mid, k);
+    else  // 否则说明在右儿子中
+        return query(rs[u], rs[v], mid + 1, r, k - x);
+&#125;
+
+inline void init() &#123;
+    scanf(&quot;%d%d&quot;, &amp;n, &amp;m);
+    for (int i = 1; i &lt;= n; ++i) scanf(&quot;%d&quot;, a + i);
+    memcpy(ind, a, sizeof ind);
+    sort(ind + 1, ind + n + 1);
+    len = unique(ind + 1, ind + n + 1) - ind - 1;
+    rt[0] = build(1, len);
+    for (int i = 1; i &lt;= n; ++i) 
+        rt[i] = update(getid(a[i]), 1, len, rt[i - 1]);
+&#125;
+int l, r, k;
+inline void work() &#123;
+    while (m--) &#123;
+        scanf(&quot;%d%d%d&quot;, &amp;l, &amp;r, &amp;k);
+           printf(&quot;%d\n&quot;, ind[query(rt[l - 1], rt[r], 1, len, k)]);  // 回答询问
+    &#125;
+&#125;
+int main() &#123;
+    init();
+    work();
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="7分块算法">7.分块算法</span></h3><pre><code>int len;
+int fir[N],sec[N],sz[N],blo[N];
+ll sum[N],lazy[N],a[N]; 
+void pre(int n)&#123;
+    len=sqrt(n);
+    for(int i=1;i&lt;=len;i++)&#123;
+        fir[i]=n/len*(i-1)+1;
+        sec[i]=n/len*i;
+    &#125;
+    sec[len]=n;
+    for(int i=1;i&lt;=len;i++)&#123;
+        for(int j=fir[i];j&lt;=sec[i];j++)&#123;
+            blo[j]=i;
+            sum[i]+=a[j];
+        &#125;
+    &#125;
+    for(int i=1;i&lt;=len;i++)&#123;
+        sz[i]=sec[i]-fir[i]+1;
+    &#125;
+&#125;
+void update(int x,int y,ll k)&#123;
+    if(blo[x]==blo[y])&#123;
+        for(int i=x;i&lt;=y;i++)&#123;
+            a[i]+=k;
+            sum[blo[i]]+=k;
+        &#125;
+        return ;
+    &#125;
+    for(int i=x;i&lt;=sec[blo[x]];i++)&#123;
+        a[i]+=k;sum[blo[i]]+=k;
+    &#125;
+    for(int i=y;i&gt;=fir[blo[y]];i--)&#123;
+        a[i]+=k;sum[blo[i]]+=k;
+    &#125;
+    for(int i=blo[x]+1;i&lt;blo[y];i++)&#123;
+        lazy[i]+=k;
+    &#125;
+&#125;
+ll query(int x,int y)&#123;
+    ll res=0;
+    if(blo[x]==blo[y])&#123;
+        for(int i=x;i&lt;=y;i++)&#123;
+            res+=a[i]+lazy[blo[i]];
+        &#125;
+    &#125;else&#123;
+        for(int i=x;i&lt;=sec[blo[x]];i++)&#123;
+            res+=a[i]+lazy[blo[i]];
+        &#125;
+        for(int i=y;i&gt;=fir[blo[y]];i--)&#123;
+            res+=a[i]+lazy[blo[i]];
+        &#125;
+        for(int i=blo[x]+1;i&lt;blo[y];i++)&#123;
+            res+=sum[i]+lazy[i]*sz[i];
+        &#125;
+    &#125;
+    return res;
+&#125;
+</code></pre>
+<h3><span id="8笛卡尔树">8.笛卡尔树</span></h3><pre><code>const int N = 1e7 + 10;
+int a[N];
+stack&lt;int&gt;st;
+int ls[N],rs[N]; 
+int main()&#123;
+    int n=read();
+    for(int i=1;i&lt;=n;i++) a[i]=read();
+    int root=0;
+    for(int i=1;i&lt;=n;i++)&#123;
+        while(!st.empty() &amp;&amp; a[i]&lt;a[st.top()])&#123;ls[i]=st.top();st.pop();&#125;
+        if(st.empty()) root=i;
+        else rs[st.top()]=i;
+        st.push(i);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>HDU 1506 最大子矩形</p>
+<blockquote>
+<p>题目大意： 个位置，每个位置上的高度是 ，求最大子矩阵。举一个例子，如下图：</p>
+<p>![eg](.&#x2F;Scarlett 的 板子 - Scarlett_boy 的博客_files&#x2F;cartesian-tree3.jpeg)</p>
+<p>阴影部分就是图中的最大子矩阵。</p>
+</blockquote>
+<p>这道题你可 DP，可单调栈，但你万万没想到的是它也可以笛卡尔树！具体地，我们把下标作为键值 k， hi 作为键值 w满足小根堆性质，构建一棵(i,hi)的笛卡尔树。</p>
+<p>这样我们枚举每个结点u ，把 Uw（即结点 u的高度键值 h）作为最大子矩阵的高度。由于我们建立的笛卡尔树满足小根堆性质，因此u 的子树内的结点的高度都大于等于u 。而我们又知道 u子树内的下标是一段连续的区间。于是我们只需要知道子树的大小，然后就可以算这个区间的最大子矩阵的面积了。用每一个点计算出来的值更新答案即可。显然这个可以一次 DFS 完成，因此复杂度仍是O(n)的。</p>
+<pre><code>#include&lt;bits/stdc++.h&gt;
+#define ll long long
+using namespace std;
+const int N = 1e6 + 10;
+struct ty&#123;
+    int ls,rs;
+&#125;tr[N];
+int a[N];
+stack&lt;int&gt;st;
+ll ans=0;
+int siz[N];
+void dfs(int x)&#123;
+    if(!x) return ;
+    dfs(tr[x].ls);
+    dfs(tr[x].rs);
+    siz[x]=siz[tr[x].ls]+siz[tr[x].rs]+1;
+    ans=max(ans,1ll*siz[x]*a[x]);
+&#125;
+void solve()&#123;
+    int n;
+    while(scanf(&quot;%d&quot;,&amp;n)!=EOF)&#123;
+        if(n==0) break;
+        for(int i=1;i&lt;=n;i++) scanf(&quot;%d&quot;,&amp;a[i]);
+        for(int i=1;i&lt;=n;i++) tr[i].ls=tr[i].rs=0;
+        int root=0; while(!st.empty()) st.pop();
+        for(int i=1;i&lt;=n;i++)&#123;
+            while(!st.empty() &amp;&amp; a[i]&lt;a[st.top()])&#123;
+                tr[i].ls=st.top();st.pop();
+            &#125;
+            if(st.empty()) root=i;
+            else&#123;
+                tr[st.top()].rs=i;
+            &#125;
+            st.push(i);
+        &#125;
+        ans=0;
+        dfs(root);
+        printf(&quot;%lld\n&quot;,ans);
+    &#125; 
+&#125;
+int main()&#123;
+        solve();
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="9珂朵莉树">9.珂朵莉树</span></h3><pre><code>int n;
+struct Node_t &#123;
+    int l, r;
+    mutable int v;
+    Node_t(const int &amp;il, const int &amp;ir, const int &amp;iv) : l(il), r(ir), v(iv) &#123;&#125;
+    inline bool operator&lt;(const Node_t &amp;o) const &#123;
+        return l &lt; o.l;
+    &#125;	
+&#125;;
+set&lt;Node_t&gt; odt;
+set&lt;Node_t&gt;::iterator split(int x) &#123;
+        if (x &gt; n) return odt.end();
+        auto it = --odt.upper_bound(Node_t &#123;x, 0, 0&#125;);
+        if (it-&gt;l == x) return it;
+        int l = it-&gt;l, r = it-&gt;r, v = it-&gt;v;
+        odt.erase(it);
+        odt.insert(Node_t(l, x - 1, v));
+        return odt.insert(Node_t(x, r, v)).first;
+    &#125;
+void assign(int l, int r, int v) &#123;
+    auto itr = split(r + 1), itl = split(l);
+    odt.erase(itl, itr);
+    odt.insert(Node_t(l, r, v));
+&#125;
+void performance(int l, int r) &#123;
+    auto itr = split(r + 1), itl = split(l);
+    for (; itl != itr; ++itl) &#123;
+        // Perform Operations here
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="10线段树动态开点">10.线段树动态开点</span></h3><pre><code>struct Tree &#123;
+#define LOG 30
+    int root, cnt, Mi, Ma;
+    vector&lt;int&gt; ls, rs, sum;
+
+    Tree(int M = 0, int Min = 1, int Max = 1e9) : ls(M * LOG), rs(M * LOG), sum(M * LOG) &#123;
+        root = 0, cnt = 0;
+        Mi = Min, Ma = Max;
+    &#125;
+
+    inline void pushup(int p) &#123; sum[p] = sum[ls[p]] + sum[rs[p]]; &#125;
+
+    inline void update(int &amp;p, int l, int r, int x, int w) &#123;
+        if (!p) p = ++cnt;
+        if (l == r) &#123;
+            sum[p] += w;
+            return;
+        &#125;
+        int mid = l + r &gt;&gt; 1;
+        if (x &lt;= mid) update(ls[p], l, mid, x, w);
+        else update(rs[p], mid + 1, r, x, w);
+        pushup(p);
+    &#125;
+
+    inline void update(int x, int w) &#123; update(root, Mi, Ma, x, w); &#125;
+
+    inline int query(int p, int l, int r, int x, int y) &#123;
+        if (!p) return 0;
+        if (x &lt;= l &amp;&amp; r &lt;= y) return sum[p];
+        int ans = 0;
+        int mid = l + r &gt;&gt; 1;
+        if (x &lt;= mid) ans += query(ls[p], l, mid, x, y);
+        if (y &gt; mid) ans += query(rs[p], mid + 1, r, x, y);
+        return ans;
+    &#125;
+
+    inline int query(int l, int r) &#123; return query(root, Mi, Ma, l, r); &#125;
+&#125;;
+</code></pre>
+<h3><span id="11吉老师线段树">11.吉老师线段树</span></h3><pre><code>int a[N];
+struct Tree &#123;
+    ll SUM[N &lt;&lt; 2], MAX[N &lt;&lt; 2], C_MAX[N &lt;&lt; 2], CNT[N &lt;&lt; 2];
+    ll lazy[N &lt;&lt; 2];
+
+    void pushup(int p, int l, int r) &#123;
+        SUM[p] = SUM[p &lt;&lt; 1] + SUM[p &lt;&lt; 1 | 1];
+        if (MAX[p &lt;&lt; 1] == MAX[p &lt;&lt; 1 | 1]) &#123;
+            MAX[p] = MAX[p &lt;&lt; 1];
+            CNT[p] = CNT[p &lt;&lt; 1] + CNT[p &lt;&lt; 1 | 1];
+            C_MAX[p] = max(C_MAX[p &lt;&lt; 1], C_MAX[p &lt;&lt; 1 | 1]);
+        &#125; else if (MAX[p &lt;&lt; 1] &gt; MAX[p &lt;&lt; 1 | 1]) &#123;
+            MAX[p] = MAX[p &lt;&lt; 1];
+            CNT[p] = CNT[p &lt;&lt; 1];
+            C_MAX[p] = max(C_MAX[p &lt;&lt; 1], MAX[p &lt;&lt; 1 | 1]);
+        &#125; else &#123;
+            MAX[p] = MAX[p &lt;&lt; 1 | 1];
+            CNT[p] = CNT[p &lt;&lt; 1 | 1];
+            C_MAX[p] = max(C_MAX[p &lt;&lt; 1 | 1], MAX[p &lt;&lt; 1]);
+        &#125;
+    &#125;
+
+    void build(int p, int l, int r) &#123;
+        lazy[p] = -1;
+        if (l == r) &#123;
+            SUM[p] = MAX[p] = a[l];
+            CNT[p] = 1;
+            C_MAX[p] = -INF;
+            return;
+        &#125;
+        int mid = l + r &gt;&gt; 1;
+        build(p &lt;&lt; 1, l, mid);
+        build(p &lt;&lt; 1 | 1, mid + 1, r);
+        pushup(p, l, r);
+    &#125;
+
+    void modify(int p, int l, int r, ll w) &#123;
+        if (MAX[p] &lt;= w) return;
+        SUM[p] += (w - MAX[p]) * CNT[p];
+        MAX[p] = lazy[p] = w;
+    &#125;
+
+    void pushdown(int p, int l, int r) &#123;
+        if (lazy[p] == -1)return;
+        int mid = l + r &gt;&gt; 1;
+        modify(p &lt;&lt; 1, l, mid, lazy[p]);
+        modify(p &lt;&lt; 1 | 1, mid + 1, r, lazy[p]);
+        lazy[p] = -1;
+    &#125;
+
+    void update1(int p, int l, int r, int x, int y, ll w) &#123;//区间取min操作
+        if (MAX[p] &lt;= w) return;
+        if (x &lt;= l &amp;&amp; r &lt;= y &amp;&amp; w &gt; C_MAX[p]) &#123;
+            modify(p, l, r, w);
+            return;
+        &#125;
+        int mid = l + r &gt;&gt; 1;
+        pushdown(p, l, r);
+        if (x &lt;= mid) update1(p &lt;&lt; 1, l, mid, x, y, w);
+        if (y &gt; mid) update1(p &lt;&lt; 1 | 1, mid + 1, r, x, y, w);
+        pushup(p, l, r);
+    &#125;
+    
+    ll query_max(int p, int l, int r, int x, int y) &#123;//区间最大值
+        if (x &lt;= l &amp;&amp; r &lt;= y) return MAX[p];
+        ll ans = -INF;
+        int mid = l + r &gt;&gt; 1;
+        pushdown(p, l, r);
+        if (x &lt;= mid) ans = max(ans, query_max(p &lt;&lt; 1, l, mid, x, y));
+        if (y &gt; mid) ans = max(ans, query_max(p &lt;&lt; 1 | 1, mid + 1, r, x, y));
+        return ans;
+    &#125;
+
+    ll query(int p, int l, int r, int x, int y) &#123;//求区间和
+        if (x &lt;= l &amp;&amp; r &lt;= y) return SUM[p];
+        int mid = l + r &gt;&gt; 1;
+        pushdown(p, l, r);
+        ll ans = 0;
+        if (x &lt;= mid) ans += query(p &lt;&lt; 1, l, mid, x, y);
+        if (y &gt; mid) ans += query(p &lt;&lt; 1 | 1, mid + 1, r, x, y);
+        return ans;
+    &#125;
+&#125; tr;
+</code></pre>
+<h3><span id="12线段树二分">12.线段树二分</span></h3><pre><code>struct Tree &#123;
+    int sum[N], lazy[N];
+
+    void pushup(int p, int l, int r) &#123;
+        sum[p] = sum[p &lt;&lt; 1] + sum[p &lt;&lt; 1 | 1];
+    &#125;
+
+    void pushdown(int p, int l, int r) &#123;
+        sum[p &lt;&lt; 1] = sum[p &lt;&lt; 1 | 1] = 0;
+        lazy[p &lt;&lt; 1] = lazy[p &lt;&lt; 1 | 1] = 1;
+        lazy[p] = 0;
+    &#125;
+
+    void modify(int p, int l, int r, int x, int y) &#123;
+        if (l == r) &#123;
+            sum[p] = 0;
+            lazy[p] = 1;
+            return;
+        &#125;
+        if (lazy[p])pushdown(p, l, r);
+        int mid = l + r &gt;&gt; 1;
+        if (x &lt;= mid) modify(p &lt;&lt; 1, l, mid, x, y);
+        if (y &gt; mid) modify(p &lt;&lt; 1 | 1, mid + 1, r, x, y);
+        pushup(p, l, r);
+    &#125;
+
+    int query(int p, int l, int r, int x, int y) &#123;
+        if (l == r) return sum[p];
+        if (lazy[p])pushdown(p, l, r);
+        int mid = l + r &gt;&gt; 1;
+        int ans = 0;
+        if (x &lt;= mid)ans += query(p &lt;&lt; 1, l, mid, x, y);
+        if (y &gt; mid)ans += query(p &lt;&lt; 1 | 1, mid + 1, r, x, y);
+        return ans;
+    &#125;
+
+    void update(int p, int l, int r, int f) &#123;
+        if (l == r) &#123;
+
+            return;
+        &#125;
+        pushdown(p, l, r);
+        int mid = l + r &gt;&gt; 1;
+        int now = mid - l + 1 - sum[p &lt;&lt; 1];
+        if (now &gt;= f) &#123;
+            update(p &lt;&lt; 1, l, mid, f);
+        &#125; else &#123;
+            update(p &lt;&lt; 1 | 1, mid + 1, r, f - now);
+        &#125;
+    &#125;
+&#125; tr;
+</code></pre>
+<h3><span id="13左偏树">13.左偏树</span></h3><pre><code>const int N = 1e5 + 10;
+/*
+ * 左偏树
+ * dis[x] 表示 x 到离他最近的叶子结点的距离 , 由于左偏性质 dis[x.lc] &gt;= dis[x.rc]
+ * 具有堆性质(例如小根堆) 对于每一个结点 x , 有 v[x] &lt;= v[x.lc] &amp;&amp; v[x] &lt;= v[x.rc]
+ *
+ * 基本结论：
+ * dis[x] = dis[x.rc] + 1;
+ * 距离为 n 的左偏树 至少有 2^(n+1)-1 个结点
+ * 有 n 个结点的左偏树的距离是 log2(n) 的
+ *
+ * 例题: 洛谷 P3377
+ * 维护小根堆合并与删除。
+ */
+int A[N];
+bool vis[N];
+
+int lc[N], rc[N], dis[N], fa[N];
+
+int find(int x) &#123; return fa[x] == x ? x : fa[x] = find(fa[x]); &#125;
+
+int merge(int x, int y) &#123;
+    if (!x || !y) return x + y;
+    if (A[y] &lt; A[x]) swap(x, y);
+    rc[x] = merge(rc[x], y);
+    if (dis[lc[x]] &lt; dis[rc[x]]) swap(lc[x], rc[x]);
+    dis[x] = dis[rc[x]] + 1;
+    return x;
+&#125;
+
+void solve() &#123;
+    int n = read(), m = read();
+    for (int i = 1; i &lt;= n; i++) fa[i] = i;
+    for (int i = 1; i &lt;= n; i++) A[i] = read();
+    while (m--) &#123;
+        int op = read();
+        if (op == 1) &#123;
+            int x = read(), y = read();
+            if (vis[x] || vis[y]) continue;
+            int fx = find(x), fy = find(y);
+            if (fx != fy) fa[fx] = fa[fy] = merge(fx, fy);
+        &#125; else &#123;
+            int x = read();
+            if (vis[x]) &#123;
+                printf(&quot;-1\n&quot;);
+                continue;
+            &#125;
+            x = find(x);
+            printf(&quot;%d\n&quot;, A[x]);
+            vis[x] = 1;
+            fa[lc[x]] = fa[rc[x]] = fa[x] = merge(lc[x], rc[x]);
+            lc[x] = rc[x] = dis[x] = 0;
+        &#125;
+&#125;
+</code></pre>
+<h3><span id="14平衡树">14.平衡树</span></h3><pre><code>const int N = 1e6 + 10;
+
+/* 普通平衡树
+ * 利用BST性质查询和修改，利用随机和堆优先级来保持平衡，把树的深度控制在log N，保证了操作效率
+ * 操作：
+ * 1.插入 x
+ * 2.删除 x
+ * 3.查询 x 的排名
+ * 4.查询排名为 x 的数是什么
+ * 5.求 x 的前驱 (小于x 最大的数)
+ * 6.求 x 的后继 (大于x 最小的数)
+ *
+ * ch[i][0] 表示 i 的左儿子 ， ch[i][1] 表示 i 的右儿子
+ * val[i] 表示节点 i 的价值 , dat[i] 是随机生成的优先级
+ * siz[i] 表示子树的大小 ， cnt[i] 表示节点包含的副本数
+ * 通过增加属性，结合BST的性质可以达到一些效果，如size(子树大小，查询排名)，cnt(每个节点包含的副本数)
+ *
+ */
+int ch[N][2];
+int val[N], dat[N], siz[N], cnt[N];
+int Root, tot;
+
+int New(int v) &#123;
+    val[++tot] = v;
+    dat[tot] = rand();
+    siz[tot] = cnt[tot] = 1;
+    return tot;
+&#125;
+
+void pushup(int p) &#123;
+    siz[p] = siz[ch[p][0]] + siz[ch[p][1]] + cnt[p];
+&#125;
+
+void build() &#123;
+    Root = New(-inf), ch[Root][1] = New(inf);
+    pushup(Root);
+&#125;
+
+// 看图理解一下Rotate
+void Rotate(int &amp;p, int d) &#123;// d表示旋转方向 ， 0 为左旋, 1 为右旋
+    int tmp = ch[p][d ^ 1];
+    ch[p][d ^ 1] = ch[tmp][d];
+    ch[tmp][d] = p;
+    p = tmp;
+    pushup(ch[p][d]), pushup(p);
+&#125;
+
+void insert(int &amp;p, int v) &#123;
+    if (!p) &#123;
+        p = New(v);
+        return;
+    &#125;
+    if (v == val[p]) cnt[p]++;
+    else &#123;
+        int d = v &lt; val[p] ? 0 : 1;
+        insert(ch[p][d], v);
+        if (dat[p] &lt; dat[ch[p][d]]) Rotate(p, d ^ 1);
+    &#125;
+    pushup(p);
+&#125;
+
+void Remove(int &amp;p, int v) &#123;
+    if (!p) return;
+    if (v == val[p]) &#123;// 找到了该值
+        if (cnt[p] &gt; 1) &#123; return cnt[p]--, pushup(p); &#125;
+        if (ch[p][0] || ch[p][1]) &#123;// 只发现了一个值
+            if (!ch[p][1] || dat[ch[p][0]] &gt; dat[ch[p][1]]) Rotate(p, 1), Remove(ch[p][1], v);
+            else Rotate(p, 0), Remove(ch[p][0], v);
+            pushup(p);
+        &#125; else p = 0;
+        return;
+    &#125;
+    v &lt; val[p] ? Remove(ch[p][0], v) : Remove(ch[p][1], v);
+    pushup(p);
+&#125;
+
+int Get_rank(int p, int v) &#123;
+    if (!p) return inf;
+    if (v == val[p]) return siz[ch[p][0]] + 1;
+    else if (v &lt; val[p]) return Get_rank(ch[p][0], v);
+    else return siz[ch[p][0]] + cnt[p] + Get_rank(ch[p][1], v);
+&#125;
+
+int Get_val(int p, int rank) &#123;
+    if (!p) return inf;
+    if (rank &lt;= siz[ch[p][0]]) return Get_val(ch[p][0], rank);
+    else if (rank &lt;= siz[ch[p][0]] + cnt[p]) return val[p];
+    else return Get_val(ch[p][1], rank - siz[ch[p][0]] - cnt[p]);
+&#125;
+
+int Get_pre(int v) &#123;
+    int p = Root, pre;
+    while (p) &#123;
+        if (val[p] &lt; v) pre = val[p], p = ch[p][1];
+        else p = ch[p][0];
+    &#125;
+    return pre;
+&#125;
+
+int Get_suf(int v) &#123;
+    int p = Root, suf;
+    while (p) &#123;
+        if (val[p] &gt; v)suf = val[p], p = ch[p][0];
+        else p = ch[p][1];
+    &#125;
+    return suf;
+&#125;
+
+void solve() &#123;
+    build();
+    int n = read();
+    for (int i = 1; i &lt;= n; i++) &#123;
+        int op = read(), x = read();
+        if (op == 1) insert(Root, x);
+        if (op == 2) Remove(Root, x);
+        if (op == 3) printf(&quot;%d\n&quot;, Get_rank(Root, x) - 1);
+        if (op == 4) printf(&quot;%d\n&quot;, Get_val(Root, x + 1));
+        if (op == 5) printf(&quot;%d\n&quot;, Get_pre(x));
+        if (op == 6) printf(&quot;%d\n&quot;, Get_suf(x));
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="15扫描线">15.扫描线</span></h3><pre><code>const int N = 1e5 + 10;
+int X[N &lt;&lt; 1];
+
+struct Line &#123;
+    ll l, r, H;
+    int op;
+
+    bool operator&lt;(const Line &amp;thi) const &#123;
+        return H &lt; thi.H;
+    &#125;
+&#125; Line[N &lt;&lt; 1];
+
+struct SegTree &#123;
+    int Left[N &lt;&lt; 4], Right[N &lt;&lt; 4], lazy[N &lt;&lt; 4];
+    ll len[N &lt;&lt; 4];
+
+    void build(int p, int l, int r) &#123;
+        Left[p] = l, Right[p] = r;
+        if (l == r) return;
+        int mid = (l + r) &gt;&gt; 1;
+        build(p &lt;&lt; 1, l, mid);
+        build(p &lt;&lt; 1 | 1, mid + 1, r);
+    &#125;
+
+    void pushup(int p) &#123;
+        int l = Left[p], r = Right[p];
+        if (lazy[p]) len[p] = X[r + 1] - X[l];
+        else len[p] = len[p &lt;&lt; 1] + len[p &lt;&lt; 1 | 1];
+    &#125;
+
+    void update(int p, int l, int r, int c) &#123;
+        int L = Left[p], R = Right[p];
+        if (X[R + 1] &lt;= l || r &lt;= X[L]) return;
+        if (l &lt;= X[L] &amp;&amp; X[R + 1] &lt;= r) &#123;
+            lazy[p] += c;
+            pushup(p);
+            return;
+        &#125;
+        update(p &lt;&lt; 1, l, r, c);
+        update(p &lt;&lt; 1 | 1, l, r, c);
+        pushup(p);
+    &#125;
+&#125; tr;
+
+void solve() &#123;
+    int n = read();
+    for (int i = 1; i &lt;= n; i++) &#123;
+        int X1 = read(), Y1 = read(), X2 = read(), Y2 = read();
+        X[2 * i - 1] = X1, X[2 * i] = X2;
+        Line[2 * i - 1] = &#123;X1, X2, Y1, 1&#125;;
+        Line[2 * i] = &#123;X1, X2, Y2, -1&#125;;
+    &#125;
+    n &lt;&lt;= 1;
+    sort(Line + 1, Line + 1 + n);
+    sort(X + 1, X + 1 + n);
+    int tot = unique(X + 1, X + 1 + n) - X - 1;
+    tr.build(1, 1, tot - 1);
+    ll Ans = 0;
+    for (int i = 1; i &lt; n; i++) &#123;
+        tr.update(1, Line[i].l, Line[i].r, Line[i].op);
+        Ans += 1ll * tr.len[1] * (Line[i + 1].H - Line[i].H);
+    &#125;
+    printf(&quot;%lld\n&quot;, Ans);
+&#125;
+</code></pre>
+<h2><span id="五-动态规划">五、动态规划</span></h2><h3><span id="1求最大子段子矩阵的和">1.求最大子段（子矩阵）的和</span></h3><h4><span id="i最大字段和">I.最大字段和</span></h4><pre><code>ll a[N],dp[N];
+ll ans=-inf;
+int main()&#123;
+    int n=read();
+    for(int i=1;i&lt;=n;i++) a[i]=read(),ans=max(ans,a[i]);
+    dp[1]=max(0,a[1]);
+    for(int i=2;i&lt;=n;i++) dp[i]=max(a[i],dp[i-1]+a[i]),ans=max(dp[i],ans);
+    return 0;
+&#125;
+</code></pre>
+<h4><span id="ii最大子矩阵">II.最大子矩阵</span></h4><pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int N = 500+10;
+int a[N][N],b[N][N],dp[N];//b[j][k]表示从i行加到j行 第k列值的大小，将二维转为一维 
+int ans,n;
+void solve(int j)&#123;
+    memset(dp,0,sizeof(dp));
+    for(int i=1;i&lt;=n;i++)	&#123;
+        dp[i]=max(b[j][i],b[j][i]+dp[i-1]);
+        ans=max(ans,dp[i]);
+    &#125;
+&#125;
+int main()&#123;
+    n=read();
+    for(int i=1;i&lt;=n;i++)&#123;
+        for(int j=1;j&lt;=n;j++)&#123;
+            a[i][j]=read();
+        &#125;
+    &#125;
+    for(int i=1;i&lt;=n;i++)&#123;//从第i行开始加 
+        memset(b,0,sizeof(b));
+        for(int j=i;j&lt;=n;j++)&#123;//加到第j行 
+            for(int k=1;k&lt;=n;k++)&#123;//第k列
+                b[j][k]=a[j][k]+b[j-1][k];
+            &#125; 
+             solve(j);
+        &#125;		
+    &#125;
+    printf(&quot;%d\n&quot;,ans);
+    return 0;
+&#125; 
+</code></pre>
+<h3><span id="2求最长上升下降子序列">2.求最长上升（下降）子序列</span></h3><pre><code>int a[N],dp[N];//dp[i]长度为i的子序列的末端最小值 
+int len=0;
+int find(int x)&#123;
+    int l=1,r=len,mid;
+    while(l&lt;=r)&#123;
+        mid=(l+r)&gt;&gt;1;
+        if(x&gt;dp[mid]) l=mid+1;
+        //记忆方法:求上升序列，就表示x更大，那么就是大于
+        else
+            r=mid-1;
+    &#125;
+    return l;
+&#125;
+int work(int x)&#123;
+    int l=1,r=len,mid;
+    while(l&lt;=r)&#123;
+        mid=(l+r)&gt;&gt;1;
+        if(x&lt;=dp[mid]) l=mid+1;
+        //记忆方法:求不增序列
+        else
+            r=mid-1;
+    &#125;
+    return l;
+&#125;
+
+int main()&#123;
+    int n=0;
+    while(scanf(&quot;%d&quot;,&amp;a[++n])!=EOF);
+    n--;
+    len=0;
+    for (int i=1;i&lt;=n;i++)	&#123;
+        int k=work(a[i]);
+        dp[k]=a[i];
+        len=max(len,k);
+    &#125;
+    printf(&quot;%d\n&quot;,len);
+    len=0;
+    for (int i =1;i&lt;=n;i++)    &#123;
+        int k=find(a[i]);
+        dp[k]=a[i];
+        len=max(len,k);
+    &#125;
+    printf(&quot;%d&quot;,len);
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="3最长公共子序列">3.最长公共子序列</span></h3><pre><code>char a[5010],b[5010];
+int dp[5010][5010];
+int dpp[5010][5010];
+//dp[i][j]表示字符串A的前i个字符和字符串b的前j个字符的LCS(最长公共子序列的长度) 
+//dpp[i][j]表示字符串A的前i个字符和字符串b的前j个字符最长公共子序列个数
+int main()
+&#123;
+    int cnt1=0;
+    while (scanf(&quot;%c&quot;,&amp;a[++cnt1]))
+    &#123;
+        if(a[cnt1]==&#39;.&#39;) break;
+    &#125;
+    getchar();
+    int cnt2=0;
+    while (scanf(&quot;%c&quot;,&amp;b[++cnt2]))
+    &#123;
+        if(b[cnt2]==&#39;.&#39;) break;
+    &#125;
+    cnt1--;cnt2--;
+    for (int i=0;i&lt;=cnt1;i++) dpp[i][0]=1;
+    for (int i=0;i&lt;=cnt2;i++) dpp[0][i]=1;
+        
+    for (int i=1;i&lt;=cnt1;i++)
+    for (int j=1;j&lt;=cnt2;j++)
+    &#123;
+        if(a[i]==b[j])
+        &#123;
+            dp[i][j]=dp[i-1][j-1]+1;
+            dpp[i][j]=dpp[i-1][j-1];
+        &#125;
+        else
+        &#123;
+            dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+            if(dp[i][j]==dp[i-1][j-1]) dpp[i][j]=(dpp[i][j]-dpp[i-1][j-1]+mod)%mod;
+        &#125;
+    
+        if(dp[i][j]==dp[i-1][j]) dpp[i][j]=(dpp[i][j]+dpp[i-1][j])%mod;
+        if(dp[i][j]==dp[i][j-1]) dpp[i][j]=(dpp[i][j]+dpp[i][j-1])%mod;
+    &#125;
+    printf(&quot;%d\n%lld&quot;,dp[cnt1][cnt2],dpp[cnt1][cnt2]);
+    
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="4背包问题">4.背包问题</span></h3><h4><span id="i">I.</span></h4><h4><span id="ii">II.</span></h4><h3><span id="5换根dp">5.换根dp</span></h3><pre><code>vector&lt;int&gt;G[N];
+int siz[N],dep[N],n;
+ll dp[N],ans;
+void dfs1(int x,int fa)&#123;
+    for(int i=0;i&lt;G[x].size();i++)&#123;
+        int u=G[x][i];
+        if(u==fa) continue;
+        dep[u]=dep[x]+1;
+        ans+=dep[u];
+        dfs1(u,x);
+        siz[x]+=siz[u];
+    &#125;
+    siz[x]+=1;
+&#125;
+void dfs2(int x,int fa)&#123;
+    ans=min(ans,dp[x]);
+    for(int i=0;i&lt;G[x].size();i++)&#123;
+        int u=G[x][i];
+        if(u==fa) continue;
+        dp[u]=dp[x]+n-2*siz[u];
+        dfs2(u,x);
+    &#125;
+&#125;
+int main()&#123;
+    scanf(&quot;%d&quot;,&amp;n);
+    for(int i=1;i&lt;n;i++)&#123;
+        int x,y;scanf(&quot;%d%d&quot;,&amp;x,&amp;y);
+        G[x].push_back(y);
+        G[y].push_back(x);
+    &#125;
+    dfs1(1,-1); // 先求出以1为根
+    dp[1]=ans;
+    dfs2(1,-1);//进行转移
+    printf(&quot;%lld\n&quot;,ans);
+    return 0;
+&#125;
+</code></pre>
+<h2><span id="六-数学">六、数学</span></h2><h3><span id="1拓展欧几里得算法">1.拓展欧几里得算法</span></h3><pre><code>ll ext_gcd(ll a,ll b,ll&amp; x,ll&amp; y)&#123;
+    ll d =a;
+    if(!b)&#123;
+        x=1;y=0;
+    &#125;else&#123;
+        d=ext_gcd(b,a%b,y,x);
+        y-=a/b*x;
+    &#125;
+    return d;
+&#125;
+</code></pre>
+<h3><span id="2中国剩余定理孙子定理">2.中国剩余定理（孙子定理）</span></h3><pre><code>ll sunzi(ll *m,ll *a,int len)&#123;
+    ll lcm=1;
+    ll ans=0;
+    for (int i=0;i&lt;len;i++)&#123;
+        ll k0,ki;
+        ll d=ext_gcd(lcm,m[i],k0,ki);
+        if((a[i]-ans)%d!=0) return -1;
+        else&#123;
+            ll t =m[i]/d;
+            k0 = ( k0*(a[i]-ans)/d%t + t)%t;
+            ans = k0*lcm + ans;
+            lcm = lcm/d*m[i];
+        &#125;
+    &#125;
+    return ans;
+&#125;
+</code></pre>
+<h3><span id="3组合数">3.组合数</span></h3><pre><code>struct Combinatorial_mathematics &#123;
+    vector&lt;int&gt; fac, inv;
+
+    inline int add(int &amp;x, int y) &#123; return x + y &gt;= mod ? x + y - mod : x + y; &#125;
+
+    inline int sub(int &amp;x, int y) &#123; return x - y &lt; 0 ? x - y + mod : x - y; &#125;
+
+    inline int mul(int &amp;x, int y) &#123; return 1ull * x * y % mod; &#125;
+
+    inline int powmod(int a, int b) &#123;
+        int res = 1;
+        while (b) &#123;
+            if (b &amp; 1) res = mul(res, a);
+            b &gt;&gt;= 1;
+            a = mul(a, a);
+        &#125;
+        return res;
+    &#125;
+
+    inline int Inv(int x) &#123; return powmod(x, mod - 2); &#125;
+
+    Combinatorial_mathematics(int m = 0) : fac(m + 1), inv(m + 1) &#123;
+        fac[0] = 1;
+        for (int i = 1; i &lt;= m; i++) fac[i] = mul(fac[i - 1], i);
+        inv[m] = Inv(fac[m]);
+        for (int i = m; i &gt;= 1; i--) inv[i - 1] = mul(inv[i], i);
+    &#125;
+
+    inline int C(int n, int m) &#123;
+        if (n &lt; m || n &lt; 0 || m &lt; 0) return 0;
+        return mul(fac[n], mul(inv[m], inv[n - m]));
+    &#125;
+&#125;;
+</code></pre>
+<h3><span id="4bsgs">4.BSGS</span></h3><p>用来求a的x次方与b同余mod p 的最小根</p>
+<pre><code>ll bsgs(ll a, ll b, ll Mod) &#123;
+    map&lt;ll, ll&gt; mp;
+    ll cur = 1, t = sqrt(Mod) + 1;
+    for (int B = 1; B &lt;= t; B++) &#123;
+        cur = cur * a % Mod;
+        mp[b * cur % Mod] = B;
+    &#125;
+    ll now = cur;
+    for (int A = 1; A &lt;= t; A++) &#123;
+        if (mp[now]) return 1ll * A * t - mp[now];
+        else now = now * cur % Mod;
+    &#125;
+    return -1;
+&#125;
+</code></pre>
+<h3><span id="5矩阵快速幂">5.矩阵快速幂</span></h3><p>求斐波那契数列</p>
+<pre><code>#include&lt;bits/stdc++.h&gt;
+#define ll long long
+using namespace std;
+const int mod = 1e9 + 7;
+const int MAX=5;
+int n=2;
+struct Mat&#123;
+    ll a[MAX][MAX];
+    Mat()&#123;
+        memset(a,0,sizeof(a));
+    &#125;
+    inline void clear()&#123;
+        memset(a,0,sizeof(a));
+    &#125;
+    inline void build_E()&#123; //构造单位矩阵 
+        for (int i=1;i&lt;=n;i++) a[i][i]=1;
+    &#125;
+    inline void init()&#123; //构造变化矩阵 
+        a[1][1]=1;a[1][2]=1;a[2][1]=1;
+    &#125;
+&#125;base;
+Mat operator *(const Mat &amp;x,const Mat &amp;y)&#123;// 重载 * 运算符 
+    Mat res;
+    for(int k=1;k&lt;=n;k++)&#123;
+        for(int i=1;i&lt;=n;i++)&#123;
+            for(int j=1;j&lt;=n;j++)&#123;
+                res.a[i][j]=(res.a[i][j]+x.a[i][k]*y.a[k][j]%mod)%mod;
+            &#125;
+        &#125;
+    &#125;
+    return res;
+&#125;
+inline Mat powmod_Mat(int b)&#123; // 矩阵快速幂 
+    Mat ans;ans.build_E();
+    while(b)&#123;
+        if(b&amp;1) ans=ans*base;
+        base=base*base;
+        b&gt;&gt;=1;
+    &#125;
+    return ans;
+&#125;
+int main()&#123;
+    int k;
+    while(scanf(&quot;%d&quot;,&amp;k)!=EOF)&#123;
+        base.clear();
+        base.init();
+        Mat ans=powmod_Mat(k);
+        printf(&quot;%lld\n&quot;,ans.a[2][1]);
+    &#125;
+    
+    return 0;
+&#125;
+</code></pre>
+<pre><code>f[n]=a*f[n-1]+b*f[n-2]+c
+|a b 1|   |f[n-1]|   | f[n]  |
+|1 0 1| * |f[n-2]| = | f[n-1]|
+|0 0 1|   |   c  |   |   c   |
+
+f[n]=c^n -f[n-1]
+|-1 c|	*	|f[n-1]| = |f[n]|
+|0  c|		| n-1  |   | n  |
+</code></pre>
+<h3><span id="6多项式">6.多项式</span></h3><h4><span id="ifft-快速傅里叶变换">I.FFT 快速傅里叶变换</span></h4><h5><span id="1复数运算重载运算符">1.复数运算，重载运算符</span></h5><p>对于多项式f(x) 与 g(x) 求 f(x)*g(x) 的各项系数</p>
+<pre><code>const double Pi=acos(-1.0);
+struct Complex&#123;
+    double x,y;
+    Complex (double xx=0,double yy=0)&#123;x=xx,y=yy;&#125;
+    inline Complex operator + (const Complex a) const &#123; return Complex(x + a.x , y + a.y);&#125;
+    inline Complex operator - (const Complex a) const &#123; return Complex(x - a.x , y - a.y);&#125;
+    inline Complex operator * (const Complex a) const &#123; return Complex(x * a.x - y * a.y , x * a.y + y * a.x);&#125;
+&#125;a[N],b[N];
+int l,r[N],n,m;
+int limit=1;
+void FFT(Complex *A,int type)&#123;
+    for(int i=0;i&lt;limit;i++) 
+        if(i&lt;r[i]) swap(A[i],A[r[i]]);//求出要迭代的序列 
+    for(int mid=1;mid&lt;limit;mid&lt;&lt;=1)&#123;//待合并区间的中点
+        Complex Wn( cos(Pi/mid) , type*sin(Pi/mid) ); //单位根 
+        for(int R=mid&lt;&lt;1,j=0;j&lt;limit;j+=R)&#123;//R是区间的右端点，j表示前已经到哪个位置了 
+            Complex w(1,0);//幂 
+            for(int k=0;k&lt;mid;k++,w=w*Wn)&#123;//枚举左半部分 
+                Complex x=A[j+k],y=w*A[j+mid+k];//蝴蝶效应 
+                A[j+k]=x+y;
+                A[j+mid+k]=x-y;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+void pre_FFT()&#123;
+    while(limit&lt;=n+m) limit&lt;&lt;=1,l++;
+    for(int i=0;i&lt;limit;i++) r[i]=(r[i&gt;&gt;1]&gt;&gt;1)|((i&amp;1)&lt;&lt;(l-1));
+&#125;
+void mul()&#123;
+    FFT(a,1);FFT(b,1);
+    for(int i=0;i&lt;=limit;i++) a[i]=a[i]*b[i];
+    FFT(a,-1);
+&#125;
+</code></pre>
+<h4><span id="iintt-快速数论变换">II.NTT 快速数论变换</span></h4><p>对于多项式f(x) 与 g(x) 求 f(x)*g(x) 的各项系数 &#x2F;&#x2F; 优化大数乘法</p>
+<pre><code>#include&lt;bits/stdc++.h&gt;
+#define ll long long
+using namespace std;
+const int N=1e6+10;
+const int mod = 998244353, G = 3, Gi = 332748118; 
+int limit=1,l,r[N];
+ll a[N],b[N];int n,m;
+ll powmod(ll a,ll b)&#123;
+    ll res=1;
+    while(b)&#123;
+        if(b&amp;1) res=res*a%mod;
+        a=a*a%mod;
+        b&gt;&gt;=1;
+    &#125;
+    return res;
+&#125;
+inline void NTT(ll *A,int type)&#123;
+    for(int i=0;i&lt;limit;i++) if(i&lt;r[i]) swap(A[i],A[r[i]]);
+    for(int mid=1;mid&lt;limit;mid&lt;&lt;=1)&#123;
+        ll Wn=powmod(type == 1 ? G : Gi , (mod - 1 ) / ( mid &lt;&lt; 1));
+        for(int j=0;j&lt;limit;j+=(mid&lt;&lt;1))&#123;
+            ll w=1;
+            for(int k=0;k&lt;mid;k++,w=(w*Wn)%mod)&#123;
+                int x=A[j+k] ,y=w*A[j+k+mid]%mod;
+                A[j+k] = ( x + y ) % mod;
+                A[j+k+mid] = ( x - y + mod )  % mod;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+void pre_NTT()&#123;
+    while(limit&lt;=n+m) limit&lt;&lt;=1,l++;
+    for(int i=0;i&lt;limit;i++) r[i]=(r[i&gt;&gt;1]&gt;&gt;1)|((i&amp;1)&lt;&lt;(l-1));
+&#125;
+void mul()&#123;
+    NTT(a,1);NTT(b,1);
+    for(int i=0;i&lt;limit;i++) a[i]=(a[i]*b[i])%mod;
+    NTT(a,-1);
+    ll inv=powmod(limit,mod-2);
+    for(int i=0;i&lt;=n+m;i++) a[i]=a[i]*inv%mod;
+&#125;
+int main()&#123;
+    string x,y;cin&gt;&gt;x&gt;&gt;y;n=x.length()-1;m=y.length()-1;
+    for(int i=n;i&gt;=0;i--) a[n-i]=x[i]-&#39;0&#39;;
+    for(int i=m;i&gt;=0;i--) b[m-i]=y[i]-&#39;0&#39;;
+    pre_NTT();
+    mul();
+    return 0;
+&#125;
+</code></pre>
+<pre><code>#include&lt;bits/stdc++.h&gt;
+#define Poly vector&lt;int&gt;
+#define ll long long
+using namespace std;
+template&lt;const int Mod&gt; struct ntt&#123;
+    inline void add(int &amp;a, int b) &#123; a += b; if(a &gt;= Mod) a -= Mod; &#125;
+    inline void sub(int &amp;a, int b) &#123; a -= b; if(a &lt; 0) a += Mod; &#125;
+    inline int add2(int a, int b) &#123; a += b; if(a &gt;= Mod) a -= Mod; return a;&#125;
+    inline int sub2(int a, int b) &#123; a -= b; if(a &lt; 0) a += Mod; return a;&#125;
+    inline int mul(int a, int b) &#123; return (1ll*a*b%Mod); &#125;
+    inline int powmod(int a, long long b) &#123;
+        int res = 1;
+        while (b &gt; 0) &#123;
+            if (b &amp; 1) res = mul(res, a);
+            a = mul(a, a);
+            b &gt;&gt;= 1;
+        &#125;
+        return res;
+    &#125;       	              
+    inline int inv(int a) &#123;
+        a %= Mod;
+        if (a &lt; 0) a += Mod;
+        int b = Mod, u = 0, v = 1;
+        while (a) &#123;
+            int t = b / a;
+            b -= t * a; swap(a, b);
+            u -= t * v; swap(u, v);
+        &#125;
+        assert(b == 1);
+        if (u &lt; 0) u += Mod;
+        return u;
+    &#125;
+     int limit, root;
+    vector&lt;int&gt; A, B;
+    ntt() &#123;
+        int tmp = Mod - 1;
+        limit = 0;
+        while (tmp % 2 == 0) &#123;
+            tmp /= 2;
+            limit++;
+        &#125;
+        root = 2;
+        while (powmod(root, (Mod-1)&gt;&gt;1) == 1) root++;
+        A.resize(limit); B.resize(limit);
+        for (int i = 0; i &lt; limit; ++i)&#123;
+            sub(A[i], powmod(root, (Mod-1) &gt;&gt; (i+2)));
+            B[i] = inv(A[i]);
+        &#125;
+    &#125;
+    void fft(vector&lt;int&gt; &amp;a, bool inv) &#123;
+        const int n = a.size();
+        assert((n &amp; (n - 1)) == 0);
+        assert(__builtin_ctz(n) &lt;= limit);
+        if(!inv)&#123;
+            for(int m=n;m&gt;&gt;=1;)&#123;
+                int w = 1;
+                for(int s=0,k=0; s&lt;n; s += 2*m)&#123;
+                    for(int i=s, j=s+m ; i &lt; s+m; ++i, ++j) &#123;
+                        int x = a[i], y = mul(a[j], w);
+                        a[j] = (x&gt;=y?x-y:x+Mod-y);
+                        a[i] = (x+y&gt;=Mod?x+y-Mod:x+y);
+                    &#125;
+                    w = mul(w, A[__builtin_ctz(++k)]);
+                &#125;
+            &#125;
+        &#125;
+        else&#123;
+            for(int m=1;m&lt;n;m*=2)&#123;
+                int w = 1;
+                for(int s=0,k=0; s&lt;n; s += 2*m)&#123;
+                    for(int i=s, j=s+m ; i &lt; s+m; ++i, ++j) &#123;
+                        int x = a[i], y = a[j];
+                        a[j] = (x&gt;=y?x-y:x+Mod-y);
+                        a[j] = mul(a[j], w);
+                        a[i] = (x+y&gt;=Mod?x+y-Mod:x+y);
+                    &#125;
+                    w = mul(w, B[__builtin_ctz(++k)]);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    vector&lt;int&gt; multiply(vector&lt;int&gt; a, vector&lt;int&gt; b, int eq = 0) &#123;
+        int need = a.size() + b.size() - 1;
+        int nbase = 0;
+        while ((1 &lt;&lt; nbase) &lt; need) nbase++;
+        int sz = 1 &lt;&lt; nbase;
+        a.resize(sz);
+        b.resize(sz);
+        fft(a, 0);
+        if (eq) b = a; else fft(b, 0);
+        int inv_sz = inv(sz);
+        for (int i = 0; i &lt; sz; i++) &#123;
+            a[i] = mul(mul(a[i], b[i]), inv_sz);
+        &#125;
+        fft(a, 1);
+        a.resize(need);
+        return a;
+    &#125;
+    vector&lt;int&gt; square(vector&lt;int&gt; a) &#123;
+        return multiply(a, a, 1);
+    &#125;
+&#125;;
+const int mod=998244353;
+char s[1100000];
+int main()&#123;
+    ntt&lt;mod&gt; t;// mod为对应的模数 
+    Poly a,b;
+    /*
+    构造 a,b 
+    */
+    Poly ans=t.multiply(a,b);
+    // 输出答案 
+    return 0;
+&#125; 
+</code></pre>
+<h4><span id="iiintt维护01背包">III.NTT维护01背包</span></h4><pre><code>const int N = 1e6 + 10;
+const int inf = 0x3f3f3f3f;
+inline ll read()&#123;ll x = 0, f = 1;char ch = getchar();while(ch &lt; &#39;0&#39; || ch &gt; &#39;9&#39;)&#123;if (ch == &#39;-&#39;)f = -1 ;ch = getchar();&#125;while(ch &gt;= &#39;0&#39; &amp;&amp; ch &lt;= &#39;9&#39;)&#123;  x = (x&lt;&lt;1) + (x&lt;&lt;3) + (ch^48);ch = getchar();&#125;return x * f;&#125;
+int k[N],n,limit,l,r[N],m;
+/* 
+    求(1+x^a1)*(1+x^a2)*...*(1+x^an) 的展开式的各项系数  其中 a1 + a2 + ... + an &lt;= 1e6  , ai &gt;= 1 
+*/ 
+const int mod = 998244353, G = 3, Gi = 332748118; 
+ll powmod(ll a,ll b)&#123;
+    ll res=1;
+    while(b)&#123;
+        if(b&amp;1) res=res*a%mod;
+        a=a*a%mod;
+        b&gt;&gt;=1;
+    &#125;
+    return res;
+&#125;
+inline void NTT(vector&lt;ll&gt;&amp;A,int type)&#123;
+    for(int i=0;i&lt;limit;i++) if(i&lt;r[i]) swap(A[i],A[r[i]]);
+    for(int mid=1;mid&lt;limit;mid&lt;&lt;=1)&#123;
+        ll Wn=powmod(type == 1 ? G : Gi , (mod - 1 ) / ( mid &lt;&lt; 1));
+        for(int j=0;j&lt;limit;j+=(mid&lt;&lt;1))&#123;
+            ll w=1;
+            for(int k=0;k&lt;mid;k++,w=(w*Wn)%mod)&#123;
+                int x=A[j+k],y=w*A[j+k+mid]%mod;
+                A[j+k] = ( x + y ) % mod;
+                A[j+k+mid] = ( x - y + mod )  % mod;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+vector&lt;ll&gt; Ntt(int L,int R)&#123;
+//	cout&lt;&lt;&#39; &#39;&lt;&lt;L &lt;&lt; &#39; &#39;&lt;&lt; R &lt;&lt; endl; 
+    if(L==R)&#123;
+        vector&lt;ll&gt;now(k[L]+1,0);
+        now[0]=1;now[k[L]]=1;
+        return now;
+    &#125;
+    int mid=L+R&gt;&gt;1;	
+    vector&lt;ll&gt;a,b;
+    a=Ntt(L,mid);b=Ntt(mid+1,R);
+    limit=1,l=0;n=a.size();m=b.size(); 
+    while(limit&lt;=n+m) limit&lt;&lt;=1,l++;
+    a.resize(limit);b.resize(limit);
+    for(int i=0;i&lt;limit;i++) r[i]=(r[i&gt;&gt;1]&gt;&gt;1)|((i&amp;1)&lt;&lt;(l-1));
+    NTT(a,1);NTT(b,1);
+    for(int i=0;i&lt;limit;i++) a[i]=(a[i]*b[i])%mod;
+    NTT(a,-1);
+    ll inv=powmod(limit,mod-2);
+    for(int i=0;i&lt;=n+m;i++) a[i]=a[i]*inv%mod;
+    a.resize(m+n-1);
+    return a;
+&#125;
+void solve()&#123;
+    int _=read();
+    for(int i=1;i&lt;=_;i++) k[i]=read();
+    vector&lt;ll&gt;ans = Ntt(1,_);
+    for(auto to:ans)&#123;
+        printf(&quot;%lld &quot;,to);
+    &#125;
+&#125;
+</code></pre>
+<h4><span id="iv">IV.</span></h4><pre><code>const int P = 1e9 + 7;
+struct FWT &#123;
+    void add(int &amp;x, int y) &#123;(x += y) &gt;= P &amp;&amp; (x -= P);&#125;
+    void sub(int &amp;x, int y) &#123;(x -= y) &lt; 0 &amp;&amp; (x += P);&#125;
+    int extend(int n) &#123;
+        int N = 1;
+        for (; N &lt; n; N &lt;&lt;= 1);
+        return N;
+    &#125;
+    void FWTor(std::vector&lt;int&gt; &amp;a, bool rev) &#123;
+        int n = a.size();
+        for (int l = 2, m = 1; l &lt;= n; l &lt;&lt;= 1, m &lt;&lt;= 1) &#123;
+            for (int j = 0; j &lt; n; j += l)
+                for (int i = 0; i &lt; m; i++) &#123;
+                    if (!rev) add(a[i + j + m], a[i + j]);
+                    else sub(a[i + j + m], a[i + j]);
+                &#125;
+        &#125;
+    &#125;
+    void FWTand(std::vector&lt;int&gt; &amp;a, bool rev) &#123;
+        int n = a.size();
+        for (int l = 2, m = 1; l &lt;= n; l &lt;&lt;= 1, m &lt;&lt;= 1) &#123;
+            for (int j = 0; j &lt; n; j += l)
+                for (int i = 0; i &lt; m; i++) &#123;
+                    if (!rev) add(a[i + j], a[i + j + m]);
+                    else sub(a[i + j], a[i + j + m]);
+                &#125;
+        &#125;
+    &#125;
+    void FWTxor(std::vector&lt;int&gt; &amp;a, bool rev) &#123;
+        int n = a.size(), inv2 = (P + 1) &gt;&gt; 1;
+        for (int l = 2, m = 1; l &lt;= n; l &lt;&lt;= 1, m &lt;&lt;= 1) &#123;
+            for (int j = 0; j &lt; n; j += l)
+                for (int i = 0; i &lt; m; i++) &#123;
+                    int x = a[i + j], y = a[i + j + m];
+                    if (!rev) &#123;
+                        a[i + j] = (x + y) % P;
+                        a[i + j + m] = (x - y + P) % P;
+                    &#125; else &#123;
+                        a[i + j] = 1LL * (x + y) * inv2 % P;
+                        a[i + j + m] = 1LL * (x - y + P) * inv2 % P;
+                    &#125;
+                &#125;
+        &#125;
+    &#125;
+    std::vector&lt;int&gt; Or(std::vector&lt;int&gt; a1, std::vector&lt;int&gt; a2) &#123;
+        int n = std::max(a1.size(), a2.size()), N = extend(n);
+        a1.resize(N), FWTor(a1, false);
+        a2.resize(N), FWTor(a2, false);
+        std::vector&lt;int&gt; A(N);
+        for (int i = 0; i &lt; N; i++) A[i] = 1LL * a1[i] * a2[i] % P;
+        FWTor(A, true);
+        return A;
+    &#125;
+    std::vector&lt;int&gt; And(std::vector&lt;int&gt; a1, std::vector&lt;int&gt; a2) &#123;
+        int n = std::max(a1.size(), a2.size()), N = extend(n);
+        a1.resize(N), FWTand(a1, false);
+        a2.resize(N), FWTand(a2, false);
+        std::vector&lt;int&gt; A(N);
+        for (int i = 0; i &lt; N; i++) A[i] = 1LL * a1[i] * a2[i] % P;
+        FWTand(A, true);
+        return A;
+    &#125;
+    std::vector&lt;int&gt; Xor(std::vector&lt;int&gt; a1, std::vector&lt;int&gt; a2) &#123;
+        int n = std::max(a1.size(), a2.size()), N = extend(n);
+        a1.resize(N), FWTxor(a1, false);
+        a2.resize(N), FWTxor(a2, false);
+        std::vector&lt;int&gt; A(N);
+        for (int i = 0; i &lt; N; i++) A[i] = 1LL * a1[i] * a2[i] % P;
+        FWTxor(A, true);
+        return A;
+    &#125;
+&#125; fwt;
+</code></pre>
+<pre><code>#define inc(a, b) (((a) += (b)) &gt;= P ? (a) -= P : 0)
+#define dec(a, b) (((a) -= (b)) &lt; 0 ? (a) += P : 0)
+#define mul(a, b) (ll(a) * (b) % P)
+
+int fpow(ll a, int b = P - 2, ll x = 1) &#123;
+    for (; b; b &gt;&gt;= 1, a = a * a % P)
+        if (b &amp; 1) x = x * a % P;
+    return x;
+&#125;
+
+int inv[N], fac[N], ifac[N], W[N], _ = [] &#123;
+    fac[0] = fac[1] = ifac[0] = ifac[1] = inv[1] = 1;
+    for (ll i = 2; i &lt; N; ++i) &#123;
+        fac[i] = fac[i - 1] * i % P;
+        inv[i] = (P - P / i) * inv[P % i] % P;
+        ifac[i] = (ll) ifac[i - 1] * inv[i] % P;
+    &#125;
+    W[N / 2] = 1;
+    for (int i = N / 2 + 1, wn = fpow(pG, P / N); i &lt; N; ++i) W[i] = mul(W[i - 1], wn);
+    for (int i = N / 2 - 1; ~i; --i) W[i] = W[i &lt;&lt; 1];
+    return 0;
+&#125;();
+
+namespace NTT &#123;
+    void dft(int *a, int n) &#123;
+        for (int k = n &gt;&gt; 1; k; k &gt;&gt;= 1)
+            for (int i = 0; i &lt; n; i += k &lt;&lt; 1)
+                for (int j = 0; j &lt; k; ++j) &#123;
+                    int &amp;x = a[i + j], y = a[i + j + k];
+                    a[i + j + k] = mul(x - y + P, W[k + j]);
+                    inc(x, y);
+                &#125;
+    &#125;
+
+    void idft(int *a, int n) &#123;
+        for (int k = 1; k &lt; n; k &lt;&lt;= 1)
+            for (int i = 0; i &lt; n; i += k &lt;&lt; 1)
+                for (int j = 0; j &lt; k; ++j) &#123;
+                    int &amp;x = a[i + j], y = mul(a[i + j + k], W[k + j]);
+                    a[i + j + k] = x &lt; y ? x - y + P : x - y;
+                    inc(x, y);
+                &#125;
+        for (int i = 0, in = P - (P - 1) / n; i &lt; n; ++i)
+            a[i] = mul(a[i], in);
+        reverse(a + 1, a + n);
+    &#125;
+&#125; // namespace NTT
+
+int norm(int n) &#123; return 1 &lt;&lt; (__lg(n - 1) + 1); &#125;
+
+struct Poly : public vector&lt;int&gt; &#123;
+#define T (*this)
+    using vector&lt;int&gt;::vector;
+
+    int deg() const &#123; return size(); &#125;
+
+    Poly rev() const &#123; return Poly(rbegin(), rend()); &#125;
+
+    void append(const Poly &amp;a) &#123; insert(end(), a.begin(), a.end()); &#125;
+
+    Poly operator-() const &#123;
+        Poly a(T);
+        for (auto &amp;x: a) x = x ? P - x : 0;
+        return a;
+    &#125;
+
+    Poly &amp;operator+=(const Poly &amp;a) &#123;
+        if (a.deg() &gt; deg()) resize(a.deg());
+        for (int i = 0; i &lt; a.deg(); ++i) inc(T[i], a[i]);
+        return T;
+    &#125;
+
+    Poly &amp;operator-=(const Poly &amp;a) &#123;
+        if (a.deg() &gt; deg()) resize(a.deg());
+        for (int i = 0; i &lt; a.deg(); ++i) dec(T[i], a[i]);
+        return T;
+    &#125;
+
+    Poly &amp;operator^=(const Poly &amp;a) &#123;
+        if (a.deg() &lt; deg()) resize(a.deg());
+        for (int i = 0; i &lt; deg(); ++i) T[i] = mul(T[i], a[i]);
+        return T;
+    &#125;
+
+    Poly &amp;operator*=(int a) &#123;
+        for (auto &amp;x: T) x = mul(x, a);
+        return T;
+    &#125;
+
+    Poly operator+(const Poly &amp;a) const &#123; return Poly(T) += a; &#125;
+
+    Poly operator-(const Poly &amp;a) const &#123; return Poly(T) -= a; &#125;
+
+    Poly operator^(const Poly &amp;a) const &#123; return Poly(T) ^= a; &#125;
+
+    Poly operator*(int a) const &#123; return Poly(T) *= a; &#125;
+
+    Poly &amp;operator&lt;&lt;=(int k) &#123; return insert(begin(), k, 0), T; &#125;
+
+    Poly operator&lt;&lt;(int r) const &#123; return Poly(T) &lt;&lt;= r; &#125;
+
+    Poly operator&gt;&gt;(int r) const &#123; return r &gt;= deg() ? Poly() : Poly(begin() + r, end()); &#125;
+
+    Poly &amp;operator&gt;&gt;=(int r) &#123; return T = T &gt;&gt; r; &#125;
+
+    Poly pre(int k) const &#123; return k &lt; deg() ? Poly(begin(), begin() + k) : T; &#125;
+
+    friend void dft(Poly &amp;a) &#123; NTT::dft(a.data(), a.size()); &#125;
+
+    friend void idft(Poly &amp;a) &#123; NTT::idft(a.data(), a.size()); &#125;
+
+    friend Poly conv(Poly a, Poly b, int n) &#123;
+        a.resize(n), dft(a);
+        b.resize(n), dft(b);
+        return idft(a ^= b), a;
+    &#125;
+
+    Poly operator*(const Poly &amp;a) const &#123;
+        int n = deg() + a.deg() - 1;
+        return conv(T, a, norm(n)).pre(n);
+    &#125;
+
+    // Description: f_i = sum T_&#123;i + j&#125; * a_j
+    Poly mulT(const Poly &amp;a) const &#123; return T * a.rev() &gt;&gt; (a.deg() - 1); &#125;
+
+    /*
+     * Description: Calculate f_1, ..., f_&#123;n - 1&#125; with a_i = sum_&#123;j &gt; 0&#125; f_&#123;i - j&#125; g_j
+     *    and f_i = F(a_i, i),where g and f_0 is known, notice T_i = g_&#123;i + 1&#125;.
+     * Time: O(n log^2 n)
+     */
+    template&lt;typename func&gt;
+    Poly semiConv(Poly f, int n, func calc) &#123;
+        f.resize(n);
+        vector&lt;Poly&gt; va(n); // storage dft result, faster
+        for (int m = 1; m &lt; n; m++) &#123;
+            int k = m &amp; -m, l = m - k, r = min(m + k, n);
+            Poly &amp;p = va[k], q(f.begin() + l, f.begin() + m);
+            if (p.empty()) p = pre(r - l - 1), p.resize(k * 2), dft(p);
+            q.resize(k &lt;&lt; 1), dft(q), idft(q ^= p);
+            // Poly q = conv(Poly(f.begin() + l, f.begin() + m), pre(r - l - 1), k &lt;&lt; 1);
+            for (int i = m; i &lt; r; i++) inc(f[i], q[i - l - 1]);
+            calc(f, m);
+        &#125;
+        return f;
+    &#125;
+
+    Poly inv2(int n) const &#123;
+        int i0 = fpow(T[0]);
+        return (T &gt;&gt; 1).semiConv(&#123;i0&#125;, n, [&amp;](Poly &amp;f, int m) &#123; f[m] = mul(f[m], P - i0); &#125;);
+    &#125;
+
+    Poly exp2(int n) const &#123; return deriv().semiConv(&#123;1&#125;, n, [&amp;](Poly &amp;f, int m) &#123; f[m] = mul(f[m], ::inv[m]); &#125;); &#125;
+
+    Poly inv(int n) const &#123;
+        Poly x&#123;fpow(T[0])&#125;;
+        for (int k = 1; k &lt; n; k &lt;&lt;= 1)
+            x.append(-((conv(pre(k &lt;&lt; 1), x, k &lt;&lt; 1) &gt;&gt; k) * x).pre(k));
+        return x.pre(n);
+    &#125;
+
+    Poly deriv() const &#123;
+        if (empty()) return &#123;&#125;;
+        Poly a(deg() - 1);
+        for (ll i = 1; i &lt; deg(); ++i) a[i - 1] = i * T[i] % P;
+        return a;
+    &#125;
+
+    Poly integ() const &#123;
+        if (empty()) return &#123;&#125;;
+        Poly a(deg() + 1);
+        for (int i = 1; i &lt;= deg(); ++i) a[i] = mul(::inv[i], T[i - 1]);
+        return a;
+    &#125;
+
+    Poly log(int n) const &#123; return (deriv() * inv(n)).integ().pre(n); &#125;
+
+    Poly exp(int n) const &#123;
+        Poly x&#123;1&#125;;
+        for (int k = 1; k &lt; n; k &lt;&lt;= 1)
+            x.append((x * ((pre(k &lt;&lt; 1) - x.log(k &lt;&lt; 1)) &gt;&gt; k)).pre(k));
+        return x.pre(n);
+    &#125;
+
+    Poly pow(int k, int n) const &#123; return (log(n) * k).exp(n); &#125; // T[0] = 1
+    Poly pow(int k, int kp, int n) const &#123; // k = K % P, kp = K % phi(P)
+        int i = 0;
+        while (i &lt; deg() &amp;&amp; !T[i]) i++;
+        if (1ll * i * k &gt;= n) return Poly(n);
+        int v = T[i], m = n - i * k;
+        return ((((T &gt;&gt; i) * fpow(v)).log(m) * k).exp(m) &lt;&lt; (i * k)) * fpow(v, kp);
+    &#125;
+
+    Poly sqrt(int n) const &#123;
+        Poly x&#123;1&#125;, y&#123;1&#125;; // x[0] = sqrt(T[0]), default T[0] = 1
+        for (int k = 1; k &lt; n; k &lt;&lt;= 1) &#123;
+            x.append((((pre(k &lt;&lt; 1) - x * x) &gt;&gt; k) * y).pre(k) * ((P + 1) &gt;&gt; 1));
+            k &lt;&lt; 1 &lt; n ? y.append(-((conv(x.pre(k &lt;&lt; 1), y, k &lt;&lt; 1) &gt;&gt; k) * y).pre(k)) : void();
+        &#125;
+        return x.pre(n);
+    &#125;
+
+    vector&lt;Poly&gt; operator/(const Poly &amp;a) const &#123;
+        int k = deg() - a.deg() + 1;
+        if (k &lt; 0) return &#123;&#123;0&#125;, T&#125;;
+        Poly q = (rev().pre(k) * (a.rev().inv(k))).pre(k).rev(), r = T - a * q;
+        return &#123;q, r.pre(a.deg() - 1)&#125;;
+    &#125;
+
+    /*
+     * Description: calculate [x ^ k](f / g)
+     * Time: O(n log n log k)
+     */
+    int divAt(Poly f, Poly g, ll k) &#123;
+        int n = max(f.deg(), g.deg()), m = norm(n);
+        for (; k; k &gt;&gt;= 1) &#123;
+            f.resize(m * 2), dft(f);
+            g.resize(m * 2), dft(g);
+            for (int i = 0; i &lt; 2 * m; ++i) f[i] = mul(f[i], g[i ^ 1]);
+            for (int i = 0; i &lt; m; ++i) g[i] = mul(g[2 * i], g[2 * i + 1]);
+            g.resize(m), idft(f), idft(g);
+            for (int i = 0, j = k &amp; 1; i &lt; n; i++, j += 2) f[i] = f[j];
+            f.resize(n), g.resize(n);
+        &#125;
+        return f[0];
+    &#125;
+
+    /*
+     * Description: calculate T[k], where T[n] = sum c[i] * T[n - i]
+     * Time: O(n log n log k)
+     */
+    int recur(Poly c, ll k) &#123; return c[0] = P - 1, divAt((T * c).pre(c.deg() - 1), c, k); &#125;
+
+    /*
+     * Description: polynomial multipoint fast evaluation
+     * Time: O(n log^2 n)
+     */
+    Poly eval(Poly x) const &#123;
+        if (empty()) return Poly(x.deg());
+        const int m = x.deg(), n = norm(m);
+        vector&lt;Poly&gt; q(2 * n, &#123;1&#125;);
+        Poly ans(m), temp, d(2 * n);
+        for (int i = n; i &lt; n + m; ++i) q[i] = Poly&#123;1, P - x[i - n]&#125;;
+        for (int i = n - 1; i; --i) q[i] = q[i &lt;&lt; 1] * q[i &lt;&lt; 1 | 1];
+        q[1] = mulT(q[1].inv(n));
+        for (int i = 1, l = 2, r = 3; i &lt; n; ++i, l += 2, r += 2) &#123;
+            temp = q[l], d[l] = d[r] = d[i] + 1;
+            q[l] = q[i].mulT(q[r]).pre(n &gt;&gt; d[l]);
+            q[r] = q[i].mulT(temp).pre(n &gt;&gt; d[r]);
+        &#125;
+        for (int i = n; i &lt; n + m; ++i) ans[i - n] = q[i][0];
+        return ans;
+    &#125;
+
+#undef T
+&#125;;
+
+// useless algorithm
+/*
+ * Description: G(F(x))
+ * Time: O(n sqrt n log n + n ^ 2)
+ */
+Poly compound(Poly f, Poly g) &#123;
+    int n = f.size(), k = norm(2 * n), L = sqrt(n) + 1;
+    vector&lt;Poly&gt; G(L + 1);
+    Poly H, h(k), t; // H = g ^ (iL)
+    auto dft = [&amp;](Poly &amp;a) &#123; a.resize(k), NTT::dft(a.data(), k); &#125;;
+    auto idft = [&amp;](Poly &amp;a) &#123; NTT::idft(a.data(), k), a.resize(n); &#125;;
+    G[0] = H = &#123;1&#125;, dft(g);
+    for (int i = 1; i &lt;= L; ++i) dft(G[i] = G[i - 1]), idft(G[i] ^= g);
+    dft(g = G[L]);
+    for (int i = 0; i &lt; L; ++i, t = &#123;&#125;, idft(H)) &#123;
+        for (int j = 0; j &lt; min(L, n - i * L); ++j) t += G[j] * f[i * L + j];
+        dft(t), dft(H);
+        for (int j = 0; j &lt; k; ++j) h[j] = (h[j] + (ll) t[j] * H[j]) % P, H[j] = mul(H[j], g[j]);
+    &#125;
+    return idft(h), h;
+&#125;
+
+/*
+ * Description: get F(x) for F(G(x)) = x
+ * Time: O(n sqrt n log n + n ^ 2)
+ */
+Poly compoundInv(Poly g) &#123; //
+    int n = g.size(), k = norm(2 * n), L = sqrt(n) + 1;
+    vector&lt;Poly&gt; G(L + 1);
+    Poly H, f(n);
+    auto dft = [&amp;](Poly &amp;a) &#123; a.resize(k), NTT::dft(a.data(), k); &#125;;
+    auto idft = [&amp;](Poly &amp;a) &#123; NTT::idft(a.data(), k), a.resize(n); &#125;;
+    G[0] = H = &#123;1&#125;, H.resize(n), dft(g = (g &gt;&gt; 1).inv(n));
+    for (int i = 1; i &lt;= L; ++i) dft(G[i] = G[i - 1]), idft(G[i] ^= g);
+    dft(g = G[L]);
+    for (int i = 0, t = 1; i &lt; L; ++i) &#123;
+        for (int j = 1; j &lt;= L &amp;&amp; t &lt; n; ++j, ++t)
+            for (int r = 0; r &lt; t; ++r) f[t] = (f[t] + (ll) G[j][r] * H[t - 1 - r]) % P;
+        dft(H), idft(H ^= g);
+    &#125;
+    return f ^ Poly(inv, inv + N);
+&#125;
+</code></pre>
+<h3><span id="7扩展卢卡斯">7.扩展卢卡斯</span></h3><pre><code>ll n, m, p;// C(n,m) mod p (p为任意数)
+ll exgcd(ll a, ll b, ll &amp;x, ll &amp;y)&#123;
+    if(!b)&#123;
+        x = 1, y = 0;
+        return a;
+    &#125;
+    ll res = exgcd(b, a%b, x, y);
+    ll t = x;
+    x = y;
+    y = t-a/b*y;
+    return res;
+&#125;
+ll qpow(ll a, ll n, ll mod)&#123;
+    ll res = 1;
+    while(n)&#123;
+        if(n&amp;1) res = (res*a) % mod;
+        a = (a*a) % mod;
+        n &gt;&gt;= 1;
+    &#125;
+    return res;
+&#125;
+ll inv(ll a, ll p)&#123;
+    ll x, y;
+    exgcd(a, p, x, y);
+    if(x+p &gt; p) return x;
+    return x+p;
+&#125;
+ll crt(ll n, ll mod)&#123;
+    return n*(p/mod)%p*inv(p/mod, mod)%p;
+&#125;
+ll fac(ll n, ll p, ll k)&#123;		//k = p^x
+       if(!n) return 1;
+       ll ans = 1;
+    for(int i = 2; i &lt;= k; i++)&#123;
+        if(i%p) ans = ans*i % k;
+    &#125;
+    ans = qpow(ans, n/k, k);
+    for(int i = 2; i &lt;= n%k; i++)&#123;
+        if(i%p) ans = ans*i % k;
+    &#125;
+    return ans*fac(n/p, p, k)%k;
+&#125;
+ll C(ll n, ll m, ll p, ll k)&#123;	//k = p^x
+       if(n &lt; m) return 0;
+    ll a = fac(n,p,k), b = fac(m,p,k), c = fac(n-m,p,k);
+    ll cnt = 0;
+    for(ll i = p; i &lt;= n; i *= p) cnt += n/i;
+    for(ll i = p; i &lt;= m; i *= p) cnt -= m/i;
+    for(ll i = p; i &lt;= n-m; i *= p) cnt -= (n-m)/i;
+    return a*inv(b, k)%k * inv(c, k)%k * qpow(p, cnt, k)%k;
+&#125;
+ll exlucas()&#123;
+    ll t = p, ans = 0;
+    for(ll i = 2; i*i &lt;= t; i++)&#123;
+        if(t%i) continue;
+        ll tmp = 1;
+        while(t%i == 0)&#123;
+            tmp *= i;
+            t /= i;
+        &#125;
+        ans = (ans+crt(C(n, m, i, tmp), tmp))%p;
+    &#125;
+    if(t &gt; 1) ans = (ans+crt(C(n, m, t, t), t))%p;
+    return ans%p;
+&#125;
+</code></pre>
+<h3><span id="8莫比乌斯反演">8.莫比乌斯反演</span></h3><h4><span id="i求莫比乌斯函数前缀和与欧拉函数前缀和">I.求莫比乌斯函数前缀和与欧拉函数前缀和</span></h4><pre><code>mu[x]=1 如果x=1
+mu[x]=0 如果存在素数p使得 x%(p*p)=0
+mu[x]=(-1)^k ,k为n的本质不同质因子个数 
+</code></pre>
+<pre><code>struct Math_Product_functions/*积性函数*/&#123;
+    #define M 2000005
+    #define mod 1000000007
+    int pri[M],p[M],tot=0,cnt=0;
+    bool v[M],f[M];
+    ll mu[M],Mu[M];// 莫比乌斯函数 
+    ll phi[M],Phi[M],Phi_2[M];// 欧拉函数 
+    map&lt;ll,ll&gt;MU;// 莫比乌斯函数(大数) 
+    map&lt;ll,ll&gt;PHI;
+    map&lt;ll,ll&gt;PHI_2;// 欧拉函数phi[x^2]的和 
+    /*
+    mu[x]=1 if x=1
+    mu[x]=0 if x%(p*p)=0
+    mu[x]=(-1)^k ,k为n的本质不同质因子个数 
+    */ 
+    int powmod(int a,int b)&#123;
+        int res=1;
+        while(b)&#123;
+            if(b&amp;1) res=1ll*res*a%mod;
+            b&gt;&gt;=1;
+            a=1ll*a*a%mod;
+        &#125;
+        return res;
+    &#125;
+    int G2=powmod(2,mod-2),G6=powmod(6,mod-2);
+    void get_Mu_and_Phi()&#123;
+        mu[1]=1,phi[1]=1;// 线性筛 
+        for(int i=2;i&lt;M;i++)&#123;
+            if(!f[i]) p[++tot]=i,mu[i]=-1,phi[i]=i-1;
+            for(int j=1;j&lt;=tot&amp;&amp;i*p[j]&lt;M;j++)&#123;
+                f[i*p[j]]=1;
+                if(i%p[j]==0)&#123;
+                    mu[i*p[j]]=0;phi[i*p[j]]=phi[i]*p[j];
+                    break;
+                &#125;
+                mu[i*p[j]]=-mu[i];phi[i*p[j]]=phi[i]*(p[j]-1);
+            &#125;
+        &#125;
+        // 求前缀和
+        for(int i=1;i&lt;M;i++) Mu[i]=mu[i]+Mu[i-1];// 莫比乌斯函数前缀和 
+        for(int i=1;i&lt;M;i++) Phi[i]=phi[i]+Phi[i-1];// 欧拉函数前缀和 
+        for(int i=1;i&lt;M;i++) Phi_2[i]=(i*phi[i]%mod+Phi_2[i-1])%mod;// 欧拉函数[x^2]的前缀和 
+    &#125;
+    ll sum_mu(ll x)&#123;// 莫比乌斯函数前缀和 
+        if(x&lt;M) return Mu[x];
+        if(MU.count(x)) return MU[x];
+        ll res=1;
+        for(ll i=2,j;i&lt;=x;i=j+1)&#123;
+            j=x/(x/i);
+            res-=sum_mu(x/i)*(j-i+1);
+        &#125;
+        return MU[x]=res;
+    &#125;
+    ll sum_phi(ll x)&#123; //欧拉函数前缀和
+        if(x&lt;M) return Phi[x];
+        if(PHI.count(x)) return PHI[x];
+        ll res=1;
+        for(ll i=1,j;i&lt;=x;i=j+1)&#123;
+            j=x/(x/i);
+            res+=(sum_mu(j)-sum_mu(i-1))*((x/i)*(x/i));
+        &#125;
+        return PHI[x]=((res+1)&gt;&gt;1);
+    &#125;
+    ll sum_phi_2(ll x)&#123;//欧拉函数phi[x^2]前缀和
+        if(x&lt;M) return Phi_2[x];
+        if(PHI_2.count(x)) return PHI_2[x];
+        ll res=(x+1)*x%mod*(2*x+1)%mod*G6%mod;
+        for(ll i=2,j;i&lt;=x;i=j+1)&#123;
+            j=x/(x/i);
+            res=(res-(i+j)*(j-i+1)/2%mod*sum_phi_2(x/i)%mod);
+            if(res&lt;0) res+=mod;
+        &#125;
+        return PHI_2[x]=res;
+    &#125;
+&#125;Math;
+</code></pre>
+<h3><span id="9矩阵行列式">9.矩阵行列式</span></h3><pre><code>struct Mat &#123;
+    double a[MAX][MAX];
+#define EPS (1e-6)
+    double Det() &#123;
+        double det = 1;
+        for (int i = 0; i &lt; n; ++i) &#123;
+            int k = i;
+            for (int j = i + 1; j &lt; n; ++j)
+                if (fabs(a[j][i]) &gt; fabs(a[k][i])) k = j;
+            if (fabs(a[k][i]) &lt; EPS) &#123;
+                det = 0;
+                break;
+            &#125;
+            swap(a[i], a[k]);
+            if (i != k) det = -det;
+            det *= a[i][i];
+            for (int j = i + 1; j &lt; n; ++j) a[i][j] /= a[i][i];
+            for (int j = 0; j &lt; n; ++j)
+                if (j != i &amp;&amp; fabs(a[j][i]) &gt; EPS)
+                    for (int k = i + 1; k &lt; n; ++k) a[j][k] -= a[i][k] * a[j][i];
+        &#125;
+        return det;
+    &#125;
+&#125;;
+</code></pre>
+<h3><span id="10高斯消元">10.高斯消元</span></h3><pre><code>struct Mat &#123;
+    double a[MAX][MAX];
+#define EPS (1e-6)
+    bool Gauss() &#123;
+        int r;
+        double f;
+        for (int i = 0; i &lt; n; ++i) &#123;
+            r = i;
+            for (int j = i + 1; j &lt; n; ++j)
+                if (fabs(a[j][i]) &gt; fabs(a[r][i])) r = j;
+            if (fabs(a[r][i]) &lt; EPS) return false;
+            if (r != i)
+                for (int j = 0; j &lt;= n; ++j) swap(a[r][j], a[i][j]);
+            for (int k = i + 1; k &lt; n; ++k) &#123;
+                f = a[k][i] / a[i][i];
+                for (int j = i; j &lt;= n; ++j) a[k][j] -= f * a[i][j];
+            &#125;
+        &#125;
+        for (int i = n - 1; i &gt;= 0; --i) &#123;
+            for (int j = i + 1; j &lt; n; ++j) a[i][n] -= a[j][n] * a[i][j];
+            a[i][n] /= a[i][i];
+        &#125;
+        return true;
+    &#125;
+&#125;;
+</code></pre>
+<h3><span id="11bm">11.BM</span></h3><pre><code>namespace Linear_seq &#123;
+    typedef long long LL;
+    LL mod;
+#define SZ(x) ((int)(x).size())
+#define rep(i, a, n) for (int i = a; i &lt; n; i++)
+#define pb push_back
+    typedef vector&lt;int&gt; VI;
+    typedef pair&lt;int, int&gt; PII;
+//    const int N = 10010;
+    LL res[N], base[N], _c[N], _md[N];
+    vector&lt;int&gt; Md;
+ 
+    LL powmod(LL a, LL b) &#123;
+        LL res = 1;
+        a %= mod;
+        for (; b; b &gt;&gt;= 1) &#123;
+            if (b &amp; 1) res = res * a % mod;
+            a = a * a % mod;
+        &#125;
+        return res;
+    &#125;
+ 
+    void mul(LL *a, LL *b, int k) &#123;
+        rep(i, 0, k + k) _c[i] = 0;
+        rep(i, 0, k) if (a[i])
+                rep(j, 0, k) _c[i + j] =
+                                     (_c[i + j] + a[i] * b[j]) % mod;
+        for (int i = k + k - 1; i &gt;= k; i--)
+            if (_c[i])
+                rep(j, 0, SZ(Md)) _c[i - k + Md[j]] =
+                                          (_c[i - k + Md[j]] - _c[i] * _md[Md[j]]) % mod;
+        rep(i, 0, k) a[i] = _c[i];
+    &#125;
+ 
+    int solve(LL n, VI a, VI b) &#123;
+        LL ans = 0, pnt = 0;
+        int k = SZ(a);
+        rep(i, 0, k) _md[k - 1 - i] = -a[i];
+        _md[k] = 1;
+        Md.clear();
+        rep(i, 0, k) if (_md[i] != 0) Md.push_back(i);
+        rep(i, 0, k) res[i] = base[i] = 0;
+        res[0] = 1;
+        while ((1LL &lt;&lt; pnt) &lt;= n) pnt++;
+        for (int p = pnt; p &gt;= 0; p--) &#123;
+            mul(res, res, k);
+            if ((n &gt;&gt; p) &amp; 1) &#123;
+                for (int i = k - 1; i &gt;= 0; i--) res[i + 1] = res[i];
+                res[0] = 0;
+                rep(j, 0, SZ(Md)) res[Md[j]] =
+                                          (res[Md[j]] - res[k] * _md[Md[j]]) % mod;
+            &#125;
+        &#125;
+        rep(i, 0, k) ans = (ans + res[i] * b[i]) % mod;
+        if (ans &lt; 0) ans += mod;
+        return ans;
+    &#125;
+ 
+    VI BM(VI s) &#123;
+        VI C(1, 1), B(1, 1);
+        int L = 0, m = 1, b = 1;
+        rep(n, 0, SZ(s)) &#123;
+            LL d = 0;
+            rep(i, 0, L + 1) d = (d + (LL) C[i] * s[n - i]) % mod;
+            if (d == 0)
+                ++m;
+            else if (2 * L &lt;= n) &#123;
+                VI T = C;
+                LL c = mod - d * powmod(b, mod - 2) % mod;
+                while (SZ(C) &lt; SZ(B) + m) C.pb(0);
+                rep(i, 0, SZ(B)) C[i + m] = (C[i + m] + c * B[i]) % mod;
+                L = n + 1 - L;
+                B = T;
+                b = d;
+                m = 1;
+            &#125; else &#123;
+                LL c = mod - d * powmod(b, mod - 2) % mod;
+                while (SZ(C) &lt; SZ(B) + m) C.pb(0);
+                rep(i, 0, SZ(B)) C[i + m] = (C[i + m] + c * B[i]) % mod;
+                ++m;
+            &#125;
+        &#125;
+        return C;
+    &#125;
+ 
+    int gao(VI a, LL n) &#123;
+        VI c = BM(a);
+        c.erase(c.begin());
+        rep(i, 0, SZ(c)) c[i] = (mod - c[i]) % mod;
+        return solve(n, c, VI(a.begin(), a.begin() + SZ(c)));
+    &#125;
+&#125;;
+//using namespace Linear_seq;
+</code></pre>
+<h2><span id="八-图论">八、图论</span></h2><h3><span id="1读入图">1.读入图</span></h3><h4><span id="i邻接矩阵-二维数组">Ⅰ.邻接矩阵 二维数组</span></h4><h4><span id="iivector">Ⅱ.vector</span></h4><h4><span id="iii邻接表">Ⅲ.邻接表</span></h4><h4><span id="iv伪邻接表链式前向星">Ⅳ.伪邻接表（链式前向星）</span></h4><h3><span id="2最短路算法">2.最短路算法：</span></h3><h4><span id="idijkstra算法">Ⅰ.dijkstra算法</span></h4><pre><code>struct dijkstra &#123;
+    vector&lt;vector&lt;pair&lt;int, int&gt;&gt;&gt; G;
+    vector&lt;int&gt; dis, vis;
+    int n;
+#define INF 2000000000
+
+    struct ty &#123;
+        int x, dis;
+
+        bool operator&lt;(const ty &amp;A) const &#123;
+            return dis &gt; A.dis;
+        &#125;
+    &#125;;
+
+    dijkstra(int N, int M) : G(N + 1), dis(N + 1), vis(N + 1) &#123;
+        n = N;
+        for (int i = 1, u, v, w; i &lt;= M; i++) &#123;
+            cin &gt;&gt; u &gt;&gt; v &gt;&gt; w;
+            G[u].emplace_back(v, w);
+            G[v].emplace_back(u, w);
+        &#125;
+    &#125;
+
+    inline void dij(int s) &#123;
+        for (int i = 1; i &lt;= n; i++) &#123;
+            vis[i] = 0;
+            dis[i] = INF;
+        &#125;
+        dis[s] = 0;
+        priority_queue&lt;ty&gt; q;
+        q.push(&#123;s, 0&#125;);
+        while (!q.empty()) &#123;
+            auto [x, d] = q.top();
+            q.pop();
+            if (vis[x]) continue;
+            vis[x] = 1;
+            for (auto [to, w]: G[x]) &#123;
+                if (vis[to]) continue;
+                if (dis[to] &gt; d + w) &#123;
+                    dis[to] = d + w;
+                    q.push(&#123;to, dis[to]&#125;);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;;
+</code></pre>
+<h4><span id="iibellman-ford算法">Ⅱ.<strong>b</strong>ellman-ford算法</span></h4><p>（权值允许是负数，但不能出现负环，且一次只求一对距离）</p>
+<h4><span id="iiispfa算法">Ⅲ.SPFA算法</span></h4><p>（权值允许是负数，但不能出现负环，且一次只求一对距离）</p>
+<pre><code>int n,m,s,t,cnt=0;
+struct ty
+&#123;
+    int to,len,next;
+&#125;edge[N];
+int head[N];
+void add(int x,int y,int z)
+&#123;
+    edge[++cnt].to=y;
+    edge[cnt].len=z;
+    edge[cnt].next=head[x];
+    head[x]=cnt;
+&#125;
+queue&lt;int&gt;q;
+int dis[N];
+bool vis[N];
+int spfa(int s,int t)
+&#123;
+    memset(dis,0x3f,sizeof dis);
+    memset(vis,0,sizeof vis);
+    dis[s]=0;
+    vis[s]=1;
+    q.push(s);
+    while(!q.empty())
+    &#123;
+        int x=q.front();
+        q.pop();
+        vis[x]=0;
+        for (int i=head[x];i!=-1;i=edge[i].next)
+        &#123;
+            int y=edge[i].to;
+            if(dis[y]&gt;dis[x]+edge[i].len)
+            &#123;
+                dis[y]=dis[x]+edge[i].len;
+                if(!vis[y])
+                &#123;
+                    q.push(y);vis[y]=1;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    if(dis[t]&gt;=inf) return -1;
+    return dis[t];
+&#125;
+int main()
+&#123;
+    n=read(),m=read(),s=read(),t=read();//n为总点数，m为边数，s为起点，t为终点 
+    memset(head,-1,sizeof head);
+    for (int i=1;i&lt;=m;i++)
+    &#123;
+        int x=read(),y=read(),z=read();
+        add(x,y,z);add(y,x,z);
+    &#125;
+    printf(&quot;%d&quot;,spfa(s,t));
+    return 0;
+&#125;
+</code></pre>
+<h4><span id="ivfloyd算法">Ⅳ.floyd算法</span></h4><p>（可以求多源点路最短路）</p>
+<pre><code>int f[N][N],n,m; 
+void floyd()
+&#123;
+    for (int k=1;k&lt;=n;k++)
+    for (int i=1;i&lt;=n;i++)
+    for (int j=1;j&lt;=n;j++)
+    &#123;
+        if((i!=j)&amp;&amp;(j!=k)&amp;&amp;(k!=i))
+        &#123;
+            if(f[i][k]+f[k][j]&lt;=f[i][j]) f[i][j]=f[i][k]+f[k][j];
+        &#125;
+    &#125;
+&#125;
+int main()
+&#123;
+    memset(f,0x3f,sizeof f);
+    n=read(),m=read();//n为点数，m为边数
+    for (int i=1;i&lt;=m;i++)
+    &#123;
+        int x=read(),y=read(),z=read();
+        f[x][y]=f[y][x]=z;
+    &#125;
+    void floyd();
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="3最小生成树">3.最小生成树</span></h3><h4><span id="iprim算法">Ⅰ.prim算法</span></h4><p>（对于每一个点，都取一条边让它进去最小生成树，贪心一下就是取与这个点相连的最小边）</p>
+<pre><code>struct ty
+&#123;
+    int to,len,next;
+&#125;edge[N];
+int head[N],dis[N];
+int cnt=0,n,m,cntt=0;
+void add(int a,int b,int v)&#123;
+    edge[++cnt].to=b;
+    edge[cnt].len=v;
+    edge[cnt].next=head[a];
+    head[a]=cnt;
+&#125;
+bool vis[N];
+struct ty2&#123;
+    int x,len;
+    bool operator &lt; (const ty2 &amp;a) const
+    &#123;
+        return len &gt;a.len;
+    &#125;
+&#125;;
+priority_queue&lt; ty2 &gt; q;
+void prim()&#123;
+    memset(dis,0x7f,sizeof dis);
+    vis[1]=1;cntt++;
+    ty2 tmp;
+    for (int i=head[1];i!=-1;i=edge[i].next)&#123;
+        tmp.x=edge[i].to;
+        tmp.len=edge[i].len;
+        dis[tmp.x]=tmp.len;
+        q.push(tmp);
+    &#125;
+    int ans=0;
+    while(!q.empty())&#123;
+        ty2 tmp=q.top();
+        q.pop();
+        int x=tmp.x;
+        if (vis[x]) continue;
+        vis[x]=1;cntt++;
+        ans+=tmp.len;
+        if(cntt&gt;=n) break;
+        for (int i=head[x];i!=-1;i=edge[i].next)&#123;
+            if(vis[edge[i].to]) continue;
+            if(dis[edge[i].to]&gt;edge[i].len)&#123;
+                tmp.x = edge[i].to;
+               tmp.len = edge[i].len;
+                dis[edge[i].to] = edge[i].len;
+               q.push(tmp);
+            &#125;
+        &#125;
+    &#125;
+    printf(&quot;%d&quot;,ans);
+&#125;
+int main()&#123;
+    n=read(),m=read();
+    memset(head,-1,sizeof(head));
+    for (int i=1;i&lt;=m;i++)&#123;
+        int a=read(),b=read(),v=read();
+        add(a,b,v);add(b,a,v);
+    &#125;
+    prim();
+    return 0;
+&#125;
+</code></pre>
+<h4><span id="iikruskal算法">Ⅱ.Kruskal算法</span></h4><pre><code>struct ty&#123;
+    int x,y,z;
+&#125;edge[N];
+int fa[N];
+inline bool cmp(ty a,ty b)&#123;
+    return a.z&lt;b.z;
+&#125;
+inline int find(int x)&#123;
+    return fa[x] == x ? x : fa[x]=find(fa[x]);
+&#125;
+int main()&#123;
+    int n=read(),m=read();
+    for (int i=1;i&lt;=n;i++)
+        fa[i]=i;
+    for (int i=1;i&lt;=m;i++)	edge[i].x=read(),edge[i].y=read(),edge[i].z=read();
+    sort(edge+1,edge+m+1,cmp);
+    int ans = 0;
+    for (int i=1;i&lt;=m;i++)&#123;
+        int fx = find(edge[i].x);
+        int fy = find(edge[i].y);
+        if(fx==fy) continue;
+        ans += edge[i].z;
+        fa[fx]=fy;
+    &#125;
+    printf(&quot;%d&quot;,ans);
+    return 0;
+&#125;
+</code></pre>
+<h4><span id="iiikruskal重构树">III.Kruskal重构树</span></h4><pre><code>struct ty&#123;
+    int x,y,z;
+&#125;edge[N];
+int fa[N];
+inline bool cmp(ty a,ty b)&#123;
+    return a.z&lt;b.z;
+&#125;
+inline int find(int x)&#123;
+    return fa[x] == x ? x : fa[x]=find(fa[x]);
+&#125;
+// kruskal重构树
+// 重构树点权就是当前边的边权
+// 可以用数剖维护 重构树，以快速求lca 
+vector&lt;int&gt;v[N];
+int val[N],f[N];// val就是点权 
+int cnt=0; 
+void rebuild(int i,int fx,int fy)&#123;
+    val[++cnt]=edge[i].z;
+    f[fx]=f[fy]=f[cnt]=cnt;
+    v[cnt].push_back(fx);
+    v[cnt].push_back(fy);
+    v[fx].push_back(cnt);
+    v[fy].push_back(cnt);
+&#125;
+int main()&#123;
+    int n=read(),m=read(); cnt=n;
+    for (int i=1;i&lt;=n;i++)
+        fa[i]=i;
+    for (int i=1;i&lt;=m;i++)	edge[i].x=read(),edge[i].y=read(),edge[i].z=read();
+    sort(edge+1,edge+m+1,cmp);
+    int ans = 0;
+    for (int i=1;i&lt;=m;i++)&#123;
+        int fx = find(edge[i].x);
+        int fy = find(edge[i].y);
+        if(fx==fy) continue;
+        rebuild(i,fx,fy);
+        ans += edge[i].z;
+        fa[fx]=fy;
+    &#125;
+    printf(&quot;%d&quot;,ans);
+    return 0;
+&#125;
+</code></pre>
+<h4><span id="ivboruvka-算法">IV.Boruvka 算法</span></h4><h3><span id="4lca">4.LCA</span></h3><h4><span id="i树上倍增">I.树上倍增</span></h4><pre><code>int f[N][30],lg[N];//f[i][j]表示点i向上2^j层的祖先是哪个点
+//f[i][0]=fa[i]
+//f[i][j]=f[f[i][j-1][j-1]
+int dep[N];//表示每一个点的深度
+vector&lt;int&gt;G[N];
+inline void dfs(int x,int fa)&#123;
+    dep[x]=dep[fa]+1;
+    f[x][0]=fa;
+    for(int i=1;(1&lt;&lt;i)&lt;=dep[x];i++)&#123;
+        f[x][i]=f[f[x][i-1]][i-1];
+    &#125;
+    for (int i=0;i&lt;G[x].size();i++)&#123;
+        int v=G[x][i];
+        if(v==fa) continue;
+        dfs(v,x);
+    &#125;
+&#125;
+inline int LCA(int a,int b)&#123;
+    if(dep[a]&lt;dep[b]) swap(a,b);
+    while(dep[a]!=dep[b]) a=f[a][lg[dep[a]-dep[b]]-1];
+    if(a==b) return a;
+    for(int k=lg[dep[a]];k&gt;=0;k--)&#123;
+        if(f[a][k]!=f[b][k]) a=f[a][k],b=f[b][k];
+    &#125;
+    return f[a][0];
+&#125;
+int n,m,s;//n为点数 m为询问数 s为根节点 
+inline void Init()&#123;
+    for(int i=1;i&lt;=n;i++)&#123;
+        lg[i]=lg[i-1];
+        if(i==(1&lt;&lt;lg[i-1])) lg[i]++;
+    &#125;
+&#125;
+</code></pre>
+<h4><span id="ii-rmqst表">II RMQ+ST表</span></h4><p>（DFS序+RMQ+ST表）</p>
+<pre><code>vector&lt;int&gt;G[N];
+int f[N],fir[N];
+int dp[N][40];
+int num=0,cnt=0;
+int b[N&lt;&lt;1];
+inline void dfs(int x,int fa)&#123;
+    int tmp=++num;
+    b[++cnt]=tmp;
+    f[tmp]=x;
+    fir[x]=cnt;
+    for (int i=0;i&lt;G[x].size();i++)&#123;
+        int v=G[x][i];if(v==fa) continue;
+        dfs(v,x);
+        b[++cnt]=tmp;
+    &#125;
+&#125;
+
+inline void rmq_st(int x)&#123;
+    for (int i=1;i&lt;=x;i++) dp[i][0]=b[i];
+    for (int j=1;j&lt;=30;j++)&#123;
+        int t=x-(1&lt;&lt;j)+1;
+        for (int i=1;i&lt;=t;i++)&#123;
+            dp[i][j]=min(dp[i][j-1],dp[i+(1&lt;&lt;(j-1))][j-1]);
+        &#125;
+    &#125;
+&#125;
+
+inline int rmq_find(int l,int r)&#123;
+    int k=log2(r-l+1);
+    return min(dp[l][k],dp[r-(1&lt;&lt;k)+1][k]);
+&#125;
+
+inline int LCA(int a,int b)&#123;
+    if(fir[a]&gt;fir[b]) swap(a,b);
+    int k=rmq_find(fir[a],fir[b]);
+    return f[k];
+&#125;
+</code></pre>
+<h4><span id="iii树链剖分">Ⅲ.树链剖分</span></h4><pre><code>// 第一遍dfs维护每个点的重儿子,父亲，深度 
+// 第二遍dfs对每个点重新编号 并且记录 
+// 记录每个点所在重链的最上面一个点是哪一个 top[x] 
+int fa[N],siz[N],dep[N],top[N],son[N];
+int n,m,s;//n为点数 m为询问次数 s为根节点 
+vector&lt;int&gt;G[N];
+inline void dfs1(int x)&#123;
+    dep[x]=dep[fa[x]]+1;
+    siz[x]=1;
+    for(int i=0;i&lt;G[x].size();i++)&#123;
+        int v=G[x][i];
+        if(v==fa[x]) continue;
+        fa[v]=x;dfs1(v);
+        siz[x]+=siz[v];
+        if(!son[x]||siz[son[x]]&lt;siz[v]) son[x]=v;
+    &#125;
+&#125;
+inline void dfs2(int x,int topf)&#123;
+    top[x]=topf;
+    if(son[x]) dfs2(son[x],topf);
+    for (int i=0;i&lt;G[x].size();i++)&#123;
+        int v=G[x][i];
+        if(v==fa[x]||v==son[x]) continue;
+        dfs2(v,v);
+    &#125;
+&#125;
+inline int LCA(int x,int y)&#123;
+    while(top[x]!=top[y])&#123;
+        if(dep[top[x]]&gt;=dep[top[y]])&#123;
+            x=fa[top[x]];
+        &#125;else&#123;
+            y=fa[top[y]];
+        &#125;
+    &#125;
+    if(dep[x]&lt;dep[y]) return x;
+    return y;
+&#125;
+</code></pre>
+<h4><span id="ivtrajan">Ⅳ.trajan</span></h4><pre><code>int n,m,s,dep[N],fa[N];
+bool vis[N];
+struct query&#123;
+    int id,x,y,lca;
+&#125;q[N];
+struct ty&#123;
+    int id,num;
+&#125;;
+int a[N];
+vector&lt;int&gt;G[N];
+vector&lt;ty&gt;qes[N];
+inline int find(int i)&#123;
+    return i==fa[i]?i:fa[i]=find(fa[i]);
+&#125;
+inline void merge(int u,int v)&#123;
+    int a=find(u),b=find(v);
+    if(dep[a]&gt;dep[b]) fa[a]=b;
+    else fa[b]=a;
+&#125;
+inline void tarjan(int x)&#123;
+    fa[x]=x;
+    vis[x]=true;
+    for(int i=0;i&lt;G[x].size();i++)&#123;
+        int p=G[x][i];
+        if(!vis[p])&#123;
+            dep[p]=dep[x]+1;
+            tarjan(p);
+            merge(p,x);
+          &#125;
+    &#125;
+    for(int i=0;i&lt;qes[x].size();i++)&#123;
+        if(vis[qes[x][i].num])&#123;
+            q[qes[x][i].id].lca=find(qes[x][i].num);
+        &#125;
+    &#125;
+&#125;
+int main()&#123;
+    scanf(&quot;%d%d%d&quot;,&amp;n,&amp;m,&amp;s);//n为点数，m为询问的所有可能，s为起点
+    for(int i=1,x,y;i&lt;n;i++) scanf(&quot;%d%d&quot;,&amp;x,&amp;y),G[x].push_back(y),G[y].push_back(x);
+    for (int i=1;i&lt;=m;i++)&#123;
+        int u,v;
+        scanf(&quot;%d%d&quot;,&amp;u,&amp;v);
+        q[i].x=u,q[i].y=v;
+        q[i].id=i;
+        qes[q[i].x].push_back((ty)&#123;i,q[i].y&#125;);
+        qes[q[i].y].push_back((ty)&#123;i,q[i].x&#125;);	
+    &#125;
+    tarjan(s);
+    for (int i=1;i&lt;=m;i++)&#123;
+        printf(&quot;%d\n&quot;,q[i].lca);
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="5网络流">5.网络流</span></h3><h4><span id="i最大流">I.最大流</span></h4><h5><span id="1dinic-算法">1.Dinic 算法</span></h5><pre><code>#include &lt;bits/stdc++.h&gt;
+using namespace std;
+const int inf=0x3f3f3f3f;
+const int N = 5e5 + 10;
+int n,m,s,t,u,v;
+int w,ans,dis[N];
+int cnt=1,now[N],head[N]; 
+struct node &#123;
+    int to,nxt;
+    int val;
+&#125;egde[N];
+void add(int u,int v,int w) &#123;
+    egde[++cnt].to=v;
+    egde[cnt].val=w;
+    egde[cnt].nxt=head[u];
+    head[u]=cnt;
+&#125;
+int bfs()&#123;  //在惨量网络中构造分层图 
+    for(int i=1;i&lt;=n;i++) dis[i]=inf;
+    queue&lt;int&gt; q;
+    q.push(s);
+    dis[s]=0;
+    now[s]=head[s];
+    while(!q.empty()) &#123;
+        int x=q.front();q.pop();
+        for(int i=head[x];i;i=egde[i].nxt)&#123;
+            int v=egde[i].to;
+            if(egde[i].val&gt;0 &amp;&amp; dis[v]==inf) &#123;
+                q.push(v);
+                now[v]=head[v];
+                dis[v]=dis[x]+1;
+                if(v==t) return 1;
+            &#125;
+        &#125;
+    &#125;
+    return 0;
+&#125;
+
+int dfs(int x,int sum) &#123;  //sum是整条增广路对最大流的贡献
+    if(x==t) return sum;
+    int k,res=0;  //k是当前最小的剩余容量 
+    for(int i=now[x];i &amp;&amp; sum;i=egde[i].nxt) &#123;
+        now[x]=i;  //当前弧优化 
+        int v=egde[i].to;
+        if(egde[i].val&gt;0 &amp;&amp; (dis[v]==dis[x]+1)) &#123;
+            k=dfs(v,min(sum,egde[i].val));
+            if(k==0) dis[v]=inf;  //剪枝，去掉增广完毕的点 
+            egde[i].val-=k; egde[i^1].val+=k;
+            res+=k;  //res表示经过该点的所有流量和（相当于流出的总量） 
+            sum-=k;  //sum表示经过该点的剩余流量 
+        &#125;
+    &#125;
+    return res;
+&#125;
+int main() &#123;
+    scanf(&quot;%d%d%d%d&quot;,&amp;n,&amp;m,&amp;s,&amp;t);
+    for(int i=1;i&lt;=m;i++) &#123;
+        scanf(&quot;%d%d%d&quot;,&amp;u,&amp;v,&amp;w);
+        add(u,v,w);
+        add(v,u,0);
+    &#125;
+    while(bfs()) ans+=dfs(s,inf);  //流量守恒（流入=流出） 
+    printf(&quot;%d&quot;,ans);
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="6强连通分量">6.强连通分量</span></h3><h4><span id="itarjan">I.tarjan</span></h4><pre><code>const int N = 1e6 + 10;
+vector&lt;int&gt;G[N];
+int dfn[N],low[N],dfncnt,s[N],in_stack[N],tp;
+int scc[N],sc;// 结点 i 所在 SCC 的编号
+int sz[N];bool flag=0;
+void tarjan(int x)&#123;
+    low[x] = dfn[x] = ++ dfncnt;s[++tp]=x;in_stack[x]=1;
+    for(auto to:G[x])&#123;
+        if(!dfn[to])&#123;
+            tarjan(to);
+            low[x]=min(low[to],low[x]);
+        &#125;else if(in_stack[x])&#123;
+            low[x]=min(low[x],dfn[to]);
+        &#125;
+    &#125;
+    if(dfn[x]==low[x])&#123;
+        sc++;
+        while(s[tp]!=x)&#123;
+            scc[s[tp]] = sc;sz[sc]++;
+            in_stack[s[tp--]]=0;
+        &#125;
+        scc[s[tp]]=sc;sz[sc]++;
+        in_stack[s[tp--]]=0;
+    &#125;
+&#125;
+</code></pre>
+<h4><span id="iikosaraju-算法">II.Kosaraju 算法</span></h4><h3><span id="7斯坦纳树">7.斯坦纳树</span></h3><pre><code>#define mp make_pair
+typedef pair&lt;int, int&gt; P;
+typedef pair&lt;P, int&gt; PP;
+const int INF = 0x3f3f3f3f;
+const int dx[] = &#123;0, 0, -1, 1&#125;;
+const int dy[] = &#123;1, -1, 0, 0&#125;;
+int n, m, K, root;
+int f[101][1111], a[101], ans[11][11];
+bool inq[101];
+PP pre[101][1111];
+queue&lt;P&gt; q;
+
+bool legal(P u) &#123;
+    if (u.first &gt;= 0 &amp;&amp; u.second &gt;= 0 &amp;&amp; u.first &lt; n &amp;&amp; u.second &lt; m) &#123;
+        return true;
+    &#125;
+    return false;
+&#125;
+
+int num(P u) &#123;
+    return u.first * m + u.second;
+&#125;
+
+void spfa(int s) &#123;
+    memset(inq, 0, sizeof(inq));
+    while (!q.empty()) &#123;
+        P u = q.front();
+        q.pop();
+        inq[num(u)] = 0;
+        for (int d = 0; d &lt; 4; d++) &#123;
+            P v = mp(u.first + dx[d], u.second + dy[d]);
+            int du = num(u), dv = num(v);
+            if (legal(v) &amp;&amp; f[dv][s] &gt; f[du][s] + a[dv]) &#123;
+                f[dv][s] = f[du][s] + a[dv];
+                if (!inq[dv]) &#123;
+                    inq[dv] = 1;
+                    q.push(v);
+                &#125;
+                pre[dv][s] = mp(u, s);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+void dfs(P u, int s) &#123;
+    if (!pre[num(u)][s].second) return;
+    ans[u.first][u.second] = 1;
+    int nu = num(u);
+    if (pre[nu][s].first == u)
+        dfs(u, s ^ pre[nu][s].second);  // 通过 dfs 来找到答案
+    dfs(pre[nu][s].first, pre[nu][s].second);
+&#125;
+
+int main() &#123;
+    memset(f, INF, sizeof(f));
+    scanf(&quot;%d %d&quot;, &amp;n, &amp;m);
+    int tot = 0;
+    for (int i = 0; i &lt; n; i++) &#123;
+        for (int j = 0; j &lt; m; j++) &#123;
+            scanf(&quot;%d&quot;, &amp;a[tot]);
+            if (!a[tot]) &#123;
+                f[tot][1 &lt;&lt; (K++)] = 0;
+                root = tot;
+            &#125;
+            tot++;
+        &#125;
+    &#125;
+    for (int s = 1; s &lt; (1 &lt;&lt; K); s++) &#123;
+        for (int i = 0; i &lt; n * m; i++) &#123;
+            for (int subs = s &amp; (s - 1); subs; subs = s &amp; (subs - 1)) &#123;
+                if (f[i][s] &gt; f[i][subs] + f[i][s ^ subs] - a[i]) &#123;
+                    f[i][s] = f[i][subs] + f[i][s ^ subs] - a[i];  // 状态转移
+                    pre[i][s] = mp(mp(i / m, i % m), subs);
+                &#125;
+            &#125;
+            if (f[i][s] &lt; INF) q.push(mp(i / m, i % m));
+        &#125;
+        spfa(s);
+    &#125;
+    printf(&quot;%d\n&quot;, f[root][(1 &lt;&lt; K) - 1]);
+    dfs(mp(root / m, root % m), (1 &lt;&lt; K) - 1);
+    for (int i = 0, tot = 0; i &lt; n; i++) &#123;
+        for (int j = 0; j &lt; m; j++) &#123;
+            if (!a[tot++])
+                putchar(&#39;x&#39;);
+            else
+                putchar(ans[i][j] ? &#39;o&#39; : &#39;_&#39;);
+        &#125;
+        if (i != n - 1) printf(&quot;\n&quot;);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="8二分图匹配匈牙利算法">8.二分图匹配，匈牙利算法</span></h3><pre><code>bool f[N][N], used[N];//f 表示图，used 表示右边的某个数是否用过
+int match[N];// match 表示右边的数连接到左边哪一个
+int n, m, e;
+
+bool dfs(int p) &#123;
+    for (int i = 1; i &lt;= m; i++) &#123;
+        if (f[p][i] &amp;&amp; !used[i]) &#123;
+            used[i] = 1;
+            if (!match[i] || dfs(match[i])) &#123;
+                match[i] = p;
+                return 1;
+            &#125;
+        &#125;
+    &#125;
+    return 0;
+&#125;
+
+int Hungarian_Algorithm() &#123;
+    int Ans = 0;
+    for (int i = 1; i &lt;= n; i++) &#123;
+        memset(used, 0, sizeof used);
+        Ans += dfs(i);
+    &#125;
+    return Ans;
+&#125;
+</code></pre>
+<h3><span id="9树分治">9.树分治</span></h3><pre><code>vector&lt;int&gt; G[N];
+int A[N];
+int siz[N], dep[N], Max[N], vis[N], bel[N];
+int root, ans, m, allsize;
+
+void Get_Root(int x, int fa) &#123;
+    siz[x] = 1;
+    Max[x] = 0;
+    for (int to: G[x]) &#123;
+        if (to == fa || vis[to]) continue;
+        Get_Root(to, x);
+        siz[x] += siz[to];
+        Max[x] = max(Max[x], siz[to]);
+    &#125;
+    Max[x] = max(Max[x], allsize - siz[x]);
+    if (Max[x] &lt; Max[root]) root = x;
+&#125;
+
+int seq[N];
+
+void dfs(int x, int fa, int dis) &#123;
+    seq[++m] = x;
+    dep[x] = dis;
+    bel[x] = bel[fa];
+    for (int to: G[x]) &#123;
+        if (to == fa || vis[to]) continue;
+        dfs(to, x, dis + 1);
+    &#125;
+&#125;
+
+bool cmp(int i, int j) &#123; return A[i] &lt; A[j]; &#125;
+
+void calc(int x) &#123;
+    // 处理
+&#125;
+
+void Solve(int x) &#123;
+    vis[x] = 1;
+    seq[m = 1] = bel[x] = x;
+    dep[x] = 0;
+    for (int to: G[x]) &#123;
+        if (vis[to]) continue;
+        bel[to] = to;
+        dfs(to, to, 1);
+    &#125;
+    calc(x);
+    for (int to: G[x]) &#123;
+        if (vis[to]) continue;
+        allsize = siz[to];
+        root = 0;
+        Get_Root(to, x);
+        Solve(root);
+    &#125;
+&#125;
+
+void solve() &#123;
+    int n = read();
+    for (int i = 1; i &lt; n; i++) &#123;
+        int u = read(), v = read();
+        G[u].push_back(v);
+        G[v].push_back(u);
+    &#125;
+    for (int i = 1; i &lt;= n; i++) A[i] = read();
+    allsize = n;
+    Max[0] = n + 1;
+    Get_Root(1, 0);
+    Solve(root);
+&#125;
+</code></pre>
+<h2><span id="九-线性基">九、线性基</span></h2><h3><span id="1线性基含义">1.线性基含义</span></h3><p>线性基是向量空间的一组基，通常可以解决有关异或( ^ )的一些题目。</p>
+<p>通俗一点的讲法就是由一个集合构造出来的另一个集合，它有以下几个性质：</p>
+<ul>
+<li>线性基的元素能相互异或得到原集合的元素的所有相互异或得到的值。</li>
+<li>线性基是满足性质 1 的最小的集合。</li>
+<li>线性基没有异或和为 0 的子集。</li>
+<li>线性基中每个元素的异或方案唯一，也就是说，线性基中不同的异或组合异或出的数都是不一样的。</li>
+<li>线性基中每个元素的二进制最高位互不相同。</li>
+</ul>
+<h3><span id="2构造线性基">2.构造线性基</span></h3><pre><code>void build(ll x)
+&#123;
+    for(int i = 62; i &gt;= 0; i--)
+    &#123;
+        if(!(x &gt;&gt; (ll)i)) continue;
+        if(!p[i])
+        &#123;
+            p[i] = x;
+            break;
+        &#125;
+        x ^= p[i];
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="3查询一个元素是否可以被异或出来">3.查询一个元素是否可以被异或出来</span></h3><p>从高到低，如果这一位为1就异或上这一位的线性基，把11消去，根据性质一，如果最后得到了0，那这个数就可以表示出来。</p>
+<pre><code>bool ask(ll x)
+&#123;
+    for(int i=62;i&gt;=0;i--) 
+        if(x&amp;(1LL&lt;&lt;i)) x^=p[i];
+    return x==0;
+&#125;
+</code></pre>
+<h3><span id="4查询异或最大值">4.查询异或最大值</span></h3><p>按位贪心</p>
+<pre><code>ll ask_max()
+&#123;
+    ll ans=0;
+    for(int i=62;i&gt;=0;i--)
+        if((ans^p[i])&gt;ans) ans^=p[i];
+    return ans;
+&#125;
+</code></pre>
+<h3><span id="5查询异或最小值">5.查询异或最小值</span></h3><p>其实异或的最小值一般来说就是线性基里的最小元素，因为插入这个元素的时候我们总是尽量让它的高位为0才来插入这一位。但是为什么是“一般”呢？因为有可能会有出现0，得要在插入的时候记下个标记来特判才行。</p>
+<pre><code>ll ask_min()
+&#123;
+    ll ans=0;
+    for(int i=0;i&lt;=62;i++)
+        if(p[i]) return p[i];
+&#125;
+</code></pre>
+<h3><span id="6查询异或第k小">6.查询异或第k小</span></h3><p>首先考虑，要是每一位的选择都不会影响下一位的话，那就可以直接从高到低按位去选择就行了，就类似于二叉树求rank的玩法。</p>
+<p>重构一个数组 d[i] 来解决问题</p>
+<pre><code>void rebuild() 
+&#123;
+    cnt=0;top=0;
+    for(int i=MB;i&gt;=0;i--)
+        for(int j=i-1;j&gt;=0;j--)
+            if(p[i]&amp;(1LL&lt;&lt;j)) p[i]^=p[j];
+    for(int i=0;i&lt;=MB;i++) if(p[i]) d[cnt++]=p[i];
+&#125;
+</code></pre>
+<p>查询第k小的值</p>
+<pre><code>ll aks_kth(int k)
+&#123;
+    if(k&gt;=(1ll&lt;&lt;cnt)) return -1;
+    ll ans=0;
+    for (int i=MB;i&gt;=0;i--) 
+        if(k&amp;(1ll&lt;&lt;i)) ans^=d[i];
+    return ans;
+&#125;
+</code></pre>
+<h3><span id="7查询排名">7.查询排名</span></h3><pre><code>int rank(ll x)
+&#123;
+    int ans=0;
+    for (int i=cnt-1;i&gt;=0;i--)
+    &#123;
+        if(x&gt;=d[i]) 
+        &#123;
+            ans+=(1&lt;&lt;i);
+            x^=d[i];
+        &#125;
+    &#125;
+    return ans;
+&#125;
+</code></pre>
+<h2><span id="十-字符串">十、字符串</span></h2><pre><code>S= &quot; 字符串 &quot;
+Border：表示 前缀字符串 和 后缀字符串 相同
+Preffix[i] 前缀
+
+
+周期： 表示 字符串以 T 为周期
+若 T1 T2 均为 S 的周期 ，则 gcd(p,q)也是 S 的周期
+    
+循环节 p | |S|
+
+Think:
+则 |S| - T = Border  (S)
+
+S Border 的 Border 也是 S 的 Border --&gt;求 S的所有 Border 等价于求所有前缀的最大前缀
+    
+nxt[i] 表示的是 Preffix[i] 的非平凡的最大 Border
+
+for(int i=2;i&lt;=len;i++)&#123;
+    nxt[i]=nxt[i-1];
+    while(nxt[i]&amp;&amp;s[i]!=s[nxt[i]+1]) nxt[i]=nxt[nxt[i]];
+    nxt[i] += (s[i]==s[nxt[i]+1]);
+&#125;
+
+Border 树:
+0是这棵有向树的根，对于其他每个点 1 &lt;= i &lt;= n , 父节点为nxt[i]
+
+性质：
+    1.每一个前缀 Prefix[i] 的所有 Border ：节点i到根的链
+    2.哪些前缀有长度为x的 Border ： x的子树
+    3.求两个前缀的公共 Border 等价于求 LCA
+</code></pre>
+<h3><span id="1kmp-new">1.KMP —— NEW</span></h3><h4><span id="inext数组">I.next数组</span></h4><p>nxt[i] 表示的是 Preffix[i] 的非平凡的最大 Border</p>
+<pre><code>for(int i=2;i&lt;=len;i++)&#123;
+    nxt[i]=nxt[i-1];
+    while(nxt[i]&amp;&amp;s[i]!=s[nxt[i]+1]) nxt[i]=nxt[nxt[i]];
+    nxt[i] += (s[i]==s[nxt[i]+1]);
+&#125;
+</code></pre>
+<h4><span id="ii计算-s2-串在-s1-串-出现的位置和次数">II.计算 S2 串在 S1 串 出现的位置和次数</span></h4><pre><code>// cnt 表示个数 
+for(int i=1,j=0;i&lt;=len1;i++)&#123;
+    while( j &amp;&amp; s1[i]!=s2[j+1]) j=nxt[j];
+    j+=(s1[i]==s2[j+1]);
+    if(j==len2)&#123;
+        ans[++cnt]=i-j+1;
+        j=nxt[j];
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="3manacher">3.Manacher</span></h3><pre><code>const int MAX = 2e5+10000;
+char s[MAX],ch[MAX];
+int lc[MAX];// 每个点的回文半径 
+int N;
+void init(char *s)&#123;
+    int n = strlen(s+1);
+    ch[n*2 +1] = &#39;#&#39;;
+    ch[0] = &#39;@&#39;;
+    ch[n*2 +2] = &#39;\0&#39;;
+    for (int i=n;i&gt;=1;i--)&#123;
+        ch[i*2] = s[i];ch[i*2 -1] = &#39;#&#39;;
+    &#125;
+    N = 2*n + 1;
+&#125;
+void manacher()&#123;
+    lc[1]=1;  int k=1;
+    for (int i=2;i&lt;=N;i++)&#123;
+        int p = k+lc[k]-1;
+        if (i&lt;=p)&#123;
+            lc[i]=min(lc[2*k-i],p-i+1);
+        &#125;else&#123;  lc[i]=1;  &#125;
+        while (ch[i+lc[i]]==ch[i-lc[i]])lc[i]++;
+        if (i+lc[i]&gt;k+lc[k])k=i;
+    &#125;
+&#125;
+</code></pre>
+<h3><span id="4sa-后缀数组">4.SA 后缀数组</span></h3><p>关于清空，需要清空两倍数组。</p>
+<p>LCP 最长公共前缀</p>
+<h4><span id="i倍增">I.倍增</span></h4><pre><code>// 后缀排序：将所有的后缀s[i]看作独立的串，放在一起按照字典序进行升序排序
+// 后缀排名：rk[i]: 表示后缀s[i]在后缀排序中的排名，即他第几小的后缀
+// 后缀数组: sa[i]: 表示排名第i小的后缀
+// rk[sa[i]]=i
+// Height[i]: 为后缀i与排名在他前面一个后缀 LCP，即：Height[i]=LCP(s[i,n],s[sa[rk[i]-1],n])
+// H[i]=Height[sa[i]]:表示排名为i与i-1的串的LCP
+const int N = 1e6 + 10;
+char s[N];
+struct Suffix_Array&#123;
+    int h[N],rk[N],sa[N],y[N],c[N],Log[N];
+    int m=122,n,len;
+    Suffix_Array()&#123;
+        Log[0] = -1;
+        for (int i = 1; i &lt;= 100000; i++) Log[i] = Log[i &gt;&gt; 1] + 1;
+    &#125;
+    void Get_Suffix_Array()&#123;
+        for(int i=0;i&lt;=m;i++) c[i]=0;
+        for(int i=1;i&lt;=n;i++) c[rk[i] = s[i]]++;
+        for(int i=1;i&lt;=m;i++) c[i]+=c[i-1];
+        for(int i=n;i&gt;=1;i--) sa[c[rk[i]]--]=i;
+        for(int k=1;k&lt;=n;k&lt;&lt;=1)&#123;
+            int p=0;
+            for(int i=n-k+1;i&lt;=n;i++) y[++p]=i;
+            for(int i=1;i&lt;=n;i++)&#123;
+                if(sa[i]&gt;k)&#123;
+                    y[++p]=sa[i]-k;
+                &#125;
+            &#125; 
+            for(int i=0;i&lt;=m;i++) c[i]=0;
+            for(int i=1;i&lt;=n;i++) c[rk[i]]++;
+            for(int i=1;i&lt;=m;i++) c[i]+=c[i-1];
+            for(int i=n;i&gt;=1;i--) sa[c[rk[y[i]]]--]=y[i];
+            for(int i=0;i&lt;=n;i++) swap(rk[i],y[i]);
+            rk[sa[1]]=p=1;
+            for(int i=2;i&lt;=n;i++)&#123;
+                rk[sa[i]]=(y[sa[i]] == y[sa[i-1]] &amp;&amp; y[sa[i]+k] == y[sa[i-1]+k] ? p : ++p);
+            &#125;
+            if(p&gt;=n) break;
+            m=p;
+        &#125;
+    &#125;
+    void Get_H()&#123;
+        for(int i=1,k=0;i&lt;=n;i++)&#123;
+            if(k)k--;
+            int j=sa[rk[i]-1];
+            while(s[i+k] == s[j+k] )k++;
+            h[rk[i]] = k;
+        &#125;
+    &#125;
+    int st[N][25];
+    void init()&#123;
+        for(int i=1;i&lt;=n;i++)&#123;
+            st[i][0]=h[i];
+        &#125;
+        for(int j=1;j&lt;=20;j++)&#123;
+            for(int i=1;i+(1&lt;&lt;j)-1&lt;=n;i++)&#123;
+                st[i][j]=min(st[i][j-1],st[i+(1&lt;&lt;(j-1))][j-1]);
+            &#125;
+        &#125;
+    &#125;
+    int query(int l, int r) &#123;
+        //l = rk[l], r = rk[r];(查第l个后缀 和 第r个后缀 的LCP)
+        if (l &gt; r) swap(l, r);l++;
+        int len = Log[r - l + 1];
+        return min(st[l][len], st[r - (1 &lt;&lt; len) + 1][len]);
+    &#125;
+    void Read()&#123;
+    /*	write your code here	*/
+    &#125;
+    void work()&#123;
+    /*	write your code here	*/
+    &#125;
+&#125;;
+</code></pre>
+<h3><span id="5trie树">5.Trie树</span></h3><pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int N = 1e6 + 10;
+struct Trie &#123;
+    int nxt[N][30], cnt;
+    bool tag[N];  // 该结点结尾的字符串是否存在
+    void insert(char *s) &#123;  // 插入字符串
+        int p = 0;
+        for (int i = 0; s[i] ; i++) &#123;
+            int c = s[i] - &#39;a&#39;;
+            if (!nxt[p][c]) nxt[p][c] = ++cnt;  // 如果没有，就添加结点
+            p = nxt[p][c];
+        &#125;
+        tag[p] = 1;
+    &#125;
+    bool find(char *s) &#123;  // 查找字符串
+        int p = 0;
+        for (int i = 0; s[i] ; i++) &#123;
+            int c = s[i] - &#39;a&#39;;
+            if (!nxt[p][c]) return 0;
+            p = nxt[p][c];
+        &#125;
+        return tag[p];
+    &#125;
+&#125;;
+Trie tr;
+int main()&#123;
+    
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="6acam">6.ACAM</span></h3><pre><code>const int N = 1e6 + 10;
+struct ACAM &#123;
+    int tr[N][26],tag[N],fail[N],tot;
+    queue&lt;int&gt; q;
+    void build() &#123;
+        for (int i = 0; i &lt; 26; i++)
+            if (tr[0][i]) q.push(tr[0][i]);
+        while (q.size()) &#123;
+            int u = q.front();
+            q.pop();
+            for (int i = 0; i &lt; 26; i++) &#123;
+                if (tr[u][i])
+                    fail[tr[u][i]] = tr[fail[u]][i], q.push(tr[u][i]);
+                else
+                    tr[u][i] = tr[fail[u]][i];
+            &#125;
+        &#125;
+    &#125;
+    void insert(char *s) &#123;
+        int u = 0;
+        for (int i = 1; s[i]; i++) &#123;
+            if (!tr[u][s[i] - &#39;a&#39;]) tr[u][s[i] - &#39;a&#39;] = ++tot;  // 如果没有则插入新节点
+            u = tr[u][s[i] - &#39;a&#39;];                              // 搜索下一个节点
+        &#125;
+        tag[u]++;  // 尾为节点 u 的串的个数
+    &#125;
+    int query(char *t) &#123;
+        int u = 0, res = 0;
+        for (int i = 1; t[i]; i++) &#123;
+            u = tr[u][t[i] - &#39;a&#39;];  // 转移
+            for (int j = u; j &amp;&amp; tag[j] != -1; j = fail[j]) &#123;
+                res += tag[j], tag[j] = -1;
+            &#125;
+        &#125;
+        return res;
+    &#125;
+&#125;;
+ACAM Tr; 
+</code></pre>
+<h3><span id="7sam-后缀自动机">7.SAM 后缀自动机</span></h3><pre><code>const int N = 1e6 + 10;
+char s[N];int n,m;
+struct Suffix_Auto_Maton&#123;
+    // ch[i][j] 表示后缀链接 ------ 即第i个字符为j的编号为多少 
+    // l[i]表示最大长度  fa[i]表示当前节点的后缀的节点 
+    int last,cnt,n;int ch[N&lt;&lt;1][26],fa[N&lt;&lt;1],l[N&lt;&lt;1];
+    void init()&#123;last=cnt=1;memset(ch[1],0,sizeof ch[1]);&#125;
+    int Tr(char c)&#123;return c-&#39;a&#39;;&#125;
+    int val(int c)&#123;return l[c]-l[fa[c]];&#125;// 匹配长度与失配位置的匹配长度之差就是他们之间的子串数量
+    void insert(int c)&#123;
+        int p = last ,np = ++cnt; last = np ; l[np] = l[p] + 1;
+        memset(ch[cnt],0,sizeof ch[cnt]);
+        for( ; p &amp;&amp; !ch[p][c] ; p = fa[p] ) ch[p][c] = np;
+        if(!p) fa[np] = 1;
+        else&#123;
+            int q = ch[p][c];
+            if(l[p] + 1 == l[q]) fa[np] = q;
+            else&#123;
+                int nq = ++cnt ; l[nq] = l[p] + 1;
+                memcpy(ch[nq] , ch[q] , sizeof ch[q]);
+                fa[nq] = fa[q] ;fa[q] = fa[np] = nq;
+                for( ; ch[p][c] == q ; p = fa[p]) ch[p][c] = nq;
+            &#125;
+        &#125;
+        siz[np] = 1;
+    &#125;
+    int siz[N&lt;&lt;1],k[N&lt;&lt;1],c[N&lt;&lt;1];
+    // c[i] 用于桶排序  
+    // k[i] 表示节点编号为 i 的排名 
+    // siz[i] 表示i状态的串的个数有多少个  当前节点的所有字符串出现的次数
+    void calc()&#123;
+        // 基数排序
+        for(int i=1;i&lt;=cnt;i++) c[l[i]]++;
+        for(int i=1;i&lt;=cnt;i++) c[i]+=c[i-1];
+        for(int i=1;i&lt;=cnt;i++) k[c[l[i]]--]=i;	
+        for(int i=cnt;i&gt;=1;i--)&#123;
+            int id=k[i]; siz[fa[id]]+=siz[id];
+        &#125;
+    &#125;
+    void build()&#123;
+        init();
+        scanf(&quot;%d&quot;,&amp;n);
+        scanf(&quot;%s&quot;,s+1);
+        for(int i=1;i&lt;=n;i++) insert(Tr(s[i]));// 是 数字 or 字母 ？ 
+        calc(); 
+    &#125;
+    void work()&#123;
+    /* write your code here */
+    &#125;
+    void de_BUG()&#123;
+        for(int i=1;i&lt;=cnt;i++)&#123;
+            for(int j=0;j&lt;3;j++)&#123;
+                printf(&quot;ch[%d][%d]=%d &quot;,i,j,ch[i][j]);
+            &#125;
+            puts(&quot;&quot;);
+        &#125;
+        for(int i=1;i&lt;=cnt;i++) printf(&quot;fa[%d]=%d &quot;,i,fa[i]);
+        puts(&quot;&quot;);
+        for(int i=1;i&lt;=cnt;i++) printf(&quot;L[%d]=%d &quot;,i,l[i]);
+        puts(&quot;&quot;);
+        for(int i=1;i&lt;=cnt;i++) printf(&quot;siz[%d]=%d &quot;,i,siz[i]);
+        puts(&quot;&quot;);
+    &#125; 
+&#125;Sam;
+
+/*
+
+5
+abcbc
+
+ch[1][0]=2 ch[1][1]=6 ch[1][2]=8
+ch[2][0]=0 ch[2][1]=3 ch[2][2]=0
+ch[3][0]=0 ch[3][1]=0 ch[3][2]=4
+ch[4][0]=0 ch[4][1]=5 ch[4][2]=0
+ch[5][0]=0 ch[5][1]=0 ch[5][2]=7
+ch[6][0]=0 ch[6][1]=0 ch[6][2]=8
+ch[7][0]=0 ch[7][1]=0 ch[7][2]=0
+ch[8][0]=0 ch[8][1]=5 ch[8][2]=0
+fa[1]=0  fa[2]=1  fa[3]=6  fa[4]=8  fa[5]=6  fa[6]=1  fa[7]=8  fa[8]=1
+L[1]=0   L[2]=1   L[3]=2   L[4]=3   L[5]=4   L[6]=1   L[7]=5   L[8]=2
+siz[1]=5 siz[2]=1 siz[3]=1 siz[4]=1 siz[5]=1 siz[6]=2 siz[7]=1 siz[8]=2
+*/
+</code></pre>
+<h2><span id="十一-计算几何">十一、计算几何</span></h2><h3><span id="1二维几何通用板子">1.二维几何通用板子</span></h3><pre><code>struct Point&#123;
+    #define INF 1e18
+    #define eps 1e-11
+    #define PI 3.14159265358979323846
+    #define Equal(t1,t2) (fabs((t1)-(t2))&lt;eps)
+    #define Min(x,y) (((x)-(y)&lt;=eps)?(y):(x))
+    double x , y;
+    Point(double X = 0, double Y = 0) : x(X), y(Y) &#123;&#125;
+    inline int SGN(double t) &#123;return Equal(t,0)?0:(t&gt;eps)?1:-1;&#125;	// 符号 
+    bool operator == (const Point&amp;a) const&#123; return Equal(x,a.x)&amp;&amp;Equal(y,a.y);&#125;// 判断是否相等 
+    bool  operator &lt; (const Point&amp;a) const&#123; return  x==a.x?y&lt;a.y:x&lt;a.x;&#125;//凸包sort
+    Point operator + (const Point&amp;a) const&#123; return &#123;x+a.x,y+a.y&#125;;&#125;	// 加法 
+    Point operator - (const Point&amp;a) const&#123; return &#123;x-a.x,y-a.y&#125;;&#125;	// 减法 
+    double operator* (const Point&amp;a) const&#123; return  x*a.y-y*a.x ;&#125;	// 叉积 
+    double operator^ (const Point&amp;a) const&#123; return  x*a.x+y*a.y ;&#125;  // 点积 
+    Point operator * (double  val  ) const&#123; return &#123;x*val,y*val&#125;;&#125;  // 数乘 
+    Point operator / (double  val  ) const&#123; return &#123;x/val,y/val&#125;;&#125;  // 除法 
+    double dot(Point&amp;a) &#123; return x*a.x + y*a.y; &#125;  					// 点积 
+    double r2() &#123; return x*x + y*y; &#125;								// 长度的平方 
+    double r () &#123; return sqrt(r2());&#125;								// 长度 
+    double dis2(Point&amp;a)&#123; return (*this-a).r2(); &#125;					// 两点距离的平方 
+    double dis (Point&amp;a)&#123; return (*this-a).r (); &#125;					// 两点距离
+    int direction(Point&amp;a,Point&amp;b) &#123; return SGN(x*(a.y-b.y)+a.x*(b.y-y)+b.x*(y-a.y));&#125; 
+    bool onLine(Point&amp;a,Point&amp;b)   &#123; return direction(a,b) == 0;&#125;	// 判断点是否在直线上
+    bool inRect(Point&amp;a,Point&amp;b)   &#123; return SGN((*this-a)^(*this-b))&lt;=0;&#125;
+    bool onLineSeg(Point&amp;a,Point&amp;b)&#123; return onLine(a,b) &amp;&amp; inRect(a,b) ;&#125;// 判断点是否在线段上，P1 P2要求是端点
+    double disLine(Point&amp;a,Point&amp;b)   &#123; return fabs((a-*this)*(b-*this)/a.dis(b));&#125;// 点到直线的距离 
+    double disLineSeg(Point&amp;a,Point&amp;b)&#123; return onLine(a,b)?disLine(a,b):Min(dis(a),dis(b));&#125; // 点到线段的距离
+    Point Rotate(double angle)&#123; Point f=&#123;sin(angle),cos(angle)&#125;;return &#123;*this*f,dot(f)&#125;;&#125;//逆时针旋转
+    Point Rotate90()&#123; return &#123;-y,x&#125;;&#125;
+&#125;;
+double S(const Point&amp;a,const Point&amp;b,const Point&amp;c)&#123;// 三角形面积 
+    return 0.5*((a-b)*(a-c)); 
+&#125;
+inline Point lineLineIntersectPoint(const Point&amp;p1,const Point&amp;p2,const Point&amp;q1,const Point&amp;q2)&#123;
+    Point q12=q2-q1;
+    double k=(p2-p1)*q12;
+    if(Equal(k,0)) return &#123;INF*INF,INF*INF&#125;;
+    double r=((q1-p1)*q12)/k;
+    return p1+(p2-p1)*r;
+&#125; 
+inline Point circumcenter(Point&amp;a,Point&amp;b,Point&amp;c)&#123;// 外心 
+    Point t1=(a+b)*0.5,t2,t3=(b+c)*0.5,t4;
+    t2=t1+(a-b).Rotate90();
+    t4=t3+(b-c).Rotate90();
+    return lineLineIntersectPoint(t1,t2,t3,t4);
+&#125;
+inline Point incenter(Point&amp;a,Point&amp;b,Point&amp;c)&#123;//内心 
+    double r12=a.dis(b),r23=b.dis(c),r31=c.dis(a);
+    Point t1=(b*r31+c*r12)/(r12+r31);
+    Point t2=(a*r23+c*r12)/(r12+r23);
+    return lineLineIntersectPoint(a,t1,b,t2);
+&#125;
+inline Point prepencenter(Point&amp;a,Point&amp;b,Point&amp;c)&#123;//垂心 
+    Point t1=a+(b-c).Rotate90();
+    Point t2=b+(a-c).Rotate90();
+    return lineLineIntersectPoint(a,t1,b,t2);
+&#125;
+inline Point barycenter(Point&amp;a,Point&amp;b,Point&amp;c)&#123;//重心 
+    return (a+b+c)/3;
+&#125;
+inline double apothem(Point&amp;a,Point&amp;b,Point&amp;c)&#123;// 内切圆半径 
+    Point p12=b-a,p13=c-a,p23=c-b;
+    return fabs(p12*p23)/(p12.r()+p13.r()+p23.r()); 
+&#125;
+inline double circumradius(Point&amp;a,Point&amp;b,Point&amp;c)&#123;//外接圆半径 
+    Point p12=b-a,p13=c-a,p23=c-b;
+    return sqrt(p12.r2()*p23.r2())/(2*fabs(p12*p23));
+&#125;
+</code></pre>
+<pre><code>struct Line &#123;
+    Point X, Y;
+    double A, B, C;
+
+    void pre_work() &#123;
+        auto &amp;[X1, Y1] = X;
+        auto &amp;[X2, Y2] = Y;
+        A = Y2 - Y1, B = X1 - X2, C = Y1 * (X2 - X1) - X1 * (Y2 - Y1);
+    &#125;
+&#125;;
+
+inline Line Midperpandicular(Point &amp;X, Point &amp;Y) &#123;//中垂线
+    auto &amp;[X1, Y1] = X;
+    auto &amp;[X2, Y2] = Y;
+    Point Mid = (X + Y) / 2;
+    double A = X1 - X2, B = Y1 - Y2, C = (X2 * X2 - X1 * X1 + Y2 * Y2 - Y1 * Y1) / 2;
+    return &#123;Mid, Mid, A, B, C&#125;;
+&#125;
+
+bool Parallel_Line(Line &amp;X, Line &amp;Y) &#123;//是否平行
+    auto &amp;[X1, Y1, A1, B1, C1] = X;
+    auto &amp;[X2, Y2, A2, B2, C2] = Y;
+    if (fabs(A1 * B2 - A2 * B1) == 0) return 1;
+    return 0;
+&#125;
+
+inline Point Line_Line(Line &amp;X, Line &amp;Y) &#123;//线线交点
+    auto &amp;[X1, Y1, A1, B1, C1] = X;
+    auto &amp;[X2, Y2, A2, B2, C2] = Y;
+    if (fabs(A1 * B2 - A2 * B1) == 0) return &#123;1.0 * INF * INF, 1.0 * INF * INF&#125;;
+    return &#123;(-B2 * C1 + B1 * C2) / (A1 * B2 - A2 * B1), (-A1 * C2 + C1 * A2) / (A1 * B2 - A2 * B1)&#125;;
+&#125;
+</code></pre>
+<h3><span id="2求凸包">2.求凸包</span></h3><pre><code>Point base;
+inline int Left(const Point &amp;a, const Point &amp;b, const Point &amp;c) &#123;
+    return ((b - a) * (c - a)) &gt;= 0;
+&#125;
+inline vector&lt;Point&gt; Convex(vector&lt;Point&gt;a) &#123;
+    int n = a.size(), cnt = 0;
+    if(n &lt; 3) return a;
+    base = a[0];
+    for(auto p : a)&#123;
+        if(make_pair(p.x, p.y) &lt; make_pair(base.x, base.y)) base = p;
+    &#125;
+    sort(a.begin(), a.end(), [](const Point &amp;a, const Point &amp;b) &#123;
+        ll d = ((a - base) * (b - base));
+        if(d) return d &gt; 0;
+        return (a - base).r2() &lt; (b - base).r2();
+    &#125;);
+    vector&lt;Point&gt;res;
+    for(int i = 0; i &lt; n; ++ i) &#123;
+        while(cnt &gt; 1 &amp;&amp; Left(res[cnt - 2], a[i], res[cnt - 1]))
+            -- cnt, res.pop_back();
+        res.push_back(a[i]), ++ cnt;
+    &#125;
+    int fixed = cnt;
+    for(int i = n - 2; ~i; -- i) &#123;
+        while(cnt &gt; fixed &amp;&amp; Left(res[cnt - 2], a[i], res[cnt - 1]))
+            -- cnt, res.pop_back();
+        res.push_back(a[i]), ++ cnt;
+    &#125;
+    res.pop_back();
+    return res;
+&#125;
+</code></pre>
+<h3><span id="3最小圆覆盖">3.最小圆覆盖</span></h3><pre><code>inline Point incenter(Point &amp;A, Point &amp;B, Point &amp;C) &#123;//内心
+    Line X = Midperpandicular(A, B), Y = Midperpandicular(B, C);
+    return Line_Line(X, Y);
+&#125;
+
+struct Circle &#123;
+    Point O;
+    double r;
+&#125;;
+int n;
+Point A[N];
+
+Circle Minimum_Circle_Coverage() &#123;
+    Point O;
+    double r2 = 0;
+    for (int i = 1; i &lt;= n; i++) &#123;
+        if ((A[i] - O).r2() &gt; r2) &#123;
+            O = A[i], r2 = 0;
+            for (int j = 1; j &lt; i; j++) &#123;
+                if ((A[j] - O).r2() &gt; r2) &#123;
+                    O = (A[i] + A[j]) / 2, r2 = (A[j] - O).r2();
+                    for (int k = 1; k &lt; j; k++) &#123;
+                        if ((A[k] - O).r2() &gt; r2) &#123;
+                            O = incenter(A[i], A[j], A[k]), r2 = (A[k] - O).r2();
+                        &#125;
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    return &#123;O, sqrt(r2)&#125;;
+&#125;
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2024 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #00bcd4">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #00a596">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -202,7 +202,7 @@
     </div>
     
     <div class="content" v-pre>
-        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">Reverse</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">MazE</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">洞OVO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Easygui</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">PLZdebugme</span></a></li></ol></li></ol> -->
+        <!-- <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link"><span class="post-toc-number">1.</span> <span class="post-toc-text">Reverse</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">MazE</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">洞OVO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Easygui</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">PLZdebugme</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">ezrust</span></a></li></ol></li></ol> -->
         <div class="toc">
 
 <!-- toc -->
@@ -213,6 +213,7 @@
 <li><a href="#%E6%B4%9Eovo">洞OVO</a></li>
 <li><a href="#easygui">Easygui</a></li>
 <li><a href="#plzdebugme">PLZdebugme</a></li>
+<li><a href="#ezrust">ezrust</a></li>
 </ul>
 </li>
 </ul>
@@ -542,6 +543,30 @@ int main() &#123;
 
     return 0;
 &#125;
+</code></pre>
+<hr>
+<h2><span id="ezrust">ezrust</span></h2><p>rust语言比较新，用高版本的ida打开会更好（IDA9）。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-18_21-32-05.png"></p>
+<p>进来就看到一堆，感觉v6就是密文。</p>
+<p>发现下面这个函数里面有一串字符”loverust“，推测这就是加密的函数，但是进入函数后发现是一堆史。想到我们已经知道密钥的位置，所以我们在密钥处下硬件断点，进行动调来寻找逻辑。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-18_21-34-00.png"></p>
+<p>发现断点在这个位置，分析一下，这个位置对密钥进行了读取，主要是和一个数据进行了异或操作。于是我们往前看看交叉引用，我们发现，在一个函数中对这个函数进行了多次的循环调用，那么我们就可以确定这是一个加密函数了。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-19_00-01-58.png"></p>
+<p>我们回到密钥操作的地方分析。看逻辑就是一个异或，我们很容易知道a1是密钥，v5是偏移量，a3是我们输入的数据。再往上分析v5的值，v5的值是由v7-a2%v6,的来的v7的值是7恒等，v6是8，a2是每次的下标，且v5的初始值是7，那么一开始异或的就是密钥的最后一位，而a2是递增的，推测这个代码的逻辑就是</p>
+<p><code>a3 ^ key[7-2a%8]</code></p>
+<p>写出解密脚本就行了。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-18_21-45-15.png"></p>
+<pre><code class="c">v6 = [18, 31, 20, 21, 30, 15, 95, 57, 43, 51, 7, 65, 58, 79, 95, 3, 16, 44, 53, 6, 58, 4, 26, 31, 0, 14, 26]
+
+key = &quot;loverust&quot;
+a = 0
+result = &quot;&quot;
+for x in v6:
+    index = 7-a%8
+    x ^= ord(key[index])
+    result += chr(x)
+    a+=1
+print(result)
 </code></pre>
 
     </div>
