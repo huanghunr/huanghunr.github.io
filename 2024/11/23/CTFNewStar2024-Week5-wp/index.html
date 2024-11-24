@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>xdbg手工脱壳学习 | huanghunr&#39;s Blog</title>
+    <title>CtfNewStar Week5 Writeup | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>xdbg手工脱壳学习</h1>
+        <h1>CtfNewStar Week5 Writeup</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/11/16
+            2024/11/23
         </span>
         
         <span class="category">
-            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+            <a href="/categories/CTFNewStar2024-WP/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                Re基础学习
+                CTFNewStar2024 WP
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
-                    Re学习
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #00bcd4">
+                    CtfNewStar Writeup
                 </a>
             </span>
             
@@ -208,33 +208,48 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#%E5%AF%B9%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F%E5%A3%B3%E7%9A%84%E7%90%86%E8%A7%A3"><strong>对一个程序壳的理解</strong></a></li>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4">具体步骤</a></li>
+<li><a href="#my_arm">MY_ARM</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
+<h2><span id="my_arm">MY_ARM</span></h2><p>用ida打开我们就可以发现输入，跟踪数据，就可以找到对比函数和加密函数，里面有密钥和密文。加密函数就是一个原生的tea加密，去解密，发现解密的是错误的，于是我们进行动调寻找，被修改的密文和密钥。用qume虚拟机运行程序</p>
+<pre><code class="s">qemu-arm -g 23946 文件
+</code></pre>
+<p>再次查看就可以找到被修改的密文和密钥,直接tea解密就行，值得注意的是在这个tea解密时，v1,v2的数据类型应该是int确保要有符号</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
 
-<h2><span id="对一个程序壳的理解"><strong>对一个程序壳的理解</strong></span></h2><p>一个程序被加壳，在我的理解下就是一个程序的代码被加密，从而使ida等反编译工具不能识别为代码数据，然后再在程序前嵌入一块代码，在程序运行时会先进行解密然后再运行。既然如此，我们就可以在运行时解密完程序就把程序提取出来。</p>
-<p>下面的程序中，这是我们一开始的点，程序从这里开始。对于一个加了壳的程序而言，它必须先运行解密代码，这段解密代码一般会被xdbg识别为Enterpoint（主入口），而一个函数的执行必须先压入栈，结束时又要弹出栈，且先入栈的最后弹出，那么在第一个被压入的栈被弹出时，也就意味着一个函数的结束，我们可以在第一个入栈时的栈顶RSP下断点，那么在出栈时就会断在函数结束的位置，从而走完解密程序我们只要把解密后的程序dump下来就行了。那么思路就清晰了，步骤就是</p>
-<blockquote>
-<ul>
-<li>寻找解密开始点</li>
-<li>在push上下硬件断点</li>
-<li>运行到pop的位置（解密结束的位置）</li>
-<li>找jmp到主程序的点</li>
-<li>在jmp处断点，用scylla进行dump</li>
-</ul>
-</blockquote>
-<h2><span id="具体步骤">具体步骤</span></h2><p>找到程序的入口，运行一步push，在RSP处下硬件断点</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-46-46.png"></p>
-<p>运行后停在这个位置，上面有一堆pop，我们执行到下面jmp的位置，然后用scylla，dump程序</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-49-23.png"></p>
-<p>dump程序，要获取一下ITA，然后转储。</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-52-15.png"></p>
-<p>脱壳成功</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-53-55.png"></p>
+int decrypt(uint32_t* v, uint32_t* k) &#123;
+    int sum = 0x9E3779B9 * 32;
+    int v0 = v[0], v1 = v[1],  i;	
+    uint32_t delta = 0x9E3779B9;
+    uint32_t k0 = k[0], k1 = k[1], k2 = k[2], k3 = k[3];
+
+    for (i = 0; i &lt; 32; i++) &#123;
+        v1 -= ((v0 &lt;&lt; 4) + k2) ^ (v0 + sum) ^ ((v0 &gt;&gt; 5) + k3);
+        v0 -= ((v1 &lt;&lt; 4) + k0) ^ (v1 + sum) ^ ((v1 &gt;&gt; 5) + k1);
+        sum -= delta;
+    &#125;
+    v[0] = v0; v[1] = v1;
+    return 0;
+&#125;
+
+int main()
+&#123;
+    uint32_t v[] = &#123; 0xA0F8CB44, 0xF82F83CF, 0xA55E48C2, 0x7A26E00A, 0xF1E354C9, 0x687D9915, 0xF88816E8, 0x90878E86,
+    0x3AB06298, 0xCBCFE78B, 0x578F0F50, 0xC39E3C65, 0xBBE92B84, 0x128A2CA2, 0xDB8F03F5, 0x8482F8E2 &#125;;
+    uint32_t k[4] = &#123; 0x11223344, 0x55667788, 0x9900AABB, 0xCCDDEEFF &#125;;
+    for (int i = 0; i &lt; 16; i += 2) &#123;
+        decrypt(v+i, k);
+    &#125;
+    for (int i = 0; i &lt; 64; i++) &#123;
+        printf(&quot;%c&quot;, *((unsigned char*)v + i));
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 
     </div>
     

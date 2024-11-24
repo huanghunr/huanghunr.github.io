@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>xdbg手工脱壳学习 | huanghunr&#39;s Blog</title>
+    <title>强网杯青少年赛选拔赛re Writeup | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>xdbg手工脱壳学习</h1>
+        <h1>强网杯青少年赛选拔赛re Writeup</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/11/16
+            2024/11/24
         </span>
         
         <span class="category">
-            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+            <a href="/categories/%E6%AF%94%E8%B5%9B/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                Re基础学习
+                比赛
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
-                    Re学习
+                <a href="/tags/%E5%BC%BA%E7%BD%91%E6%9D%AF%E9%9D%92%E5%B0%91%E5%B9%B4%E8%B5%9B%E9%80%89%E6%8B%94%E8%B5%9Bre-Writeup/" style="color: #00a596">
+                    强网杯青少年赛选拔赛re Writeup
                 </a>
             </span>
             
@@ -208,33 +208,40 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#%E5%AF%B9%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F%E5%A3%B3%E7%9A%84%E7%90%86%E8%A7%A3"><strong>对一个程序壳的理解</strong></a></li>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4">具体步骤</a></li>
+<li><a href="#flip_over">Flip_over</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-
-<h2><span id="对一个程序壳的理解"><strong>对一个程序壳的理解</strong></span></h2><p>一个程序被加壳，在我的理解下就是一个程序的代码被加密，从而使ida等反编译工具不能识别为代码数据，然后再在程序前嵌入一块代码，在程序运行时会先进行解密然后再运行。既然如此，我们就可以在运行时解密完程序就把程序提取出来。</p>
-<p>下面的程序中，这是我们一开始的点，程序从这里开始。对于一个加了壳的程序而言，它必须先运行解密代码，这段解密代码一般会被xdbg识别为Enterpoint（主入口），而一个函数的执行必须先压入栈，结束时又要弹出栈，且先入栈的最后弹出，那么在第一个被压入的栈被弹出时，也就意味着一个函数的结束，我们可以在第一个入栈时的栈顶RSP下断点，那么在出栈时就会断在函数结束的位置，从而走完解密程序我们只要把解密后的程序dump下来就行了。那么思路就清晰了，步骤就是</p>
+<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1_9v117ykQEk9BlDtg_ouew">原题提取码：95lk </a></p>
+<h2><span id="flip_over">Flip_over</span></h2><p>看java层主逻辑在validateAndEncrypt()函数里，在so文件里找到这个函数，大概逻辑的是取flagflag这个字符串作为密钥把”a4c3f8927d9b8e6d6e483fa2cd0193b0a6e2f19c8b47d5a8f3c7a91e8d4b9f67”先进行RC4加密再进行DES_ECB加密,最后再与0x21和密后的数据进行异或后，与密文比较。解密时提取数据，把异或逆一下，直接用赛博厨师解密。</p>
 <blockquote>
-<ul>
-<li>寻找解密开始点</li>
-<li>在push上下硬件断点</li>
-<li>运行到pop的位置（解密结束的位置）</li>
-<li>找jmp到主程序的点</li>
-<li>在jmp处断点，用scylla进行dump</li>
-</ul>
+<p>值得注意的是，我字自己了一个脚本用于获取异或的数据，然后我发现当c语言输出到01 00这类只有一位的十六进制数时，会省略掉前面的0，在用这一大串密钥异或时默认是两位一字节，如果没有前面的0，那么密钥就是错误的，所以我们要自己把0添加进去。如下面的注释。</p>
 </blockquote>
-<h2><span id="具体步骤">具体步骤</span></h2><p>找到程序的入口，运行一步push，在RSP处下硬件断点</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-46-46.png"></p>
-<p>运行后停在这个位置，上面有一堆pop，我们执行到下面jmp的位置，然后用scylla，dump程序</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-49-23.png"></p>
-<p>dump程序，要获取一下ITA，然后转储。</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-52-15.png"></p>
-<p>脱壳成功</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-53-55.png"></p>
+<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E5%BC%BA%E7%BD%91/Snipaste_2024-11-24_16-06-47.png"></p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+unsigned char data[] = &#123; 0x59,0x15,0xc1,0x3f,0x40,0x9a,0x7a,0xe7,0xa6,0x8b,0xb6,0xe3,0xee,0x0d,0x19,0x6d,0xb7,
+0x6d,0xca,0xe6,0xda,0x5f,0x0d,0x4b,0xd6,0x0a,0xb2,0xde,0xad,0xaa,0x95,0xeb,0x85,0xb7,0x77,0xc3,0x10,0xbb,0xcf,
+0xce,0xf7,0xd2,0x22,0xc9,0xc4,0xf9,0xfc,0xfb,0xab,0x32,0xea,0x31,0x81,0x55,0xaf,0x79,0x52,0x8e,0x80,0xaf,0xc3,
+0x18,0x60,0x50,0xf1,0xd8,0x40,0xbb,0xfc,0x1b,0x89,0xa6 &#125;;//赛博厨师解密的数据.
+
+int main() &#123;
+   unsigned long long a[] = &#123; 0xF462D91A7981581E, 0x780001A9A6A79EE3,0x47141FC8F3C62DA6, 0xAFD0BEA1CBF14F95,0x89DDAB508133AF93,0x8EE2 &#125;;
+   unsigned char result[42];
+   for (int i = 0; i &lt; 42; i++) &#123;
+       printf(&quot;%x,&quot;, *((unsigned char*)a + i));
+       result[i] = *((unsigned char*)a + i) ^ 0x21 ^ data[i];
+   &#125;
+   for (int i = 0; i &lt; 42; i++) &#123;
+       printf(&quot;%c&quot;, *((unsigned char*)result + i));
+   &#125;
+
+   //1e5881791ad962f4e39ea7a6a9 1 0 78a62dc6f3c81f1447954ff1cba1bed0af93af338150abdd89e28e  //输出结果
+   //1e5881791ad962f4e39ea7a6a9 01 00 78a62dc6f3c81f1447954ff1cba1bed0af93af338150abdd89e28e  //异或要用到的结果
+&#125;
+</code></pre>
 
     </div>
     
