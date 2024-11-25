@@ -183,7 +183,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Writeup/" style="color: #00bcd4">
+                <a href="/tags/Writeup/" style="color: #00a596">
                     Writeup
                 </a>
             </span>
@@ -228,9 +228,32 @@
 </ul>
 </li>
 <li><a href="#pwn">Pwn：</a><ul>
-<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-1">题目名称 ｜ OPEN ｜ Working:</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-1">题目名称 ｜ OPEN ｜ Working:</a><ul>
+<li><a href="#1-off-by-one-%E9%94%99%E8%AF%AF">1. <strong><code>off-by-one</code> 错误</strong></a></li>
+<li><a href="#2-%E4%BC%AA%E9%80%A0%E5%A4%A7%E5%9D%97%E8%A6%86%E7%9B%96%E4%B8%A4%E4%B8%AA%E5%B0%8F%E5%9D%97">2. <strong>伪造大块覆盖两个小块</strong></a></li>
+<li><a href="#3-%E6%B3%84%E6%BC%8F-libc-%E5%9C%B0%E5%9D%80">3. <strong>泄漏 <code>libc</code> 地址</strong></a></li>
+<li><a href="#4-%E8%A6%86%E7%9B%96-fd-%E6%89%93-__free_hook">4. <strong>覆盖 <code>fd</code> 打 <code>__free_hook</code></strong></a></li>
+<li><a href="#%E7%BB%93%E5%90%88%E4%BB%A3%E7%A0%81%E5%92%8C%E6%94%BB%E5%87%BB%E6%80%9D%E8%B7%AF">结合代码和攻击思路</a></li>
+<li><a href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93">攻击流程总结：</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+<li><a href="#clock_in-open-working">clock_in ｜ OPEN ｜ Working:</a><ul>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90"><strong>程序分析</strong></a></li>
+<li><a href="#%E6%94%BB%E5%87%BB%E6%80%9D%E8%B7%AF"><strong>攻击思路</strong></a></li>
+<li><a href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%E6%B3%84%E9%9C%B2-libc-%E5%9C%B0%E5%9D%80"><strong>第一阶段：泄露 libc 地址</strong></a></li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%E6%9E%84%E9%80%A0-rop-%E9%93%BE%E8%B0%83%E7%94%A8-systembinsh"><strong>第二阶段：构造 ROP 链，调用 <code>system(&quot;/bin/sh&quot;)</code></strong></a></li>
+</ul>
+</li>
+<li><a href="#%E8%AF%A6%E7%BB%86%E8%A7%A3%E5%86%B3%E6%AD%A5%E9%AA%A4"><strong>详细解决步骤</strong></a><ul>
+<li><a href="#1-%E7%A1%AE%E5%AE%9A%E6%BA%A2%E5%87%BA%E5%81%8F%E7%A7%BB"><strong>1. 确定溢出偏移</strong></a></li>
+<li><a href="#2-%E6%B3%84%E9%9C%B2-libc-%E5%9C%B0%E5%9D%80"><strong>2. 泄露 libc 地址</strong></a></li>
+<li><a href="#3-%E8%8E%B7%E5%8F%96-shell"><strong>3. 获取 Shell</strong></a></li>
+<li><a href="#%E5%AE%8C%E6%95%B4%E5%88%A9%E7%94%A8%E6%B5%81%E7%A8%8B"><strong>完整利用流程</strong></a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><strong>注意事项</strong></a></li>
+</ul>
+</li>
 <li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-2">题目名称 ｜ OPEN ｜ Working:</a></li>
-<li><a href="#%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0-open-working-3">题目名称 ｜ OPEN ｜ Working:</a></li>
 </ul>
 </li>
 </ul>
@@ -467,7 +490,7 @@ echo serialize($payload);
 <h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3><h2><span id="crypto">Crypto：</span></h2><h3><span id="题目名称-classics-solved-workinglunatic">题目名称 Classics｜ SOLVED ｜ Working:Lunatic</span></h3><p> <img src="/attachments/4d6be654-6190-4182-ad1d-8572ae2efa35.png">flag{2834d185-a1da-4fb1-8bac-59076eb6a634}</p>
 <h3><span id="题目名称-alice-aes-solved-workinglunatic">题目名称 Alice-AES｜ SOLVED ｜ Working:Lunatic</span></h3><p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/027256e9-835e-40bf-9dec-ff5f464f57d9.png"> <img src="/attachments/8271139e-67df-418d-b99a-9c9d56d24d7c.png"> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/c788d495-b657-4f61-93ac-682efdd4eccc.png"></p>
 <p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/772d145b-af58-4e8d-980e-5818ed0aafa6.png">flag{c8a7ba1b-b222-410f-9e41-7053299c15a5}</p>
-<h3><span id="题目名称-solved-workingx1ao">题目名称 ｜ SOLVED ｜ Working:X1ao</span></h3><p>原解密就是一个RAS解密但是key有一个获取方法，枚举了一个范围的数字<br>数字必须是奇数（最低位为 1）。<br>数字的二进制形式中 不能包含连续的 4 个 1 或连续的 4 个 0。<br>然后根据数字的数量对key值进行加减</p>
+<h3><span id="题目名称-solved-workingx1ao">题目名称 ｜ SOLVED ｜ Working:X1ao</span></h3><p>原解密就是一个RSA解密但是key有一个获取方法，枚举了一个范围的数字<br>数字必须是奇数（最低位为 1）。<br>数字的二进制形式中 不能包含连续的 4 个 1 或连续的 4 个 0。<br>然后根据数字的数量对key值进行加减</p>
 <pre><code class="python">from Crypto.Util.number import *
 from gmpy2 import next_prime
 
@@ -498,6 +521,14 @@ p=next_prime(key)
 m=pow(c,inverse(65537,p-1),p)
 print(long_to_bytes(m))
 </code></pre>
+<p>动态规划函数 count_valid_binary_strings 的目标是统计长度为 l 的二进制字符串的数量，要求它们的最后四位（即连续的四个比特）不全是 1111 或 0000，并且最终以 1 结尾。以下是函数具体逻辑的分解：</p>
+<ol>
+<li>状态定义<br>dp[length] 是一个字典，用来存储当前长度为 length 的所有可能二进制字符串的统计信息。</li>
+</ol>
+<p>字典的键是这些字符串的最后四位（用整数表示）。<br>字典的值是以对应最后四位为结尾的二进制字符串数量。<br>初始化<br>dp[1] &#x3D; {0b1: 1} 表示长度为 1 且以 1 结尾的字符串数量为 1。<br>2. 转移过程<br>从长度 length - 1 的字符串扩展到长度 length：</p>
+<p>对于 dp[length - 1] 中每种可能的最后四位 last_digits：<br>尝试在其末尾加 0 或 1，形成新的最后四位 new_last_digits：<br>python<br>复制代码<br>new_last_digits &#x3D; ((last_digits &lt;&lt; 1) | next_bit) &amp; 0b1111<br>last_digits &lt;&lt; 1：将原来的最后四位左移一位，为下一位留出空间。<br>| next_bit：添加新的一位 0 或 1。<br>&amp; 0b1111：只保留结果的低四位。<br>检查新生成的四位是否符合要求（不是 1111 或 0000）：<br>python<br>复制代码<br>if new_last_digits !&#x3D; 0b1111 and new_last_digits !&#x3D; 0b0000:<br>如果符合要求，将其加入到 dp[length]：<br>python<br>复制代码<br>if new_last_digits not in dp[length]:<br>    dp[length][new_last_digits] &#x3D; 0<br>dp[length][new_last_digits] +&#x3D; count<br>3. 目标条件过滤<br>最终，我们只统计长度为 l 且以 1 结尾的字符串：</p>
+<p>python<br>复制代码<br>key &#x3D; sum(count for last_digits, count in dp[l].items() if last_digits &amp; 0b1 &#x3D;&#x3D; 1)<br>last_digits &amp; 0b1 &#x3D;&#x3D; 1：检查最低位是否为 1。<br>将满足条件的所有计数累加，得到 key。<br>4. 总结<br>函数通过构造和维护 dp 表，逐步计算满足条件的二进制字符串的数量：</p>
+<p>不允许连续 4 位全 1111 或 0000。<br>最终以 1 结尾。</p>
 <h2><span id="pwn">Pwn：</span></h2><h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3><p><strong># journey_story</strong></p>
 <pre><code>update_story`存在`off-by-one`，伪造个大chunk覆盖两个小chunk，然后leak `libc`，覆写`fd`打`__free_hook
 </code></pre>
@@ -625,7 +656,55 @@ def pwn():
 pwn()
 
 </code></pre>
-<h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3><p><strong># clock_in</strong></p>
+<p>这个思路解释提到了一些常见的堆漏洞利用技巧，包括 <code>off-by-one</code> 错误、伪造大块（large chunk）、泄漏 <code>libc</code> 地址、以及通过覆盖堆上的 <code>fd</code> 来控制 <code>__free_hook</code>。下面我将分析这个思路并与原程序中的代码结合。</p>
+<h4><span id="1-off-by-one-错误">1. <strong><code>off-by-one</code> 错误</strong></span></h4><p><code>off-by-one</code> 错误通常发生在程序中访问数组或缓冲区时，未正确计算边界，导致访问超出预期的内存区域。在这道题中，<code>off-by-one</code> 可能出现在以下几个方面：</p>
+<ul>
+<li><p><strong>内存分配和写入</strong>:<br>在 <code>add_entry</code> 函数中，程序通过 <code>fgets</code> 获取用户输入的故事，并将其写入到堆分配的内存块中。输入的大小 <code>n</code> 是由用户提供的，并且 <code>fgets</code> 会读取最多 <code>n-1</code> 个字符，这可能导致缓冲区溢出，尤其是如果没有正确处理字符串结束符 <code>\0</code> 时。</p>
+<p><code>v0[strcspn(v0, &quot;\n&quot;)] = 0;</code> 这一行代码用于移除输入字符串末尾的换行符，防止内存泄漏。如果存在 <code>off-by-one</code> 错误，可能导致写入的内存超出了预期的边界，修改了相邻的内存块。</p>
+</li>
+</ul>
+<h4><span id="2-伪造大块覆盖两个小块">2. <strong>伪造大块覆盖两个小块</strong></span></h4><p>这种利用方式通常涉及到 <strong>堆合并（bin merging）</strong> 或 <strong>堆碎片化（heap fragmentation）</strong> 技术。假设程序允许用户分配多个小块内存，当攻击者尝试分配一个大块时（比如，调用 <code>add()</code> 分配比小块大的内存），他们可以通过内存碎片化的方式使得这些小块和大块相邻，从而<strong>覆盖</strong>多个小块的内容。</p>
+<ul>
+<li>在代码中，用户可以通过 <code>add()</code> 调用多次分配内存，攻击者可能会通过反复调用 <code>add()</code> 和 <code>delete()</code>，创建合适的内存布局。</li>
+<li>通过“伪造大块”操作，攻击者可以让两个小块合并成一个大块（或者覆盖它们）。这会破坏原来的堆结构，并可能导致 <strong>use-after-free</strong> 或 <strong>堆溢出</strong> 等问题。</li>
+</ul>
+<h4><span id="3-泄漏-libc-地址">3. <strong>泄漏 <code>libc</code> 地址</strong></span></h4><p>一旦攻击者通过堆操作（例如 <code>add()</code> 和 <code>delete()</code>）创建了正确的内存布局并利用 <code>off-by-one</code> 错误破坏了堆结构，他们就可以通过泄漏堆地址来获取 <code>libc</code> 基址。</p>
+<ul>
+<li>在原程序中，通过 <code>show()</code> 函数，攻击者可以读取堆中某个区域的内容，并泄漏出堆的地址。结合这些地址和已知的偏移量，攻击者可以计算出 <code>libc</code> 库的基址。</li>
+<li>具体来说，攻击者可以通过泄漏的地址，推算出 <code>__malloc_hook</code> 或 <code>__free_hook</code> 的地址。这样，他们就能够在堆上执行任意代码。</li>
+</ul>
+<h4><span id="4-覆盖-fd-打-__free_hook">4. <strong>覆盖 <code>fd</code> 打 <code>__free_hook</code></strong></span></h4><p><code>fd</code> 是指向堆块的前继块的指针，它在管理内存时起着重要作用。如果攻击者能够覆盖堆块中的 <code>fd</code> 指针，他们就可以控制后续 <code>free()</code> 操作时的行为。</p>
+<ul>
+<li>通过**覆盖 <code>fd</code>**，攻击者可以让 <code>free()</code> 调用 <code>__free_hook</code>，而 <code>__free_hook</code> 是一个函数指针，可以用来指向任意函数。</li>
+<li>攻击者的目标是将 <code>__free_hook</code> 覆盖为 <code>system</code> 函数的地址。然后，当程序尝试释放一个内存块时，实际上会触发 <code>system(&quot;/bin/sh&quot;)</code>，从而执行恶意命令。</li>
+</ul>
+<h4><span id="结合代码和攻击思路">结合代码和攻击思路</span></h4><p>让我们将这些概念结合到原程序中：</p>
+<ol>
+<li><p><strong>内存分配与覆盖</strong>:</p>
+<ul>
+<li>攻击者通过调用 <code>add()</code> 函数多次分配小块内存（如 <code>0x58</code> 或 <code>0xb0</code> 大小），然后利用 <code>edit()</code> 和 <code>delete()</code> 函数控制堆上的内存布局。</li>
+<li>攻击者可以通过分配一个比原来内存块更大的块来破坏堆结构，并通过 <code>off-by-one</code> 错误覆盖堆上的其他块。比如，通过分配一个大块并覆盖堆上的 <code>fd</code> 指针。</li>
+</ul>
+</li>
+<li><p><strong>泄漏堆地址</strong>:</p>
+<ul>
+<li>攻击者通过 <code>show()</code> 函数泄漏堆地址，并推算出 <code>libc</code> 基地址。然后，通过已知的偏移量计算出 <code>__free_hook</code> 和 <code>system</code> 函数的地址。</li>
+</ul>
+</li>
+<li><p><strong>覆盖 <code>fd</code> 指针和 <code>__free_hook</code></strong>:</p>
+<ul>
+<li>攻击者通过修改堆块中的 <code>fd</code> 指针，将它指向一个恶意地址，即 <code>__free_hook</code> 的位置。这样，当程序调用 <code>free()</code> 时，实际上会调用 <code>system(&quot;/bin/sh&quot;)</code>。</li>
+</ul>
+</li>
+</ol>
+<h4><span id="攻击流程总结">攻击流程总结：</span></h4><ol>
+<li>攻击者利用 <code>off-by-one</code> 错误破坏堆结构，通过 <code>add</code> 和 <code>edit</code> 操作将小块合并成大块，伪造合适的堆布局。</li>
+<li>通过 <code>show()</code> 获取堆地址，计算出 <code>libc</code> 基地址。</li>
+<li>覆盖堆块中的 <code>fd</code>，将其指向 <code>__free_hook</code>，并将 <code>__free_hook</code> 设置为 <code>system</code> 函数地址。</li>
+<li>通过触发 <code>free()</code> 调用，执行 <code>system(&quot;/bin/sh&quot;)</code>，获取 shell。</li>
+</ol>
+<h4><span id="总结">总结</span></h4><p>这个攻击思路结合了堆溢出、内存泄漏、<code>off-by-one</code> 错误、<code>fd</code> 覆盖、以及通过 <code>__free_hook</code> 触发任意代码执行的技术。攻击者通过精心操控堆内存的分配和释放，最终实现了控制程序执行流的目标。</p>
+<h3><span id="clock_in-open-working">clock_in ｜ OPEN ｜ Working:</span></h3><p><strong># clock_in</strong></p>
 <p>常规<code>ret2libc</code></p>
 <pre><code class="python">
 from pwn import *
@@ -704,6 +783,117 @@ def pwn():
 
 pwn()
 </code></pre>
+<p>从主函数和给出的脚本来看，这道 <strong>ret2libc</strong> 题目利用了函数 <code>get_info</code> 中的栈溢出漏洞。以下是这道题的解决办法总结：</p>
+<hr>
+<h4><span id="程序分析"><strong>程序分析</strong></span></h4><ol>
+<li><p><strong>栈溢出点</strong>：</p>
+<pre><code class="c">char s[64];
+fgets(s, 256, stdin);
+</code></pre>
+<ul>
+<li>定义了大小为 64 字节的缓冲区 <code>s</code>，但用 <code>fgets</code> 从标准输入读取了最多 256 字节的数据。</li>
+<li>这导致用户输入可以超出缓冲区的限制，覆盖返回地址，进而劫持控制流。</li>
+</ul>
+</li>
+<li><p><strong>漏洞触发条件</strong>：</p>
+<ul>
+<li>无栈保护（Canary）：因为栈保护会检测溢出，这里需要 <code>checksec</code> 确认没有启用。</li>
+<li>可控返回地址：覆盖缓冲区后，可以修改函数返回地址。</li>
+</ul>
+</li>
+<li><p><strong>目标保护机制</strong>：</p>
+<ul>
+<li>NX（No-eXecute）：栈不可执行，因此不能直接放置 Shellcode。</li>
+<li>libc 函数的利用成为主要手段。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4><span id="攻击思路"><strong>攻击思路</strong></span></h4><h4><span id="第一阶段泄露-libc-地址"><strong>第一阶段：泄露 libc 地址</strong></span></h4><ol>
+<li><p><strong>调用 <code>puts</code> 泄露 libc 中符号地址</strong>：</p>
+<ul>
+<li>将 <code>puts</code> 的 GOT 表地址加载到 <code>rdi</code>（第一个参数寄存器）。</li>
+<li>调用 PLT 表中的 <code>puts</code> 函数，打印 <code>puts</code> 的实际地址。</li>
+</ul>
+</li>
+<li><p><strong>恢复程序执行</strong>：</p>
+<ul>
+<li>泄露后返回到原始函数 <code>get_info</code>，便于第二次攻击。</li>
+</ul>
+</li>
+<li><p><strong>计算 libc 基地址</strong>：</p>
+<ul>
+<li>利用泄露的 <code>puts</code> 地址，减去 <code>libc</code> 中 <code>puts</code> 函数的偏移量，计算出 libc 的基地址。</li>
+</ul>
+</li>
+</ol>
+<h4><span id="第二阶段构造-rop-链调用-systemquotbinshquot"><strong>第二阶段：构造 ROP 链，调用 <code>system(&quot;/bin/sh&quot;)</code></strong></span></h4><ol>
+<li><strong>查找 libc 中的目标符号</strong>：<ul>
+<li><code>system</code>：执行系统命令的函数地址。</li>
+<li><code>&quot;/bin/sh&quot;</code>：libc 中 <code>/bin/sh</code> 字符串的地址。</li>
+</ul>
+</li>
+<li><strong>构造 ROP 链</strong>：<ul>
+<li>通过 ROP gadget <code>pop rdi; ret</code> 将 <code>&quot;/bin/sh&quot;</code> 地址加载到 <code>rdi</code>。</li>
+<li>调用 <code>system</code>，执行 <code>system(&quot;/bin/sh&quot;)</code>。</li>
+</ul>
+</li>
+<li><strong>进入交互模式</strong>：<ul>
+<li>通过远程交互获取 shell。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3><span id="详细解决步骤"><strong>详细解决步骤</strong></span></h3><h4><span id="1-确定溢出偏移"><strong>1. 确定溢出偏移</strong></span></h4><ul>
+<li>根据程序结构，发现栈上缓冲区到返回地址的偏移量为 64 字节（<code>0x40</code>）。</li>
+<li>脚本中实际使用了 <code>0x48</code>（72 字节），说明还包括了额外的 8 字节对齐或其他局部变量。</li>
+</ul>
+<h4><span id="2-泄露-libc-地址"><strong>2. 泄露 libc 地址</strong></span></h4><ul>
+<li>构造第一阶段 ROP 链：<pre><code class="python">pay = b&#39;\x00&#39;*0x48 + fit(
+    pop_rdi_ret,         # 将 GOT 中 puts 的地址放入 rdi
+    elf.got[&quot;puts&quot;],     # GOT 表中 puts 的地址
+    elf.plt[&quot;puts&quot;],     # 调用 puts 打印地址
+    elf.sym[&quot;get_info&quot;]  # 返回到 get_info 继续执行
+)
+</code></pre>
+</li>
+<li>泄露 <code>puts</code> 的实际地址后，通过：<pre><code class="python">libc.address = u64(ru(b&#39;\x7f&#39;)[-6:].ljust(8, b&#39;\x00&#39;)) - libc.sym[&quot;puts&quot;]
+</code></pre>
+计算出 libc 的基地址。</li>
+</ul>
+<h4><span id="3-获取-shell"><strong>3. 获取 Shell</strong></span></h4><ul>
+<li>构造第二阶段 ROP 链：<pre><code class="python">pay = b&#39;\x00&#39;*0x48 + fit(
+    ret,                # 对齐栈
+    pop_rdi_ret,        # 将 &quot;/bin/sh&quot; 的地址放入 rdi
+    binsh,              # libc 中 &quot;/bin/sh&quot; 的地址
+    system              # 调用 system(&quot;/bin/sh&quot;)
+)
+</code></pre>
+</li>
+<li>执行该 Payload 后，程序调用 <code>system(&quot;/bin/sh&quot;)</code>，获得交互式 shell。</li>
+</ul>
+<hr>
+<h4><span id="完整利用流程"><strong>完整利用流程</strong></span></h4><ol>
+<li>分析程序，找到溢出点及溢出偏移。</li>
+<li>构造第一阶段 Payload，泄露 libc 中符号地址。</li>
+<li>根据泄露的地址，计算 libc 的基地址。</li>
+<li>构造第二阶段 Payload，调用 <code>system(&quot;/bin/sh&quot;)</code>，获得 Shell。</li>
+<li>提交 Flag。</li>
+</ol>
+<hr>
+<h4><span id="注意事项"><strong>注意事项</strong></span></h4><ol>
+<li><strong>调试</strong>：<ul>
+<li>在本地调试时，可使用 <code>gdb.attach</code> 辅助，检查 ROP 链的执行是否正确。</li>
+<li>使用 <code>checksec</code> 确认目标程序的保护机制。</li>
+</ul>
+</li>
+<li><strong>远程 libc 环境</strong>：<ul>
+<li>确保使用的是远程环境中对应的 libc 文件。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>这道题的核心在于熟悉 <strong>ret2libc</strong> 攻击方法，以及构造 ROP 链的技巧。通过这两个阶段，可以顺利劫持控制流并获得目标系统的控制权限。如果还有疑问，可以继续探讨！</p>
 <h3><span id="题目名称-open-working">题目名称 ｜ OPEN ｜ Working:</span></h3>
     </div>
     
