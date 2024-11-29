@@ -217,7 +217,7 @@
 <p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1_9v117ykQEk9BlDtg_ouew">原题提取码：95lk </a></p>
 <h2><span id="flip_over">Flip_over</span></h2><p>看java层主逻辑在validateAndEncrypt()函数里，在so文件里找到这个函数，大概逻辑的是取flagflag这个字符串作为密钥把”a4c3f8927d9b8e6d6e483fa2cd0193b0a6e2f19c8b47d5a8f3c7a91e8d4b9f67”先进行RC4加密再进行DES_ECB加密,最后再与0x21和密后的数据进行异或后，与密文比较。解密时提取数据，把异或逆一下，直接用赛博厨师解密。</p>
 <blockquote>
-<p>值得注意的是，我字自己了一个脚本用于获取异或的数据，然后我发现当c语言输出到01 00这类只有一位的十六进制数时，会省略掉前面的0，在用这一大串密钥异或时默认是两位一字节，如果没有前面的0，那么密钥就是错误的，所以我们要自己把0添加进去。如下面的注释。</p>
+<p>值得注意的是，我字自己了一个脚本用于获取异或的数据，然后我发现当c语言输出到01 00这类只有一位的十六进制数时，会省略掉前面的0，在用这一大串密钥异或时默认是两位一字节，如果没有前面的0，那么密钥就是错误的，所以我们要把0添加进去。如下面的注释。或者我们在输出十六进制数据时用空格隔开，这在赛博厨师里时不影响的。还有一种解决方案就是用”%.2x”的格式输出，指定输出2个十六进制数。</p>
 </blockquote>
 <p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E5%BC%BA%E7%BD%91/Snipaste_2024-11-24_16-06-47.png"></p>
 <pre><code class="c">#include &lt;stdio.h&gt;

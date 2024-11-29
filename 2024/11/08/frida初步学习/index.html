@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
                     Re学习
                 </a>
             </span>
@@ -280,7 +280,7 @@ Java.perform(function()&#123;
 &#125;);
 var MainActivity = Java.use(&quot;packname.MainActivity&quot;);
         //overload 选择被重载的对象，funname是方法名,int是要重载的类型
-        MainActivity.funname.overload(&#39;int&#39;)implementation = function (x) &#123;
+        MainActivity.funname.overload(&#39;int&#39;).implementation = function (x) &#123;
             console.log(&quot;ok&quot; + x);
             //可修改结果，另一种修改返回值的方法
             var result = &quot;&quot;;
@@ -346,6 +346,43 @@ Java.perform(function()&#123;
     // @ts-ignore
     hook_native_addr(Module.findBaseAddress(&quot;libdebugme.so&quot;).add(0xff0), 0x1);
 &#125;)();
+
+//重载函数的其他类型
+.overload()
+.overload(&#39;int&#39;)
+.overload(&#39;java.lang.Exception&#39;)
+.overload(&#39;android.content.Context&#39;)
+.overload(&#39;java.lang.String&#39;)
+.overload(&#39;android.content.Context&#39;, &#39;java.lang.String&#39;)
+.overload(&#39;java.io.BufferedInputStream&#39;, &#39;java.io.BufferedInputStream&#39;, &#39;int&#39;)
+.overload(&#39;android.content.Context&#39;, &#39;java.lang.String&#39;, &#39;java.lang.String&#39;, &#39;java.lang.String&#39;)
+</code></pre>
+<hr>
+<p>上面的方法都是被动调用，下面一段脚本是主动调用脚本</p>
+<pre><code class="js">Java.perform(function()&#123;
+        var main =Java.use(&quot;com.moible.r15.main&quot;).$new();
+        var input = &quot;66.666s&quot;;
+        var result = main.getit(input);
+        console.log(result);
+    &#125;)
+</code></pre>
+<p>有时候我们想要把一个调用方法封装在一个函数里面，在之后手动调用，然而在我们后面调用时可能会出现报错<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-29_15-04-08.png"><br>这个时候我们要使用一下代码使handle能够在别的实例中运行。</p>
+<pre><code class="js"> send(Java.available); 
+function get()&#123;
+    Java.perform(function () &#123; 
+        send(Java.androidVersion); 
+        send(Java.isMainThread());
+    
+        Java.scheduleOnMainThread(function () &#123; 
+            send(Java.isMainThread());
+            
+            var main = Java.use(&quot;com.moible.r15.main&quot;).$new();  //记得实例化new
+            var input = &quot;66.666s&quot;;  //设置参数
+            var result = main.getit(input);
+            console.log(result);       
+        &#125;);
+    &#125;);
+&#125;
 </code></pre>
 <h2><span id="一些常见错误">一些常见错误</span></h2><h3><span id="关于雷电模拟器spawn启动时卡在waitdebug界面的的原因解决方案">关于雷电模拟器spawn启动时卡在waitdebug界面的的原因解决方案</span></h3><p>在用雷电模拟器调试时，有可能会卡在wait for debug，这是因为雷电的adb调试会给我们自动设置调试的应用，从而卡在wait界面。只要在开发者选项中把选择调试的应用改成”无”就行了。</p>
 <h3><span id="关于frida调试应用闪退的解决方案">关于frida调试应用闪退的解决方案</span></h3><p>端口没有设置好.设置一下端口就行。</p>
