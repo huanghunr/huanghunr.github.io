@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #00a596">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #ff7d73">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -209,6 +209,7 @@
 
 <ul>
 <li><a href="#my_arm">MY_ARM</a></li>
+<li><a href="#ohn_flutter">ohn_flutter!!!</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -249,6 +250,35 @@ int main()
     &#125;
     return 0;
 &#125;
+</code></pre>
+<h2><span id="ohn_flutter">ohn_flutter!!!</span></h2><p>用blutter进行解包，在”asm\ohn_flutter”目录下，把这个文件夹在vscode里面打开，我们可以看到汇编形式的源代码，可以尝试用关键的字符串搜索，找到程序的主逻辑处。然后我们可以读汇编中调用的函数，和一些关键参数，来查看加密函数的名字，和地址。然后在ida中分析。搜索字符串，发现主逻辑在一个_bulid的函数里面，用地址在ida中找到这个函数，发现是一坨，也不好找到逻辑。于是回到汇编中继续往下看，这个时候我们看到了一个”key”,但是查找后也没有什么收获。继续往下看我们看到一个函数里面调用了许多加密函数，用ida分析，这就是加密的主函数，一下就看到一个AES加密。这里面有些函数出现了很多次，感觉是程序自带的函数，把这些函数排除后，我们一个个进去看，在”ohn_flutter_doi_::jumppp_2fe3c8()”深入挖掘，我们还可以看到在”ohn_flutter_drink_drink::_encryptUint32List_2fe5ec()”函数里面有XXTEA加密的特征，在下图的上面还有一个”v18 &#x3D; v14 &#x2F; v16 + 6;”<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-12-02_19-55-00.png" alt="Snipaste_2024-12-02_19-55-00"><br>往后面看，只有一个base64加密，再后面就没有其他加密方法了。接下来的步骤就是找出密文和密钥，以及iv。</p>
+<p>在这里我们需要一个真机来进行ARM调试，用frida进行hook或者IDA调试。这里我们用frida进行hook。</p>
+<p>首先我们来hookXXtea的密钥，根据XXtea的加密逻辑，我们可以知道密钥的偏移量里面有一个”&amp;3”,我们找到这里。<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-12-02_20-25-20.png" alt="Snipaste_2024-12-02_20-25-20"><br>但是偏移量有点大，所以我们直接在寄存器里找密钥，在汇编里找到和+16有关x29的寄存器，很显然就是X12。<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-12-02_20-28-10.png" alt="Snipaste_2024-12-02_20-28-10"><br>然后我们把地址复制下来，就可以写hook脚本读取寄存器数值了，脚本如下。<br>用类似的方法可以拿到AES加密的密钥和iv。<br>最后我们要找密文。密文其实在java层里，但是最后有一个check函数，在这个函数里面一定会把密文传入比较，所以我们同样可以用上面的方法获取寄存器的值来获取密文，只不过我们要猜一下是哪个寄存器。</p>
+<pre><code class="js">const ShowNullField = false;
+const MaxDepth = 5;
+var libapp = null;
+
+Interceptor.att
+
+function onLibappLoaded() &#123;
+    const fn_addr = 0x2FE7F0;   //填写地址偏移
+    Interceptor.attach(libapp.add(fn_addr), &#123;
+        onEnter: function () &#123;
+            var r1 = this.context.x12;  //x12是要打的印寄存器
+            console.log(r1)
+            console.log(hexdump(ptr(r1), &#123; length: 100, ansi: true &#125;))  //打印寄存器
+        &#125;
+    &#125;);
+&#125;
+
+function tryLoadLibapp() &#123;  //初始化
+    libapp = Module.findBaseAddress(&#39;libapp.so&#39;);
+    if (libapp === null)
+        setTimeout(tryLoadLibapp, 500);
+    else
+        onLibappLoaded();
+&#125;
+tryLoadLibapp();
 </code></pre>
 
     </div>
