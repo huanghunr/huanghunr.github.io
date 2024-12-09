@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     Re学习
                 </a>
             </span>
@@ -225,6 +225,10 @@
 <li><a href="#%E4%B8%8A%E9%9D%A2%E6%B1%87%E7%BC%96%E7%9A%84%E5%8A%A0%E5%AF%86%E9%80%BB%E8%BE%91%E5%92%8C%E9%80%86%E5%90%91%E8%84%9A%E6%9C%AC">上面汇编的加密逻辑和逆向脚本</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#%E6%B1%87%E7%BC%96%E8%BF%9B%E9%98%B6%E7%90%86%E8%A7%A3%E4%B8%8E%E5%A0%86%E6%A0%88">汇编进阶理解与堆栈</a><ul>
+<li><a href="#%E6%A0%88%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C">栈操作与函数执行</a></li>
 </ul>
 </li>
 </ul>
@@ -330,7 +334,7 @@ MOV  EBP,ESP      ;将栈顶地址存入EBP中
 
 MOV  ESP,EBP      ;基准点地址给到ESP
 POP EBP           ;栈状态恢复，弹出EBP
-RETN              ;函
+RETN              ;
 </code></pre>
 <blockquote>
 <p>ida汇编分析</p>
@@ -446,6 +450,31 @@ int main() &#123;
     printf(&quot;%s&quot;, str);
 &#125;
 </code></pre>
+<h2><span id="汇编进阶理解与堆栈">汇编进阶理解与堆栈</span></h2><h3><span id="栈操作与函数执行">栈操作与函数执行</span></h3><p>push a; 把esp-4,并把a的值赋值给esp指向的位置<br>pop  a; 把当前esp赋值给a，再把esp+4</p>
+<p>我们取一段函数</p>
+<pre><code class="c">PUSH EBP          
+MOV  EBP,ESP    
+sub  esp,n
+call enc;
+....              
+
+MOV  ESP,EBP    
+POP EBP        
+RETN         
+</code></pre>
+<p>假设我们的这个函数是由别的地方call进来的,那么在call的时候执行了一下步骤。</p>
+<ul>
+<li>把call的下一条指令压入栈中，并把esp-4,即保存返回地址</li>
+<li>修改eip的值为被调用函数的开头</li>
+<li>进入被调用函数执行</li>
+<li>push ebp；把原函数的栈底指针压入栈，把esp-4,然后把ebp的值赋值给esp指向的地址即保存原来的栈底指针。</li>
+<li>mov ebp,esp;设置栈底指针为当前函数的开头。</li>
+<li>sub esp,n;用esp-n开辟新的栈帧，往下正常执行函数。</li>
+<li>…</li>
+<li>mov esp,ebp;回收栈帧，恢复栈顶指针到当前栈底</li>
+<li>pop ebp;弹出保存栈底指针,把当前esp赋值给ebp，再把esp+4</li>
+<li>retn ;修改eip的值为esp指向的值，esp此时指向call的下一条指令的地址。</li>
+</ul>
 
     </div>
     

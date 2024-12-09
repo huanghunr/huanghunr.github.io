@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #ff7d73">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #03a9f4">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -210,6 +210,10 @@
 <ul>
 <li><a href="#my_arm">MY_ARM</a></li>
 <li><a href="#ohn_flutter">ohn_flutter!!!</a></li>
+<li><a href="#junjunkcode">jun…junkcode？</a><ul>
+<li><a href="#%E6%80%BB%E9%80%BB%E8%BE%91">总逻辑</a></li>
+</ul>
+</li>
 </ul>
 <!-- tocstop -->
 
@@ -279,6 +283,150 @@ function tryLoadLibapp() &#123;  //初始化
         onLibappLoaded();
 &#125;
 tryLoadLibapp();
+</code></pre>
+<h2><span id="junjunkcode">jun…junkcode？</span></h2><p>打开后去除一个jz，jnz的花指令。我们可以看到main函数的加密流程，就是一个对表的异或和加减，写出解密脚本发现答案并不正确，结合题目来看我们再次去仔细的看看main前面的其他函数，同时我们也可以看看import，里面导入了许多WindowsAPI的函数。在开头，我们可以看到一个sub_4017A9(“%43s”, byte_408A40);函数，这个函数里面藏了一些东西，</p>
+<pre><code class="c">BOOL sub_4017A9(const char *a1, __int64 a2, ...)
+&#123;
+  _UNKNOWN *retaddr;  //一个地址指针，存储了main函数call的返回地址，即call的下一个地址
+
+  scanf(a1, a2);  //获取输入
+  *((_QWORD *)qword_408A20[0] + 1) = &amp;retaddr;  //记录返回地址到变量中
+  CreateProcessA(ApplicationName, 0LL, 0LL, 0LL, 0, 0, 0LL, 0LL, &amp;StartupInfo, (LPPROCESS_INFORMATION)&amp;hObject); //以ApplicationName创建一个子进程，把句柄保存到hObject
+  WaitForSingleObject(hObject, 0xFFFFFFFF); //等待句柄记的结束，0xFFFFFFFF表示等待时间为无限，
+  UnmapViewOfFile(qword_408A20[0]); //取消文件映射
+  CloseHandle(qword_408A70);  //关闭句柄
+  CloseHandle(hObject);//关闭hObject句柄
+  return CloseHandle(*(&amp;hObject + 1)); //关闭句柄
+&#125;
+</code></pre>
+<p>这里涉及到了文件映射的概念，UnmapViewOfFile(qword_408A20[0]); 这个函数取消了一个文件映射，我们查看qword_408A20[0]这个文件的交叉引用，我们可以找到另一个函数sub_401550()。</p>
+<blockquote>
+<p>Windows文件映射:创建并打开一个文件，把这个文件映射到内存中，通过读写这个文件以达到让不同进程共享内存的目的。</p>
+</blockquote>
+<pre><code class="c++">DWORD sub_401550()
+&#123;
+  DWORD *v0; // rbx
+  DWORD result; // eax
+  __int64 Buffer; // [rsp+30h] [rbp-50h] BYREF
+  HANDLE hProcess; // [rsp+38h] [rbp-48h]
+
+  qword_408A70[0] = OpenFileMappingA(0xF001Fu, 0, &quot;jun...junkcode?&quot;);  //打开一个名为jun...junkcode?的映射对象，返回文件的句柄
+  if ( qword_408A70[0] ) //判断是否打开成功
+  &#123;
+    qword_408A20[0] = MapViewOfFile(qword_408A70[0], 0xF001Fu, 0, 0, 0x18uLL);//把映射对象映射到内存中，返回一个指针
+    if ( DebugActiveProcess(*(_DWORD *)qword_408A20[0]) ) //映射内存中的进程进行调试
+    &#123;
+      hProcess = OpenProcess(0x1F0FFFu, 0, *(_DWORD *)qword_408A20[0]);//打开进程并获得所有的控制权限
+      Buffer = *((_QWORD *)qword_408A20[0] + 2); //赋值
+      WriteProcessMemory(hProcess, *((LPVOID *)qword_408A20[0] + 1), &amp;Buffer, 8uLL, 0LL);//写内存，把buffer的值写入*((LPVOID *)qword_408A20[0] + 1)中
+      DebugActiveProcessStop(*(_DWORD *)qword_408A20[0]);//停止调试
+    &#125;
+    UnmapViewOfFile(qword_408A20[0]);//取消映射内存
+    CloseHandle(qword_408A70[0]);//关闭句柄
+    CloseHandle(hProcess);//关闭句柄
+    exit(0);//推出进程
+  &#125;
+  GetModuleFileNameA(0LL, ApplicationName, 0x104u);//获取当前程序路径
+  qword_408A70[0] = CreateFileMappingA((HANDLE)0xFFFFFFFFFFFFFFFFLL, 0LL, 4u, 0, 0x18u, &quot;jun...junkcode?&quot;);//创建映射文件对象
+  qword_408A20[0] = MapViewOfFile(qword_408A70[0], 0xF001Fu, 0, 0, 0x18uLL);//映射文件到内存中
+  *((_QWORD *)qword_408A20[0] + 2) = 4201097LL;//把4201097LL;赋值给*((_QWORD *)qword_408A20[0] + 2)，上文中是buffer。
+  v0 = (DWORD *)qword_408A20[0];//保存指针到v0
+  result = GetCurrentProcessId();//获取进程ID
+  *v0 = result;//把进程ID赋值给v0指针，即是为qword_408A20[0]。
+  return result;
+&#125;
+</code></pre>
+<p>这个函数整个逻辑的大概解释，就是父进程执行打开失败的内容，子进程执行打开成功的内容。<br>那么这个函数的逻辑就是父进程把自己的返回地址和另一个返回地址映射到内存中，然后被子进程替换，从而使父进程的返回地址改变到4201097。<br>加密逻辑已经清楚，但是我们还是不知道总程序的逻辑。接下来我们分析一下这个函数的交叉引用来寻找总逻辑。</p>
+<h4><span id="总逻辑">总逻辑</span></h4><ul>
+<li>对sub_401550()引用我们可以找到一个数组__int64 qword_4032A0[];<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-12-09_17-33-52.png"><br>在这个数组中记录了sub_401550()的地址，继续寻找数组的引用，继续往下找我们可以找到sub_401B50()</li>
+</ul>
+<pre><code class="c++">__int64 sub_401B50()
+&#123;
+  void (**v0)(void); // rbx
+  __int64 *v1; // rsi
+  unsigned int i; // eax
+
+  for ( i = 0; qword_4032A0[i + 1]; ++i )
+    ;
+  if ( i )
+  &#123;
+    v0 = (void (**)(void))&amp;qword_4032A0[i];
+    v1 = &amp;qword_4032A0[i - (unsigned __int64)(i - 1) - 1];
+    do
+      (*v0--)();
+    while ( v0 != (void (**)(void))v1 );
+  &#125;
+  return sub_401510(loc_401B10);
+&#125;
+</code></pre>
+<p>这个函数把qword_4032A0[]数组的指针依次保存到v0执行，包括我们的sub_401550()函数。我们继续往上跟，最终会跟到main函数里面<br><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-12-09_18-13-55.png"></p>
+<p>这下就真相大白了，在进入main函数时程序也就是父进程，先执行了sub_401550()，因为没有创建映射对象所以会走打开失败的分支，然后创建映射对象，并映射内存，把上述的数据写入内存。接下来执行到输入的函数sub_4017A9()，创建子进程(创建的子进程与父程序是相同文件)并等待子进程的结束。这期间子进程因为有了父进程的创建映射对象，子进程会走成功打开的分支，修改父进程的返回地址，从而改变程序的执行逻辑，我们找到最终执行的位置，发现真正的加密方法。</p>
+<p>那么接下来就是对最后的加密进行分析了，我们来到0x401A89处，也就是父进程返回被修改后到的函数。但是我们发现一个问题，这里是一大堆字节码，我们c键恢复成代码后勉强可以看到汇编，不能反编译。</p>
+<pre><code class="x86asm">.text:0000000000401A90 loc_401A90:                             ; CODE XREF: .text:0000000000401B00↓j
+.text:0000000000401A90                 movsx   eax, bl
+.text:0000000000401A93
+.text:0000000000401A93 loc_401A93:                             ; CODE XREF: .text:0000000000401A69↑j
+.text:0000000000401A93                 mov     edx, 41 
+.text:0000000000401A98                 sub     edx, eax ;41减去下标
+.text:0000000000401A9A                 mov     eax, edx
+.text:0000000000401A9C                 lea     rdx, byte_408A40
+.text:0000000000401AA3                 cdqe
+.text:0000000000401AA5                 movzx   r8d, byte ptr [rdx+rax]
+.text:0000000000401AAA                 movsx   eax, bl
+.text:0000000000401AAD                 lea     ecx, [rax+rax]  ;下标的2倍
+.text:0000000000401AB0                 mov     edx, 818089009
+.text:0000000000401AB5                 mov     eax, ecx
+.text:0000000000401AB7                 imul    edx
+.text:0000000000401AB9                 sar     edx, 3
+.text:0000000000401ABC                 mov     eax, ecx
+.text:0000000000401ABE                 sar     eax, 31
+.text:0000000000401AC1                 sub     edx, eax
+.text:0000000000401AC3                 mov     eax, edx
+.text:0000000000401AC5                 imul    eax, 42
+.text:0000000000401AC8                 sub     ecx, eax
+.text:0000000000401ACA                 mov     eax, ecx
+.text:0000000000401ACC                 lea     rdx, byte_408A40
+.text:0000000000401AD3                 cdqe
+.text:0000000000401AD5                 movzx   edx, byte ptr [rdx+rax] ;input[(2*i)%42]
+.text:0000000000401AD9                 movsx   eax, bl
+.text:0000000000401ADC                 mov     ecx, 41
+.text:0000000000401AE1                 sub     ecx, eax
+.text:0000000000401AE3                 mov     eax, ecx
+.text:0000000000401AE5                 mov     ecx, r8d  ;获取input[41-i]
+.text:0000000000401AE8                 xor     ecx, edx  ;异或
+.text:0000000000401AEA                 lea     rdx, byte_408A40
+.text:0000000000401AF1                 cdqe
+.text:0000000000401AF3                 mov     [rdx+rax], cl
+.text:0000000000401AF6                 mov     eax, ebx
+.text:0000000000401AF8                 add     eax, 1
+.text:0000000000401AFB                 mov     ebx, eax
+.text:0000000000401AFD                 cmp     bl, 29h ;比较是判断否加密完毕
+.text:0000000000401B00                 jle     short loc_401A90
+.text:0000000000401B02                 jmp     loc_4019F9
+</code></pre>
+<p>其实这里可以借助动调分析。但是这个题是有反调试的，在上面的sub_401550()函数中，要子进程调试父进程，如果在这之前父进程被其他进程调试了，子进程就无法附加调试，那自然无法执行正确的逻辑。我们已经知道子程序的逻辑就是修改父进程的返回地址，我们可以手动修改。在retn处下断点，然后修改EIP的值为0x401A89；这样就可以直接跳到加密部分分析了。<br>这里我们经过短暂（雾）的分析汇编盯针出主要的加密逻辑。</p>
+<pre><code class="c">for (int i = 0; i &lt; 42; i++) &#123;
+    input[41 - i] ^= input[(2* i)%42];
+&#125;
+</code></pre>
+<p>写出解密脚本</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+int main() &#123;
+    unsigned char mm[42] = &#123;
+    0x34, 0x6C, 0x60, 0x33, 0x15, 0x3B, 0x74, 0x38, 0x5E, 0x6A, 0x53, 0x05, 0x31, 0x1C, 0x43, 0x35,
+    0x53, 0x58, 0x4A, 0x12, 0x39, 0x3B, 0x35, 0x5E, 0x3A, 0x21, 0x08, 0x1B, 0x44, 0x00, 0x7C, 0x26,
+    0x6E, 0x5D, 0x54, 0x0C, 0x01, 0x07, 0x00, 0x1F, 0x52, 0x1B
+    &#125;;
+
+    
+    for (int i = 41; i&gt;=0; i--) &#123;
+        mm[41-i] ^= mm[(2 * i) % 42];
+        printf(&quot;%c&quot;, mm[41-i]);
+    &#125;
+  
+&#125;
+//flag&#123;G00d_jOb_!_7h1s_i5_nOt_0nIy_junkc0d3&#125;
 </code></pre>
 
     </div>
