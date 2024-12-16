@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>2024浙江省省赛决赛 Writeup | huanghunr&#39;s Blog</title>
+    <title>IDApy学习和花指令的初步学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>2024浙江省省赛决赛 Writeup</h1>
+        <h1>IDApy学习和花指令的初步学习</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/11/10
+            2024/12/16
         </span>
         
         <span class="category">
-            <a href="/categories/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B%E5%86%B3%E8%B5%9B/">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                2024浙江省省赛决赛
+                Re基础学习
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B%E5%86%B3%E8%B5%9B-Writeup/" style="color: #00bcd4">
-                    2024浙江省省赛决赛 Writeup
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                    Re学习
                 </a>
             </span>
             
@@ -208,117 +208,145 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#reverse1">reverse1</a></li>
-<li><a href="#reverse2">reverse2</a></li>
+<li><a href="#%E7%94%A8vscode%E7%BC%96%E5%86%99idapython">用VScode编写IDApython</a></li>
+<li><a href="#%E8%8A%B1%E6%8C%87%E4%BB%A4%E6%B7%B7%E6%B7%86%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86">花指令混淆以及原理</a><ul>
+<li><a href="#%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C%E7%A0%81">插入操作码</a><ul>
+<li><a href="#%E5%BF%85%E5%AE%9A%E8%B7%B3%E8%BD%AC">必定跳转</a></li>
+<li><a href="#jmp%E8%B7%B3%E8%BD%AC">jmp跳转</a></li>
+</ul>
+</li>
+<li><a href="#%E6%93%8D%E4%BD%9C%E6%A0%88">操作栈</a><ul>
+<li><a href="#%E4%B8%8D%E6%89%A7%E8%A1%8C%E7%9A%84%E6%A0%88%E6%93%8D%E4%BD%9C">不执行的栈操作</a></li>
+<li><a href="#%E4%BC%9A%E6%89%A7%E8%A1%8C%E7%9A%84%E6%A0%88%E6%93%8D%E4%BD%9C">会执行的栈操作</a></li>
+</ul>
+</li>
+<li><a href="#callret%E8%B7%B3%E8%BD%AC">CALL&#x2F;RET跳转</a></li>
+</ul>
+</li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<h2><span id="reverse1">reverse1</span></h2><p>两个rc4加密，一个是原版另一个是被修改的版本。加密过程就是用key1先加密key，再用加密的key去加密flag。所以按照这个逻辑来逆向即可解密。rc4原版加密是对称加密，而修改版的rc4只要把减号改为加号就行。</p>
 <blockquote>
-<p>在比赛时这题并没有写出来，脚本最后的结果一直是乱码，后面复盘时发现了一个关键的东西。当盒子是char类型时，只要盒子里的元素被当作下标时，就要把这个下标转成(unsigned char)，如果不转的话在后面的下标就是一个负数。当盒子是unsigned char类型时，(box[v5] + box[v6])作为下标时要转化为(unsigned char)，如果不转化的话(box[v5] + box[v6])就有可能会超过下标255。所以box[(unsigned char)(box[v5] + box[v6])]实际上就是box[(box[v5] + box[v6])%256]。</p>
+<p>ida版本为IDA9.0</p>
 </blockquote>
-<blockquote>
-<ul>
-<li><font color="red">所以在写题中一定要注意下标的数值是否合规。</font></li>
+<h2><span id="用vscode编写idapython">用VScode编写IDApython</span></h2><ul>
+<li>找到这个项目<a target="_blank" rel="noopener" href="https://github.com/ioncodes/idacode">IDAcode</a>,把下来的文件加到你ida的plugins文件夹中。</li>
+<li>修改idacode_utils&#x2F;settings.py中的PYTHON路径为本地的python路径</li>
+<li>在本地中用控制台安装依赖</li>
 </ul>
+<pre><code class="s">python -m pip install --user debugpy tornado
+</code></pre>
+<ul>
+<li>在VScode中安装IDAcode插件</li>
+<li>在VScode按CTRL+Shift+P输入”Open User Settings(JSON)”打开后添加如下代码。</li>
+</ul>
+<pre><code class="js">&quot;python.autoComplete.extraPaths&quot;: [
+        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径
+     ],
+     &quot;python.analysis.extraPaths&quot;: [
+        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径
+   ],
+</code></pre>
+<ul>
+<li>在VScode按CTRL+Shift+P，搜索ida即可找到想要的功能。</li>
+<li>在ida插件中打开idacode，显示Listening on 127.0.0.1:7065即成功。</li>
+<li>如果出现找不到依赖的报错，请在ida目录下找到并运行idapyswitch.exe，选择同样的python解释器(切换解释器可能会导致库的缺失，请自行安装缺失的库)。</li>
+<li>如果写的命令发到ida执行报错，请在VScode中选择同样的python解释器，不要用虚拟解释器。</li>
+</ul>
+<h2><span id="花指令混淆以及原理">花指令混淆以及原理</span></h2><h3><span id="插入操作码">插入操作码</span></h3><blockquote>
+<p>常见的花指令字节码<br>9A:CALL immed32<br>E8:CALL immed16<br>E9:JMP immed16<br>EB:JMP immed8<br>21:add<br>add esp,1; 对esp进行操作</p>
 </blockquote>
-<pre><code class="c">#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-
-char input[32] = &#123;
-    0x4E, 0x47, 0x38, 0x47, 0x62, 0x0A, 0x79, 0x6A, 0x03, 0x66, 0xC0, 0x69, 0x8D, 0x1C, 0x84, 0x0F,
-    0x54, 0x4A, 0x3B, 0x08, 0xE3, 0x30, 0x4F, 0xB9, 0x6C, 0xAB, 0x36, 0x24, 0x52, 0x81, 0xCF, 0x00
-&#125;;
-char key[100] = &quot;ban_debug!&quot;;
-char key1[] = &quot;keykey&quot;;
-unsigned char box[256];
-
-int getbox(unsigned char*box, char*key,int keylen) &#123;
-    char v4;
-    int v6 = 0;
-    int v8[256];
-    memset(v8, 0, 0x400uLL);
-    for (int i = 0; i &lt;= 255; ++i)
-    &#123;
-        box[i] = i;
-        v8[i] = (unsigned char)key[i % keylen];
-    &#125;
-    v6 = 0;
-    for (int j = 0; j &lt;= 255; ++j)
-    &#123;
-       
-        v6 = (v8[j] + v6 + box[j]) % 256;
-        v4 = box[j];
-        box[j] = box[v6];
-        box[v6] = v4;
-    &#125;
-    return 0;
+<h4><span id="必定跳转">必定跳转</span></h4><p>cpu的指令集规定了许多汇编指令，如0XE8表示的是call这个指令，并规定后面的几个字节是call的参数(跳转的地址)。<br>IDA通过<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42492218/article/details/124116387">线性扫描</a>从开始到结尾把每一个字节反汇编成汇编指令，例如IDA识别到了一个字节0xE8(0xE8不属于前一条汇编的参数里)，那么就把这个字节汇编成call，并把后面的字节识别成参数，然后继续往下分析。<br>那么我们是不是可以在程序中插入一个0xE8来干扰IDA的解析呢。很明显是可以的，这就是花指令的一种实现方法。如下程序中我们用_asm{}插入一段汇编代码，并用_emit插入一个0xE8的字节码。</p>
+<pre><code class="c">__asm&#123;
+   jz start;
+   jnz start;
+   _emit 0xE8;
 &#125;
-
-
-int dec1(unsigned char*box, unsigned char* input,int len) &#123;
-    char v4; 
-    int v5; 
-    int v6; 
-    int i; 
-
-    v5 = 0;
-    v6 = 0;
-    for (i = 0; ; ++i)
-    &#123;
-        if (len &lt;= i)
-            break;
-        v5 = (v5 + 1) % 256;
-        v6 = (v6 + box[v5]) % 256;
-        v4 = box[v5];
-        box[v5] = box[v6];
-        box[v6] = v4;
-        input[i] ^= box[(unsigned char)(box[v5] + box[v6])];
+start:
+   printf(&quot;yes&quot;);
+</code></pre>
+<p>在上面的代码中，因为jz与jnz都是跳转到start所以程序本身就不会执行到0xE8这个位置，但是在IDA反汇编时却会被扫描出来，从而导致把我们的0xE8识别成call，把后面的字节码识别成参数，就会导致接下来的分析错误。那么构建一个花指令其实就是想帮法构建一段内联汇编，并插入一些不会被程序执行汇编指令字节码。<br>有时候跳转会有很多次，有较多的花指令。</p>
+<p>通过xor eax, eax;得到结果为0，从而使zf标志为1，造成jz必然跳转。</p>
+<pre><code class="c">int main()
+&#123;
+    _asm &#123;
+    xor eax, eax;// eax ^ eax = 0 
+    jz s; // 必然成立跳转，一定会跳转
+    add esp,1; 
+    _emit 0x22; 
+    _emit 0x33; 
+    s:
     &#125;
-    return 0;
-&#125;
-
-int dec2(unsigned char* box,char* input, int len) &#123;
-    char v4;
-    int v5; 
-    int v6;
-    int i;
-
-    v5 = 0;
-    v6 = 0;
-    for (i = 0; ; ++i)
-    &#123;
-        if (len &lt;= i)
-            break;
-        v5 = (v5 + 1) % 256;
-        v6 = (v6 + box[v5]) % 256;
-        v4 = box[v5];
-        box[v5] = box[v6];
-        box[v6] = v4;
-        input[i] += box[(unsigned char)(box[v5] + box[v6])];
-    &#125;
-    return 0;
-&#125;
-
-
-int main() &#123;
-
-    getbox(box, key1, strlen(key1));
-    dec1(box, (unsigned char*)key, strlen(key));
-    memset(box, 0, sizeof(box));
-    getbox(box, key, strlen(key));
-    dec2(box, input, 32);
-    for (int i = 0; i &lt; 31; i++) &#123;
-        printf(&quot;%c&quot;, input[i]);
-    &#125;
-   
-    //puts(input);
-    
+    printf(&quot;test \n&quot;);
 &#125;
 </code></pre>
-<h2><span id="reverse2">reverse2</span></h2><p>用010editer把ABC全部修改为UPX，ida分析后就是一个base64加密函数，直接就可以看到明文和码表，直接解密就得flag</p>
+<h4><span id="jmp跳转">jmp跳转</span></h4><p>$+5表示跳到当前地址后偏移5的位置</p>
+<pre><code class="c">int main()
+&#123;
+    _asm &#123;
+    
+        jmp $+5
+        _emit 0x71
+        _emit 2
+        _emit 0xE9
+        _emit 0xED
+   &#125;
+ lable:
+    printf(&quot;ok2&quot;);
+
+    return 0;
+&#125;
+</code></pre>
+<blockquote>
+<p>解决方法:找到垃圾代码按U然后nop掉，再按C，最后再在函数开头按P创建函数。</p>
+</blockquote>
+<hr>
+<h3><span id="操作栈">操作栈</span></h3><p>栈的操作是需要平衡的，一个入栈后面必要一个出栈平衡，但是如果我们不用pop出栈，那么IDA可能就会识别到栈的不平衡而无法反编译。</p>
+<h4><span id="不执行的栈操作">不执行的栈操作</span></h4><p>在下面的代码中我们插入了对栈顶进行操作的操作码，实际上因为永恒跳转的原因，这个操作是不会执行的，但是如果被ida识别到，那么就会认为栈是不平衡的，从而导致上面的问题。</p>
+<pre><code class="c">int main() &#123;
+    
+    int main()
+&#123;
+    _asm &#123;
+    xor eax, eax;// eax ^ eax = 0 
+    jz s; // 必然成立跳转，一定会跳转
+    add esp,0x100;   //操作栈顶指针，实际上不会执行
+    _emit 0x22; 
+    _emit 0x33; 
+    s:
+    &#125;
+    printf(&quot;test \n&quot;);
+&#125;
+start:
+    printf(&quot;hello world&quot;);
+&#125;
+</code></pre>
+<p>我们在option中的general中右上角勾选Starck pointer和设置number of byte 为8。来显示字节码和栈指针以便我们分析。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20241215140918996.png" alt="image-20241215140918996"></p>
+<p>我们可以轻易发现我们写的花指令，发现ida已经识别到了栈顶指针的异常，这个时候我们只要把add的那个操作码nop掉就行。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20241215141351396.png" alt="image-20241215141351396"></p>
+<h4><span id="会执行的栈操作">会执行的栈操作</span></h4><p>在下面的代码中我们push了寄存器eax，这回让esp-4然后再把eax的值放入esp指向的地址中，正常来说，我们在后面要pop eax(把esp指向地址的值赋值给eax再把esp+4)来平衡栈，但是我们这里直接用mov来操作esp来平衡，这就会导致ida识别到栈不平衡的问题。</p>
+<pre><code class="c">int main() &#123;
+    
+    __asm &#123;
+        push eax;
+        add esp, 4;
+    &#125;
+start:
+    printf(&quot;hello world&quot;);
+&#125;
+</code></pre>
+<p>这个花指令在高版本的IDA（IDA9）中好像已经不管用了，如果有这种花指令的话直接nop就行。</p>
+<h3><span id="callx2fret跳转">CALL&#x2F;RET跳转</span></h3><p>call在执行时会把返回地址入栈，并跳转到函数执行，但是如果在后面的过程中修改这个返回地址，那么当ret返回的时候就会跳转到其他的方执行。如下代码实现了这种效果，这会增加我们的分析难度，但本质还是跳转，nop掉垃圾数据就行。可以直接把call和ret部分全nop掉。</p>
+<pre><code class="asm">__asm &#123;
+    call a;
+    _emit 0xE8;
+a:
+    add dword ptr ss:[esp], 0x1; //表示以四字节(dword)写入栈段(ss)到esp指向的值(ptr表示把后面的数当成指针使用)
+    ret;
+</code></pre>
 
     </div>
     

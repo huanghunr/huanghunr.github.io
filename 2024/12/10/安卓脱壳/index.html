@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>IDApy学习和花指令的初步学习 | huanghunr&#39;s Blog</title>
+    <title>frida安卓脱壳学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,14 +164,14 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>IDApy学习和花指令的初步学习</h1>
+        <h1>frida安卓脱壳学习</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/12/6
+            2024/12/10
         </span>
         
         <span class="category">
@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
                     Re学习
                 </a>
             </span>
@@ -208,107 +208,22 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#%E7%94%A8vscode%E7%BC%96%E5%86%99idapython">用VScode编写IDApython</a></li>
-<li><a href="#%E8%8A%B1%E6%8C%87%E4%BB%A4%E6%B7%B7%E6%B7%86%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86">花指令混淆以及原理</a><ul>
-<li><a href="#%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C%E7%A0%81">插入操作码</a><ul>
-<li><a href="#%E5%BF%85%E5%AE%9A%E8%B7%B3%E8%BD%AC">必定跳转</a></li>
-<li><a href="#jmp%E8%B7%B3%E8%BD%AC">jmp跳转</a></li>
-</ul>
-</li>
-<li><a href="#%E6%93%8D%E4%BD%9C%E6%A0%88">操作栈</a></li>
-</ul>
-</li>
+<li><a href="#frida-dexdump%E8%84%B1%E5%A3%B3">frida-dexdump脱壳</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<blockquote>
-<p>ida版本为IDA9.0</p>
-</blockquote>
-<h2><span id="用vscode编写idapython">用VScode编写IDApython</span></h2><ul>
-<li>找到这个项目<a target="_blank" rel="noopener" href="https://github.com/ioncodes/idacode">IDAcode</a>,把下来的文件加到你ida的plugins文件夹中。</li>
-<li>修改idacode_utils&#x2F;settings.py中的PYTHON路径为本地的python路径</li>
-<li>在本地中用控制台安装依赖</li>
-</ul>
-<pre><code class="s">python -m pip install --user debugpy tornado
-</code></pre>
-<ul>
-<li>在VScode中安装IDAcode插件</li>
-<li>在VScode按CTRL+Shift+P输入”Open User Settings(JSON)”打开后添加如下代码。</li>
-</ul>
-<pre><code class="js">&quot;python.autoComplete.extraPaths&quot;: [
-        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径
-     ],
-     &quot;python.analysis.extraPaths&quot;: [
-        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径
-   ],
-</code></pre>
-<ul>
-<li>在VScode按CTRL+Shift+P，搜索ida即可找到想要的功能。</li>
-<li>在ida插件中打开idacode，显示Listening on 127.0.0.1:7065即成功。</li>
-<li>如果出现找不到依赖的报错，请在ida目录下找到并运行idapyswitch.exe，选择同样的python解释器(切换解释器可能会导致库的缺失，请自行安装缺失的库)。</li>
-<li>如果写的命令发到ida执行报错，请在VScode中选择同样的python解释器，不要用虚拟解释器。</li>
-</ul>
-<h2><span id="花指令混淆以及原理">花指令混淆以及原理</span></h2><h3><span id="插入操作码">插入操作码</span></h3><blockquote>
-<p>常见的花指令字节码<br>9A:CALL immed32<br>E8:CALL immed16<br>E9:JMP immed16<br>EB:JMP immed8<br>add esp,1; 对esp进行操作</p>
-</blockquote>
-<h4><span id="必定跳转">必定跳转</span></h4><p>cpu的指令集规定了许多汇编指令，如0XE8表示的是call这个指令，并规定后面的几个字节是call的参数(跳转的地址)。<br>IDA通过<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42492218/article/details/124116387">线性扫描</a>从开始到结尾把每一个字节反汇编成汇编指令，例如IDA识别到了一个字节0xE8(0xE8不属于前一条汇编的参数里)，那么就把这个字节汇编成call，并把后面的字节识别成参数，然后继续往下分析。<br>那么我们是不是可以在程序中插入一个0xE8来干扰IDA的解析呢。很明显是可以的，这就是花指令的一种实现方法。如下程序中我们用_asm{}插入一段汇编代码，并用_emit插入一个0xE8的字节码。</p>
-<pre><code class="c">__asm&#123;
-   jz start;
-   jnz start;
-   _emit 0xE8;
-&#125;
-start:
-   printf(&quot;yes&quot;);
-</code></pre>
-<p>在上面的代码中，因为jz与jnz都是跳转到start所以程序本身就不会执行到0xE8这个位置，但是在IDA反汇编时却会被扫描出来，从而导致把我们的0xE8识别成call，把后面的字节码识别成参数，就会导致接下来的分析错误。那么构建一个花指令其实就是想帮法构建一段内联汇编，并插入一些不会被程序执行汇编指令字节码。<br>有时候跳转会有很多次，有较多的花指令。</p>
-<p>通过xor eax, eax;得到结果为0，从而使zf标志为1，造成jz必然跳转。</p>
-<pre><code class="c">int main()
-&#123;
-    _asm &#123;
-    xor eax, eax;// eax ^ eax = 0 
-    jz s; // 必然成立跳转，一定会跳转
-    add esp,1; 
-    _emit 0x22; 
-    _emit 0x33; 
-    s:
-    &#125;
-    printf(&quot;test \n&quot;);
-&#125;
-</code></pre>
-<h4><span id="jmp跳转">jmp跳转</span></h4><p>$+5表示跳到当前地址后偏移5的位置</p>
-<pre><code class="c">int main()
-&#123;
-    _asm &#123;
-    
-        jmp $+5
-        _emit 0x71
-        _emit 2
-        _emit 0xE9
-        _emit 0xED
-   &#125;
- lable:
-    printf(&quot;ok2&quot;);
 
-    return 0;
-&#125;
+<h2><span id="frida-dexdump脱壳">frida-dexdump脱壳</span></h2><p>安装</p>
+<pre><code class="s">pip3 install frida-dexdump
 </code></pre>
+<pre><code class="s">frida-dexdump -U -f com.app.pkgname
+</code></pre>
+<p>可选参数</p>
 <blockquote>
-<p>解决方法:找到垃圾代码按U然后nop掉，再按C，最后再在函数开头按P创建函数。</p>
+<p>-o OUTPUT, –output OUTPUT  Output folder path, default is ‘.&#x2F;<appname>&#x2F;‘.选择输出文件夹<br>-d, –deep-search           Enable deep search mode.<br>–sleep SLEEP               Waiting times for start, spawn mode default is 5s.</appname></p>
 </blockquote>
-<hr>
-<h3><span id="操作栈">操作栈</span></h3><p>栈的操作是需要平衡的，一个入栈后面必要一个出栈平衡，但是如果我们不用pop出栈，那么IDA可能就会识别到栈的不平衡而无法反编译。<br>在下面的代码中我们push了寄存器eax，这回让esp-4然后再把eax的值放入esp指向的地址中，正常来说，我们在后面要pop eax(把esp指向地址的值赋值给eax再把esp+4)，来平衡栈，但是我们这里直接来操作esp来平衡，这就会导致上面的问题。</p>
-<pre><code class="c">int main() &#123;
-    
-    __asm &#123;
-        push eax;
-        add esp, 4;
-    &#125;
-start:
-    printf(&quot;hello world&quot;);
-&#125;
-</code></pre>
 
     </div>
     

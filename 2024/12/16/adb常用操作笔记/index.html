@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>Categories: 学习 | huanghunr&#39;s Blog</title>
+    <title>常用的adb命令记录 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -158,36 +162,20 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
-        
-        
-        
-        <span>
-            <a href="/categories/CTFNewStar2024-WP/" style="background: #00a596">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                CTFNewStar2024 WP
-            </a>
+            <div class="article">
+    <div>
+        <h1>常用的adb命令记录</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/12/16
         </span>
         
-        
-        
-        <span>
-            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                学习资料
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" style="background: #03a9f4">
+        <span class="category">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
@@ -196,102 +184,134 @@
         </span>
         
         
-        
-        <span>
-            <a href="/categories/%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                实用小技巧
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                    Re学习
+                </a>
+            </span>
+            
         </span>
-        
-        
-        
-        <span>
-            <a href="/categories/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B%E5%86%B3%E8%B5%9B/" style="background: #03a9f4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                2024浙江省省赛决赛
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/%E7%AE%97%E6%B3%95/" style="background: #ffa2c4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                算法
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/%E6%AF%94%E8%B5%9B/" style="background: #03a9f4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                比赛
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/%E5%AD%A6%E4%B9%A0/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                学习
-            </a>
-        </span>
-        
-        
-        
         
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2024/11/29</div>
-            <a href="/2024/11/29/c%E8%AF%AD%E8%A8%80%E7%9A%84%E5%90%8E%E9%9D%A2%E5%86%85%E5%AE%B9%E5%AD%A6%E4%B9%A0/">
-                <h3>C语言学习</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E5%AD%A6%E4%B9%A0/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        学习
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
-                            C语言学习
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#adb%E5%91%BD%E4%BB%A4">adb命令</a><ul>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96">初始化</a><ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E8%AE%BE%E5%A4%87">查看设备</a></li>
+<li><a href="#%E6%8C%87%E5%AE%9A%E8%AE%BE%E5%A4%87%E6%93%8D%E4%BD%9C">指定设备操作</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Bactivity%E5%8C%85%E5%90%8D">查看Activity&#x2F;包名</a><ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E4%B8%AD%E7%9A%84%E5%8C%85%E5%90%8D">查看运行中的包名</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%AE%89%E8%A3%85%E5%BA%94%E7%94%A8%E7%9A%84%E5%8C%85%E5%90%8D">查看安装应用的包名</a></li>
+<li><a href="#%E6%A0%B9%E6%8D%AE%E6%9F%90%E4%B8%AA%E5%85%B3%E9%94%AE%E5%AD%97%E6%9F%A5%E6%89%BE%E5%8C%85">根据某个关键字查找包</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91ida">端口转发(IDA)</a></li>
+<li><a href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91frida">端口转发(frida)</a></li>
+<li><a href="#root%E5%90%AF%E5%8A%A8">root启动</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96root">获取root</a></li>
+<li><a href="#%E9%87%8D%E6%96%B0%E8%BD%BD%E5%85%A5">重新载入</a></li>
+<li><a href="#%E9%87%8D%E5%90%AF%E8%AE%BE%E5%A4%87">重启设备</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8A%9F%E8%83%BD">功能</a><ul>
+<li><a href="#%E4%BC%A0%E9%80%81%E6%96%87%E4%BB%B6%E6%9C%AC%E6%9C%BAa%E6%89%8B%E6%9C%BAb">传送文件(本机a，手机b)</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%8D%B8%E8%BD%BD%E5%BA%94%E7%94%A8">安装卸载应用</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8activity">启动Activity</a></li>
+</ul>
+</li>
+<li><a href="#adbshell">adbshell</a><ul>
+<li><a href="#%E7%BB%99%E4%B8%8E%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90">给与执行权限</a></li>
+<li><a href="#kill%E8%BF%9B%E7%A8%8B">kill进程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h2><span id="adb命令">adb命令</span></h2><h3><span id="初始化">初始化</span></h3><h4><span id="查看设备">查看设备</span></h4><pre><code>adb devices
+</code></pre>
+<h4><span id="指定设备操作">指定设备操作</span></h4><pre><code>adb -s 设备 指令
+</code></pre>
+<h4><span id="查看activityx2f包名">查看Activity&#x2F;包名</span></h4><h5><span id="查看运行中的包名">查看运行中的包名</span></h5><pre><code>adb shell dumpsys activity top
+</code></pre>
+<p>第二种方法</p>
+<pre><code>adb shell
+su
+dumpsys activity top
+</code></pre>
+<h5><span id="查看安装应用的包名">查看安装应用的包名</span></h5><pre><code>adb shell
+su
+pm list packages
+</code></pre>
+<h5><span id="根据某个关键字查找包">根据某个关键字查找包</span></h5><pre><code> pm list packages | grep ...
+</code></pre>
+<h4><span id="端口转发ida">端口转发(IDA)</span></h4><pre><code>adb forward tcp:23946 tcp:23946
+</code></pre>
+<h4><span id="端口转发frida">端口转发(frida)</span></h4><pre><code>adb forward tcp:27042 tcp:27043
+</code></pre>
+<h4><span id="root启动">root启动</span></h4><pre><code>adb root
+</code></pre>
+<h4><span id="获取root">获取root</span></h4><p>在shell下执行</p>
+<pre><code>su -c &quot;resetprop ro.debuggable 1&quot;
+su -c &quot;resetprop service.adb.root 1&quot;
+su -c &quot;magiskpolicy --live &#39;allow adbd adbd process setcurrent&#39;&quot;
+su -c &quot;magiskpolicy --live &#39;allow adbd su process dyntransition&#39;&quot;
+su -c &quot;magiskpolicy --live &#39;permissive &#123; su &#125;&#39;&quot; 
+su -c &quot;kill -9 `ps -A | grep adbd | awk &#39;&#123;print $2&#125;&#39; `&quot; 
+</code></pre>
+<p>再重新载入，下面的命令，在adb外执行</p>
+<h4><span id="重新载入">重新载入</span></h4><pre><code>adb remount
+</code></pre>
+<h4><span id="重启设备">重启设备</span></h4><pre><code>adb reboot
+</code></pre>
+<h3><span id="功能">功能</span></h3><h4><span id="传送文件本机a手机b">传送文件(本机a，手机b)</span></h4><pre><code>adb push a b
+</code></pre>
+<pre><code>adb pull b
+</code></pre>
+<h4><span id="安装卸载应用">安装卸载应用</span></h4><pre><code>adb install -r -t xxx.apk
+</code></pre>
+<pre><code>adb uninstall com.zhy.app
+</code></pre>
+<h4><span id="启动activity">启动Activity</span></h4><p>正常启动</p>
+<pre><code>adb shell am start 包名/完整Activity路径
+</code></pre>
+<p>调试启动</p>
+<pre><code>adb shell am start -D -n 包名/.类名
+</code></pre>
+<p>&#x2F;&#x2F;adb shell am start -D -n com.test.app&#x2F;.MainActivity</p>
+<h3><span id="adbshell">adbshell</span></h3><p>使用到shell的命令都可以直接执行，adb shell 命令</p>
+<p>如果执行出现问题就进入shell的su执行。</p>
+<pre><code>adb shell
+su
+</code></pre>
+<h4><span id="给与执行权限">给与执行权限</span></h4><pre><code>chmod 777 filename
+</code></pre>
+<h4><span id="kill进程">kill进程</span></h4><pre><code>am kill
+</code></pre>
+
     </div>
+    
+    
+    
+    
+    
+    
     
 </div>
 
@@ -323,6 +343,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>
