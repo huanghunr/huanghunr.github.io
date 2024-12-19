@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>军事理论课后测试答案 | huanghunr&#39;s Blog</title>
+    <title>三七彩票 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>军事理论课后测试答案</h1>
+        <h1>三七彩票</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/10/26
+            2024/12/19
         </span>
         
         <span class="category">
-            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/">
+            <a href="/categories/%E7%AE%97%E6%B3%95/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                学习资料
+                算法
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-%E7%AD%94%E6%A1%88/" style="color: #00bcd4">
-                    学习资料-答案
+                <a href="/tags/%E7%AE%97%E6%B3%95/" style="color: #03a9f4">
+                    算法
                 </a>
             </span>
             
@@ -203,93 +203,174 @@
     
     
     <div class="content" v-pre>
-        <h4><span id="tips多选题中-o-代表全选判断题中-d-为正确x-为错误">Tips:多选题中 O 代表全选，判断题中 D 为正确，X 为错误</span></h4><h2><span id="第一章">第一章</span></h2><pre><code class="C">1~5   DBDCC  
-6~10  BCBCB  
-11~15 DAADA  
-16~20 ABCBD  
-21~25 CDBAB  
-26~30 AC CD O O BCD  
-31~35 OABC O O CD  
-36~40 ABC ABC O BCD ABC  
-41~45 O O ABD ABD O
-46~50 O AB BCD AC O
-51~55 DDDDX  
-56~60 DXDDX  
-61~65 DDDXD  
-66~70 DXDXX
-71~75 XXDDD
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90">问题分析</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4">算法步骤</a></li>
+<li><a href="#%E4%BC%AA%E4%BB%A3%E7%A0%81">伪代码</a></li>
+<li><a href="#%E8%A7%A3%E9%87%8A">解释</a></li>
+<li><a href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6">时间复杂度</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B">测试用例</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<p>这个问题是一个涉及图论的问题，具体来说，可以通过图的连通性和拓扑排序来解决。我们可以将每一天的参与者和中奖者关系抽象成一个图，分析每天的抽奖问题。</p>
+<h3><span id="问题分析">问题分析</span></h3><ol>
+<li><strong>参赛者与中奖者</strong>：在每一天 <code>i</code>，有一组参与者。如果某个人在某一天中奖，那么这个人不能在之后的任何一天再次中奖。因此，我们可以将这些参与者看作是一个集合，每次抽奖的结果会减少当前集合的大小，并影响后续抽奖的集合。</li>
+<li><strong>问题的本质</strong>：实际上这是一个约束满足问题。每一天的抽奖要求从当天的参与者中选择一个中奖者，且不能重复选择之前的中奖者。问题可以通过建立一个合适的排除规则来解决，类似于图的拓扑排序。</li>
+</ol>
+<h3><span id="思路">思路</span></h3><ol>
+<li><strong>图的构建</strong>：<ul>
+<li>每一天的中奖者可以看作是一个节点，所有的参与者都和这个节点有一条“边”，表示他们可以被选为中奖者。</li>
+<li>题目给出的要求类似于一个“排除图”，即如果某个人在某一天中奖，就不能出现在之后的任何一天。</li>
+</ul>
+</li>
+<li><strong>使用贪心算法</strong>：<ul>
+<li>每一天选择一个合适的中奖者，使得在后续天数中不会违反规则。我们可以使用一个优先队列（最小堆）来选择最小的参与者编号，从而避免后续冲突。</li>
+</ul>
+</li>
+<li><strong>贪心选择的核心</strong>：在每一天的候选中奖者中，选择一个最小的编号，然后将这个中奖者从后续天数的候选名单中删除。</li>
+<li><strong>具体步骤</strong>：<ul>
+<li>使用一个数组或哈希集来维护每个人的“参与情况”，即记录哪些人已经被选中过。</li>
+<li>遍历每一天的参与者，挑选一个最小的、没有被选中过的参与者作为中奖者。</li>
+</ul>
+</li>
+<li><strong>判断是否有解</strong>：<ul>
+<li>如果在某一天没有可选的中奖者，那么说明没有解决方案，输出 <code>-1</code>。</li>
+<li>否则，输出一个可能的中奖者列表。</li>
+</ul>
+</li>
+</ol>
+<h3><span id="算法步骤">算法步骤</span></h3><ol>
+<li>解析每个测试用例。</li>
+<li>对每一天的参与者构建集合。</li>
+<li>使用优先队列（最小堆）来选择合适的中奖者。</li>
+<li>如果某天无法选出中奖者，则输出 <code>-1</code>。</li>
+<li>否则，输出各天的中奖者编号。</li>
+</ol>
+<h3><span id="伪代码">伪代码</span></h3><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdbool.h&gt;
+
+#define MAXN 50000
+
+// 优先队列比较函数，用于最小堆
+int cmp(const void* a, const void* b) &#123;
+    return (*(int*)a) - (*(int*)b);
+&#125;
+
+int main() &#123;
+    int t;
+    scanf(&quot;%d&quot;, &amp;t);
+
+    while (t--) &#123;
+        int m;
+        scanf(&quot;%d&quot;, &amp;m);
+
+        int winners[m];  // 存储每一天的中奖者
+        bool chosen[MAXN] = &#123;false&#125;;  // 标记某人是否已中奖
+
+        bool possible = true;
+        for (int i = 0; i &lt; m; i++) &#123;
+            int ni;
+            scanf(&quot;%d&quot;, &amp;ni);
+
+            int participants[ni];
+            for (int j = 0; j &lt; ni; j++) &#123;
+                scanf(&quot;%d&quot;, &amp;participants[j]);
+            &#125;
+
+            // 排序参与者，选择未中奖的最小值
+            qsort(participants, ni, sizeof(int), cmp);
+            bool found = false;
+            for (int j = 0; j &lt; ni; j++) &#123;
+                if (!chosen[participants[j]]) &#123;
+                    winners[i] = participants[j];
+                    chosen[participants[j]] = true;
+                    found = true;
+                    break;
+                &#125;
+            &#125;
+
+            if (!found) &#123;
+                possible = false;
+                break;
+            &#125;
+        &#125;
+
+        if (possible) &#123;
+            for (int i = 0; i &lt; m; i++) &#123;
+                printf(&quot;%d &quot;, winners[i]);
+            &#125;
+            printf(&quot;\n&quot;);
+        &#125; else &#123;
+            printf(&quot;-1\n&quot;);
+        &#125;
+    &#125;
+
+    return 0;
+&#125;
 </code></pre>
-<hr>
-<h2><span id="第二章">第二章</span></h2><pre><code class="C">1~5    BCCDB
-6~10   DACDA
-11~15  DABCA
-16~20  DCAAD
-21~23  AAB
-24~28  AD AC ABC BC ABC
-29~33  ABC BC O ABC CD
-34~38  ABD O BCD CD O
-39~43  AB AC AC ABC BCD
-44~48  ACD ABC O BCD O
-49~53  DXDDD
-54~58  XDDDD
-59~63  XDDXD
-64~68  DXDXD
-69~73  XXDDX
-74~75  DD
+<h3><span id="解释">解释</span></h3><ol>
+<li><strong>输入解析</strong>：<ul>
+<li>首先读取测试用例的数量 <code>t</code>。</li>
+<li>对于每个测试用例，首先读取天数 <code>m</code>，然后对于每一天，读取参与者数量 <code>ni</code>，再读取该天的参与者编号。</li>
+</ul>
+</li>
+<li><strong>排序与选择</strong>：<ul>
+<li>对当天的参与者进行排序（使用 <code>qsort</code>）。然后从排序后的数组中选择第一个未被选择的参与者作为中奖者，确保没有重复中奖者。</li>
+</ul>
+</li>
+<li><strong>标记中奖者</strong>：<ul>
+<li>使用 <code>chosen</code> 数组来标记每个人是否已经中奖。如果某个参与者已经中奖，则跳过这个人，选择下一个未中奖的人。</li>
+</ul>
+</li>
+<li><strong>判断是否有解</strong>：<ul>
+<li>如果某一天无法选出未中奖的参与者，则输出 <code>-1</code>，表示无解。</li>
+<li>如果可以为每一天选出中奖者，则输出这些中奖者的编号。</li>
+</ul>
+</li>
+</ol>
+<h3><span id="时间复杂度">时间复杂度</span></h3><ul>
+<li>每个测试用例中对于每一天的参与者进行排序，排序的复杂度是 <code>O(ni log ni)</code>，其中 <code>ni</code> 是第 <code>i</code> 天的参与者数量。总的时间复杂度是 <code>O(sum(ni) log ni)</code>，其中 <code>sum(ni)</code> 是所有天数参与者数量的总和。由于总和不超过 50000，排序的复杂度是可接受的。</li>
+</ul>
+<h3><span id="测试用例">测试用例</span></h3><ol>
+<li><p><strong>输入</strong>：</p>
+<pre><code>1
+3
+3
+1 2 3
+2
+2 3
+3
+3 1 2
 </code></pre>
-<hr>
-<h2><span id="第三章">第三章</span></h2><pre><code class="C">1~5    BBBAC
-6~10   CDBDC
-11~15  DBADD
-16~18  CABCA
-21~25  ACDBD
-26~30  O AC AB O ABC
-31~35  BC BCD BC AC ABC
-36~40  O BCD AB O O
-41~45  ABC O ABC BC O
-46~50  ABC CD ABC ABD O
-51~55  DDXDD
-56~60  XDXDD
-61~65  DDDXD
-66~70  XDXDD
-71~75  DDDXD
+<p><strong>输出</strong>：</p>
+<pre><code>1 2 3
 </code></pre>
-<hr>
-<h2><span id="第四章">第四章</span></h2><pre><code class="C">1~5    BAAAC
-6~10   AADDA
-11~15  CBDCA
-16~20  ABCDC
-21~23  CDB
-24~28  ABC O CD ABD O
-29~33  O AB O ABC O 
-34~38  BC ABC ACD ABC BCD 
-39~43  O ABC O ABC ABC 
-44~48  O ACD ABC BD AC 
-49     AB
-50~54  XDDXD
-55~59  DXXDX
-60~64  DXDDX
-65~69  XDDDD
-70~73  DDDX
+</li>
+<li><p><strong>输入</strong>：</p>
+<pre><code>1
+3
+3
+1 2 3
+1
+3
+2
+1 2
 </code></pre>
-<hr>
-<h2><span id="第五章">第五章</span></h2><pre><code class="C">1~5    CBCDA
-6~10   BDDAB
-11~15  CBBAA
-16~20  DADDA
-21~25  BCBAC
-26~30  O AB ABC ABC ABC
-31~35  BCD ABC ABD BCD AD
-36~40  O AB O O BD
-41~45  ABC ABC BCD ACD O
-46~50  O O O ABC O
-51~55  DDDDD
-56~60  DXDDD 
-61~65  XXDDX
-66~70  XXDDD
-71~75  DXDXD
+<p><strong>输出</strong>：</p>
+<pre><code>-1
 </code></pre>
-<hr>
+</li>
+</ol>
+<p>这个方法通过贪心策略和排序来保证在每一天都能够选择一个合适的中奖者，同时确保解的正确性。</p>
 
     </div>
     
