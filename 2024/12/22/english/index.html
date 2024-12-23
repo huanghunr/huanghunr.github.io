@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>英语期末考翻译 | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>英语期末考翻译</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/12/22
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                    学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#unit1">UNIT1</a></li>
+<li><a href="#unit3">UNIT3</a></li>
+<li><a href="#unit4">UNIT4</a></li>
+<li><a href="#unit5">UNIT5</a></li>
+<li><a href="#unit6">UNIT6</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="unit1">UNIT1</span></h3><p><em>1</em>  杰克是个如此勤奋的学生，他无论走到哪里身边总是带着本书。 <strong>(diligent)</strong></p>
+<p><span style="color:#87CEEB">Jack is so diligent a student that he never goes anywhere without </span> <span style="color:#87CEEB">a book.</span></p>
+<p><em>2</em>  这是我的论文(paper)提纲(outline)，对于你的任何建议，我将不胜感激。 <strong>(appreciate)</strong></p>
+<p><span style="color:#87CEEB">This is an outline of my paper any of your suggestions will be </span><span style="color:#87CEEB">truly appreciated.</span></p>
+<p><em>3</em>  无论是买还是租，你都得弄清楚什么样的房产最适合你和你的生活方式。 <strong>(property)</strong></p>
+<p><span style="color:#87CEEB">Whether you’re buying or renting, you’ll need to be fully aware </span>  <span style="color:#87CEEB">what kind of property best suits you and your lifestyle.</span></p>
+<p><em>4</em>   在冰路上骑车是很危险的，因此我们必须用车闸(brake)减慢自行车的速度。 <strong>(slow down)</strong></p>
+<p><span style="color:#87CEEB">It is dangerous to ride a bicycle on an icy road, so we have to </span>  <span style="color:#87CEEB">use the brake to slow it down.</span></p>
+<p><em>5</em>  如果我们把所有精力和努力投入进去，再过几个月，我们肯定能完成这个项目。 <strong>(accomplish)</strong></p>
+<p><span style="color:#87CEEB">If we put all our energy and effort into this project, we will </span>  <span style="color:#87CEEB">definitely accomplish it in a few more months.</span></p>
+<p><em>6</em>  我打算搬入一座位于镇中心附近三居室的房子。而且，它离火车站也很近，走走就到。 <strong>(locate, in addition)</strong></p>
+<p><span style="color:#87CEEB">I am thinking about moving to a three-bedroom house located </span>  <span style="color:#87CEEB">near the town center. In addition, it is within walking distance </span>  <span style="color:#87CEEB">to the train station.</span></p>
+<p><em>7</em>  我们想当然地认为是垃圾的很多东西，比如报纸、杂志、旧电脑和手机，实际上可以通过这样或那样的方式再循环、再利用。 <strong>(take ... for granted, trash, recycle)</strong></p>
+<p><span style="color:#87CEEB">A lot of the things we take for granted as trash, such as newspapers,</span>  <span style="color:#87CEEB"> </span>  <span style="color:#87CEEB">magazines, old computers and </span>  <span style="color:#87CEEB">cellphones</span>  <span style="color:#87CEEB">, can actually be </span>  <span style="color:#87CEEB">recycled or reused in one way or another.</span></p>
+<p><em>8</em>  —在询问一份工作的时候，我能问一些什么问题？—你可以问，这个职位(position)是否还有，要等多久才能知道你是否有面试机会__(inquire, available)__</p>
+<p><span style="color:#87CEEB">— What questions can I ask when inquiring about a job?</span></p>
+<p><span style="color:#87CEEB">— </span>  <span style="color:#87CEEB">You may ask if the position is still available and how long you</span><span style="color:#87CEEB">      </span> <span style="color:#87CEEB">have to wait before getting to know if you will be given an</span><span style="color:#87CEEB">      interview.</span></p>
+<hr>
+<h3><span id="unit3">UNIT3</span></h3><p><em>1</em>  这篇文章有助于我们深刻了解该问题的性质。 <strong>(insight)</strong></p>
+<p><span style="color:#87CEEB">The article&#x2F;essay helps us get a deep insight into the nature of the </span>  <span style="color:#87CEEB">problem.</span></p>
+<p><em>2</em> 在相互尊重的基础上，友谊会蓬勃发展。 <strong>(mutual, flourish)</strong></p>
+<p><span style="color:#87CEEB">Based on mutual respect, friendship will flourish.</span></p>
+<p><em>3</em>  友谊就像一棵植物，如果被忽视了，它就会凋谢。 <strong>(neglect,wither)</strong></p>
+<p><span style="color:#87CEEB">Like a plant, friendship will wither if neglected.</span></p>
+<p><em>4</em>  不论发生什么情况，我们一定会尽全力将其克服。 <strong>(no  matter what, overcome)</strong></p>
+<p><span style="color:#87CEEB">No matter what may happen, we will do our best to overcome it.</span></p>
+<p><em>5</em>  没有双方不断的关心，友谊将以分手告终。 <strong>(end up with)</strong></p>
+<p><span style="color:#87CEEB">A friendship without constant care from both sides will end up </span> <span style="color:#87CEEB">with a breakup.</span></p>
+<p><em>6</em>  今年寒冷的天气已严重影响北方地区的庄稼。 <strong>(affect)</strong></p>
+<p><span style="color:#87CEEB">This year cold weather has seriously affected the crops in the </span>  <span style="color:#87CEEB">northern region.</span></p>
+<p><em>7</em>  虽然我痛恨这么做，但是我必须按计划完成任务。 <strong>(as much as)</strong></p>
+<p><span style="color:#87CEEB">As much as I hate to do it, I must finish the task as planned.</span></p>
+<p><em>8</em>  那意味着这一新法律也适用于私营企业 (private businesses) __。 __<strong>(apply to)</strong></p>
+<p><span style="color:#87CEEB">That means the new law also applies to private businesses.</span></p>
+<hr>
+<h3><span id="unit4">UNIT4</span></h3><p><em>1</em>  我根本来不及害怕就从老虎手中夺回了我的孩子。我想这是母亲的本能。 <strong>(grab, instinct)</strong></p>
+<p><span style="color:#87CEEB">I grabbed my baby from the tiger before I had time to feel afraid. </span><span style="color:#87CEEB">I guess it was a mother’s natural instinct.</span></p>
+<p><em>2</em>  现代旅游者渴望去像西藏(Tibet)这样神秘的地方。你要早点去，否则那里也会人满为患。 <strong>(yearn for, mysterious, be flooded with)</strong></p>
+<p><span style="color:#87CEEB">Modern tourists yearn for mysterious places like Tibet. You </span>  <span style="color:#87CEEB">should go there before it is flooded with visitors.</span></p>
+<p><em>3</em>  现在我女儿会爬了。家里没有什么地方她没爬到过。我得时时跟在她后面捡玩具，烦死了。 <strong>(spot, be tired of)</strong></p>
+<p><span style="color:#87CEEB">Now that my daughter can crawl, there is not a spot in the house </span>  <span style="color:#87CEEB">she hasn’t reached. I’m just tired of picking up toys constantly after her.</span></p>
+<p><em>4</em>  最近，又要工作，又要照顾生病的孩子，我感到分身乏术。这份业务计划我能推迟点交吗？ <strong>(pull apart, turn in)</strong></p>
+<p><span style="color:#87CEEB">I felt pulled apart of late by work and taking care of my sick child. </span>  <span style="color:#87CEEB">Can I postpone turning in the business plan?</span></p>
+<p><em>5</em>  我不是有意引发争议，但我真觉得我们公司还是分拆成两个公司为好。 <strong>(provocative, split)</strong></p>
+<p><span style="color:#87CEEB">I don’t mean to be provocative, but I do think it’s better for our </span>  <span style="color:#87CEEB">company to split into two. </span></p>
+<p><em>6</em> 美国政府有义务优先购买在美国制造的产品，但外国公司仍有可能成为美国政府的供应商。例如，某产品在美国没有生产，这时美国政府将向海外购买。 <strong>(feel obligated to, for instance)</strong></p>
+<p><span style="color:#87CEEB">The US government feels obligated to prefer US-made products, but it’s still possible for a foreign company to be its supplier. For </span>  <span style="color:#87CEEB">instance, if a product is not made in the US, then the US government </span>  <span style="color:#87CEEB">will buy abroad.</span></p>
+<p><em>7</em>  我们得不断分析环境变化，看是否有必要改变原来的计划。__(analyze, original, program)__</p>
+<p><span style="color:#87CEEB">We must constantly analyze changes in the environment to see </span>  <span style="color:#87CEEB">if there is a need to change the original program.</span></p>
+<p><em>8</em>  你怎么解读中国政府的新“二孩”政策？这个政策是不是为了填补中国未来年轻人口的不足(shortage)？<strong>(interpretation, make up for)</strong></p>
+<p><span style="color:#87CEEB">What’s your interpretation of the Chinese government’s new </span>  <span style="color:#87CEEB">policy of allowing two children per family? Is it to make up for the shortage of young people in the future in China?</span></p>
+<hr>
+<h3><span id="unit5">UNIT5</span></h3><p><em>1</em>  如何控制住火箭的动力，是成功发射宇宙飞船的一个关键。<strong>(harness)</strong></p>
+<p><span style="color:#87CEEB">How to harness the power of the rockets is the key to the successful launch of a spaceship.</span></p>
+<p><em>2</em>  二十世纪见证了航空工业的成长。 <strong>(witness)</strong></p>
+<p><span style="color:#87CEEB">The 20th century witnessed the growth of the aviation industry.</span></p>
+<p><em>3</em>  第二次世界大战期间，美国需要大型运输机运送战争物资。<strong>(transportation)</strong></p>
+<p><span style="color:#87CEEB">During World War II, the United States needed giant cargo planes </span>  <span style="color:#87CEEB">for transportation of war materials.</span></p>
+<p><em>4</em>  电影“飞行者”( <em>The Aviator</em> )是根据霍华德·休斯的生平创作的。 <strong>(base … on)</strong></p>
+<p><span style="color:#87CEEB">The film </span><span style="color:#87CEEB"><em>The Aviator</em> </span> <span style="color:#87CEEB">is based on the life of Howard Hughes.</span></p>
+<p><em>5</em>  这位教授认为投入能效(energy efficiency)领域研究的钱应再多些。 <strong>(in the field of)</strong></p>
+<p><span style="color:#87CEEB">The professor thinks that more money should be invested in&#x2F;put </span>  <span style="color:#87CEEB">into research in the field of energy efficiency.</span></p>
+<p><em>6</em>  他们正在执行一项秘密任务。 <strong>(mission)</strong></p>
+<p><span style="color:#87CEEB">They are carrying out a secret mission.</span></p>
+<p><em>7</em>  “着重注意文章的内容，别担心单个词汇。”老师对学生们说。 <strong>(focus on, individual)</strong></p>
+<p><span style="color:#87CEEB">“Focus on the content of the article. Don’t worry about individual </span>  <span style="color:#87CEEB">words,” </span>  <span style="color:#87CEEB">said the teacher to the students.</span></p>
+<p><em>8</em>  万户的方案太冒险太原始了，不可能成功的。 <strong>(risky, primitive)</strong></p>
+<p><span style="color:#87CEEB">Wan </span>  <span style="color:#87CEEB">Hu’s</span>  <span style="color:#87CEEB"> plan was too risky and too primitive to be successful.</span></p>
+<hr>
+<h3><span id="unit6">UNIT6</span></h3><p><em>1</em>  纽约的创客集市汇聚了各年龄层次的发明者。 <strong>(get together)</strong></p>
+<p><span style="color:#87CEEB">The Maker Faire in New York got together inventors of all ages.</span></p>
+<p><em>2</em>  创客们展示了他们最新的作品。 <strong>(exhibit, creation)</strong></p>
+<p><span style="color:#87CEEB">Makers exhibited their latest creations.</span></p>
+<p><em>3</em>  工业化国家必须带头减少碳排放量(emissions)。 <strong>(industrialize)</strong></p>
+<p><span style="color:#87CEEB">Industrialized nations must take the lead in reducing their </span>  <span style="color:#87CEEB">carbon emissions.</span></p>
+<p><em>4</em>  如果有适当的工具和灵感(inspiration)，创客们有能力改变这个世界。 <strong>(capacity)</strong></p>
+<p><span style="color:#87CEEB">With the right tools and inspiration, makers have the capacity to change the world.</span></p>
+<p>_5_据我所知，他们正在秘密地制定一项计划。 <strong>(work on, in secret)</strong></p>
+<p><span style="color:#87CEEB">As far as I know, they are working on a project in secret.</span></p>
+<p><em>6</em>  这个小镇有着蓬勃发展的旅游产业和房地产市场。 <strong>(boom)</strong></p>
+<p><span style="color:#87CEEB">This town has a booming tourist industry and (a flourishing) real </span>  <span style="color:#87CEEB">estate market. </span></p>
+<p><em>7</em>  过去十年的数字化革命以一种前所未有的方式激发(stimulate)</p>
+<p>了人们的创造力。 <strong>(in a(n) … way)</strong></p>
+<p><span style="color:#87CEEB">In the last decade, the digital revolution has stimulated people’s </span>  <span style="color:#87CEEB">creativity in an unprecedented way.</span></p>
+<p><em>8</em>  在中国第一家正式的创客空间“新车间”里，创客们正鼓捣着各种各样的材料，如金属、塑料、电子元件等等。__(formal, tinker with, electronic component)__</p>
+<p><span style="color:#87CEEB">At </span>  <span style="color:#87CEEB">Xinchejian</span><span style="color:#87CEEB">, China’s first formal </span> <span style="color:#87CEEB">makerspace</span><span style="color:#87CEEB">, makers are tinkering </span>  <span style="color:#87CEEB">with all types of materials, such as metals, plastics and electronic </span>  <span style="color:#87CEEB">components.</span></p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2024 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+        <div>
+            备案号：
+            
+            <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">桂ICP备2024049894号</a>
+            
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

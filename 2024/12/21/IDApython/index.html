@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>Categories: 实用小技巧 | huanghunr&#39;s Blog</title>
+    <title>IDApy学习和花指令的初步学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -158,36 +162,20 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
-        
-        
-        
-        <span>
-            <a href="/categories/CTFNewStar2024-WP/" style="background: #ffa2c4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                CTFNewStar2024 WP
-            </a>
+            <div class="article">
+    <div>
+        <h1>IDApy学习和花指令的初步学习</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/12/21
         </span>
         
-        
-        
-        <span>
-            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                学习资料
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" style="background: #03a9f4">
+        <span class="category">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
@@ -196,102 +184,149 @@
         </span>
         
         
-        
-        <span>
-            <a href="/categories/%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                实用小技巧
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                    Re学习
+                </a>
+            </span>
+            
         </span>
-        
-        
-        
-        
-        
-        <span>
-            <a href="/categories/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B%E5%86%B3%E8%B5%9B/" style="background: #ffa2c4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                2024浙江省省赛决赛
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/%E7%AE%97%E6%B3%95/" style="background: #00bcd4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                算法
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/%E6%AF%94%E8%B5%9B/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                比赛
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/categories/%E5%AD%A6%E4%B9%A0/" style="background: #00a596">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                学习
-            </a>
-        </span>
-        
         
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2024/11/8</div>
-            <a href="/2024/11/08/%E5%85%B3%E4%BA%8E%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%A7%A3%E9%99%A4%E5%8F%AA%E8%83%BD%E5%A4%8D%E5%88%B6/">
-                <h3>学习通粘贴的解决办法之一</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        实用小技巧
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/" style="color: #00a596">
-                            实用小技巧
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#%E7%94%A8vscode%E7%BC%96%E5%86%99idapython">用VScode编写IDApython</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0">函数</a><ul>
+<li><a href="#idcget_inf_attr-%E8%8E%B7%E5%8F%96%E5%B1%9E%E6%80%A7">idc.get_inf_attr() 获取属性</a><ul>
+<li><a href="#%E5%8F%82%E6%95%B0">参数</a></li>
+<li><a href="#%E8%BF%94%E5%9B%9E%E5%80%BC">返回值</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E7%9A%84-idcinf_-%E5%B8%B8%E9%87%8F">常用的 <code>idc.INF_</code> 常量</a></li>
+</ul>
+</li>
+<li><a href="#idc_idc%E5%BA%93%E8%8E%B7%E5%BE%97%E5%B1%9E%E6%80%A7">idc_idc库获得属性</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<blockquote>
+<p>ida版本为IDA9.0</p>
+</blockquote>
+<h2><span id="用vscode编写idapython">用VScode编写IDApython</span></h2><ul>
+<li>找到这个项目<a target="_blank" rel="noopener" href="https://github.com/ioncodes/idacode">IDAcode</a>,把下来的文件加到你ida的plugins文件夹中。</li>
+<li>修改idacode_utils&#x2F;settings.py中的PYTHON路径为本地的python路径</li>
+<li>在本地中用控制台安装依赖</li>
+</ul>
+<pre><code class="s">python -m pip install --user debugpy tornado
+</code></pre>
+<ul>
+<li>在VScode中安装IDAcode插件</li>
+<li>在VScode按CTRL+Shift+P输入”Open User Settings(JSON)”打开后添加如下代码。</li>
+</ul>
+<pre><code class="js">&quot;python.autoComplete.extraPaths&quot;: [
+        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径
+     ],
+     &quot;python.analysis.extraPaths&quot;: [
+        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径
+   ],
+</code></pre>
+<ul>
+<li>在VScode按CTRL+Shift+P，搜索ida即可找到想要的功能。</li>
+<li>在ida插件中打开idacode，显示Listening on 127.0.0.1:7065即成功。</li>
+<li>如果出现找不到依赖的报错，请在ida目录下找到并运行idapyswitch.exe，选择同样的python解释器(切换解释器可能会导致库的缺失，请自行安装缺失的库)。</li>
+<li>如果写的命令发到ida执行报错，请在VScode中选择同样的python解释器，不要用虚拟解释器。</li>
+</ul>
+<h2><span id="函数">函数</span></h2><pre><code class="python">idc.get_screen_ea()      #获取当前光标的地址
+idc.here()               #获取当前光标的地址
+idc.get_segm_name()      #(addr)-&gt;(str)获取当前的地址的区段名
+idc.print_insn_mnem()    #(addr)-&gt;(str)获取地址的助记符(操作符)
+idc.print_operand()  #(addr,ptr)-&gt;(str)获取操作数(被操作的数据),ptr为操作数的序号
+</code></pre>
+<h3><span id="idcget_inf_attr-获取属性">idc.get_inf_attr() 获取属性</span></h3><blockquote>
+<p>[!NOTE]</p>
+<p>在ida9中idc库似乎有些内容被弃用，我们可以用ida_ida库实现相同的功能。官方也说明了idc库中的某些内容可能在将来的版本中被弃用。”This file is subject to change without any notice. Future versions of IDA may use other definitions.”</p>
+<p>[]: <a target="_blank" rel="noopener" href="https://python.docs.hex-rays.com/namespaceidc.html">https://python.docs.hex-rays.com/namespaceidc.html</a>	“hex-rays”</p>
+</blockquote>
+<p><code>idc.get_inf_attr()</code> 是 IDAPython 中一个用于获取全局信息的函数。它可以用来访问 IDA 数据库的各种设置和属性。</p>
+<pre><code class="python">idc.get_inf_attr(attr)
+</code></pre>
+<h4><span id="参数">参数</span></h4><ul>
+<li><code>attr</code>：一个常量，表示需要获取的属性。常量通常以 <code>idc.INF_</code> 开头。</li>
+</ul>
+<h4><span id="返回值">返回值</span></h4><ul>
+<li>返回对应属性的值。不同的属性类型可能会返回整数、字符串或其他数据。</li>
+</ul>
+<hr>
+<h4><span id="常用的-idcinf_-常量">常用的 <code>idc.INF_</code> 常量</span></h4><table>
+<thead>
+<tr>
+<th><strong>常量</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>idc.INF_MIN_EA</code></td>
+<td>返回程序的最小地址。</td>
+</tr>
+<tr>
+<td><code>idc.INF_MAX_EA</code></td>
+<td>返回程序的最大地址。</td>
+</tr>
+<tr>
+<td><code>idc.INF_FILETYPE</code></td>
+<td>返回文件类型（整型，参考 <code>ida_loader.FILE_</code> 常量）。</td>
+</tr>
+<tr>
+<td><code>idc.INF_START_IP</code></td>
+<td>返回程序的入口点（如 <code>_start</code> 的地址）。</td>
+</tr>
+<tr>
+<td><code>idc.INF_BIN_PREFIX_SIZE</code></td>
+<td>返回 IDA 设置的二进制文件加载时的前缀大小。</td>
+</tr>
+<tr>
+<td><code>idc.INF_LFLAGS</code></td>
+<td>返回加载标志（如加载时的选项）。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h3><span id="idc_idc库获得属性">idc_idc库获得属性</span></h3><blockquote>
+<p>[!NOTE]</p>
+<p>用ida_ida库替换idc库的idc.get_inf_attr(attr)，这是在高版本的实现方式。</p>
+</blockquote>
+<pre><code class="python">import ida_ida as ida
+ida.inf_get_max_ea()  #()-&gt;(程序最大地址)
+ida.inf_get_min_ea()  #()-&gt;(程序最小地址)
+ida.inf_get_start_ip() #()-&gt;(start的地址/入口点)
+
+</code></pre>
+
     </div>
+    
+    
+    
+    
+    
+    
     
 </div>
 
@@ -330,6 +365,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>
