@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     C语言学习
                 </a>
             </span>
@@ -429,11 +429,13 @@ typedef struct chain &#123;   //定义一个结构体定义一个链表的一个
 chain* appendchain(chain* head, int value);   //在末尾添加一个节点
 int initchain(chain* ptr, int len);           //初始化一个链表
 int printchain(chain* header);                //输出链表
+int reprintchain(Student* chain);  //从尾部节点往前输出,逆向输出
 int delchain(chain* header, int value);        //删除一个节点
 int addchain(chain* header, int value, int value1, int value2);  //添加一个节点
 chain* search(chain* header, int value);       //搜素一个节点数据
 int exchange(Student* chain1, Student* chain2);  //交换相邻两个节点
 int range(Student* stu);  //冒泡排序，交换指针，也可以交换数据
+
 
 int main() &#123;
 
@@ -480,6 +482,30 @@ int printchain(chain* header) &#123;
             return 0;
         &#125;
         header = header-&gt;after;
+    &#125;
+&#125;
+
+int reprintchain(Student* chain) &#123;  //从尾部节点往前输出
+    Student* tmp =chain;   //链表头节点没有数据从下一个节点开始
+    chain = chain-&gt;next;   //如果头节点有数据请删除前两行
+    if (chain == NULL)
+        return 0;
+    while (chain-&gt;next != NULL) &#123;
+        chain = chain-&gt;next;
+    &#125;
+    while (1) &#123;
+        if (chain == tmp)
+            return 0;
+        printf(&quot;%d\t%s\t%d\t%d\t%d&quot;,
+            chain-&gt;no,
+            chain-&gt;name,
+            chain-&gt;chinese,
+            chain-&gt;math,
+            chain-&gt;english
+        );
+        if (chain-&gt;all &gt;= 0) printf(&quot;\t%d\n&quot;, chain-&gt;all);
+        else printf(&quot;\n&quot;);
+        chain = chain-&gt;last;
     &#125;
 &#125;
 
