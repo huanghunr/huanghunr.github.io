@@ -402,8 +402,21 @@ int main() &#123;
 <p>这个基本结构适用于大多数链表实现，可以在此基础上进一步扩展，如实现插入、删除等操作。</p>
 <hr>
 <p>我们自己写一个双向链表来总结一下知识点，并作为常用脚本。</p>
+<p>链表排序: </p>
+<p>[]: <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35644234/article/details/53222603">https://blog.csdn.net/qq_35644234/article/details/53222603</a></p>
 <pre><code class="c">#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
+
+typedef struct Student &#123;
+    struct Student* last;
+    struct Student* next;
+    int  no;
+    char name[16];
+    int  chinese;
+    int  math;
+    int  english;
+    int all;
+&#125; Student;
 
 typedef struct chain &#123;   //定义一个结构体定义一个链表的一个单位的结构
     struct chain* before;  //上一个节点的地址
@@ -419,7 +432,8 @@ int printchain(chain* header);                //输出链表
 int delchain(chain* header, int value);        //删除一个节点
 int addchain(chain* header, int value, int value1, int value2);  //添加一个节点
 chain* search(chain* header, int value);       //搜素一个节点数据
-
+int exchange(Student* chain1, Student* chain2);  //交换相邻两个节点
+int range(Student* stu);  //冒泡排序，交换指针，也可以交换数据
 
 int main() &#123;
 
@@ -510,6 +524,54 @@ chain* search(chain* header, int value) &#123;
         flag++;
     &#125;
     return header;
+&#125;
+
+int exchange(Student* chain1, Student* chain2) &#123;   //交换两个节点
+    if (chain1-&gt;next != chain2 || chain2-&gt;last != chain1) &#123;   //判断节点是否相邻
+        if (chain1-&gt;next != chain2 || chain2-&gt;last != chain1) &#123;  //不相邻
+        if (chain1-&gt;last) chain1-&gt;last-&gt;next = chain2;
+        if (chain1-&gt;next) chain1-&gt;next-&gt;last = chain2;
+        if (chain2-&gt;next) chain2-&gt;next-&gt;last = chain1;
+        if (chain2-&gt;last)chain2-&gt;last-&gt;next = chain1;
+        Student tmp;
+        tmp.last = chain1-&gt;last;
+        tmp.next = chain1-&gt;next;
+        chain1-&gt;next = chain2-&gt;next;
+        chain1-&gt;last = chain2-&gt;last;
+
+        chain2-&gt;last = tmp.last;
+        chain2-&gt;next = tmp.next;
+        return 0;
+    &#125; 
+    //相邻
+    if (chain1-&gt;last) chain1-&gt;last-&gt;next = chain2;  //确保头指针和尾部指针的正常，修正两节点旁边的节点
+    if (chain2-&gt;next) chain2-&gt;next-&gt;last = chain1;
+    Student tmp;
+    tmp.last = chain1-&gt;last;   //交换指针
+    chain1-&gt;next = chain2-&gt;next;
+    chain1-&gt;last = chain2;
+
+    chain2-&gt;last = tmp.last;
+    chain2-&gt;next = chain1;
+    return 0;
+&#125;
+
+int range(Student* stu) &#123;   //冒泡排序，交换指针，也可以交换数据
+    Student* tmp = stu-&gt;next;  //这里我的头指针没有数据，所以从下一个节点开始排序
+    int flag = 0;
+    do &#123;
+        flag = 0;   //记录是否产生交换
+        tmp = stu-&gt;next;
+        while (tmp != NULL &amp;&amp; tmp-&gt;next != NULL) &#123;  //遍历到链表末尾
+            if (tmp-&gt;all &lt; tmp-&gt;next-&gt;all) &#123;
+                exchange(tmp, tmp-&gt;next);  //交换
+                flag = 1;
+            &#125;
+            tmp = tmp-&gt;next;
+        &#125;
+
+    &#125; while (flag);  //若未产生交换，排序完毕
+    return 0;
 &#125;
 </code></pre>
 

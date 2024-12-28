@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>IDApy学习和花指令的初步学习 | huanghunr&#39;s Blog</title>
+    <title>IDApy的初步学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,7 +164,7 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>IDApy学习和花指令的初步学习</h1>
+        <h1>IDApy的初步学习</h1>
     </div>
     <div class="info">
         <span class="date">
@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     Re学习
                 </a>
             </span>
@@ -217,6 +217,7 @@
 </ul>
 </li>
 <li><a href="#idc_idc%E5%BA%93%E8%8E%B7%E5%BE%97%E5%B1%9E%E6%80%A7">idc_idc库获得属性</a></li>
+<li><a href="#%E5%8E%BB%E8%8A%B1%E6%8C%87%E4%BB%A4">去花指令</a></li>
 </ul>
 </li>
 </ul>
@@ -251,7 +252,8 @@
 <li>如果出现找不到依赖的报错，请在ida目录下找到并运行idapyswitch.exe，选择同样的python解释器(切换解释器可能会导致库的缺失，请自行安装缺失的库)。</li>
 <li>如果写的命令发到ida执行报错，请在VScode中选择同样的python解释器，不要用虚拟解释器。</li>
 </ul>
-<h2><span id="函数">函数</span></h2><pre><code class="python">idc.get_screen_ea()      #获取当前光标的地址
+<h2><span id="函数">函数</span></h2><pre><code class="python">import idc
+idc.get_screen_ea()      #获取当前光标的地址
 idc.here()               #获取当前光标的地址
 idc.get_segm_name()      #(addr)-&gt;(str)获取当前的地址的区段名
 idc.print_insn_mnem()    #(addr)-&gt;(str)获取地址的助记符(操作符)
@@ -261,6 +263,7 @@ idc.print_operand()  #(addr,ptr)-&gt;(str)获取操作数(被操作的数据),pt
 <p>[!NOTE]</p>
 <p>在ida9中idc库似乎有些内容被弃用，我们可以用ida_ida库实现相同的功能。官方也说明了idc库中的某些内容可能在将来的版本中被弃用。”This file is subject to change without any notice. Future versions of IDA may use other definitions.”</p>
 <p>[]: <a target="_blank" rel="noopener" href="https://python.docs.hex-rays.com/namespaceidc.html">https://python.docs.hex-rays.com/namespaceidc.html</a>	“hex-rays”</p>
+<p>对于一些ida90的兼容性问题可参考: <a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1957552-1-1.html">https://www.52pojie.cn/thread-1957552-1-1.html</a></p>
 </blockquote>
 <p><code>idc.get_inf_attr()</code> 是 IDAPython 中一个用于获取全局信息的函数。它可以用来访问 IDA 数据库的各种设置和属性。</p>
 <pre><code class="python">idc.get_inf_attr(attr)
@@ -318,6 +321,62 @@ ida.inf_get_max_ea()  #()-&gt;(程序最大地址)
 ida.inf_get_min_ea()  #()-&gt;(程序最小地址)
 ida.inf_get_start_ip() #()-&gt;(start的地址/入口点)
 
+</code></pre>
+<h3><span id="去花指令">去花指令</span></h3><pre><code class="python">import idautils
+import idc
+import idaapi
+
+def nop_jzjnz(start_addr,endaddr,pattern):
+    length =len(pattern)
+    flag = 0
+    while start_addr &lt; endaddr:
+        getbytes =idc.get_bytes(start_addr,length) #获取指定范围内指定地址的字节码并返回成列表
+        if(getbytes[0]==pattern[0] and getbytes[2]==pattern[2] and getbytes[4] == pattern[4] ):  #匹配花指令模板
+            flag = 1
+            for i in range(length):        
+                idc.patch_byte(start_addr + i,0x90)  #nop
+            print(f&quot;success! nop 0x&#123;hex(start_addr)&#125; to 0x&#123;hex(start_addr + length -1)&#125; length:&#123;length&#125;&quot;)
+            start_addr += length - 1
+        start_addr += 1
+    if(flag == 0):
+        print(&quot;Not find!!!&quot;)
+        
+def nop_range(start_addr,end_addr):
+    while(start_addr &lt;= end_addr):
+        idc.patch_byte(start_addr,0x90)
+        start_addr += 1
+    print(f&quot;success! nop 0x&#123;start_addr&#125; to 0x&#123;end_addr&#125;&quot;)
+
+def remount(): #重建光标所指内的函数
+    try:
+        addr = idc.get_screen_ea()
+        func = idaapi.get_func(addr)
+        func_start = func.start_ea
+        idaapi.del_func(func_start)
+        idaapi.add_func(func_start)
+        print(f&quot;success!! remount the func in 0X&#123;func&#125;&quot;)
+    except Exception as a:
+        print(&quot;some errors occur, remount falrue&quot;)
+        print(f&quot;error : &#123;a&#125;&quot;)
+
+start_addr = 0x0401020   
+end_addr = 0x040122F    
+
+pattern_jzjnz1 = [0x74, 0x00, 0x75, 0x00, 0xE8] # call
+pattern_jzjnz2 = [0x74, 0x00, 0x75, 0x00, 0xE9] # jmp
+
+
+#nop_jzjnz(start_addr,end_addr,pattern_jzjnz1)
+#nop_range(0x04010C3,0x04010CB)
+#remount()
+</code></pre>
+<pre><code class="python">idc.get_bytes() #获取指定范围内指定地址的字节码并返回成列表
+
+idc.patch_byte()  #修改地址字节码
+
+idaapi.get_func(addr) #输入一个在函数内的地址，返回一个函数对象，包含了函数的各种信息，可用dir()查看可用属性
+idaapi.del_func(func_start) #输入地址，删除一个函数
+idaapi.add_func(func_start) #输入地址，建立一个函数
 </code></pre>
 
     </div>
