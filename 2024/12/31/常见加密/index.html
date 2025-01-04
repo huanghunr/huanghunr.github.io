@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     Re学习
                 </a>
             </span>
@@ -248,11 +248,15 @@
 <li><a href="#%E5%8A%A0%E8%A7%A3%E5%AF%86%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81">加解密实现代码</a></li>
 </ul>
 </li>
-<li><a href="#crc64">CRC64</a></li>
+<li><a href="#crc64">CRC64</a><ul>
+<li><a href="#%E8%A7%A3%E5%AF%86%E8%84%9A%E6%9C%AC%E7%89%B9%E5%BE%81">解密脚本(特征)</a></li>
+</ul>
+</li>
 <li><a href="#hash">Hash</a><ul>
 <li><a href="#md5%E7%89%B9%E5%BE%81%E5%B8%B8%E9%87%8F">MD5特征常量</a></li>
 </ul>
 </li>
+<li><a href="#%E5%B0%8F%E7%BB%83%E4%B9%A0">小练习</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -2312,6 +2316,53 @@ if __name__ == &#39;__main__&#39;:
 <p>循环冗余校验（Cyclic Redundancy Check， CRC）是一种根据网络数据包或计算机文件等数据产生简短固定位数校验码的一种信道编码技术，主要用来检测或校验数据传输或者保存后可能出现的错误。</p>
 <p>本质就是一种多项式除法，把原二进制与一个另一个二进制以多项式的形式相除，最后把余数添加到数据末尾用于检验。</p>
 <p>我们可以用赛博厨师计算crc的值。</p>
+<h4><span id="解密脚本特征">解密脚本(特征)</span></h4><pre><code class="py">import struct
+
+
+def shld(a1, a2):
+    return ((a1 &lt;&lt; 1) | (a2 &gt;&gt; 31)) &amp; 0xffffffff
+
+
+def shl(a1):
+    return (a1 &lt;&lt; 1) &amp; 0xffffffff
+
+
+def shr(a1):
+    return (a1 &gt;&gt; 1) &amp; 0xffffffff
+
+
+def de(buf):
+    for i in range(0, 10, 2):
+        ta = buf[i]
+        tb = buf[i + 1]
+        for k in range(64):
+
+            if (ta &amp; 1):
+                ta = (0x54AA4A9 ^ ta) &amp; 0xffffffff
+                ta = shr(ta) | ((tb &amp; 1) &lt;&lt; 31)
+
+                tb = shr(tb) | (1 &lt;&lt; 31)
+            else:
+                ta = shr(ta) | ((tb &amp; 1) &lt;&lt; 31)
+
+                tb = shr(tb)
+        buf[i] = ta
+        buf[i + 1] = tb
+
+
+def main():
+    flag = [0x149b24c1, 0xbc17996, 0x192ce051, 0x1666bae6, 0xf0f13109, 0x713168a1, 0xcc4fa796, 0x9d5344d9, 0x623329f6, 0x5e22b5da]
+    de(flag)
+    for i in range(len(flag)):
+        print(hex(flag[i]), end=&#39;, &#39;)
+    print()
+    flag = b&#39;&#39;.join(struct.pack(&quot;&lt;I&quot;, i) for i in flag)
+    print(flag)
+
+
+if __name__ == &#39;__main__&#39;:
+    main()
+</code></pre>
 <h2><span id="hash">Hash</span></h2><ul>
 <li>数据摘要算法，可以理解为有损压缩</li>
 <li>因此，hash不可逆，所以如果解题遇到hash基本以算法识别+撞库为主</li>
@@ -2322,6 +2373,49 @@ if __name__ == &#39;__main__&#39;:
 0EFCDAB89h
 98BADCFEh 
 10325476h
+</code></pre>
+<h2><span id="小练习">小练习</span></h2><p>第一个加密函数是一个魔改xtea，特征是delta和加密代码。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250104205509436.png" alt="image-20250104205509436"></p>
+<p>第二个是一个rc4，特征明显，没有魔改，密钥在函数外面的上一层</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250104205717563.png" alt="image-20250104205717563"></p>
+<p>下一个是base64，特征是一个表和上面的除3分组。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250104205838323.png" alt="image-20250104205838323"></p>
+<p>在函数的外围我们可以拿到base64的密文，先进行base64解码，再解rc4.</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250104210042553.png" alt="image-20250104210042553"></p>
+<p>现在我们来解这个魔改的xtea。这个xtea加密把7个四字节的块按两个一组的方式轮流加密到最后一个数字。分析发现delta的初始值和加密数据的索引有关，且当v4为33时才会结束，也就是说每一轮加密了33次，这样我们就得知了初始的delta值，且delta相加的位置也换到了最后。在第一个行密代码中多异或了一个v3，也就是delta。大概逻辑就是这样。解密时我们先把数据转换一下端序，并分成一个数组的形式以便我们使用（脚本在下方）。因为key太过于明显，且第一次解密错误，我们动调看一下，发现key被修改，我们用修改的key就可以解密成功，最后我们在转一下端序输出就可以得到结果。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include&lt;stdint.h&gt;
+
+void decipher(unsigned int num_rounds, uint32_t *v, uint32_t const key[4], uint32_t j) &#123;
+    unsigned int i;
+    uint32_t v0 = v[0], v1 = v[1], delta = 0xA852C66, sum = delta * num_rounds + (j) * delta;
+
+    for (i = 0; i &lt; num_rounds; i++) &#123;
+        sum -= delta;
+        v1 -= (((v0 &lt;&lt; 4) ^ (v0 &gt;&gt; 5)) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3]);
+        v0 -= sum ^ (((v1 &lt;&lt; 4) ^ (v1 &gt;&gt; 5)) + v1) ^ (sum + key[sum &amp; 3]);
+    &#125;
+    v[0] = v0; v[1] = v1;
+&#125;
+
+int main() &#123;
+    uint32_t key[4] = &#123;
+    0x00000002, 0x00000003, 0x00000004, 0x00000001
+    &#125;;
+    uint32_t m[] = &#123; 0xc54cd766, 0x862d6760, 0x5e051928, 0xa0fbb057, 0x1e656482, 0xe98f9651, 0xde837c45 &#125;;
+    uint32_t m2[] = &#123; 0x66d74cc5,0x60672d86,0x2819055e,0x57b0fba0,0x8264651e,0x51968fe9,0x457c83de &#125;;
+
+    for (int i = 5; i &gt;= 0; i--) &#123;
+        decipher(33, &amp;m2[i], key, i);
+    &#125;
+    for (int i = 0; i &lt; 7; i++) &#123;
+        for (int m = 3; m &gt;=0; m--) &#123;
+            printf(&quot;%c&quot;, (m2[i] &gt;&gt; (8 *m)) &amp; 0xff);
+        &#125;
+    &#125;
+
+&#125;
 </code></pre>
 
     </div>
