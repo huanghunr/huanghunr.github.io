@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #00bcd4">
+                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #00a596">
                     2024浙江省省赛 Writeup
                 </a>
             </span>
@@ -222,7 +222,14 @@
 
 </div>
 
-<h1><span id="初赛">初赛</span></h1><h2><span id="midre">Midre</span></h2><p>去掉花指令后，可以看到主函数。首先是一个异或”what’s this”，后面是一个加密函数。</p>
+<h1><span id="初赛">初赛</span></h1><h2><span id="midre">Midre</span></h2><p>先去主函数的花</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153707030.png" alt="image-20250105153707030"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153813904.png" alt="image-20250105153813904"></p>
+<p>nop完后发现还有问题，我们在下面的代码中按c试探一下，发现从第二个字节码开始就可以恢复为正常函数，所以还要一个垃圾指令，nop掉后即可看到主函数逻辑。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105154053668.png" alt="image-20250105154053668"></p>
+<p>加密函数里面还有花指令，nop掉后即可看到完整代码。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105154237983.png" alt="image-20250105154237983"></p>
+<p>去掉花指令后，可以看到主函数。首先是一个异或”what’s this”，后面是一个加密函数。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105152745694.png" alt="image-20250105152745694"></p>
 <p>在这个加密函数里面有一个比较，可以找到密文。前面有一个函数，像是在按密钥的长度决定加密的轮数，再看加密函数的参数，像极了一个AES加密，且有两个常量’5855eab53a2275d3’和’b051a57d6d05b393’，推测一个是密钥一个是IV。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105152911268.png" alt="image-20250105152911268"></p>
