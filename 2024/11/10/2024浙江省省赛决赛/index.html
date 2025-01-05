@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>2024浙江省省赛决赛 Writeup | huanghunr&#39;s Blog</title>
+    <title>2024浙江省省赛 Writeup | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,7 +164,7 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>2024浙江省省赛决赛 Writeup</h1>
+        <h1>2024浙江省省赛 Writeup</h1>
     </div>
     <div class="info">
         <span class="date">
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B%E5%86%B3%E8%B5%9B-Writeup/" style="color: #03a9f4">
-                    2024浙江省省赛决赛 Writeup
+                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #00bcd4">
+                    2024浙江省省赛 Writeup
                 </a>
             </span>
             
@@ -208,14 +208,28 @@
 <!-- toc -->
 
 <ul>
+<li><a href="#%E5%88%9D%E8%B5%9B">初赛</a><ul>
+<li><a href="#midre">Midre</a></li>
+</ul>
+</li>
+<li><a href="#%E5%86%B3%E8%B5%9B">决赛</a><ul>
 <li><a href="#reverse1">reverse1</a></li>
 <li><a href="#reverse2">reverse2</a></li>
+</ul>
+</li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<h2><span id="reverse1">reverse1</span></h2><p>两个rc4加密，一个是原版另一个是被修改的版本。加密过程就是用key1先加密key，再用加密的key去加密flag。所以按照这个逻辑来逆向即可解密。rc4原版加密是对称加密，而修改版的rc4只要把减号改为加号就行。</p>
+<h1><span id="初赛">初赛</span></h1><h2><span id="midre">Midre</span></h2><p>去掉花指令后，可以看到主函数。首先是一个异或”what’s this”，后面是一个加密函数。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105152745694.png" alt="image-20250105152745694"></p>
+<p>在这个加密函数里面有一个比较，可以找到密文。前面有一个函数，像是在按密钥的长度决定加密的轮数，再看加密函数的参数，像极了一个AES加密，且有两个常量’5855eab53a2275d3’和’b051a57d6d05b393’，推测一个是密钥一个是IV。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105152911268.png" alt="image-20250105152911268"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153327594.png" alt="image-20250105153327594"></p>
+<p>直接进行解密即可得到结果</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153250922.png" alt="image-20250105153250922"></p>
+<h1><span id="决赛">决赛</span></h1><h2><span id="reverse1">reverse1</span></h2><p>两个rc4加密，一个是原版另一个是被修改的版本。加密过程就是用key1先加密key，再用加密的key去加密flag。所以按照这个逻辑来逆向即可解密。rc4原版加密是对称加密，而修改版的rc4只要把减号改为加号就行。</p>
 <blockquote>
 <p>在比赛时这题并没有写出来，脚本最后的结果一直是乱码，后面复盘时发现了一个关键的东西。当盒子是char类型时，只要盒子里的元素被当作下标时，就要把这个下标转成(unsigned char)，如果不转的话在后面的下标就是一个负数。当盒子是unsigned char类型时，(box[v5] + box[v6])作为下标时要转化为(unsigned char)，如果不转化的话(box[v5] + box[v6])就有可能会超过下标255。所以box[(unsigned char)(box[v5] + box[v6])]实际上就是box[(box[v5] + box[v6])%256]。</p>
 </blockquote>

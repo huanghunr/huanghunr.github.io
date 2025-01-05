@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>强网杯青少年赛选拔赛re Writeup | huanghunr&#39;s Blog</title>
+    <title>pyhon和cython逆向学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>强网杯青少年赛选拔赛re Writeup</h1>
+        <h1>pyhon和cython逆向学习</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/11/24
+            2025/1/4
         </span>
         
         <span class="category">
-            <a href="/categories/%E6%AF%94%E8%B5%9B/">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                比赛
+                Re基础学习
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%BC%BA%E7%BD%91%E6%9D%AF%E9%9D%92%E5%B0%91%E5%B9%B4%E8%B5%9B%E9%80%89%E6%8B%94%E8%B5%9Bre-Writeup/" style="color: #03a9f4">
-                    强网杯青少年赛选拔赛re Writeup
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                    Re学习
                 </a>
             </span>
             
@@ -208,39 +208,40 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#flip_over">Flip_over</a></li>
+<li><a href="#magic%E5%A4%B4">magic头</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1_9v117ykQEk9BlDtg_ouew">原题提取码：95lk </a></p>
-<h2><span id="flip_over">Flip_over</span></h2><p>看java层主逻辑在validateAndEncrypt()函数里，在so文件里找到这个函数，大概逻辑的是取flagflag这个字符串作为密钥把”a4c3f8927d9b8e6d6e483fa2cd0193b0a6e2f19c8b47d5a8f3c7a91e8d4b9f67”先进行RC4加密再进行DES_ECB加密,最后再与0x21和密后的数据进行异或后，与密文比较。解密时提取数据，把异或逆一下，直接用赛博厨师解密。</p>
-<blockquote>
-<p>值得注意的是，我字自己了一个脚本用于获取异或的数据，然后我发现当c语言输出到01 00这类只有一位的十六进制数时，会省略掉前面的0，在用这一大串密钥异或时默认是两位一字节，如果没有前面的0，那么密钥就是错误的，所以我们要把0添加进去。如下面的注释。或者我们在输出十六进制数据时用空格隔开，这在赛博厨师里时不影响的。还有一种解决方案就是用”%.2x”的格式输出，指定输出2个十六进制数。</p>
-</blockquote>
-<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E5%BC%BA%E7%BD%91/Snipaste_2024-11-24_16-06-47.png"></p>
-<pre><code class="c">#include &lt;stdio.h&gt;
+<p>反编译pyc文件时可能要修复magic头</p>
+<h2><span id="magic头">magic头</span></h2><pre><code>    MAGIC_1_0 = 0x00999902,
+    MAGIC_1_1 = 0x00999903, /* Also covers 1.2 */
+    MAGIC_1_3 = 0x0A0D2E89,
+    MAGIC_1_4 = 0x0A0D1704,
+    MAGIC_1_5 = 0x0A0D4E99,
+    MAGIC_1_6 = 0x0A0DC4FC,
 
-unsigned char data[] = &#123; 0x59,0x15,0xc1,0x3f,0x40,0x9a,0x7a,0xe7,0xa6,0x8b,0xb6,0xe3,0xee,0x0d,0x19,0x6d,0xb7,
-0x6d,0xca,0xe6,0xda,0x5f,0x0d,0x4b,0xd6,0x0a,0xb2,0xde,0xad,0xaa,0x95,0xeb,0x85,0xb7,0x77,0xc3,0x10,0xbb,0xcf,
-0xce,0xf7,0xd2,0x22,0xc9,0xc4,0xf9,0xfc,0xfb,0xab,0x32,0xea,0x31,0x81,0x55,0xaf,0x79,0x52,0x8e,0x80,0xaf,0xc3,
-0x18,0x60,0x50,0xf1,0xd8,0x40,0xbb,0xfc,0x1b,0x89,0xa6 &#125;;//赛博厨师解密的数据.
+    MAGIC_2_0 = 0x0A0DC687,
+    MAGIC_2_1 = 0x0A0DEB2A,
+    MAGIC_2_2 = 0x0A0DED2D,
+    MAGIC_2_3 = 0x0A0DF23B,
+    MAGIC_2_4 = 0x0A0DF26D,
+    MAGIC_2_5 = 0x0A0DF2B3,
+    MAGIC_2_6 = 0x0A0DF2D1,
+    MAGIC_2_7 = 0x0A0DF303,
 
-int main() &#123;
-   unsigned long long a[] = &#123; 0xF462D91A7981581E, 0x780001A9A6A79EE3,0x47141FC8F3C62DA6, 0xAFD0BEA1CBF14F95,0x89DDAB508133AF93,0x8EE2 &#125;;
-   unsigned char result[42];
-   for (int i = 0; i &lt; 42; i++) &#123;
-       printf(&quot;%x,&quot;, *((unsigned char*)a + i));
-       result[i] = *((unsigned char*)a + i) ^ 0x21 ^ data[i];
-   &#125;
-   for (int i = 0; i &lt; 42; i++) &#123;
-       printf(&quot;%c&quot;, *((unsigned char*)result + i));
-   &#125;
-
-   //1e5881791ad962f4e39ea7a6a9 1 0 78a62dc6f3c81f1447954ff1cba1bed0af93af338150abdd89e28e  //输出结果
-   //1e5881791ad962f4e39ea7a6a9 01 00 78a62dc6f3c81f1447954ff1cba1bed0af93af338150abdd89e28e  //异或要用到的结果
-&#125;
+    MAGIC_3_0 = 0x0A0D0C3A,
+    MAGIC_3_1 = 0x0A0D0C4E,
+    MAGIC_3_2 = 0x0A0D0C6C,
+    MAGIC_3_3 = 0x0A0D0C9E,
+    MAGIC_3_4 = 0x0A0D0CEE,
+    MAGIC_3_5 = 0x0A0D0D16,
+    MAGIC_3_5_3 = 0x0A0D0D17,
+    MAGIC_3_6 = 0x0A0D0D33,
+    MAGIC_3_7 = 0x0A0D0D42,
+    MAGIC_3_8 = 0x0A0D0D55,
+    MAGIC_3_9 = 0x0A0D0D61,
 </code></pre>
 
     </div>
