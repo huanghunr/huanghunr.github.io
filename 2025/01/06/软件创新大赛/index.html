@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>强网杯青少年赛选拔赛re Writeup | huanghunr&#39;s Blog</title>
+    <title>软件创新大赛re | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>强网杯青少年赛选拔赛re Writeup</h1>
+        <h1>软件创新大赛re</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/11/24
+            2025/1/6
         </span>
         
         <span class="category">
-            <a href="/categories/%E6%AF%94%E8%B5%9B/">
+            <a href="/categories/%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%8E%B0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                比赛
+                比赛复现
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%BC%BA%E7%BD%91%E6%9D%AF%E9%9D%92%E5%B0%91%E5%B9%B4%E8%B5%9B%E9%80%89%E6%8B%94%E8%B5%9Bre-Writeup/" style="color: #00a596">
-                    强网杯青少年赛选拔赛re Writeup
+                <a href="/tags/%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%8E%B0wp/" style="color: #03a9f4">
+                    比赛复现wp
                 </a>
             </span>
             
@@ -207,41 +207,52 @@
 
 <!-- toc -->
 
-<ul>
-<li><a href="#flip_over">Flip_over</a></li>
-</ul>
+
+
 <!-- tocstop -->
 
 </div>
 
-<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1_9v117ykQEk9BlDtg_ouew">原题提取码：95lk </a></p>
-<h2><span id="flip_over">Flip_over</span></h2><p>看java层主逻辑在validateAndEncrypt()函数里，在so文件里找到这个函数，大概逻辑的是取flagflag这个字符串作为密钥把”a4c3f8927d9b8e6d6e483fa2cd0193b0a6e2f19c8b47d5a8f3c7a91e8d4b9f67”先进行RC4加密再进行DES_ECB加密,最后再与0x21和密后的数据进行异或后，与密文比较。解密时提取数据，把异或逆一下，直接用赛博厨师解密。</p>
-<blockquote>
-<p>值得注意的是，我字自己了一个脚本用于获取异或的数据，然后我发现当c语言输出到01 00这类只有一位的十六进制数时，会省略掉前面的0，在用这一大串密钥异或时默认是两位一字节，如果没有前面的0，那么密钥就是错误的，所以我们要把0添加进去。如下面的注释。或者我们在输出十六进制数据时用空格隔开，这在赛博厨师里时不影响的。还有一种解决方案就是用”%.2x”的格式输出，指定输出2个十六进制数。</p>
-</blockquote>
-<p> <img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E5%BC%BA%E7%BD%91/Snipaste_2024-11-24_16-06-47.png"></p>
-<pre><code class="c">#include &lt;stdio.h&gt;
 
-unsigned char data[] = &#123; 0x59,0x15,0xc1,0x3f,0x40,0x9a,0x7a,0xe7,0xa6,0x8b,0xb6,0xe3,0xee,0x0d,0x19,0x6d,0xb7,
-0x6d,0xca,0xe6,0xda,0x5f,0x0d,0x4b,0xd6,0x0a,0xb2,0xde,0xad,0xaa,0x95,0xeb,0x85,0xb7,0x77,0xc3,0x10,0xbb,0xcf,
-0xce,0xf7,0xd2,0x22,0xc9,0xc4,0xf9,0xfc,0xfb,0xab,0x32,0xea,0x31,0x81,0x55,0xaf,0x79,0x52,0x8e,0x80,0xaf,0xc3,
-0x18,0x60,0x50,0xf1,0xd8,0x40,0xbb,0xfc,0x1b,0x89,0xa6 &#125;;//赛博厨师解密的数据.
+<p>主函数在start的第一个参数里面。去除如下花指令</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106004250667.png" alt="image-20250106004250667"></p>
+<p>一个rc4加密，密钥在第一个生成盒函数的参数里。第二个函数是加密函数，动调密钥会被修改。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106004444730.png" alt="image-20250106004444730"></p>
+<p>在第二个函数的call处下断点动调就可以看到加密函数，进入加密函数后发现花指令，和上面一样的nop掉后可以发现魔改RC4。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106004958622.png" alt="image-20250106004958622"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106005231890.png" alt="image-20250106005231890"></p>
+<p>我们输入一串字符进行动调，在主函数的unk_5C6CC0中下硬件断点。后面会断在如下位置,这里就是比较的位置。去除这里的花指令后就可以看到逻辑，密文就是上面这些。所有数据都已经拿到，记得把密文转一下端序（见python脚本）,最后还有一个异或0x23。</p>
+<p>密文:25cd54af511c58d3a84b4f56ec835dd4f6474a6fe073b0a5a8c317815e2bf4f671ea2fffa8639957</p>
+<p>密钥:921C2B1FBAFBA2FF07697D77188C</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106010729015.png" alt="image-20250106010729015"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106011024150.png" alt="image-20250106011024150"></p>
+<pre><code class="python">a = [0x0D3581C51AF54CD25,0x0D45D83EC564F4BA8,0x0A5B073E06F4A47F6,0x0F6F42B5E8117C3A8,0x579963A8FF2FEA71]
+b=&quot;&quot;
+for i in a:
+    b += i.to_bytes(8,&#39;little&#39;).hex()
+print(f&quot;&#123;b&#125;&quot;,end=&#39;&#39;)
 
-int main() &#123;
-   unsigned long long a[] = &#123; 0xF462D91A7981581E, 0x780001A9A6A79EE3,0x47141FC8F3C62DA6, 0xAFD0BEA1CBF14F95,0x89DDAB508133AF93,0x8EE2 &#125;;
-   unsigned char result[42];
-   for (int i = 0; i &lt; 42; i++) &#123;
-       printf(&quot;%x,&quot;, *((unsigned char*)a + i));
-       result[i] = *((unsigned char*)a + i) ^ 0x21 ^ data[i];
-   &#125;
-   for (int i = 0; i &lt; 42; i++) &#123;
-       printf(&quot;%c&quot;, *((unsigned char*)result + i));
-   &#125;
-
-   //1e5881791ad962f4e39ea7a6a9 1 0 78a62dc6f3c81f1447954ff1cba1bed0af93af338150abdd89e28e  //输出结果
-   //1e5881791ad962f4e39ea7a6a9 01 00 78a62dc6f3c81f1447954ff1cba1bed0af93af338150abdd89e28e  //异或要用到的结果
-&#125;
 </code></pre>
+<p>方法2，不去花指令的动调获取,需要汇编基础，当作汇编和动调练习了。</p>
+<p>首先我们寻找输入输入数据的位置，可以单步进入函数看从什么位置开始读取数据，当然这很麻烦，万不得已还是别了吧。接下来我们用更简单一点的方法进行定位，首先我们调试直接运行到输入数据的时候，程序会等待我们的输入，这时我们用ida的trace来寻找输入函数。按下图打开栈追踪，</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106234940999.png" alt="image-20250106234940999"></p>
+<p>进行函数追踪</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106235129340.png" alt="image-20250106235129340"></p>
+<p>这个时候程序会断在一个位置，一般这个位置就是输入数据的前一个位置，在断下的位置(EIP)下断点（总之下的断点要把程序停在附近，不能让程序结束），单步运行到程序等待输入，然后输入数据。用Call stack可以看函数调用的顺序，寻找出主函数和加密函数，不过暂时用不到。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250106235507942.png" alt="image-20250106235507942"></p>
+<p>其实我们也可以发现①就是一个读取函数，我们的程序断在了断点处，并且我们往上分析就可以看到我们输入的数据，这个时候我们就可以下一个硬件断点在输入的数据上，继续动调，下断点的时候建议多下几个，最少头尾两个，这样更好分析。我们接下来运行程序，分析汇编。<img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107000128991.png" alt="image-20250107000128991"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107001055873.png" alt="image-20250107001055873"></p>
+<p>我们运行下去就会发现我们会在一个函数里面循环，分析一下，好像是把我们的输入转存到rbx-1里面去了，我们进入，继续给数据下硬件断点。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107002449416.png" alt="image-20250107002449416"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107002946182.png" alt="image-20250107002946182"></p>
+<p>我们可以发现这个变量是有名字的，我们对这个变量进行引用查看，就会到一个函数如下图，这个函数里面有一个%s。上面是我们输入的数据，下面有个%s，想都不用想，下一个call就是输入函数scanf，所以这里大概就是主函数了。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107003033098.png" alt="image-20250107003033098"></p>
+<p>如下图，继续看引用可以看到上面有一个别的变量好像存储了一些数据，感觉是密文，先记下来。我们可以看到我们的输入数据被加载到了rdi中，然后call了一个r8函数(猜不出来也没问题，可以继续用硬件断点分析)，估计这个函数就是处理数据的函数。我们给call下一个断点，继续运行程序。发现下一步直接到了call这里，继续运行。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107003440688.png" alt="image-20250107003440688"></p>
+<p>如下图，我们会进入一个函数循环中，这就是加密主逻辑了，看到&amp;255你能想到什么?没错，就是RC4。单步分析这个循环，我们还可以发现RC4的表，以及还有一个异或0x23。在最后我们在返回处下一个断点单步运行，发现返回的位置就是Call r8的位置，那么这就是RC4加密函数。我们可以知道，RC4前面的一个函数一般就是用密钥生成盒，而且正好在我们call r8的上面刚还有一个call r8，而且上面刚好也加载了一个变量，没错，这就是我们之前记下的密钥。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107004358701.png" alt="image-20250107004358701"></p>
+<p>继续往下运行，我们到了一个比较函数，上面有一大串的数据，我们加密后的密文也在cmp处进行比较，右侧就是密文。至此，分析结束，我们开始解密。结束了吗？还没有，我们拿到的密钥被反调试修改了，我们要在没有调试的情况下获取密钥，就在我们记下的那个变量里。这样就可以正确解密了，解密参照方法1.</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250107005817462.png" alt="image-20250107005817462"></p>
 
     </div>
     
