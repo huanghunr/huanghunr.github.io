@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #03a9f4">
+                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #00bcd4">
                     2024浙江省省赛 Writeup
                 </a>
             </span>
@@ -222,7 +222,263 @@
 
 </div>
 
-<h1><span id="初赛">初赛</span></h1><h2><span id="midre">Midre</span></h2><p>先去主函数的花</p>
+<h1><span id="初赛">初赛</span></h1><p>ezre</p>
+<p>一个python字节码文件，可以用pycdas查看字节码。我们借此来分析一下python字节码文件的结构。</p>
+<p>涉及到闭包函数的内容，总的来说闭包就是函数被定义在了函数里面。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43586120/article/details/89456183">闭包，看这一篇就够了——带你看透闭包的本质，百发百中-CSDN博客</a></p>
+<pre><code class="python">ezRe (Python 3.9)
+[Code]
+    File Name: flag_checker.py    #文件信息
+    Object Name: &lt;module&gt;        #表示这是模块的主代码（即文件的最外层代码，不是函数或类）。
+    Arg Count: 0                 #表示模块没有参数。
+    Pos Only Arg Count: 0		#表示没有仅限位置参数。
+    KW Only Arg Count: 0		#表示没有仅限关键字参数。
+    Locals: 0				   #表示模块中没有局部变量。
+    Stack Size: 7				#栈大小
+    Flags: 0x00000040 (CO_NOFREE) #标志位，CO_NOFREE表示这段代码没有自由变量（即没有闭包）。
+    [Names]				#全局变量、函数和模块的名称列表。
+        &#39;base64&#39;
+        &#39;input&#39;
+        &#39;text&#39;
+        &#39;key&#39;
+        &#39;list&#39;
+        &#39;range&#39;
+        &#39;s&#39;
+        &#39;j&#39;
+        &#39;i&#39;
+        &#39;len&#39;
+        &#39;data&#39;
+        &#39;_&#39;
+        &#39;append&#39;
+        &#39;result&#39;
+        &#39;zip&#39;
+        &#39;c&#39;
+        &#39;k&#39;
+        &#39;chr&#39;
+        &#39;ord&#39;
+        &#39;b64encode&#39;
+        &#39;encode&#39;
+        &#39;decode&#39;
+        &#39;enc&#39;
+        &#39;print&#39;
+    [Var Names]   		#模块中的局部变量
+    [Free Vars]			#自由变量
+    [Cell Vars]			#闭包变量
+    [Constants]			#常量池
+        0
+        None
+        &#39;Flag: &#39;
+        &#39;7e021a7dd49e4bd0837e22129682551b&#39;  #密钥
+        [Code]			#嵌套代码对象，类似list(ord(i) for i in range(102)),本质就是一个列表所以会显示为常量。同时python也会把这个封装为一个隐式函数，后面调用的时候以函数形式调用
+            File Name: flag_checker.py  #属于的文件
+            Object Name: &lt;listcomp&gt;     #对象的名字，列表推导式
+            Arg Count: 1 #有一个参数
+            Pos Only Arg Count: 0  #下面的同上
+            KW Only Arg Count: 0
+            Locals: 2
+            Stack Size: 4
+            Flags: 0x00000043 (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)
+            [Names]
+                &#39;ord&#39;
+            [Var Names]
+                &#39;.0&#39;
+                &#39;i&#39;
+            [Free Vars]
+            [Cell Vars]
+            [Constants]
+                102
+            [Disassembly]			#字节码指令
+                0       BUILD_LIST                    0 	#建立一个列表对象
+                2       LOAD_FAST                     0: .0  #加载参数
+                4       FOR_ITER                      16 (to 22)	#迭代器迭代对象
+                6       STORE_FAST                    1: i	#存储到i
+                8       LOAD_GLOBAL                   0: ord	#加载函数名称
+                10      LOAD_FAST                     1: i		#加载变量
+                12      CALL_FUNCTION                 1			#调用函数
+                14      LOAD_CONST                    0: 102	#加载常量
+                16      BINARY_XOR							  #异或操作，现在栈顶的两个值是i和102
+                18      LIST_APPEND                   2			#追加结果到列表中，列表保存到栈顶
+                20      JUMP_ABSOLUTE                 4			#返回，继续迭代
+                22      RETURN_VALUE						   #返回栈顶值，即列表
+        &#39;&lt;listcomp&gt;&#39;		#列表推导式的名称(函数名)
+        256
+        50
+        1
+        &#39;&#39;
+        51
+        &#39;w53Cj3HDgzTCsSM5wrg6FMKcw58Qw7RZSFLCljRxwrxbwrVdw4AEwqMjw7/DkMKTw4/Cv8Onw4NGw7jDmSdcwq4GGg==&#39; #密文
+        &#39;yes!&#39;
+        &#39;try again...&#39;
+    [Disassembly]		#字节操作码，
+        0       LOAD_CONST                    0: 0
+        2       LOAD_CONST                    1: None	#加载常量
+        4       JUMP_FORWARD                  0 (to 6)	#跳转到6
+        6       JUMP_FORWARD                  0 (to 8)
+        8       JUMP_FORWARD                  0 (to 10)
+        10      IMPORT_NAME                   0: base64		#导入模块
+        12      STORE_NAME                    0: base64
+        14      LOAD_NAME                     1: input		#获取输入
+        16      LOAD_CONST                    2: &#39;Flag: &#39;
+        18      CALL_FUNCTION                 1				#调用input函数
+        20      STORE_NAME                    2: text		#存储到text
+        22      LOAD_CONST                    3: &#39;7e021a7dd49e4bd0837e22129682551b&#39;	#加载密钥
+        24      STORE_NAME                    3: key	#存储到key
+        26      LOAD_CONST                    4: &lt;CODE&gt; &lt;listcomp&gt; #加载列表递推式代码
+        28      LOAD_CONST                    5: &#39;&lt;listcomp&gt;&#39;	#加载常量，列表递推式的名字
+        30      MAKE_FUNCTION                 0					#以创建函数形式了列表递推式对象
+        32      LOAD_NAME                     3: key			#加载key
+        34      GET_ITER									#迭代器，迭代对象key
+        36      CALL_FUNCTION                 1					#调用列表递推式，key被作为迭代对象传入
+        38      STORE_NAME                    3: key			#保存返回结果到key
+        40      LOAD_NAME                     4: list
+        42      LOAD_NAME                     5: range
+        44      LOAD_CONST                    6: 256
+        46      CALL_FUNCTION                 1
+        48      CALL_FUNCTION                 1
+        50      STORE_NAME                    6: s
+        52      LOAD_CONST                    0: 0
+        54      STORE_NAME                    7: j
+        56      LOAD_NAME                     5: range
+        58      LOAD_CONST                    6: 256
+        60      CALL_FUNCTION                 1
+        62      GET_ITER
+        64      FOR_ITER                      62 (to 128)
+        66      STORE_NAME                    8: i
+        68      LOAD_NAME                     7: j
+        70      LOAD_NAME                     6: s
+        72      LOAD_NAME                     8: i
+        74      BINARY_SUBSCR
+        76      BINARY_ADD
+        78      LOAD_NAME                     3: key
+        80      LOAD_NAME                     8: i
+        82      LOAD_NAME                     9: len
+        84      LOAD_NAME                     3: key
+        86      CALL_FUNCTION                 1
+        88      BINARY_MODULO
+        90      BINARY_SUBSCR
+        92      BINARY_ADD
+        94      LOAD_CONST                    6: 256
+        96      BINARY_MODULO
+        98      STORE_NAME                    7: j
+        100     LOAD_NAME                     6: s
+        102     LOAD_NAME                     7: j
+        104     BINARY_SUBSCR
+        106     LOAD_NAME                     6: s
+        108     LOAD_NAME                     8: i
+        110     BINARY_SUBSCR
+        112     ROT_TWO
+        114     LOAD_NAME                     6: s
+        116     LOAD_NAME                     8: i
+        118     STORE_SUBSCR
+        120     LOAD_NAME                     6: s
+        122     LOAD_NAME                     7: j
+        124     STORE_SUBSCR
+        126     JUMP_ABSOLUTE                 64
+        128     LOAD_CONST                    0: 0
+        130     DUP_TOP
+        132     STORE_NAME                    8: i
+        134     STORE_NAME                    7: j
+        136     BUILD_LIST                    0
+        138     STORE_NAME                    10: data
+        140     LOAD_NAME                     5: range
+        142     LOAD_CONST                    7: 50
+        144     CALL_FUNCTION                 1
+        146     GET_ITER
+        148     FOR_ITER                      88 (to 238)
+        150     STORE_NAME                    11: _
+        152     LOAD_NAME                     8: i
+        154     LOAD_CONST                    8: 1
+        156     BINARY_ADD
+        158     LOAD_CONST                    6: 256
+        160     BINARY_MODULO
+        162     STORE_NAME                    8: i
+        164     LOAD_NAME                     7: j
+        166     LOAD_NAME                     6: s
+        168     LOAD_NAME                     8: i
+        170     BINARY_SUBSCR
+        172     BINARY_ADD
+        174     LOAD_CONST                    6: 256
+        176     BINARY_MODULO
+        178     STORE_NAME                    7: j
+        180     LOAD_NAME                     6: s
+        182     LOAD_NAME                     7: j
+        184     BINARY_SUBSCR
+        186     LOAD_NAME                     6: s
+        188     LOAD_NAME                     8: i
+        190     BINARY_SUBSCR
+        192     ROT_TWO
+        194     LOAD_NAME                     6: s
+        196     LOAD_NAME                     8: i
+        198     STORE_SUBSCR
+        200     LOAD_NAME                     6: s
+        202     LOAD_NAME                     7: j
+        204     STORE_SUBSCR
+        206     LOAD_NAME                     10: data
+        208     LOAD_METHOD                   12: append
+        210     LOAD_NAME                     6: s
+        212     LOAD_NAME                     6: s
+        214     LOAD_NAME                     8: i
+        216     BINARY_SUBSCR
+        218     LOAD_NAME                     6: s
+        220     LOAD_NAME                     7: j
+        222     BINARY_SUBSCR
+        224     BINARY_ADD
+        226     LOAD_CONST                    6: 256
+        228     BINARY_MODULO
+        230     BINARY_SUBSCR
+        232     CALL_METHOD                   1
+        234     POP_TOP
+        236     JUMP_ABSOLUTE                 148
+        238     LOAD_CONST                    9: &#39;&#39;
+        240     STORE_NAME                    13: result
+        242     LOAD_NAME                     14: zip
+        244     LOAD_NAME                     2: text
+        246     LOAD_NAME                     10: data
+        248     CALL_FUNCTION                 2
+        250     GET_ITER
+        252     FOR_ITER                      32 (to 286)
+        254     UNPACK_SEQUENCE               2
+        256     STORE_NAME                    15: c
+        258     STORE_NAME                    16: k
+        260     LOAD_NAME                     13: result
+        262     LOAD_NAME                     17: chr
+        264     LOAD_NAME                     18: ord
+        266     LOAD_NAME                     15: c
+        268     CALL_FUNCTION                 1
+        270     LOAD_NAME                     16: k
+        272     BINARY_XOR
+        274     LOAD_CONST                    10: 51
+        276     BINARY_XOR
+        278     CALL_FUNCTION                 1
+        280     INPLACE_ADD
+        282     STORE_NAME                    13: result
+        284     JUMP_ABSOLUTE                 252
+        286     LOAD_NAME                     0: base64
+        288     LOAD_METHOD                   19: b64encode
+        290     LOAD_NAME                     13: result
+        292     LOAD_METHOD                   20: encode
+        294     CALL_METHOD                   0
+        296     CALL_METHOD                   1
+        298     LOAD_METHOD                   21: decode
+        300     CALL_METHOD                   0
+        302     STORE_NAME                    22: enc
+        304     LOAD_NAME                     22: enc
+        306     LOAD_CONST                    11: &#39;w53Cj3HDgzTCsSM5wrg6FMKcw58Qw7RZSFLCljRxwrxbwrVdw4AEwqMjw7/DkMKTw4/Cv8Onw4NGw7jDmSdcwq4GGg==&#39;
+        308     COMPARE_OP                    2 (==)
+        310     POP_JUMP_IF_FALSE             324
+        314     LOAD_NAME                     23: print
+        316     LOAD_CONST                    12: &#39;yes!&#39;
+        318     CALL_FUNCTION                 1
+        320     POP_TOP
+        322     JUMP_FORWARD                  8 (to 332)
+        324     LOAD_NAME                     23: print
+        326     LOAD_CONST                    13: &#39;try again...&#39;
+        328     CALL_FUNCTION                 1
+        330     POP_TOP
+        332     LOAD_CONST                    1: None
+        334     RETURN_VALUE
+</code></pre>
+<h2><span id="midre">Midre</span></h2><p>先去主函数的花</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153707030.png" alt="image-20250105153707030"></p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153813904.png" alt="image-20250105153813904"></p>
 <p>nop完后发现还有问题，我们在下面的代码中按c试探一下，发现从第二个字节码开始就可以恢复为正常函数，所以还要一个垃圾指令，nop掉后即可看到主函数逻辑。</p>
