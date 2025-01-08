@@ -330,141 +330,141 @@
         34      GET_ITER									#迭代器，迭代对象key
         36      CALL_FUNCTION                 1					#调用列表递推式，key被作为迭代对象传入
         38      STORE_NAME                    3: key			#保存返回结果到key
-        40      LOAD_NAME                     4: list
-        42      LOAD_NAME                     5: range
-        44      LOAD_CONST                    6: 256
-        46      CALL_FUNCTION                 1
-        48      CALL_FUNCTION                 1
-        50      STORE_NAME                    6: s
-        52      LOAD_CONST                    0: 0
-        54      STORE_NAME                    7: j
-        56      LOAD_NAME                     5: range
+        40      LOAD_NAME                     4: list			#获取函数名list
+        42      LOAD_NAME                     5: range			#获取函数名range
+        44      LOAD_CONST                    6: 256			#获取range的值
+        46      CALL_FUNCTION                 1					#调用函数range
+        48      CALL_FUNCTION                 1					#调用函数list
+        50      STORE_NAME                    6: s				#把列表存储到s中，s为一个ASCII码表
+        52      LOAD_CONST                    0: 0				#加载0
+        54      STORE_NAME                    7: j				#把0赋值给j
+        56      LOAD_NAME                     5: range			
         58      LOAD_CONST                    6: 256
-        60      CALL_FUNCTION                 1
-        62      GET_ITER
-        64      FOR_ITER                      62 (to 128)
-        66      STORE_NAME                    8: i
+        60      CALL_FUNCTION                 1					#调用函数range(256)
+        62      GET_ITER									  #以range(256)为对象
+        64      FOR_ITER                      62 (to 128)		#开始迭代，如果迭代完毕，跳转到128
+        66      STORE_NAME                    8: i				#存储迭代的数据
         68      LOAD_NAME                     7: j
         70      LOAD_NAME                     6: s
         72      LOAD_NAME                     8: i
-        74      BINARY_SUBSCR
-        76      BINARY_ADD
+        74      BINARY_SUBSCR								  #下标操作，s[i]
+        76      BINARY_ADD									  #栈顶2个数据相加，这里为s[i]+j
         78      LOAD_NAME                     3: key
         80      LOAD_NAME                     8: i
         82      LOAD_NAME                     9: len
-        84      LOAD_NAME                     3: key
+        84      LOAD_NAME                     3: key			#调用函数len(key)
         86      CALL_FUNCTION                 1
-        88      BINARY_MODULO
-        90      BINARY_SUBSCR
-        92      BINARY_ADD
+        88      BINARY_MODULO								   #对栈顶的两个元素取余，这里是i%len(key)
+        90      BINARY_SUBSCR							#下标操作，现在栈顶为key和i%len(key),即为key[i%len(key)]
+        92      BINARY_ADD								#栈顶两个相加，现在是s[i]+j+key[i%len(key)]
         94      LOAD_CONST                    6: 256
-        96      BINARY_MODULO
-        98      STORE_NAME                    7: j
+        96      BINARY_MODULO							#对栈顶两个元素取余，现在是(s[i]+j+key[i%len(key)])%256
+        98      STORE_NAME                    7: j		  #保存结果到j中
         100     LOAD_NAME                     6: s
         102     LOAD_NAME                     7: j
-        104     BINARY_SUBSCR
+        104     BINARY_SUBSCR							#下标操作s[j]
         106     LOAD_NAME                     6: s
         108     LOAD_NAME                     8: i
-        110     BINARY_SUBSCR
-        112     ROT_TWO
+        110     BINARY_SUBSCR							#下标操作s[i]
+        112     ROT_TWO									#交换栈顶两个元素
         114     LOAD_NAME                     6: s
         116     LOAD_NAME                     8: i
-        118     STORE_SUBSCR
+        118     STORE_SUBSCR							#赋值栈顶元素到s[i]
         120     LOAD_NAME                     6: s
         122     LOAD_NAME                     7: j
-        124     STORE_SUBSCR
-        126     JUMP_ABSOLUTE                 64
+        124     STORE_SUBSCR							#赋值栈顶元素到s[j]，这两步就是交换下标
+        126     JUMP_ABSOLUTE                 64		  #迭代继续，跳转回开始位置
         128     LOAD_CONST                    0: 0
-        130     DUP_TOP
+        130     DUP_TOP									#复制一遍栈顶的值，这里为0
         132     STORE_NAME                    8: i
-        134     STORE_NAME                    7: j
-        136     BUILD_LIST                    0
-        138     STORE_NAME                    10: data
+        134     STORE_NAME                    7: j          #把栈顶的值复制给i和j，这里是两个0
+        136     BUILD_LIST                    0				
+        138     STORE_NAME                    10: data		##建立列表data
         140     LOAD_NAME                     5: range
         142     LOAD_CONST                    7: 50
         144     CALL_FUNCTION                 1
         146     GET_ITER
-        148     FOR_ITER                      88 (to 238)
-        150     STORE_NAME                    11: _
+        148     FOR_ITER                      88 (to 238) #对range(50)进行迭代
+        150     STORE_NAME                    11: _  	  #迭代值放入_
         152     LOAD_NAME                     8: i
         154     LOAD_CONST                    8: 1
-        156     BINARY_ADD
+        156     BINARY_ADD								#i+1
         158     LOAD_CONST                    6: 256
-        160     BINARY_MODULO
-        162     STORE_NAME                    8: i
+        160     BINARY_MODULO							#(i+1)%256
+        162     STORE_NAME                    8: i		  #i=(i+1)%256
         164     LOAD_NAME                     7: j
         166     LOAD_NAME                     6: s
         168     LOAD_NAME                     8: i
-        170     BINARY_SUBSCR
-        172     BINARY_ADD
+        170     BINARY_SUBSCR							#s[i]
+        172     BINARY_ADD								#s[i]+j
         174     LOAD_CONST                    6: 256
-        176     BINARY_MODULO
-        178     STORE_NAME                    7: j
+        176     BINARY_MODULO							#(s[i]+j)%256
+        178     STORE_NAME                    7: j		  #j = (s[i]+j)%256
         180     LOAD_NAME                     6: s
         182     LOAD_NAME                     7: j
-        184     BINARY_SUBSCR
+        184     BINARY_SUBSCR							#s[j]
         186     LOAD_NAME                     6: s
         188     LOAD_NAME                     8: i
-        190     BINARY_SUBSCR
+        190     BINARY_SUBSCR							#s[i]
         192     ROT_TWO
         194     LOAD_NAME                     6: s
         196     LOAD_NAME                     8: i
         198     STORE_SUBSCR
         200     LOAD_NAME                     6: s
         202     LOAD_NAME                     7: j
-        204     STORE_SUBSCR
+        204     STORE_SUBSCR							#交换s[i]和s[j]
         206     LOAD_NAME                     10: data
         208     LOAD_METHOD                   12: append
         210     LOAD_NAME                     6: s
         212     LOAD_NAME                     6: s
         214     LOAD_NAME                     8: i
-        216     BINARY_SUBSCR
+        216     BINARY_SUBSCR							#s[i]
         218     LOAD_NAME                     6: s
         220     LOAD_NAME                     7: j
-        222     BINARY_SUBSCR
-        224     BINARY_ADD
-        226     LOAD_CONST                    6: 256
-        228     BINARY_MODULO
-        230     BINARY_SUBSCR
-        232     CALL_METHOD                   1
-        234     POP_TOP
-        236     JUMP_ABSOLUTE                 148
+        222     BINARY_SUBSCR							#s[j]
+        224     BINARY_ADD								#s[i]+s[j]
+        226     LOAD_CONST                    6: 256	   
+        228     BINARY_MODULO							#(s[i]+s[j])%256
+        230     BINARY_SUBSCR							#s[(s[i]+s[j])%256]
+        232     CALL_METHOD                   1			  #data.append(s[(s[i]+s[j])%256])
+        234     POP_TOP									#清理栈顶
+        236     JUMP_ABSOLUTE                 148		  #继续迭代
         238     LOAD_CONST                    9: &#39;&#39;
-        240     STORE_NAME                    13: result
+        240     STORE_NAME                    13: result	#定义空字符串result
         242     LOAD_NAME                     14: zip
         244     LOAD_NAME                     2: text
         246     LOAD_NAME                     10: data
-        248     CALL_FUNCTION                 2
+        248     CALL_FUNCTION                 2				#调用zip函数有两个参数，就是text和data,放回一个元组，把数据成对成列表放在元组中，例如[(text[0],data[0]),(text[1],data[1]),...]
         250     GET_ITER
-        252     FOR_ITER                      32 (to 286)
-        254     UNPACK_SEQUENCE               2
-        256     STORE_NAME                    15: c
+        252     FOR_ITER                      32 (to 286)	#对元组进行迭代
+        254     UNPACK_SEQUENCE               2				#解包，提示赋值2个变量
+        256     STORE_NAME                    15: c			#赋值数据给c,k
         258     STORE_NAME                    16: k
         260     LOAD_NAME                     13: result
         262     LOAD_NAME                     17: chr
         264     LOAD_NAME                     18: ord
         266     LOAD_NAME                     15: c
-        268     CALL_FUNCTION                 1
+        268     CALL_FUNCTION                 1				#ord(c)
         270     LOAD_NAME                     16: k
-        272     BINARY_XOR
+        272     BINARY_XOR								  #ord(c) ^ k
         274     LOAD_CONST                    10: 51
-        276     BINARY_XOR
-        278     CALL_FUNCTION                 1
-        280     INPLACE_ADD
-        282     STORE_NAME                    13: result
-        284     JUMP_ABSOLUTE                 252
+        276     BINARY_XOR								   #ord(c) ^ k ^51
+        278     CALL_FUNCTION                 1				 #chr(ord(c) ^ k ^51)
+        280     INPLACE_ADD								   #result + chr(ord(c) ^ k ^51)
+        282     STORE_NAME                    13: result  	  #result = result
+        284     JUMP_ABSOLUTE                 252			  #继续迭代
         286     LOAD_NAME                     0: base64
         288     LOAD_METHOD                   19: b64encode
         290     LOAD_NAME                     13: result
         292     LOAD_METHOD                   20: encode
-        294     CALL_METHOD                   0
-        296     CALL_METHOD                   1
+        294     CALL_METHOD                   0				#result.encode
+        296     CALL_METHOD                   1				#base64.b64encode(result.encode)
         298     LOAD_METHOD                   21: decode
-        300     CALL_METHOD                   0
+        300     CALL_METHOD                   0				#base64.b64encode(result.encode).decode
         302     STORE_NAME                    22: enc
         304     LOAD_NAME                     22: enc
         306     LOAD_CONST                    11: &#39;w53Cj3HDgzTCsSM5wrg6FMKcw58Qw7RZSFLCljRxwrxbwrVdw4AEwqMjw7/DkMKTw4/Cv8Onw4NGw7jDmSdcwq4GGg==&#39;
-        308     COMPARE_OP                    2 (==)
+        308     COMPARE_OP                    2 (==) #判断enc是否等于上面的base64.b64encode(result.encode).decode
         310     POP_JUMP_IF_FALSE             324
         314     LOAD_NAME                     23: print
         316     LOAD_CONST                    12: &#39;yes!&#39;
@@ -477,6 +477,87 @@
         330     POP_TOP
         332     LOAD_CONST                    1: None
         334     RETURN_VALUE
+</code></pre>
+<p>上面代码的加密解密脚本</p>
+<pre><code class="python">import base64
+
+def enc():
+    text = input(&quot;flag:&quot;)
+
+    key = &quot;7e021a7dd49e4bd0837e22129682551b&quot;
+
+    key = list(ord(i) ^ 102 for i in key)
+
+    s = list(range(256))
+
+    j = 0
+
+    for i in range(256):
+        j = (s[i] + j + key[i % len(key)]) % 256
+        tmp = s[i]
+        s[i] = s[j]
+        s[j] = tmp
+
+    i = j = 0
+    data = list()
+    for _ in range(50):
+        i = (i + 1) % 256
+        j = (s[i] + j) % 256
+        tmp = s[i]
+        s[i] = s[j]
+        s[j] = tmp
+        data.append(s[(s[i] + s[j]) % 256])
+
+    result = &quot;&quot;
+    for c, k in zip(text, data):
+        result += chr(ord(c) ^ k ^ 51)
+
+    result = base64.b64encode(result.encode()).decode()
+    enc = &#39;w53Cj3HDgzTCsSM5wrg6FMKcw58Qw7RZSFLCljRxwrxbwrVdw4AEwqMjw7/DkMKTw4/Cv8Onw4NGw7jDmSdcwq4GGg==&#39;
+
+    if result == enc:
+        print(&quot;yes!&quot;)
+    else:
+        print(&quot;try again...&quot;)
+
+
+
+def dec():
+    enc = &#39;w53Cj3HDgzTCsSM5wrg6FMKcw58Qw7RZSFLCljRxwrxbwrVdw4AEwqMjw7/DkMKTw4/Cv8Onw4NGw7jDmSdcwq4GGg==&#39;
+    key = &quot;7e021a7dd49e4bd0837e22129682551b&quot;
+    text = base64.b64decode(enc.encode()).decode()
+
+    key = list(ord(i) ^ 102 for i in key)
+
+    s = list(i for i in range(256))
+
+    j = 0
+
+    for i in range(256):
+        j = (s[i] + j + key[i % len(key)]) % 256
+        tmp = s[i]
+        s[i] = s[j]
+        s[j] = tmp
+
+    i = j = 0
+    data = list()
+    for _ in range(50):
+        i = (i + 1) % 256
+        j = (s[i] + j) % 256
+        tmp = s[i]
+        s[i] = s[j]
+        s[j] = tmp
+        data.append(s[(s[i] + s[j]) % 256])
+
+    result = &quot;&quot;
+    for c, k in zip(text, data):
+        result += chr(ord(c) ^ k ^ 51)
+
+    print(result)
+
+
+dec()
+
 </code></pre>
 <h2><span id="midre">Midre</span></h2><p>先去主函数的花</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250105153707030.png" alt="image-20250105153707030"></p>
