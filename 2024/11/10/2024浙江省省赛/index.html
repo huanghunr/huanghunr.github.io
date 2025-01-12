@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #00bcd4">
+                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #ff7d73">
                     2024浙江省省赛 Writeup
                 </a>
             </span>
@@ -704,9 +704,10 @@ int main() &#123;
 <p>4.输入0x140001E24的rdx</p>
 <p>mian函数中我们的输入被保存到了v11中，然后在下面的for循环调用，我们直接获取寄存器的值就行，[rbp+rax+0E0h+var_100]就是v11的数据。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112114921154.png" alt="image-20250112114921154"></p>
+<p>！要把可见字符拆分成两段分别hook，因为输入字符最好要保持在48个以内（小于等于密文长度）</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-23-04.png" alt="Snipaste_2025-01-12_03-23-04"></p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-23-30.png" alt="Snipaste_2025-01-12_03-23-30"></p>
-<p>对比分析发现我们的输入被改了，单字节加密，就是被加了一点偏移。我们可以打印所有可见字符，构建一个表查找对应查找原来的数据。密钥也被修改了。s盒也被修改了，对比原来的AES盒是相同的，所以AES的魔改又被改回了正常的AES加密，直接用常规解密就行。密文是不变的。我们直接提出来写出解密脚本。以下为c和py的解密脚本和hook脚本。</p>
+<p>对比分析发现我们的输入被改了，单字节加密，就是被加了一点偏移。我们可以打印所有可见字符，构建一个表查找对应查找原来的数据。密钥也被修改了。s盒也被修改了，对比没有魔改的AES盒是相同的，所以AES的魔改又被改回了正常的AES加密，直接用常规解密就行。密文是不变的。我们直接提出来写出解密脚本。以下为c和py的解密脚本和hook脚本。</p>
 <pre><code class="c">#include &lt;stdint.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
