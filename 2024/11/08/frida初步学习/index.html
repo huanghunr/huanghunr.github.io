@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     Re学习
                 </a>
             </span>
@@ -208,6 +208,7 @@
 <!-- toc -->
 
 <ul>
+<li><a href="#frida_android">frida_Android</a><ul>
 <li><a href="#%E8%BF%90%E8%A1%8Cfrida%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">运行frida常用命令</a><ul>
 <li><a href="#%E8%BF%90%E8%A1%8C">运行</a></li>
 </ul>
@@ -227,11 +228,15 @@
 </ul>
 </li>
 </ul>
+</li>
+<li><a href="#frida_win_processes">frida_win_processes</a></li>
+</ul>
 <!-- tocstop -->
 
 </div>
 
-<h2><span id="运行frida常用命令">运行frida常用命令</span></h2><h3><span id="运行">运行</span></h3><pre><code class="s">adb push 名 /data/local/tmp
+<p><a target="_blank" rel="noopener" href="https://frida.ivory.cafe/">JavaScript API 手册 | Frida JavaScript-api 中文手册</a></p>
+<h1><span id="frida_android">frida_Android</span></h1><h2><span id="运行frida常用命令">运行frida常用命令</span></h2><h3><span id="运行">运行</span></h3><pre><code class="s">adb push 名 /data/local/tmp
 adb root
 adb shell chmod +x /data/local/tmp/fridaad64
 adb shell /data/local/tmp/frida-server -l 0.0.0.0:27042 #默认27042端口
@@ -389,6 +394,94 @@ function get()&#123;
 <pre><code class="s">adb forward tcp:27042 tcp:27043
 </code></pre>
 <h3><span id="脚本运行过程中报错">脚本运行过程中报错</span></h3><p>查找报错点，找到报错的方法，分析，有必要时直接hook下来，修改函数的返回值等内容。</p>
+<h1><span id="frida_win_processes">frida_win_processes</span></h1><p>frida可以hookwindows上的的进程，详见<a target="_blank" rel="noopener" href="https://frida.re/docs/functions/">功能 |Frida • 世界一流的动态仪表工具包</a></p>
+<pre><code class="cmd">frida -l hook.js -n [name]
+</code></pre>
+<p>这里的name是进程的程序名字。</p>
+<p>先介绍一下frida的processAPI。<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/article-342.htm">bbs.kanxue.com&#x2F;article-342.htm</a></p>
+<pre><code class="js">var process = Process.findModuleByAddress(address) //根据包含的地址查找模块
+var process = Process.findModuleByName()  //根据名字查找在内存中的模块(str)-&gt;(模块对象)
+process.base //模块基地址
+process.name //模块名
+process.size //模块大小
+process.path //模块路径
+
+setInterval(f, delay) //每隔delay毫秒调用f,返回一个id，使用clearinterval(id)取消对setIntervar()的调用
+
+ptr(addr) //以指针形式调用地址数据
+
+hexdump(addr,&#123;offset:0,length:64,header:true,absi:true&#125;) //把一个区域内的内存按格式导出
+
+this.context  //访问当前hook的上下文信息，其中this.context.rax可以获取寄存器的值
+</code></pre>
+<p>hook脚本来自<a target="_blank" rel="noopener" href="https://frida.re/docs/examples/windows/">Windows | Frida • A world-class dynamic instrumentation toolkit</a><br>通用脚本</p>
+<pre><code class="js">    //const baseAddr = Module.findBaseAddress(&#39;Jvm.dll&#39;); //获取hook对象的拓展模块基地址
+    //console.log(&#39;Jvm.dll baseAddr: &#39; + baseAddr); 
+    var process = Process.findModuleByName(&quot;xx.exe&quot;); //以名称获取进程中的模块
+    var baseaddr = process.base
+    
+    //const f = resolveAddress(&#39;0x1FF44870&#39;); //输入函数在ida中显示的地址，获得在内存中的地址
+
+    Interceptor.attach(baseaddr.add(0x0000), &#123; // hook函数，函数被调用时执行
+        // 被hook时打印函数信息
+        onEnter(args) &#123;
+            console.log(&#39;&#39;);
+            console.log(&#39;[+] Called SetAesDeCrypt0&#39; + f); //被hook的函数地址
+            console.log(&#39;[+] Input: &#39; + args[0]); // 参数args[1],args[2]...
+            aegs[0] = 111;  //修改参数
+            dumpAddr(&#39;Input&#39;, args[1], args[3].toInt32()); //导出指针参数的数据
+            this.outptr = args[2]; //保存参数的值以便函数结束时查看
+            this.outsize = args[3].toInt32();
+            var rdx=this.context.rdx;  //以上下文获取寄存器的值
+            console.log(hexdump(ptr(rdx),&#123;length: 16,ansi:true&#125;)); //导出寄存器指向内存的数据
+        &#125;,
+
+        onLeave(retval) &#123;  //函数结束时执行
+            dumpAddr(&#39;Output&#39;, this.outptr, this.outsize); // 获取我们保存的指针参数的值
+            console.log(&#39;[+] Returned from setAesDecrypt0: &#39; + retval);  //函数的返回值
+        &#125;
+    &#125;);
+
+    function dumpAddr(info, addr, size) &#123; //导出内存数据
+        if (addr.isNull())
+            return;
+
+        console.log(&#39;Data dump &#39; + info + &#39; :&#39;);
+        const buf = addr.readByteArray(size);
+
+        // 如果想要色彩高亮，ansi为true
+        console.log(hexdump(buf, &#123; offset: 0, length: size, header: true, ansi: false &#125;));
+    &#125;
+
+    function resolveAddress(addr) &#123;  //用IDA显示的地址获取当前内存中的地址,其实自己手算偏移也行
+        const idaBase = ptr(&#39;0x1FEE0000&#39;); //输入IDA中显示的基地址，用于计算地址偏移
+        const offset = ptr(addr).sub(idaBase); //计算地址偏移
+        const result = baseAddr.add(offset); //计算现在在内存中的地址
+        console.log(&#39;[+] New addr=&#39; + result); // 输出在内存中的地址
+        return result;
+    &#125;
+</code></pre>
+<p>手动调用函数</p>
+<pre><code class="js">var f = new NativeFunction(ptr(addr), &#39;void&#39;, [&#39;int&#39;]); //函数地址，返回类型，参数类型，调用函数
+f(1911); //调用函数并串参
+</code></pre>
+<p>实用脚本，一般dump寄存器的值</p>
+<pre><code class="js">var inter=setInterval(function () &#123;
+    var process = Process.findModuleByName(&quot;1.exe&quot;);
+    var baseaddr = process.base
+    console.log(&quot;base&quot;+baseaddr);
+
+    clearInterval(inter);
+    console.log(hexdump(baseaddr.add(0x005160),&#123;length:255,ansi:true&#125;))
+    
+    Interceptor.attach(baseaddr.add(0x001E7F), &#123; 
+    onEnter: function (args) &#123;
+        var rax=this.context.rax; 
+        console.log(&quot;secret&quot; +rax);
+        console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
+    &#125;&#125;),
+&#125;,1)
+</code></pre>
 
     </div>
     

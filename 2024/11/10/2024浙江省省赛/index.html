@@ -209,12 +209,14 @@
 
 <ul>
 <li><a href="#%E5%88%9D%E8%B5%9B">初赛</a><ul>
+<li><a href="#ezre">ezre</a></li>
 <li><a href="#midre">Midre</a></li>
 </ul>
 </li>
 <li><a href="#%E5%86%B3%E8%B5%9B">决赛</a><ul>
 <li><a href="#reverse1">reverse1</a></li>
 <li><a href="#reverse2">reverse2</a></li>
+<li><a href="#reverse3">reverse3</a></li>
 </ul>
 </li>
 </ul>
@@ -222,8 +224,8 @@
 
 </div>
 
-<h1><span id="初赛">初赛</span></h1><p>ezre</p>
-<p>一个python字节码文件，可以用pycdas查看字节码。我们借此来分析一下python字节码文件的结构。</p>
+<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1lAch6EE3EPA44ulqQOkv7w">(・∀・)つ原题(提取码: d9sa)</a></p>
+<h1><span id="初赛">初赛</span></h1><h2><span id="ezre">ezre</span></h2><p>一个python字节码文件，可以用pycdas查看字节码。我们借此来分析一下python字节码文件的结构。</p>
 <p>涉及到闭包函数的内容，总的来说闭包就是函数被定义在了函数里面。</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43586120/article/details/89456183">闭包，看这一篇就够了——带你看透闭包的本质，百发百中-CSDN博客</a></p>
 <pre><code class="python">ezRe (Python 3.9)
@@ -677,6 +679,554 @@ int main() &#123;
 &#125;
 </code></pre>
 <h2><span id="reverse2">reverse2</span></h2><p>用010editer把ABC全部修改为UPX，ida分析后就是一个base64加密函数，直接就可以看到明文和码表，直接解密就得flag</p>
+<h2><span id="reverse3">reverse3</span></h2><p>在main函数下面有个sub_140002E90函数，这个创建了一个子进程，并进行了一些写内存操作，可执行文件就是上面那串字符串，有一个异或0x11加密，解密得到C:\Users\Public\1.exe。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112112501482.png" alt="image-20250112112501482"></p>
+<p>在1.exe的mian函数上面有一个函数。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112113434343.png" alt="image-20250112113434343"></p>
+<p>逐一分析看看，能在sub_140001690函数里面找到一个255大小的盒，但是这个盒是被修改了的不是常规的AES盒，sub_140001380函数像是一个AES的密钥轮函数。继续往main函数上面看，还能看到密钥拓展函数。这就是一个AES无疑了。这时候我们再回头看main函数。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112113803015.png" alt="image-20250112113803015"></p>
+<p> main函数的逻辑大概如下图。有一个加载密钥的函数，一个输入函数，还有密文。这个时候就可以解密了，但是不出所料的解不出来。这里加了反调试，我们调试不了，于是我们用fridahook来获取值。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112113919083.png" alt="image-20250112113919083"></p>
+<p>要hook的数据</p>
+<p>1.密钥0x0000000140017060</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112114416287.png" alt="image-20250112114416287"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-23-48.png" alt="Snipaste_2025-01-12_03-23-48"></p>
+<p>2.s盒0x140005160</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>hook盒和密文时，在加密函数使用盒时hook，最开始就hook的话可能在盒被修改前。</p>
+</blockquote>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112114456928.png" alt="image-20250112114456928"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-22-48.png" alt="Snipaste_2025-01-12_03-22-48"></p>
+<p>3.密文0x1400152DC</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112114633555.png" alt="image-20250112114633555"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112222904968.png" alt="image-20250112222904968"></p>
+<p>4.输入0x140001E24的rdx</p>
+<p>mian函数中我们的输入被保存到了v11中，然后在下面的for循环调用，我们直接获取寄存器的值就行，[rbp+rax+0E0h+var_100]就是v11的数据。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112114921154.png" alt="image-20250112114921154"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-23-04.png" alt="Snipaste_2025-01-12_03-23-04"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-23-30.png" alt="Snipaste_2025-01-12_03-23-30"></p>
+<p>对比分析发现我们的输入被改了，单字节加密，就是被加了一点偏移。我们可以打印所有可见字符，构建一个表查找对应查找原来的数据。密钥也被修改了。s盒也被修改了，对比原来的AES盒是相同的，所以AES的魔改又被改回了正常的AES加密，直接用常规解密就行。密文是不变的。我们直接提出来写出解密脚本。以下为c和py的解密脚本和hook脚本。</p>
+<pre><code class="c">#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct &#123;
+    uint32_t eK[44], dK[44];    // encKey, decKey
+    int Nr; // 10 rounds
+&#125;AesKey;
+
+#define BLOCKSIZE 16  //AES-128分组长度为16字节
+
+// uint8_t y[4] -&gt; uint32_t x
+#define LOAD32H(x, y) \
+  do &#123; (x) = ((uint32_t)((y)[0] &amp; 0xff)&lt;&lt;24) | ((uint32_t)((y)[1] &amp; 0xff)&lt;&lt;16) | \
+             ((uint32_t)((y)[2] &amp; 0xff)&lt;&lt;8)  | ((uint32_t)((y)[3] &amp; 0xff));&#125; while(0)
+
+// uint32_t x -&gt; uint8_t y[4]
+#define STORE32H(x, y) \
+  do &#123; (y)[0] = (uint8_t)(((x)&gt;&gt;24) &amp; 0xff); (y)[1] = (uint8_t)(((x)&gt;&gt;16) &amp; 0xff);   \
+       (y)[2] = (uint8_t)(((x)&gt;&gt;8) &amp; 0xff); (y)[3] = (uint8_t)((x) &amp; 0xff); &#125; while(0)
+
+// 从uint32_t x中提取从低位开始的第n个字节
+#define BYTE(x, n) (((x) &gt;&gt; (8 * (n))) &amp; 0xff)
+
+/* used for keyExpansion */
+// 字节替换然后循环左移1位
+#define MIX(x) (((S[BYTE(x, 2)] &lt;&lt; 24) &amp; 0xff000000) ^ ((S[BYTE(x, 1)] &lt;&lt; 16) &amp; 0xff0000) ^ \
+                ((S[BYTE(x, 0)] &lt;&lt; 8) &amp; 0xff00) ^ (S[BYTE(x, 3)] &amp; 0xff))
+
+// uint32_t x循环左移n位
+#define ROF32(x, n)  (((x) &lt;&lt; (n)) | ((x) &gt;&gt; (32-(n))))
+// uint32_t x循环右移n位
+#define ROR32(x, n)  (((x) &gt;&gt; (n)) | ((x) &lt;&lt; (32-(n))))
+
+/* for 128-bit blocks, Rijndael never uses more than 10 rcon values */
+// AES-128轮常量
+static const uint32_t rcon[10] = &#123;
+        0x01000000UL, 0x02000000UL, 0x04000000UL, 0x08000000UL, 0x10000000UL,
+        0x20000000UL, 0x40000000UL, 0x80000000UL, 0x1B000000UL, 0x36000000UL
+&#125;;
+// S盒
+unsigned char S[256] = &#123;
+        0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
+        0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
+        0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
+        0x04, 0xC7, 0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, 0xEB, 0x27, 0xB2, 0x75,
+        0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, 0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84,
+        0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, 0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF,
+        0xD0, 0xEF, 0xAA, 0xFB, 0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, 0x9F, 0xA8,
+        0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, 0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2,
+        0xCD, 0x0C, 0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, 0x64, 0x5D, 0x19, 0x73,
+        0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, 0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB,
+        0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, 0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79,
+        0xE7, 0xC8, 0x37, 0x6D, 0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, 0xAE, 0x08,
+        0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, 0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A,
+        0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E,
+        0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF,
+        0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
+&#125;;
+
+//逆S盒
+unsigned char inv_S[256] = &#123;
+        0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
+        0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB,
+        0x54, 0x7B, 0x94, 0x32, 0xA6, 0xC2, 0x23, 0x3D, 0xEE, 0x4C, 0x95, 0x0B, 0x42, 0xFA, 0xC3, 0x4E,
+        0x08, 0x2E, 0xA1, 0x66, 0x28, 0xD9, 0x24, 0xB2, 0x76, 0x5B, 0xA2, 0x49, 0x6D, 0x8B, 0xD1, 0x25,
+        0x72, 0xF8, 0xF6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xD4, 0xA4, 0x5C, 0xCC, 0x5D, 0x65, 0xB6, 0x92,
+        0x6C, 0x70, 0x48, 0x50, 0xFD, 0xED, 0xB9, 0xDA, 0x5E, 0x15, 0x46, 0x57, 0xA7, 0x8D, 0x9D, 0x84,
+        0x90, 0xD8, 0xAB, 0x00, 0x8C, 0xBC, 0xD3, 0x0A, 0xF7, 0xE4, 0x58, 0x05, 0xB8, 0xB3, 0x45, 0x06,
+        0xD0, 0x2C, 0x1E, 0x8F, 0xCA, 0x3F, 0x0F, 0x02, 0xC1, 0xAF, 0xBD, 0x03, 0x01, 0x13, 0x8A, 0x6B,
+        0x3A, 0x91, 0x11, 0x41, 0x4F, 0x67, 0xDC, 0xEA, 0x97, 0xF2, 0xCF, 0xCE, 0xF0, 0xB4, 0xE6, 0x73,
+        0x96, 0xAC, 0x74, 0x22, 0xE7, 0xAD, 0x35, 0x85, 0xE2, 0xF9, 0x37, 0xE8, 0x1C, 0x75, 0xDF, 0x6E,
+        0x47, 0xF1, 0x1A, 0x71, 0x1D, 0x29, 0xC5, 0x89, 0x6F, 0xB7, 0x62, 0x0E, 0xAA, 0x18, 0xBE, 0x1B,
+        0xFC, 0x56, 0x3E, 0x4B, 0xC6, 0xD2, 0x79, 0x20, 0x9A, 0xDB, 0xC0, 0xFE, 0x78, 0xCD, 0x5A, 0xF4,
+        0x1F, 0xDD, 0xA8, 0x33, 0x88, 0x07, 0xC7, 0x31, 0xB1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xEC, 0x5F,
+        0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF,
+        0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
+        0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D
+&#125;;
+
+/* copy in[16] to state[4][4] */
+int loadStateArray(uint8_t(*state)[4], const uint8_t* in) &#123;
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            state[j][i] = *in++;
+        &#125;
+    &#125;
+    return 0;
+&#125;
+
+/* copy state[4][4] to out[16] */
+int storeStateArray(uint8_t(*state)[4], uint8_t* out) &#123;
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            *out++ = state[j][i];
+        &#125;
+    &#125;
+    return 0;
+&#125;
+//秘钥扩展
+int keyExpansion(const uint8_t* key, uint32_t keyLen, AesKey* aesKey) &#123;
+
+    if (NULL == key || NULL == aesKey) &#123;
+        printf(&quot;keyExpansion param is NULL\n&quot;);
+        return -1;
+    &#125;
+
+    if (keyLen != 16) &#123;
+        printf(&quot;keyExpansion keyLen = %d, Not support.\n&quot;, keyLen);
+        return -1;
+    &#125;
+
+    uint32_t* w = aesKey-&gt;eK;  //加密秘钥
+    uint32_t* v = aesKey-&gt;dK;  //解密秘钥
+
+    /* keyLen is 16 Bytes, generate uint32_t W[44]. */
+
+    /* W[0-3] */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        LOAD32H(w[i], key + 4 * i);
+    &#125;
+
+    /* W[4-43] */
+    for (int i = 0; i &lt; 10; ++i) &#123;
+        w[4] = w[0] ^ MIX(w[3]) ^ rcon[i];
+        w[5] = w[1] ^ w[4];
+        w[6] = w[2] ^ w[5];
+        w[7] = w[3] ^ w[6];
+        w += 4;
+    &#125;
+
+    w = aesKey-&gt;eK + 44 - 4;
+    //解密秘钥矩阵为加密秘钥矩阵的倒序，方便使用，把ek的11个矩阵倒序排列分配给dk作为解密秘钥
+    //即dk[0-3]=ek[41-44], dk[4-7]=ek[37-40]... dk[41-44]=ek[0-3]
+    for (int j = 0; j &lt; 11; ++j) &#123;
+
+        for (int i = 0; i &lt; 4; ++i) &#123;
+            v[i] = w[i];
+        &#125;
+        w -= 4;
+        v += 4;
+    &#125;
+
+    return 0;
+&#125;
+
+// 轮秘钥加
+int addRoundKey(uint8_t(*state)[4], const uint32_t* key) &#123;
+    uint8_t k[4][4];
+
+    /* i: row, j: col */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            k[i][j] = (uint8_t)BYTE(key[j], 3 - i);  /* 把 uint32 key[4] 先转换为矩阵 uint8 k[4][4] */
+            state[i][j] ^= k[i][j];
+        &#125;
+    &#125;
+
+    return 0;
+&#125;
+
+//字节替换
+int subBytes(uint8_t(*state)[4]) &#123;
+    /* i: row, j: col */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            state[i][j] = S[state[i][j]]; //直接使用原始字节作为S盒数据下标
+        &#125;
+    &#125;
+
+    return 0;
+&#125;
+
+//逆字节替换
+int invSubBytes(uint8_t(*state)[4]) &#123;
+    /* i: row, j: col */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            state[i][j] = inv_S[state[i][j]];
+        &#125;
+    &#125;
+    return 0;
+&#125;
+
+//行移位
+int shiftRows(uint8_t(*state)[4]) &#123;
+    uint32_t block[4] = &#123; 0 &#125;;
+
+    /* i: row */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        //便于行循环移位，先把一行4字节拼成uint_32结构，移位后再转成独立的4个字节uint8_t
+        LOAD32H(block[i], state[i]);
+        block[i] = ROF32(block[i], 8 * i);
+        STORE32H(block[i], state[i]);
+    &#125;
+
+    return 0;
+&#125;
+
+//逆行移位
+int invShiftRows(uint8_t(*state)[4]) &#123;
+    uint32_t block[4] = &#123; 0 &#125;;
+
+    /* i: row */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        LOAD32H(block[i], state[i]);
+        block[i] = ROR32(block[i], 8 * i);
+        STORE32H(block[i], state[i]);
+    &#125;
+
+    return 0;
+&#125;
+
+/* Galois Field (256) Multiplication of two Bytes */
+// 两字节的伽罗华域乘法运算
+uint8_t GMul(uint8_t u, uint8_t v) &#123;
+    uint8_t p = 0;
+
+    for (int i = 0; i &lt; 8; ++i) &#123;
+        if (u &amp; 0x01) &#123;    //
+            p ^= v;
+        &#125;
+
+        int flag = (v &amp; 0x80);
+        v &lt;&lt;= 1;
+        if (flag) &#123;
+            v ^= 0x1B; /* x^8 + x^4 + x^3 + x + 1 */
+        &#125;
+
+        u &gt;&gt;= 1;
+    &#125;
+
+    return p;
+&#125;
+
+// 列混合
+int mixColumns(uint8_t(*state)[4]) &#123;
+    uint8_t tmp[4][4];
+    uint8_t M[4][4] = &#123; &#123;0x02, 0x03, 0x01, 0x01&#125;,
+                       &#123;0x01, 0x02, 0x03, 0x01&#125;,
+                       &#123;0x01, 0x01, 0x02, 0x03&#125;,
+                       &#123;0x03, 0x01, 0x01, 0x02&#125; &#125;;
+
+    /* copy state[4][4] to tmp[4][4] */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            tmp[i][j] = state[i][j];
+        &#125;
+    &#125;
+
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;  //伽罗华域加法和乘法
+            state[i][j] = GMul(M[i][0], tmp[0][j]) ^ GMul(M[i][1], tmp[1][j])
+                ^ GMul(M[i][2], tmp[2][j]) ^ GMul(M[i][3], tmp[3][j]);
+        &#125;
+    &#125;
+
+    return 0;
+&#125;
+
+// 逆列混合
+int invMixColumns(uint8_t(*state)[4]) &#123;
+    uint8_t tmp[4][4];
+    uint8_t M[4][4] = &#123; &#123;0x0E, 0x0B, 0x0D, 0x09&#125;,
+                       &#123;0x09, 0x0E, 0x0B, 0x0D&#125;,
+                       &#123;0x0D, 0x09, 0x0E, 0x0B&#125;,
+                       &#123;0x0B, 0x0D, 0x09, 0x0E&#125; &#125;;  //使用列混合矩阵的逆矩阵
+
+    /* copy state[4][4] to tmp[4][4] */
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            tmp[i][j] = state[i][j];
+        &#125;
+    &#125;
+
+    for (int i = 0; i &lt; 4; ++i) &#123;
+        for (int j = 0; j &lt; 4; ++j) &#123;
+            state[i][j] = GMul(M[i][0], tmp[0][j]) ^ GMul(M[i][1], tmp[1][j])
+                ^ GMul(M[i][2], tmp[2][j]) ^ GMul(M[i][3], tmp[3][j]);
+        &#125;
+    &#125;
+
+    return 0;
+&#125;
+
+// AES-128加密接口，输入key应为16字节长度，输入长度应该是16字节整倍数，
+// 这样输出长度与输入长度相同，函数调用外部为输出数据分配内存
+int aesEncrypt(const uint8_t* key, uint32_t keyLen, const uint8_t* pt, uint8_t* ct, uint32_t len) &#123;
+
+    AesKey aesKey;
+    uint8_t* pos = ct;
+    const uint32_t* rk = aesKey.eK;  //解密秘钥指针
+    uint8_t out[BLOCKSIZE] = &#123; 0 &#125;;
+    uint8_t actualKey[16] = &#123; 0 &#125;;
+    uint8_t state[4][4] = &#123; 0 &#125;;
+
+    if (NULL == key || NULL == pt || NULL == ct) &#123;
+        printf(&quot;param err.\n&quot;);
+        return -1;
+    &#125;
+
+    if (keyLen &gt; 16) &#123;
+        printf(&quot;keyLen must be 16.\n&quot;);
+        return -1;
+    &#125;
+
+    if (len % BLOCKSIZE) &#123;
+        printf(&quot;inLen is invalid.\n&quot;);
+        return -1;
+    &#125;
+
+    memcpy(actualKey, key, keyLen);
+    keyExpansion(actualKey, 16, &amp;aesKey);  // 秘钥扩展
+
+    // 使用ECB模式循环加密多个分组长度的数据
+    for (int i = 0; i &lt; len; i += BLOCKSIZE) &#123;
+        // 把16字节的明文转换为4x4状态矩阵来进行处理
+        loadStateArray(state, pt);
+        // 轮秘钥加
+        addRoundKey(state, rk);
+
+        for (int j = 1; j &lt; 10; ++j) &#123;
+            rk += 4;
+            subBytes(state);   // 字节替换
+            shiftRows(state);  // 行移位
+            mixColumns(state); // 列混合
+            addRoundKey(state, rk); // 轮秘钥加
+        &#125;
+
+        subBytes(state);    // 字节替换
+        shiftRows(state);  // 行移位
+        // 此处不进行列混合
+        addRoundKey(state, rk + 4); // 轮秘钥加
+
+        // 把4x4状态矩阵转换为uint8_t一维数组输出保存
+        storeStateArray(state, pos);
+
+        pos += BLOCKSIZE;  // 加密数据内存指针移动到下一个分组
+        pt += BLOCKSIZE;   // 明文数据指针移动到下一个分组
+        rk = aesKey.eK;    // 恢复rk指针到秘钥初始位置
+    &#125;
+    return 0;
+&#125;
+
+// AES128解密， 参数要求同加密
+int aesDecrypt(const uint8_t* key, uint32_t keyLen, const uint8_t* ct, uint8_t* pt, uint32_t len) &#123;
+    AesKey aesKey;
+    uint8_t* pos = pt;
+    const uint32_t* rk = aesKey.dK;  //解密秘钥指针
+    uint8_t out[BLOCKSIZE] = &#123; 0 &#125;;
+    uint8_t actualKey[16] = &#123; 0 &#125;;
+    uint8_t state[4][4] = &#123; 0 &#125;;
+
+    if (NULL == key || NULL == ct || NULL == pt) &#123;
+        printf(&quot;param err.\n&quot;);
+        return -1;
+    &#125;
+
+    if (keyLen &gt; 16) &#123;
+        printf(&quot;keyLen must be 16.\n&quot;);
+        return -1;
+    &#125;
+
+    if (len % BLOCKSIZE) &#123;
+        printf(&quot;inLen is invalid.\n&quot;);
+        return -1;
+    &#125;
+
+    memcpy(actualKey, key, keyLen);
+    keyExpansion(actualKey, 16, &amp;aesKey);  //秘钥扩展，同加密
+
+    for (int i = 0; i &lt; len; i += BLOCKSIZE) &#123;
+        // 把16字节的密文转换为4x4状态矩阵来进行处理
+        loadStateArray(state, ct);
+        // 轮秘钥加，同加密
+        addRoundKey(state, rk);
+
+        for (int j = 1; j &lt; 10; ++j) &#123;
+            rk += 4;
+            invShiftRows(state);    // 逆行移位
+            invSubBytes(state);     // 逆字节替换，这两步顺序可以颠倒
+            addRoundKey(state, rk); // 轮秘钥加，同加密
+            invMixColumns(state);   // 逆列混合
+        &#125;
+
+        invSubBytes(state);   // 逆字节替换
+        invShiftRows(state);  // 逆行移位
+        // 此处没有逆列混合
+        addRoundKey(state, rk + 4);  // 轮秘钥加，同加密
+
+        storeStateArray(state, pos);  // 保存明文数据
+        pos += BLOCKSIZE;  // 输出数据内存指针移位分组长度
+        ct += BLOCKSIZE;   // 输入数据内存指针移位分组长度
+        rk = aesKey.dK;    // 恢复rk指针到秘钥初始位置
+    &#125;
+    return 0;
+&#125;
+// 方便输出16进制数据
+void printHex(uint8_t* ptr, int len, char* tag) &#123;
+    printf(&quot;%s\ndata[%d]: &quot;, tag, len);
+    for (int i = 0; i &lt; len; ++i) &#123;
+        printf(&quot;%.2X &quot;, *ptr++);
+    &#125;
+    printf(&quot;\n&quot;);
+&#125;
+char table[] = &quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\&quot;#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[\\]^_`&#123;|&#125;~ &quot;;
+char res[] = &#123; 0x36,0x35,0x34,0x33,0x3a,0x39,0x38,0x37,0x3e,0x3d,0x85,0x84,0x83,0x8a,0x89,0x88,0x87,0x8e,0x8d,0x8c,0x8b,0x92,0x91,0x90,0x8f,0x76,0x75,0x74,0x73,0x7a,0x79,0x78,0x77,0x7e,0x7d,0x7c,0xa5,0xa4,0xa3,0xaa,0xa9,0xa8,0xa7,0xae,0xad,0xac,0xab,0xb2,
+0xb1,0xb0,0xaf,0x96,0x95,0x94,0x93,0x9a,0x99,0x98,0x97,0x9e,0x9d,0x9c,0x45,0x44,0x43,0x4a,0x49,0x48,0x47,0x4e,0x4d,0x4c,0x4b,0x52,0x51,0x50,0x4f,0x3c,0x3b,0x42,0x41,0x40,0x3f,0xa6,0x9b,0xa2,0xa1,0xa0,0x9f,0x86,0x7b,0x82,0x81,0x80,0x66,0x66
+&#125;;
+char getcc(char in) &#123;
+    for (size_t i = 0; i &lt; 96; i++)
+    &#123;
+        if (in == res[i])
+        &#123;
+            return table[i];
+        &#125;
+
+    &#125;
+
+&#125;
+
+int main() &#123;
+
+    
+    // case 1
+    const uint8_t key[16] = &#123; 0x05,0x06,0x07,0x08,0x37,0x42,0x4d,0x58,0x63,0x00,0x0a,0x0c,0x0d,0x0e,0x0f,0x10 &#125;; //十六字节密钥
+    const uint8_t pt[48] = &#123; 0x71,0x55,0x7f,0xa8,0xfa,0x0e,0xa3,0x19,0xa0,0x5c,0xf9,0x0e,0x9b,0x0b,0x5e,0xfc,0xb5,0xa8,0x49,0xfd,0x90,0x99,0x74,0xc7,0x77,0x02,0x6a,0xf5,0x9a,0x6a,0xba,0x7f,0xfb,0xe7,0x68,0xda,0x54,0xee,0xe8,0xbb,0x78,0x01,0xe7,0xbb,0xa2,0x95,0x95,0xfa &#125;;
+    uint8_t ct[16] = &#123; 0 &#125;;     // 外部申请输出数据内存，用于加密后的数据
+    uint8_t plain[16] = &#123; 0 &#125;;  // 外部申请输出数据内存，用于解密后的数据
+
+
+    for (int i = 0; i &lt; 3; i++) &#123;
+        for (int j = 0; j &lt; 16; j++) &#123;
+            ct[j] = pt[j + i * 16];
+        &#125;
+        aesDecrypt(key, 16, ct, plain, 16);
+        for (int k = 0; k &lt; 16; k++) &#123;
+            printf(&quot;%c&quot;, getcc(plain[k]));
+        &#125;
+    &#125;
+
+
+    return 0;
+&#125;
+
+</code></pre>
+<pre><code class="python">import base64
+from base64 import encode
+from Crypto.Cipher import AES
+
+key = bytes.fromhex(&quot;0506070837424d5863000a0c0d0e0f10&quot;) #需要加密的内容，bytes类型
+
+aes = AES.new(key,AES.MODE_ECB) #创建一个aes对象
+enc =&quot;71557FA8FA0EA319A05CF90E9B0B5EFCB5A849FD909974C777026AF59A6ABA7FFBE768DA54EEE8BB7801E7BBA29595FA0F&quot;
+result =&quot;&quot;
+for i in range(len(enc)//32):
+    #print(enc[i*32:(i+1)*32:])
+    den_text = aes.decrypt(bytes.fromhex(enc[i*32:(i+1)*32:]))  # 解密密文
+    result+= den_text.hex()
+    #print(den_text.hex(),end=&#39;&#39;)
+
+table = dict()
+chars = &quot;!#$%&amp;&#39;()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz&#123;|&#125;~ &quot;
+enc_char =&quot;&quot;&quot;45 43 4a 49 48 47 4e 4d 4c 4b 52 51 50 4f 36 
+            35 34 33 3a 39 38 37 3e 3d 3c 3b 42 41 40 3f a6  
+            a5 a4 a3 aa a9 a8 a7 ae ad ac ab b2 b1 b0 af 96
+            95 94 93 9a 99 98 97 9e 9d 9c 9b a2 a1 a0 9f 86 85
+            84 83 8a 89 88 87 8e 8d 8c 8b 92 91 90 8f 76 75
+            74 73 7a 79 78 77 7e 7d 7c 7b 82 81 80 66 66 66 &quot;&quot;&quot;
+
+b = enc_char.replace(&#39; &#39;,&#39;&#39;).replace(&#39;\n&#39;,&#39;&#39;)
+
+for i,char in enumerate(chars):
+    tmp = b[2 * i:2 * i + 2]
+    table[bytes.fromhex(tmp)] = char
+
+flag =&quot;&quot;
+for i in bytes.fromhex(result):
+    flag+= table.get(i.to_bytes(),&#39;?&#39;)
+print(flag)
+</code></pre>
+<p>hook脚本</p>
+<pre><code class="js">var inter=setInterval(function () &#123;
+    var sgame = Process.findModuleByName(&quot;1.exe&quot;);
+    var baseaddr = sgame.base
+    if(sgame==null)&#123;
+        console.log(&quot;无&quot;);
+        return;
+    &#125;
+
+    console.log(&quot;base&quot;+baseaddr);
+
+    clearInterval(inter);
+    console.log(&quot;sbox&quot;)
+    console.log(hexdump(baseaddr.add(0x005160),&#123;length:255,ansi:true&#125;))
+    console.log(&quot;key&quot;)
+    console.log(hexdump(baseaddr.add(0x0017060),&#123;length:16,ansi:true&#125;))
+    
+    Interceptor.attach(baseaddr.add(0x001E7F), &#123; 
+    onEnter: function (args) &#123;
+        var rax=this.context.rax; 
+        console.log(&quot;secret&quot; +rax);
+        console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
+    &#125;&#125;),
+    Interceptor.attach(baseaddr.add(0x001E29), &#123; 
+        onEnter: function (args) &#123;
+            var rdx=this.context.rdx; 
+            console.log(&quot;input&quot; +rdx);
+               console.log(hexdump(ptr(rdx),&#123;length: 95,ansi:true&#125;));
+        &#125; 
+&#125;)
+,
+Interceptor.attach(baseaddr.add(0x001720), &#123; 
+    onEnter: function (args) &#123;
+        console.log(hexdump(baseaddr.add(0x5160),&#123;length: 256,ansi:true&#125;));
+    &#125;
+&#125;)
+&#125;,1)
+</code></pre>
+<p>参考wp <a target="_blank" rel="noopener" href="https://www.a1natas.com/2024-ZJCTFJS/">A1natas 2024 浙江省赛决赛 WriteUp</a></p>
 
     </div>
     
