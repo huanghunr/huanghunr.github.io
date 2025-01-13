@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
                     Re学习
                 </a>
             </span>
@@ -210,6 +210,14 @@
 <ul>
 <li><a href="#base64">Base64</a><ul>
 <li><a href="#%E4%B8%80%E8%88%AC%E5%BD%A2%E5%BC%8F%E7%89%B9%E5%BE%81">一般形式（特征）</a></li>
+</ul>
+</li>
+<li><a href="#salsa20">Salsa20</a><ul>
+<li><a href="#%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%84%9A%E6%9C%AC">加解密脚本</a></li>
+</ul>
+</li>
+<li><a href="#chacha20">ChaCha20</a><ul>
+<li><a href="#%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%84%9A%E6%9C%AC-1">加解密脚本</a></li>
 </ul>
 </li>
 <li><a href="#rc4">RC4</a><ul>
@@ -233,7 +241,7 @@
 </ul>
 </li>
 <li><a href="#aes">AES</a><ul>
-<li><a href="#%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%84%9A%E6%9C%AC">加解密脚本</a></li>
+<li><a href="#%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%84%9A%E6%9C%AC-2">加解密脚本</a></li>
 </ul>
 </li>
 <li><a href="#sm4">SM4</a><ul>
@@ -264,6 +272,7 @@
 
 <h2><span id="base64">Base64</span></h2><p>一种基于64个可打印的字符来表示二进制的数据的一种方法。</p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1868972">https://cloud.tencent.com/developer/article/1868972</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Hp4y1g7Ex/?spm_id_from=333.1387.upload.video_card.click">动画演示</a></p>
 <p>总的来说就是把原数据的二进制按3字节分块，后再按6位二进制分成4块，然后在每组二进制前面补00，变成8位（一块二进制内少于6位在末尾补0，三字节数据块内存在空字节就用等号补上。），按分块的二进制表示的值为索引到表中去寻找对应的元素。</p>
 <p>解码时按4字节到表中寻找元素后计算索引按三字节恢复就行。</p>
 <p>源码解读，来自</p>
@@ -564,7 +573,534 @@ unsigned char *base64_decode(unsigned char *code)
 &#125;  
 </code></pre>
 <hr>
+<h2><span id="salsa20">Salsa20</span></h2><p>需要的数据：8字节的随机数noce，128位或256位的密钥，不定长度明文&#x2F;密文，一个16字节密钥拓展常量”expand 32-byte k”，一个常量[0x61707865, 0x3320646e, 0x79622d32, 0x6b206574]。</p>
+<p>加密流程，密钥拓展-&gt;把拓展的密钥和随机数，计数器，常量排列成一个4x4的矩阵，每个元素4字节-&gt;行列分别多轮加密每行&#x2F;列3个为一组加密-&gt;把矩阵拆分成单字节的盒-&gt;明文与盒异或</p>
+<h3><span id="加解密脚本">加解密脚本</span></h3><pre><code class="c">#include &lt;stdint.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;stdio.h&gt;
+
+enum s20_status_t  //返回加解密结果状态
+&#123;
+    S20_SUCCESS,
+    S20_FAILURE
+&#125;;
+
+enum s20_keylen_t  //salsa20支持128和256位密钥
+&#123;
+    S20_KEYLEN_256,
+    S20_KEYLEN_128
+&#125;;
+
+static uint32_t rotl(uint32_t value, int shift)   //32位数据位移交换操作
+&#123;
+    return (value &lt;&lt; shift) | (value &gt;&gt; (32 - shift));
+&#125;
+
+static void s20_quarterround(uint32_t* y0, uint32_t* y1, uint32_t* y2, uint32_t* y3)  //行列加密逻辑
+&#123;
+    *y1 = *y1 ^ rotl(*y0 + *y3, 7);
+    *y2 = *y2 ^ rotl(*y1 + *y0, 9);
+    *y3 = *y3 ^ rotl(*y2 + *y1, 13);
+    *y0 = *y0 ^ rotl(*y3 + *y2, 18);
+&#125;
+
+static void s20_rowround(uint32_t y[16])  //列加密
+&#123;
+    s20_quarterround(&amp;y[0], &amp;y[1], &amp;y[2], &amp;y[3]);
+    s20_quarterround(&amp;y[5], &amp;y[6], &amp;y[7], &amp;y[4]);
+    s20_quarterround(&amp;y[10], &amp;y[11], &amp;y[8], &amp;y[9]);
+    s20_quarterround(&amp;y[15], &amp;y[12], &amp;y[13], &amp;y[14]);
+&#125;
+
+static void s20_columnround(uint32_t x[16])    //行加密
+&#123;
+    s20_quarterround(&amp;x[0], &amp;x[4], &amp;x[8], &amp;x[12]);
+    s20_quarterround(&amp;x[5], &amp;x[9], &amp;x[13], &amp;x[1]);
+    s20_quarterround(&amp;x[10], &amp;x[14], &amp;x[2], &amp;x[6]);
+    s20_quarterround(&amp;x[15], &amp;x[3], &amp;x[7], &amp;x[11]);
+&#125;
+
+static void s20_doubleround(uint32_t x[16])  //行列加密，这次就是一轮加密
+&#123;
+    s20_columnround(x);
+    s20_rowround(x);
+&#125;
+
+// Creates a little-endian word from 4 bytes pointed to by b
+static uint32_t s20_littleendian(uint8_t* b)  //端序转化，字节数据转小端序4字节
+&#123;
+    return b[0] +
+        ((uint_fast16_t)b[1] &lt;&lt; 8) +
+        ((uint_fast32_t)b[2] &lt;&lt; 16) +
+        ((uint_fast32_t)b[3] &lt;&lt; 24);
+&#125;
+
+// Moves the little-endian word into the 4 bytes pointed to by b
+static void s20_rev_littleendian(uint8_t* b, uint32_t w)  //4字节按小端序转字节数据
+&#123;
+    b[0] = w;
+    b[1] = w &gt;&gt; 8;
+    b[2] = w &gt;&gt; 16;
+    b[3] = w &gt;&gt; 24;
+&#125;
+
+// The core function of Salsa20
+static void s20_hash(uint8_t seq[64])
+&#123;
+    int i;
+    uint32_t x[16];
+    uint32_t z[16];
+
+    for (i = 0; i &lt; 16; ++i)
+        x[i] = z[i] = s20_littleendian(seq + (4 * i)); //转成4字节分组加密
+
+    for (i = 0; i &lt; 10; ++i)  //轮加密
+        s20_doubleround(z);
+
+    for (i = 0; i &lt; 16; ++i) &#123;
+        z[i] += x[i];
+        s20_rev_littleendian(seq + (4 * i), z[i]);  //转成单字节生成盒
+    &#125;
+&#125;
+
+// The 16-byte (128-bit) key expansion function
+static void s20_expand16(uint8_t* k,  //密钥拓展
+    uint8_t n[16],
+    uint8_t keystream[64])
+&#123;
+    int i, j;
+    // The constants specified by the Salsa20 specification, &#39;tau&#39;
+    // &quot;expand 16-byte k&quot;
+    uint8_t t[4][4] = &#123;
+      &#123; &#39;e&#39;, &#39;x&#39;, &#39;p&#39;, &#39;a&#39; &#125;,
+      &#123; &#39;n&#39;, &#39;d&#39;, &#39; &#39;, &#39;1&#39; &#125;,
+      &#123; &#39;6&#39;, &#39;-&#39;, &#39;b&#39;, &#39;y&#39; &#125;,
+      &#123; &#39;t&#39;, &#39;e&#39;, &#39; &#39;, &#39;k&#39; &#125;
+    &#125;;
+
+    // Copy all of &#39;tau&#39; into the correct spots in our keystream block
+    for (i = 0; i &lt; 64; i += 20)
+        for (j = 0; j &lt; 4; ++j)
+            keystream[i + j] = t[i / 20][j];
+
+    // Copy the key and the nonce into the keystream block
+    for (i = 0; i &lt; 16; ++i) &#123;
+        keystream[4 + i] = k[i];
+        keystream[44 + i] = k[i];
+        keystream[24 + i] = n[i];
+    &#125;
+
+    s20_hash(keystream);
+&#125;
+
+
+// The 32-byte (256-bit) key expansion function
+static void s20_expand32(uint8_t* k,
+    uint8_t n[16],
+    uint8_t keystream[64])
+&#123;
+    int i, j;
+    // The constants specified by the Salsa20 specification, &#39;sigma&#39;
+    // &quot;expand 32-byte k&quot;
+    uint8_t o[4][4] = &#123;
+      &#123; &#39;e&#39;, &#39;x&#39;, &#39;p&#39;, &#39;a&#39; &#125;,
+      &#123; &#39;n&#39;, &#39;d&#39;, &#39; &#39;, &#39;3&#39; &#125;,
+      &#123; &#39;2&#39;, &#39;-&#39;, &#39;b&#39;, &#39;y&#39; &#125;,
+      &#123; &#39;t&#39;, &#39;e&#39;, &#39; &#39;, &#39;k&#39; &#125;
+    &#125;;
+
+    // Copy all of &#39;sigma&#39; into the correct spots in our keystream block
+    for (i = 0; i &lt; 64; i += 20)
+        for (j = 0; j &lt; 4; ++j)
+            keystream[i + j] = o[i / 20][j];
+
+    // Copy the key and the nonce into the keystream block
+    for (i = 0; i &lt; 16; ++i) &#123;
+        keystream[4 + i] = k[i];
+        keystream[44 + i] = k[i + 16];
+        keystream[24 + i] = n[i];
+    &#125;
+
+    s20_hash(keystream);
+&#125;
+
+enum s20_status_t s20_crypt(  //加解密函数
+    uint8_t* key,    //密钥
+    enum s20_keylen_t keylen,  //密钥长度
+    uint8_t nonce[8],   //随机数
+    uint32_t si,   //密钥偏移量，决定从什么时候使用密钥
+    uint8_t* buf,  //要输入的数据
+    uint32_t buflen)  //数去的长度
+&#123;
+    uint8_t keystream[64];  //密钥流，盒
+    uint8_t n[16] = &#123; 0 &#125;;  //随机数和计数器
+    uint32_t i;
+
+    void (*expand)(uint8_t*, uint8_t*, uint8_t*) = NULL;
+    if (keylen == S20_KEYLEN_256)
+        expand = s20_expand32;
+    if (keylen == S20_KEYLEN_128)
+        expand = s20_expand16;      
+
+    if (expand == NULL || key == NULL || nonce == NULL || buf == NULL)
+        return S20_FAILURE;
+
+    for (i = 0; i &lt; 8; ++i)
+        n[i] = nonce[i];  //生成随机数与计数器
+
+    if (si % 64 != 0) &#123;
+        s20_rev_littleendian(n + 8, si / 64);
+        (*expand)(key, n, keystream); 
+    &#125;
+
+    for (i = 0; i &lt; buflen; ++i) &#123;
+        if ((si + i) % 64 == 0) &#123;
+            s20_rev_littleendian(n + 8, ((si + i) / 64));
+            (*expand)(key, n, keystream);  //密钥拓展，生成盒
+        &#125;
+
+        buf[i] ^= keystream[(si + i) % 64];  //与原数据异或加密
+    &#125;
+
+    return S20_SUCCESS;
+&#125;
+
+int main() &#123;
+
+    uint8_t key[32] = &#123; 0x59, 0x6F, 0x75, 0x74, 0x68, 0x20, 0x53, 0x74,0x72,0x65, 0x6E, 0x67, 0x74, 0x68, 0x65, 0x6E, 0x73,0x20, 0x74, 0x68, 0x65, 0x20, 0x4E, 0x61,0x74, 0x69, 0x6F, 0x6E &#125;;
+    uint8_t nonce[8] = &#123; 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37 &#125;;
+    unsigned char data[48] = &#123;
+    0x5E, 0x13, 0xAA, 0xD3, 0x87, 0x75, 0x2B, 0x7A, 0x1B, 0x16, 0x04, 0xA3, 0x49, 0x7E, 0x1D, 0xD2,
+    0x6B, 0x5D, 0x58, 0x40, 0x5E, 0x44, 0x63, 0x59, 0x48, 0x51, 0x0D, 0x54, 0x5E, 0x58, 0x55, 0x58,
+    0xAD, 0x82, 0xAF, 0xDC, 0xE7, 0xAB, 0x58, 0x5D, 0xCE, 0xC1, 0xFD, 0xF7, 0xFF, 0x7F, 0x0, 0x0
+    &#125;;
+
+    printf(&quot;%d&quot;,s20_crypt(key, S20_KEYLEN_256, nonce, 0, (uint8_t*)data, 48));
+
+    for (int i = 0; i &lt; 48; i++) &#123;
+        printf(&quot;%c&quot;, data[i]);
+    &#125;
+&#125;
+</code></pre>
+<p>参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lordtianqiyi/articles/16822639.html">ChaCha20加密 与 Salsa20加密 - TLSN - 博客园</a></p>
+<p>​    <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Bj411q7Kr?spm_id_from=333.788.recommend_more_video.-1&vd_source=7b352c7cd2bdf055df2dc80c7bf5002c">【动画密码学】Salsa20|流密码_哔哩哔哩_bilibili</a></p>
+<p>​	<a target="_blank" rel="noopener" href="https://github.com/alexwebr/salsa20">alexwebr&#x2F;salsa20: An implementation of the Salsa20 stream cipher in C99</a></p>
+<hr>
+<h2><span id="chacha20">ChaCha20</span></h2><p>需要的数据：一个计数器counter一般为0，8字节的随机数noce，128位或256位的密钥，不定长度明文&#x2F;密文，一个16字节密钥拓展常量”expand 32-byte k”，。</p>
+<p>加密流程，密钥拓展-&gt;把拓展的密钥和随机数，计数器，常量排列成一个4x4的矩阵（顺序排列），每个元素4字节-&gt;列加密，斜对角加密，相比salsa20还多了一次异或-&gt;把矩阵拆分成单字节的盒-&gt;明文与盒异或.</p>
+<h3><span id="加解密脚本">加解密脚本</span></h3><pre><code class="c">#include &lt;stdint.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+
+static inline void u32t8le(uint32_t v, uint8_t p[4]) &#123;
+    p[0] = v &amp; 0xff;
+    p[1] = (v &gt;&gt; 8) &amp; 0xff;
+    p[2] = (v &gt;&gt; 16) &amp; 0xff;
+    p[3] = (v &gt;&gt; 24) &amp; 0xff;
+&#125;
+
+static inline uint32_t u8t32le(uint8_t p[4]) &#123;
+    uint32_t value = p[3];
+
+    value = (value &lt;&lt; 8) | p[2];
+    value = (value &lt;&lt; 8) | p[1];
+    value = (value &lt;&lt; 8) | p[0];
+
+    return value;
+&#125;
+
+static inline uint32_t rotl32(uint32_t x, int n) &#123;
+    // http://blog.regehr.org/archives/1063
+    return x &lt;&lt; n | (x &gt;&gt; (-n &amp; 31));
+&#125;
+
+// https://tools.ietf.org/html/rfc7539#section-2.1
+static void chacha20_quarterround(uint32_t* x, int a, int b, int c, int d) &#123;
+    x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 16);
+    x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 12);
+    x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 8);
+    x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 7);
+&#125;
+
+static void chacha20_serialize(uint32_t in[16], uint8_t output[64]) &#123;
+    int i;
+    for (i = 0; i &lt; 16; i++) &#123;
+        u32t8le(in[i], output + (i &lt;&lt; 2));
+    &#125;
+&#125;
+
+static void chacha20_block(uint32_t in[16], uint8_t out[64], int num_rounds) &#123; // num_rounds 一般为20 
+    int i;
+    uint32_t x[16];
+
+    memcpy(x, in, sizeof(uint32_t) * 16);
+
+    for (i = num_rounds; i &gt; 0; i -= 2) &#123;
+        //odd round
+        chacha20_quarterround(x, 0, 4, 8, 12);
+        chacha20_quarterround(x, 1, 5, 9, 13);
+        chacha20_quarterround(x, 2, 6, 10, 14);
+        chacha20_quarterround(x, 3, 7, 11, 15);
+        //even round 
+        chacha20_quarterround(x, 0, 5, 10, 15);
+        chacha20_quarterround(x, 1, 6, 11, 12);
+        chacha20_quarterround(x, 2, 7, 8, 13);
+        chacha20_quarterround(x, 3, 4, 9, 14);
+    &#125;
+
+    for (i = 0; i &lt; 16; i++) &#123;
+        x[i] += in[i];
+    &#125;
+
+    chacha20_serialize(x, out);
+&#125;
+
+// https://tools.ietf.org/html/rfc7539#section-2.3
+static void chacha20_init_state(uint32_t s[16], uint8_t key[32], uint32_t counter, uint8_t nonce[12]) &#123;
+    int i;
+
+    // refer: https://dxr.mozilla.org/mozilla-beta/source/security/nss/lib/freebl/chacha20.c
+    // convert magic number to string: &quot;expand 32-byte k&quot;
+    s[0] = 0x61707865;
+    s[1] = 0x3320646e;
+    s[2] = 0x79622d32;
+    s[3] = 0x6b206574;
+
+    for (i = 0; i &lt; 8; i++) &#123;
+        s[4 + i] = u8t32le(key + i * 4);
+    &#125;
+
+    s[12] = counter;
+
+    for (i = 0; i &lt; 3; i++) &#123;
+        s[13 + i] = u8t32le(nonce + i * 4);
+    &#125;
+&#125;
+
+void ChaCha20XOR(uint8_t key[32], uint32_t counter, uint8_t nonce[12], uint8_t* in, uint8_t* out, int inlen) &#123;
+    int i, j;
+
+    uint32_t s[16];
+    uint8_t block[64];
+
+    chacha20_init_state(s, key, counter, nonce);
+
+    for (i = 0; i &lt; inlen; i += 64) &#123;
+        chacha20_block(s, block, 20);
+        s[12]++;
+
+        for (j = i; j &lt; i + 64; j++) &#123;
+            if (j &gt;= inlen) &#123;
+                break;
+            &#125;
+            out[j] = in[j] ^ block[j - i];
+        &#125;
+    &#125;
+&#125;
+
+int main(int argc, char** argv) &#123;
+    int i;
+
+    uint8_t nonce[8] = &#123; 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37 &#125;;
+    unsigned char data[48] = &#123;
+    0x5E, 0x13, 0xAA, 0xD3, 0x87, 0x75, 0x2B, 0x7A, 0x1B, 0x16, 0x04, 0xA3, 0x49, 0x7E, 0x1D, 0xD2,
+    0x6B, 0x5D, 0x58, 0x40, 0x5E, 0x44, 0x63, 0x59, 0x48, 0x51, 0x0D, 0x54, 0x5E, 0x58, 0x55, 0x58,
+    0xAD, 0x82, 0xAF, 0xDC, 0xE7, 0xAB, 0x58, 0x5D, 0xCE, 0xC1, 0xFD, 0xF7, 0xFF, 0x7F, 0x0, 0x0
+    &#125;;
+
+    uint8_t key[32] = &#123; 0x59, 0x6F, 0x75, 0x74, 0x68, 0x20, 0x53, 0x74, 0x72, 0x65, 0x6E, 0x67, 0x74, 0x68, 0x65, 0x6E,
+    0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x4E, 0x61, 0x74, 0x69, 0x6F, 0x6E ,0x0,0x0,0x0,0x0 &#125;;
+
+    uint8_t encrypt[114];
+
+    ChaCha20XOR(key, 0, nonce, data, encrypt, 48); 
+    
+    for (int i = 0; i &lt; 48; i++) &#123;
+        printf(&quot;%c&quot;, encrypt[i]);
+    &#125;
+   
+   
+    return 0;
+&#125;
+</code></pre>
+<pre><code class="c">#include &lt;assert.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+
+struct chacha20_context
+&#123;
+    uint32_t keystream32[16];
+    size_t position;
+
+    uint8_t key[32];
+    uint8_t nonce[12];
+    uint64_t counter;
+
+    uint32_t state[16];
+&#125;;
+
+void chacha20_init_context(struct chacha20_context* ctx, uint8_t key[], uint8_t nounc[], uint64_t counter);
+
+void chacha20_xor(struct chacha20_context* ctx, uint8_t* bytes, size_t n_bytes);
+
+
+static uint32_t rotl32(uint32_t x, int n)
+&#123;
+    return (x &lt;&lt; n) | (x &gt;&gt; (32 - n));
+&#125;
+
+static uint32_t pack4(const uint8_t* a)
+&#123;
+    uint32_t res = 0;
+    res |= (uint32_t)a[0] &lt;&lt; 0 * 8;
+    res |= (uint32_t)a[1] &lt;&lt; 1 * 8;
+    res |= (uint32_t)a[2] &lt;&lt; 2 * 8;
+    res |= (uint32_t)a[3] &lt;&lt; 3 * 8;
+    return res;
+&#125;
+
+static void unpack4(uint32_t src, uint8_t* dst) &#123;
+    dst[0] = (src &gt;&gt; 0 * 8) &amp; 0xff;
+    dst[1] = (src &gt;&gt; 1 * 8) &amp; 0xff;
+    dst[2] = (src &gt;&gt; 2 * 8) &amp; 0xff;
+    dst[3] = (src &gt;&gt; 3 * 8) &amp; 0xff;
+&#125;
+
+static void chacha20_init_block(struct chacha20_context* ctx, uint8_t key[], uint8_t nonce[])
+&#123;
+    memcpy(ctx-&gt;key, key, sizeof(ctx-&gt;key));
+    memcpy(ctx-&gt;nonce, nonce, sizeof(ctx-&gt;nonce));
+
+    const uint8_t* magic_constant = (uint8_t*)&quot;expand 32-byte k&quot;;
+    ctx-&gt;state[0] = pack4(magic_constant + 0 * 4);
+    ctx-&gt;state[1] = pack4(magic_constant + 1 * 4);
+    ctx-&gt;state[2] = pack4(magic_constant + 2 * 4);
+    ctx-&gt;state[3] = pack4(magic_constant + 3 * 4);
+    ctx-&gt;state[4] = pack4(key + 0 * 4);
+    ctx-&gt;state[5] = pack4(key + 1 * 4);
+    ctx-&gt;state[6] = pack4(key + 2 * 4);
+    ctx-&gt;state[7] = pack4(key + 3 * 4);
+    ctx-&gt;state[8] = pack4(key + 4 * 4);
+    ctx-&gt;state[9] = pack4(key + 5 * 4);
+    ctx-&gt;state[10] = pack4(key + 6 * 4);
+    ctx-&gt;state[11] = pack4(key + 7 * 4);
+    // 64 bit counter initialized to zero by default.
+    ctx-&gt;state[12] = 0;
+    ctx-&gt;state[13] = pack4(nonce + 0 * 4);
+    ctx-&gt;state[14] = pack4(nonce + 1 * 4);
+    ctx-&gt;state[15] = pack4(nonce + 2 * 4);
+
+    memcpy(ctx-&gt;nonce, nonce, sizeof(ctx-&gt;nonce));
+&#125;
+
+static void chacha20_block_set_counter(struct chacha20_context* ctx, uint64_t counter)
+&#123;
+    ctx-&gt;state[12] = (uint32_t)counter;
+    ctx-&gt;state[13] = pack4(ctx-&gt;nonce + 0 * 4) + (uint32_t)(counter &gt;&gt; 32);
+&#125;
+
+static void chacha20_block_next(struct chacha20_context* ctx) &#123;
+    // This is where the crazy voodoo magic happens.
+    // Mix the bytes a lot and hope that nobody finds out how to undo it.
+    for (int i = 0; i &lt; 16; i++) ctx-&gt;keystream32[i] = ctx-&gt;state[i];
+
+#define CHACHA20_QUARTERROUND(x, a, b, c, d) \
+    x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 16); \
+    x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 12); \
+    x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 8); \
+    x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 7);
+
+    for (int i = 0; i &lt; 10; i++)
+    &#123;
+        CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 0, 4, 8, 12)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 1, 5, 9, 13)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 2, 6, 10, 14)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 3, 7, 11, 15)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 0, 5, 10, 15)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 1, 6, 11, 12)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 2, 7, 8, 13)
+            CHACHA20_QUARTERROUND(ctx-&gt;keystream32, 3, 4, 9, 14)
+    &#125;
+
+    for (int i = 0; i &lt; 16; i++) ctx-&gt;keystream32[i] += ctx-&gt;state[i];
+
+    uint32_t* counter = ctx-&gt;state + 12;
+    // increment counter
+    counter[0]++;
+    if (0 == counter[0])
+    &#123;
+        // wrap around occured, increment higher 32 bits of counter
+        counter[1]++;
+        // Limited to 2^64 blocks of 64 bytes each.
+        // If you want to process more than 1180591620717411303424 bytes
+        // you have other problems.
+        // We could keep counting with counter[2] and counter[3] (nonce),
+        // but then we risk reusing the nonce which is very bad.
+        assert(0 != counter[1]);
+    &#125;
+&#125;
+
+void chacha20_init_context(struct chacha20_context* ctx, uint8_t key[], uint8_t nonce[], uint64_t counter)
+&#123;
+    memset(ctx, 0, sizeof(struct chacha20_context));
+
+    chacha20_init_block(ctx, key, nonce);
+    chacha20_block_set_counter(ctx, counter);
+
+    ctx-&gt;counter = counter;
+    ctx-&gt;position = 64;
+&#125;
+
+void chacha20_xor(struct chacha20_context* ctx, uint8_t* bytes, size_t n_bytes)
+&#123;
+    uint8_t* keystream8 = (uint8_t*)ctx-&gt;keystream32;
+    for (size_t i = 0; i &lt; n_bytes; i++)
+    &#123;
+        if (ctx-&gt;position &gt;= 64)
+        &#123;
+            chacha20_block_next(ctx);
+            for (int i = 0; i &lt; 64; i++) &#123;
+                printf(&quot;%.2x,&quot;, keystream8[i]);
+            &#125;
+            ctx-&gt;position = 0;
+        &#125;
+        bytes[i] ^= keystream8[ctx-&gt;position];
+        ctx-&gt;position++;
+    &#125;
+&#125;
+
+
+int main() &#123;
+
+   
+    uint8_t nonce[8] = &#123; 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37 &#125;;
+    unsigned char data[48] = &#123;
+    0x5E, 0x13, 0xAA, 0xD3, 0x87, 0x75, 0x2B, 0x7A, 0x1B, 0x16, 0x04, 0xA3, 0x49, 0x7E, 0x1D, 0xD2,
+    0x6B, 0x5D, 0x58, 0x40, 0x5E, 0x44, 0x63, 0x59, 0x48, 0x51, 0x0D, 0x54, 0x5E, 0x58, 0x55, 0x58,
+    0xAD, 0x82, 0xAF, 0xDC, 0xE7, 0xAB, 0x58, 0x5D, 0xCE, 0xC1, 0xFD, 0xF7, 0xFF, 0x7F, 0x0, 0x0
+    &#125;;
+
+    uint8_t key[32] = &#123; 0x59, 0x6F, 0x75, 0x74, 0x68, 0x20, 0x53, 0x74, 0x72, 0x65, 0x6E, 0x67, 0x74, 0x68, 0x65, 0x6E,
+    0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x4E, 0x61, 0x74, 0x69, 0x6F, 0x6E ,0x0,0x0,0x0,0x0&#125;;
+    
+    struct chacha20_context ctx;
+
+    chacha20_init_context(&amp;ctx, key, nonce, 0);
+    chacha20_xor(&amp;ctx,(uint8_t*) data,48);
+
+    printf(&quot;\n&quot;);
+    for (int i = 0; i &lt; 48; i++) &#123;
+        printf(&quot;%.2x,&quot;, data[i]);
+    &#125;
+&#125;
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://github.com/Ginurx/chacha20-c">Ginurx&#x2F;chacha20-c: ChaCha20 stream cipher implemented in C</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lordtianqiyi/articles/16822639.html">ChaCha20加密 与 Salsa20加密 - TLSN - 博客园</a></p>
+<hr>
 <h2><span id="rc4">RC4</span></h2><p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/xiao__1bai/article/details/123357156">https://blog.csdn.net/xiao__1bai/article/details/123357156</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1z94y1C79p/?share_source=copy_web&vd_source=3c5a9c55a0916c3bbdeb89727b25cf20">演示动画</a></p>
 <p>对称加密算法，可以用写内存解决。</p>
 <p>单字节加密。</p>
 <p>大概流程：初始化盒S，用密钥初始化盒子T，用S和T的值做为索引组合交换盒S中的内容打乱S盒，遍历要加密的数据，再次用S盒中的数据作为下标和S盒内的数据进行交换打乱，把S盒中的数据相加作为索引在S盒中寻找数据与原数据进行异或。</p>
@@ -745,6 +1281,7 @@ int main() &#123;
 </code></pre>
 <hr>
 <h2><span id="tea">TEA</span></h2><p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/xiao__1bai/article/details/123307059">https://blog.csdn.net/xiao__1bai/article/details/123307059</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Nu411E7wX/?share_source=copy_web&vd_source=3c5a9c55a0916c3bbdeb89727b25cf20">动画演示</a></p>
 <p>位移与运算的关系</p>
 <pre><code class="c">A &gt;&gt; n == A / pow(2,n)
 A &lt;&lt; n == A * pow(2,n)
@@ -796,6 +1333,7 @@ int main()
 <p>CFB：类似OFB，只不过将上一组的密文作为下一组的输入来加密进行反馈。</p>
 <hr>
 <h2><span id="xtea">XTEA</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiao__1bai/article/details/123307059">解析 TEA 加密算法(C语言、python)：_tea加密-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1dw411w7WH/?spm_id_from=333.1387.upload.video_card.click&vd_source=7b352c7cd2bdf055df2dc80c7bf5002c">演示动画</a></p>
 <p>XTEA是TEA的升级版，增加了更多的密钥表，移位和异或操作</p>
 <h4><span id="代码">代码</span></h4><pre><code class="c">#include&lt;stdio.h&gt;
 #include&lt;stdint.h&gt;
@@ -904,6 +1442,7 @@ int main()
 <h3><span id="tea系列的特征">TEA系列的特征</span></h3><p>TEA系列最明显的特征就是DELTA&#x3D;0x933779b9，有时值不一样，但是delta是一定有的。还有就是那一串异或相加加密的代码。</p>
 <p>在TEA和XTEA中每次加密只会涉及到两个密文，而XXTEA有三个密文。在XTEA和XXTEA中有&amp;3，而TEA中没有。在XXTEA中的轮数是6+52&#x2F;n。</p>
 <h2><span id="aes">AES</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/dingxingaq/article/details/144160367">AES加密算法原理详解-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1kK4y1F7TJ/?share_source=copy_web&vd_source=3c5a9c55a0916c3bbdeb89727b25cf20">演示动画</a></p>
 <p>AES 是一种对称密钥加密方法，依赖于分组密码，将数据分成块，对每个块进行加密以确保一致的安全性。AES 加密提供三种密钥长度——128 位、192 位和 256 位。包括4个操作：字节代换、行位移、列混合和轮密钥加。最后一轮迭代不执行列混合。AES的字节代换其实就是一个简单的查表操作。AES定义了一个S盒和一个逆S盒。</p>
 <p>AES加密比较复杂，我们不深入研究，只掌握一些特征用于分析，具体解密方式可以用赛博厨师和Python脚本</p>
 <ul>
@@ -1434,6 +1973,21 @@ den_text = aes.decrypt(en_text) # 解密密文
 print(&quot;明文：&quot;,den_text)
 
 # print(den_text.decode(&#39;gbk&#39;))   #中文输出
+</code></pre>
+<p>解密AES需要逆s盒，逆s盒脚本为</p>
+<pre><code class="py">new_s_box = [
+    0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,0x04,0xc7,0x23,0xc3,0x18,0x96,0x05,0x9a,0x07,0x12,0x80,0xe2,0xeb,0x27,0xb2,0x75,0x09,0x83,0x2c,0x1a,0x1b,0x6e,0x5a,0xa0,0x52,0x3b,0xd6,0xb3,0x29,0xe3,0x2f,0x84,0x53,0xd1,0x00,0xed,0x20,0xfc,0xb1,0x5b,0x6a,0xcb,0xbe,0x39,0x4a,0x4c,0x58,0xcf,0xd0,0xef,0xaa,0xfb,0x43,0x4d,0x33,0x85,0x45,0xf9,0x02,0x7f,0x50,0x3c,0x9f,0xa8,0x51,0xa3,0x40,0x8f,0x92,0x9d,0x38,0xf5,0xbc,0xb6,0xda,0x21,0x10,0xff,0xf3,0xd2,0xcd,0x0c,0x13,0xec,0x5f,0x97,0x44,0x17,0xc4,0xa7,0x7e,0x3d,0x64,0x5d,0x19,0x73,0x60,0x81,0x4f,0xdc,0x22,0x2a,0x90,0x88,0x46,0xee,0xb8,0x14,0xde,0x5e,0x0b,0xdb,0xe0,0x32,0x3a,0x0a,0x49,0x06,0x24,0x5c,0xc2,0xd3,0xac,0x62,0x91,0x95,0xe4,0x79,0xe7,0xc8,0x37,0x6d,0x8d,0xd5,0x4e,0xa9,0x6c,0x56,0xf4,0xea,0x65,0x7a,0xae,0x08,0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16
+]
+import string
+new_contrary_sbox = [0]*256
+print(len(new_s_box))
+for i in range(256):
+    line = (new_s_box[i]&amp;0xf0)&gt;&gt;4
+    rol = new_s_box[i]&amp;0xf
+    new_contrary_sbox[(line*16)+rol] = i
+print(len(new_contrary_sbox))
+for i in new_contrary_sbox:
+    print(f&quot;&#123;hex(i)&#125;,&quot;,end=&#39;&#39;)
 </code></pre>
 <h2><span id="sm4">SM4</span></h2><p>SM4 的加密过程将数据块分成 128 位（16 字节）的分组进行加密，使用 32 轮加密操作，基于复杂的置换和替代（P-box 和 S-box）。由于其固定的 128 位分组长度，处理非 128 位整数倍的明文数据时，通常需要进行填充。主要包含异或、移位以及盒变换操作。它分为密钥拓展和加&#x2F;解密两个模块，这两个模块的流程大同小异。其中，移位变换是指循环左移；盒变换是一个将8bit输入映射到8bit输出的变换，是一个固定的变换。</p>
 <p>代码分析（来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42568323/article/details/141687655">Python实现SM4加解密算法_sm4 python-CSDN博客</a>）</p>
@@ -1996,7 +2550,9 @@ if __name__ == &#39;__main__&#39;:
             break
 </code></pre>
 <hr>
-<h2><span id="des">DES</span></h2><p>分块对称加密算法，用64位明文被分为一组进行加密，使用64位密钥。若有多于64位的明文需要进行多组加密。</p>
+<h2><span id="des">DES</span></h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1eh4y1m75A/?share_source=copy_web&vd_source=3c5a9c55a0916c3bbdeb89727b25cf20">演示动画</a></p>
+<p>分块对称加密算法，用64位明文被分为一组进行加密，使用64位密钥。若有多于64位的明文需要进行多组加密。</p>
+<p>密钥拓展-&gt;二分明文-&gt;(半部分操作)明文ip置换-&gt;明文E拓展-&gt;轮密钥异或-&gt;加密分组s盒代换-&gt;p盒置换操作-&gt;继续右半部分相同操作-&gt;重复左右操作多轮加密-&gt;左右拼接ip逆置换</p>
 <h4><span id="加解密实现代码">加解密实现代码</span></h4><p>来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_62107003/article/details/142746369">python实现DES算法-CSDN博客</a></p>
 <pre><code class="python">import re
 
@@ -2369,7 +2925,8 @@ if __name__ == &#39;__main__&#39;:
 <li>md5、sha1、sha256、sha384、sha512等等</li>
 <li>加密过程有大量移位操作且不可逆</li>
 </ul>
-<h4><span id="md5特征常量">MD5特征常量</span></h4><pre><code class="c">67452301h
+<h4><span id="md5特征常量">MD5特征常量</span></h4><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1am4y1n73T?spm_id_from=333.788.videopod.sections&vd_source=7b352c7cd2bdf055df2dc80c7bf5002c">演示动画</a></p>
+<pre><code class="c">67452301h
 0EFCDAB89h
 98BADCFEh 
 10325476h

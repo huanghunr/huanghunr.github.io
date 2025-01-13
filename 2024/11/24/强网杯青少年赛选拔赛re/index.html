@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%BC%BA%E7%BD%91%E6%9D%AF%E9%9D%92%E5%B0%91%E5%B9%B4%E8%B5%9B%E9%80%89%E6%8B%94%E8%B5%9Bre-Writeup/" style="color: #00bcd4">
+                <a href="/tags/%E5%BC%BA%E7%BD%91%E6%9D%AF%E9%9D%92%E5%B0%91%E5%B9%B4%E8%B5%9B%E9%80%89%E6%8B%94%E8%B5%9Bre-Writeup/" style="color: #00a596">
                     强网杯青少年赛选拔赛re Writeup
                 </a>
             </span>
@@ -208,6 +208,7 @@
 <!-- toc -->
 
 <ul>
+<li><a href="#entergame">EnterGame</a></li>
 <li><a href="#flip_over">Flip_over</a></li>
 </ul>
 <!-- tocstop -->
@@ -215,6 +216,13 @@
 </div>
 
 <p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1_9v117ykQEk9BlDtg_ouew">原题提取码：95lk </a></p>
+<h2><span id="entergame">EnterGame</span></h2><p>一个chacha20加密，尝试用脚本解密不过好像不行，不知道是哪里的问题，可能是我密钥找错了。chacha20本质就是一个异或，我们可以把密文写入加密一次就可以得到原文。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250113235605760.png" alt="image-20250113235605760"></p>
+<p>下断点在加密入口处，提取密文注意点进去把密文全部提取，一共有48字节“5E 13 AA D3 87 75 2B 7A 1B 16 04 A3 49 7E 1D D26B 5D 58 40 5E 44 63 59 48 51 0D 54 5E 58 55 58 AD 82 AF DC E7 AB 58 5D CE C1 FD F7 FF 7F 00 00”。我们再次动调，输入48字节数据作为输入，然后再次在加密入口处断点，修改input的值。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250114000006845.png" alt="image-20250114000006845"></p>
+<p>用ida自带的chage byte就可以每十六字节进行修改。在比较的位置下一个断点继续运行查看s1的值就可以得到flag。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250114000519077.png" alt="image-20250114000519077"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250114001301768.png" alt="image-20250114001301768"></p>
 <h2><span id="flip_over">Flip_over</span></h2><p>看java层主逻辑在validateAndEncrypt()函数里，在so文件里找到这个函数，大概逻辑的是取flagflag这个字符串作为密钥把”a4c3f8927d9b8e6d6e483fa2cd0193b0a6e2f19c8b47d5a8f3c7a91e8d4b9f67”先进行RC4加密再进行DES_ECB加密,最后再与0x21和密后的数据进行异或后，与密文比较。解密时提取数据，把异或逆一下，直接用赛博厨师解密。</p>
 <blockquote>
 <p>值得注意的是，我字自己了一个脚本用于获取异或的数据，然后我发现当c语言输出到01 00这类只有一位的十六进制数时，会省略掉前面的0，在用这一大串密钥异或时默认是两位一字节，如果没有前面的0，那么密钥就是错误的，所以我们要把0添加进去。如下面的注释。或者我们在输出十六进制数据时用空格隔开，这在赛博厨师里时不影响的。还有一种解决方案就是用”%.2x”的格式输出，指定输出2个十六进制数。</p>

@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #ff7d73">
+                <a href="/tags/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B-Writeup/" style="color: #00a596">
                     2024浙江省省赛 Writeup
                 </a>
             </span>
@@ -687,7 +687,7 @@ int main() &#123;
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112113803015.png" alt="image-20250112113803015"></p>
 <p> main函数的逻辑大概如下图。有一个加载密钥的函数，一个输入函数，还有密文。这个时候就可以解密了，但是不出所料的解不出来。这里加了反调试，我们调试不了，于是我们用fridahook来获取值。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112113919083.png" alt="image-20250112113919083"></p>
-<p>要hook的数据</p>
+<p>要hook的数据（手动计算IDA中的地址偏移用于hook，这里是0x0000000140017060后面的0x17060）</p>
 <p>1.密钥0x0000000140017060</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250112114416287.png" alt="image-20250112114416287"></p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2025-01-12_03-23-48.png" alt="Snipaste_2025-01-12_03-23-48"></p>
