@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>pyhon和cython逆向学习 | huanghunr&#39;s Blog</title>
+    <title>IDA实用操作 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,14 +164,14 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>pyhon和cython逆向学习</h1>
+        <h1>IDA实用操作</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2025/1/4
+            2025/1/21
         </span>
         
         <span class="category">
@@ -208,41 +208,95 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#magic%E5%A4%B4">magic头</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE">常用快捷键</a><ul>
+<li><a href="#1"><strong>1</strong></a></li>
+<li><a href="#2"><strong>2</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E7%94%A8%E5%8A%9F%E8%83%BD">实用功能</a><ul>
+<li><a href="#%E6%8B%8D%E6%91%84%E5%BF%AB%E7%85%A7">拍摄快照</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%BB%93%E6%9E%84%E4%BD%93">创建结构体</a></li>
+</ul>
+</li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<p>反编译pyc文件时可能要修复magic头</p>
-<h2><span id="magic头">magic头</span></h2><pre><code>    MAGIC_1_0 = 0x00999902,
-    MAGIC_1_1 = 0x00999903, /* Also covers 1.2 */
-    MAGIC_1_3 = 0x0A0D2E89,
-    MAGIC_1_4 = 0x0A0D1704,
-    MAGIC_1_5 = 0x0A0D4E99,
-    MAGIC_1_6 = 0x0A0DC4FC,
-
-    MAGIC_2_0 = 0x0A0DC687,
-    MAGIC_2_1 = 0x0A0DEB2A,
-    MAGIC_2_2 = 0x0A0DED2D,
-    MAGIC_2_3 = 0x0A0DF23B,
-    MAGIC_2_4 = 0x0A0DF26D,
-    MAGIC_2_5 = 0x0A0DF2B3,
-    MAGIC_2_6 = 0x0A0DF2D1,
-    MAGIC_2_7 = 0x0A0DF303,
-
-    MAGIC_3_0 = 0x0A0D0C3A,
-    MAGIC_3_1 = 0x0A0D0C4E,
-    MAGIC_3_2 = 0x0A0D0C6C,
-    MAGIC_3_3 = 0x0A0D0C9E,
-    MAGIC_3_4 = 0x0A0D0CEE,
-    MAGIC_3_5 = 0x0A0D0D16,
-    MAGIC_3_5_3 = 0x0A0D0D17,
-    MAGIC_3_6 = 0x0A0D0D33,
-    MAGIC_3_7 = 0x0A0D0D42,
-    MAGIC_3_8 = 0x0A0D0D55,
-    MAGIC_3_9 = 0x0A0D0D61,
-</code></pre>
+<h2><span id="常用快捷键">常用快捷键</span></h2><h4><span id="1"><strong>1</strong></span></h4><p>1、切换文本视图与图表视图 空格键</p>
+<p>2、返回上一个操作地址 ESC</p>
+<p>3、搜索地址和符号 G</p>
+<p>4、对符号进行重命名 N</p>
+<p>5、常规注释 冒号键</p>
+<p>6、可重复注释 分号键</p>
+<p>7、添加标签 Alt+M</p>
+<p>8、查看标签 Ctrl+M</p>
+<p>9、查看段的信息 Ctrl+S</p>
+<p>10、查看交叉应用 X</p>
+<p>11、查看伪代码 F5</p>
+<p>12、搜索文本 Alt+T</p>
+<p>13、搜索十六进 Alt+B</p>
+<h4><span id="2"><strong>2</strong></span></h4><p>a：将数据转换为字符串</p>
+<p>f5：一键反汇编</p>
+<p>esc：回退键，能够倒回上一部操作的视图（只有在反汇编窗口才是这个作用，如果是在其他窗口按下esc，会关闭该窗口）</p>
+<p>shift+f12：可以打开string窗口，一键找出所有的字符串，右击setup，还能对窗口的属性进行设置</p>
+<p>ctrl+w：保存ida数据库</p>
+<p>ctrl+s：选择某个数据段，直接进行跳转</p>
+<p>ctrl+鼠标滚轮：能够调节流程视图的大小</p>
+<p>r：把大数转为字符串</p>
+<p>x：对着某个函数、变量按该快捷键，可以查看它的交叉引用</p>
+<p>g：直接跳转到某个地址</p>
+<p>n：更改变量的名称</p>
+<p>y：更改变量的类型</p>
+<p>&#x2F; ：在反编译后伪代码的界面中写下注释</p>
+<p>\在反编译后伪代码的界面中隐藏&#x2F;显示变量和函数的类型描述，有时候变量特别多的时候隐藏掉类型描述看起来会轻松很多</p>
+<p>；：在反汇编后的界面中写下注释</p>
+<p>ctrl+shift+w：拍摄IDA快照</p>
+<p>u：undefine，取消定义函数、代码、数据的定义</p>
+<p>动态调试快捷键<br>F2：下断点</p>
+<p>F3：打开程序</p>
+<p>F4：运行到当前光标处（可应用在跳出 循坏）</p>
+<p>F7：单步步入（进函数）</p>
+<p>F8：单步 步过</p>
+<p>F9；运行</p>
+<p>F10：打开反汇编选项菜单快捷键</p>
+<p>F12:暂时停止</p>
+<p>Ctrl+F2：重新开始</p>
+<p>Art+F2：结束跟踪</p>
+<p>Shift+F2：打开附加选项窗口</p>
+<p>Shift+F4：打开条件对话窗</p>
+<p>Shift+F7：与F7相同，但是如果被调试程序发生异常而中止，调试器会首先尝试步入被调试程序指定的异常处理</p>
+<p>Ctrl+F7：自动步入，在所有的函数调用中一条一条地执行命令，断点或异常时，自动 停止</p>
+<p>Shift+F8与F8相同，但是如果被调试程序发生异常而中止，调试器会首先尝试步过被调试程序指定的异常处理</p>
+<p>Ctrl+F8：自动步过，一条一条的执行命令，程序到达断点，或者发生异常时，自动步过过程都会停止</p>
+<p>Shift+F9：与F9相同，但是如果被调试程序发生异常而中止，调试器会首先尝试执行被调试程序指定的异常处理</p>
+<p>Ctrl+F9:执行直到返回，跟踪程序直到遇到返回，在此期间不进入子函数也不更新CPU数据。因为程序是一条一条命令执行的，所以速度可能会慢一些。按Esc键，可以停止跟踪。</p>
+<p>Alt+F9:执行直到返回到用户代码段，跟踪程序直到指令所属于的模块不在系统目录中，在此期间不进入子函数也不更新CPU数据。按Esc键，可以停止跟踪。</p>
+<p>Ctrl+F11:Run跟踪步入，一条一条执行命令，进入每个子函数调用，并把寄存器的信息加入到Run跟踪的存储数据中。Run跟踪不会同步更新CPU窗口。</p>
+<p>Ctrl+F12 :Run跟踪。步过，一条一条执行命令，但是不进入子函数调用，并把寄存器的信息加入到Run跟踪的存储数据中。Run跟踪不会同步更新CPU窗口。</p>
+<p>Art+C:快速回到主界面</p>
+<p>Alt+B:显示断点窗口</p>
+<p>Alt+E:显示模块窗口</p>
+<p>Art+L:显示记录窗口</p>
+<p>Alt+M:显示内存窗口</p>
+<p>Alt+O:显示调试选项窗口</p>
+<p>Alt+K:显示呼叫堆栈</p>
+<p>Ctrl+E:编辑机器码</p>
+<p>Ctrl+G:输入跟随地址</p>
+<p>Ctrl+N:查找名称标志，选择你要下断的内容</p>
+<p>Ctrl+S:打开查找命令次序窗口</p>
+<p>Ctrl+P:显示补丁窗口</p>
+<p>Ctrl+F9:返回到跟踪</p>
+<p>Ctrl+F8:自动步进扫描，按F12可停止</p>
+<p>Ctrl+F7:同上，功能略有不同</p>
+<p>Ctrl+F6:回到OL主窗口</p>
+<p>(可能有些已经不适用ida9了)</p>
+<h2><span id="实用功能">实用功能</span></h2><p>下面的ida环境为ida9和windows。</p>
+<p>在ida的Options中有一个show command palette(快捷键ctrl+shift+p)，里面可以搜索使用ida的全部功能，在接下来的功能中我们以”@功能名”的形式介绍，您可以通过功能名搜索到功能直接使用。</p>
+<h3><span id="拍摄快照">拍摄快照</span></h3><p>@Take database snapshot  拍摄当前数据库快照，可用@Database snapshot manager恢复快照</p>
+<h3><span id="创建结构体">创建结构体</span></h3><p>结构体的作用</p>
+<p>我们会在ida中遇见类似”a1 + 1”,”a1 + 3”,……的变量，这个时候我们可以把类似的变量名整理成一个结构体，结果会以结构体中的元素索引（结构体中元素的偏移量）与a1后面的偏移量匹配。结构体中的元素偏移量与结构体中的元素变量类型的大小有关，假如结构体的第一个元素大小为1字节，那么第二个元素的偏移量就是1，如果第二个元素的大小为4字节，那么第三个元素的索引为5，以此类推。通过对结构体命名来对变量进行命名，这可以大大提高代码的可读性。</p>
+<p>在@Local Types窗口中我们可以右键选择Add type以创建一个结构体（c语言格式）。在创建的结构体里按D键可以创建元素，多按几次可以改变，对元素名按N可以重命名。在要创建结构体的变量右键选择Structure offset(@Offset(struct))以匹配结构体。<br>在函数参数右键选择con to struct*以创建结构体指针。<br>对数据右键选择Structure创建一个结构体数组，再右键选择@Array创建合适大小的数组，以生成结构体数组。</p>
 
     </div>
     

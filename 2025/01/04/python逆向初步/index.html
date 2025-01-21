@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>军事理论课后测试答案 | huanghunr&#39;s Blog</title>
+    <title>pyhon逆向初步学习 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>军事理论课后测试答案</h1>
+        <h1>pyhon逆向初步学习</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/10/26
+            2025/1/4
         </span>
         
         <span class="category">
-            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                学习资料
+                Re基础学习
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-%E7%AD%94%E6%A1%88/" style="color: #03a9f4">
-                    学习资料-答案
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                    Re学习
                 </a>
             </span>
             
@@ -203,93 +203,46 @@
     
     
     <div class="content" v-pre>
-        <h4><span id="tips多选题中-o-代表全选判断题中-d-为正确x-为错误">Tips:多选题中 O 代表全选，判断题中 D 为正确，X 为错误</span></h4><h2><span id="第一章">第一章</span></h2><pre><code class="C">1~5   DBDCC  
-6~10  BCBCB  
-11~15 DAADA  
-16~20 ABCBD  
-21~25 CDBAB  
-26~30 AC CD O O BCD  
-31~35 OABC O O CD  
-36~40 ABC ABC O BCD ABC  
-41~45 O O ABD ABD O
-46~50 O AB BCD AC O
-51~55 DDDDX  
-56~60 DXDDX  
-61~65 DDDXD  
-66~70 DXDXX
-71~75 XXDDD
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#magic%E5%A4%B4">magic头</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<p>反编译pyc文件时可能要修复magic头</p>
+<h2><span id="magic头">magic头</span></h2><pre><code>    MAGIC_1_0 = 0x00999902,
+    MAGIC_1_1 = 0x00999903, /* Also covers 1.2 */
+    MAGIC_1_3 = 0x0A0D2E89,
+    MAGIC_1_4 = 0x0A0D1704,
+    MAGIC_1_5 = 0x0A0D4E99,
+    MAGIC_1_6 = 0x0A0DC4FC,
+
+    MAGIC_2_0 = 0x0A0DC687,
+    MAGIC_2_1 = 0x0A0DEB2A,
+    MAGIC_2_2 = 0x0A0DED2D,
+    MAGIC_2_3 = 0x0A0DF23B,
+    MAGIC_2_4 = 0x0A0DF26D,
+    MAGIC_2_5 = 0x0A0DF2B3,
+    MAGIC_2_6 = 0x0A0DF2D1,
+    MAGIC_2_7 = 0x0A0DF303,
+
+    MAGIC_3_0 = 0x0A0D0C3A,
+    MAGIC_3_1 = 0x0A0D0C4E,
+    MAGIC_3_2 = 0x0A0D0C6C,
+    MAGIC_3_3 = 0x0A0D0C9E,
+    MAGIC_3_4 = 0x0A0D0CEE,
+    MAGIC_3_5 = 0x0A0D0D16,
+    MAGIC_3_5_3 = 0x0A0D0D17,
+    MAGIC_3_6 = 0x0A0D0D33,
+    MAGIC_3_7 = 0x0A0D0D42,
+    MAGIC_3_8 = 0x0A0D0D55,
+    MAGIC_3_9 = 0x0A0D0D61,
 </code></pre>
-<hr>
-<h2><span id="第二章">第二章</span></h2><pre><code class="C">1~5    BCCDB
-6~10   DACDA
-11~15  DABCA
-16~20  DCAAD
-21~23  AAB
-24~28  AD AC ABC BC ABC
-29~33  ABC BC O ABC CD
-34~38  ABD O BCD CD O
-39~43  AB AC AC ABC BCD
-44~48  ACD ABC O BCD O
-49~53  DXDDD
-54~58  XDDDD
-59~63  XDDXD
-64~68  DXDXD
-69~73  XXDDX
-74~75  DD
-</code></pre>
-<hr>
-<h2><span id="第三章">第三章</span></h2><pre><code class="C">1~5    BBBAC
-6~10   CDBDC
-11~15  DBADD
-16~18  CABCA
-21~25  ACDBD
-26~30  O AC AB O ABC
-31~35  BC BCD BC AC ABC
-36~40  O BCD AB O O
-41~45  ABC O ABC BC O
-46~50  ABC CD ABC ABD O
-51~55  DDXDD
-56~60  XDXDD
-61~65  DDDXD
-66~70  XDXDD
-71~75  DDDXD
-</code></pre>
-<hr>
-<h2><span id="第四章">第四章</span></h2><pre><code class="C">1~5    BAAAC
-6~10   AADDA
-11~15  CBDCA
-16~20  ABCDC
-21~23  CDB
-24~28  ABC O CD ABD O
-29~33  O AB O ABC O 
-34~38  BC ABC ACD ABC BCD 
-39~43  O ABC O ABC ABC 
-44~48  O ACD ABC BD AC 
-49     AB
-50~54  XDDXD
-55~59  DXXDX
-60~64  DXDDX
-65~69  XDDDD
-70~73  DDDX
-</code></pre>
-<hr>
-<h2><span id="第五章">第五章</span></h2><pre><code class="C">1~5    CBCDA
-6~10   BDDAB
-11~15  CBBAA
-16~20  DADDA
-21~25  BCBAC
-26~30  O AB ABC ABC ABC
-31~35  BCD ABC ABD BCD AD
-36~40  O AB O O BD
-41~45  ABC ABC BCD ACD O
-46~50  O O O ABC O
-51~55  DDDDD
-56~60  DXDDD 
-61~65  XXDDX
-66~70  XXDDD
-71~75  DXDXD
-</code></pre>
-<hr>
 
     </div>
     

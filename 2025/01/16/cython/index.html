@@ -1,0 +1,909 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>Cyhon逆向初步学习 | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>Cyhon逆向初步学习</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/1/16
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Re基础学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                    Re学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#cython%E7%BC%96%E5%86%99">Cython编写</a><ul>
+<li><a href="#1%E5%9C%A8python%E4%B8%AD%E5%AE%89%E8%A3%85cython%E5%92%8Csetuptools%E5%8C%85">1.在python中安装cython和setuptools包</a></li>
+<li><a href="#2%E5%AE%89%E8%A3%85cc%E7%BC%96%E8%AF%91%E5%99%A8">2.安装c\c++编译器</a></li>
+<li><a href="#3%E7%BC%96%E5%86%99cython%E6%8B%93%E5%B1%95">3.编写cython拓展</a></li>
+</ul>
+</li>
+<li><a href="#cython%E9%80%86%E5%90%91">Cython逆向</a><ul>
+<li><a href="#%E6%81%A2%E5%A4%8D%E7%AC%A6%E5%8F%B7">恢复符号</a></li>
+<li><a href="#%E9%87%8D%E5%BB%BA%E7%BB%93%E6%9E%84%E4%BD%93">重建结构体</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<p>我们只进行一些总结，基础理解我参考了<a target="_blank" rel="noopener" href="https://www.cnblogs.com/traditional/p/13196509.html">这篇文章</a></p>
+<h2><span id="cython编写">Cython编写</span></h2><p>系统环境:windows，python编译器pycharm(python虚拟环境.venv)，c&#x2F;c++编译器visual stdio 2022</p>
+<h3><span id="1在python中安装cython和setuptools包">1.在python中安装cython和setuptools包</span></h3><p>建议给Cython单独开一个python虚拟环境，有时候包多了导入pyd会报错。</p>
+<p>pycharm可以直接使用包管理器搜索安装。</p>
+<pre><code class="cmd">pip install cython
+pip install setuptools
+</code></pre>
+<h3><span id="2安装cc编译器">2.安装c\c++编译器</span></h3><p>我这里用的是visual stdio,也可以用MinGW。</p>
+<h3><span id="3编写cython拓展">3.编写cython拓展</span></h3><p>可以参考<a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/cython-doc-zh/docs-23.md">用户指南 - 《Cython 3.0 中文文档》 - 书栈网 · BookStack</a></p>
+<p>随意编写一个source.py作为拓展模块，代码如下</p>
+<pre><code class="python">def sayhello():
+    a = &quot;hello world&quot;
+    print(a)
+    
+cdef int add(int n,int m):
+    return m+n
+
+def aadd(n,m):
+    print(add(n,m))
+</code></pre>
+<p>还需要一个编译文件，这里我们用myc.py,代码如下</p>
+<pre><code class="python">from setuptools import setup
+from Cython.Build import cythonize
+
+setup(ext_modules=cythonize(&quot;source.pyx&quot;,language_level=3))
+
+&quot;&quot;&quot;
+cythonize函数用于把cython编译成c文件
+setup把c文件生成拓展模块
+cythonize第一个参数是要编译的pyx或者py文件(与本文件在同一目录下)，
+language_level=3表示在python3环境下运行，默认python2和3通用
+&quot;&quot;&quot;
+</code></pre>
+<p>用cmd编译拓展模块</p>
+<p>在上面文件所在目录打开cmd并启动我们的python虚拟环境(不是虚拟环境的跳过)，输入的命令如下，我这里是”E:\python projects\cython\.venv\Scripts\activate”</p>
+<pre><code class="cmd">&quot;项目根目录\.venv\Scripts\activate&quot;
+</code></pre>
+<p>再输入一下命令进行编译,我这里是python myc.py build</p>
+<pre><code class="cmd">python [编译文件] build
+
+python [编译文件] build_ext --inplace #这个指令直接把拓展模块放到当前目录而不是build目录
+</code></pre>
+<p>当前目录下的build文件夹中的lib文件夹就是我们的库文件.pyd，我们直使用这个库文件就行，其他的可以删除。把pyd文件放到工作目录下，直接按名字导入即可使用。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250116220849678.png" alt="image-20250116220849678"></p>
+<p>cython还可以导入c文件，这个先后面再说吧，好像有点问题</p>
+<pre><code class="python">from setuptools import setup, Extension
+from Cython.Build import cythonize
+
+setup(ext_modules=cythonize(Extension(name=&quot;myc&quot;, sources=[&quot;source.pyx&quot;, &quot;rc4enc.cpp&quot;]),language_level=3))
+</code></pre>
+<h2><span id="cython逆向">Cython逆向</span></h2><p>我们自己编译一份cython文件分析，这里我实现了一个RC4加密</p>
+<p>source.pyx</p>
+<pre><code class="python">def sayhello():
+    a = &quot;hello world&quot;
+    print(a)
+
+cdef int add(int n,int m):
+    return m+n
+
+def aadd(n,m):
+    print(add(n,m))
+
+def rc4():
+    x=[0x1c,0x05,0x96,0xd3,0xf1,0x62,0x90,0x7d,0x17,0x86,0xd6,0x63,0xd8,0xe2,0x9a,0x93,0x44,0x6b,0xee,0xeb,0x4d,0x6c,0xcc,0x6c,0x38]
+    key=&#39;key!key!&#39;
+    flag = &#39;&#39;
+    j = 0
+    c = x
+    s = list(range(256))
+    for i in range(256):
+        j = ((j + s[i]) + ord(key[i % len(key)])) % 256
+        s[i], s[j] = s[j], s[i]
+    j = 0
+    i = 0
+    for r in c:
+        i = (i + 1) % 256
+        j = (j + s[i]) % 256
+        s[i], s[j] = s[j], s[i]
+        x = (s[i] + s[j] % 256) % 256
+        flag += chr(r ^ s[x] % 256)
+    print(flag)
+</code></pre>
+<p>imp.py</p>
+<pre><code class="python">import source
+
+source.sayhello()
+source.aadd(10,10)
+source.rc4()
+
+# hello world
+# 20
+# flag&#123;yes!_this_is_cython&#125;
+</code></pre>
+<h3><span id="恢复符号">恢复符号</span></h3><p>用help函数可以看到模块的一些信息</p>
+<pre><code class="python">import source
+help(source)
+
+&quot;&quot;&quot;
+返回结果
+Help on module source:
+
+NAME  #模块名
+    source
+
+FUNCTIONS #包含的函数
+    aadd(n, m)
+
+    rc4()
+
+    sayhello()
+
+DATA
+    __test__ = &#123;&#125;
+
+FILE #源文件
+    e:\python projects\cython\source.cp313-win_amd64.pyd
+
+&quot;&quot;&quot;
+</code></pre>
+<p>我们把得到的pyd文件拖入ida分析。如果是.so文件函数的符号是被去掉了，我们可以在linux下随便编译一个python<strong>版本相同且内容最好要相似</strong>的cython文件，用bindiff来恢复符号表。（python版本在ida的Imports窗口可以看到”我这里是python313，即为3.13”）</p>
+<p>根据上面的信息我们用linux编译一个差不多的cython模块。这里我用linux的pycharm部署了python3.13的cython环境。</p>
+<pre><code class="bash">sudo apt install python3.13
+
+sudo apt-get install python3.13-dev 
+</code></pre>
+<p>source.pyx</p>
+<pre><code class="python">def sayhello():
+    return 1
+def aadd(n, m):
+    return 1
+def rc4():
+    return 1
+</code></pre>
+<p>mycython.py同上</p>
+<p>在目录下用cython编译”.&#x2F;.venv&#x2F;bin&#x2F;python3.13 myc.py build_ext –inplace”</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121153722273.png" alt="image-20250121153722273"></p>
+<p>把so文件复制出来，用ida打开一次获得idb数据库，bindiff导入恢复符号。</p>
+<p>这里有一个细节，就是windows下的cython文件默认是会去掉符号的，而linux却不会。所以如果是.pyd文件的话，我们要用下面的脚本进行编译来保留符号。</p>
+<p>mycthon.py</p>
+<pre><code class="python">from setuptools import setup,Extension
+from Cython.Build import cythonize
+ 
+module = Extension(
+    &quot;MyPyd&quot;,
+    sources=[&quot;MyPyd.py&quot;],
+    extra_compile_args=[&quot;/Zi&quot;],  # 生成调试信息
+    extra_link_args=[&quot;/DEBUG&quot;],  # 生成 PDB 文件
+)
+setup(
+    ext_modules = cythonize(module,annotate=True)
+)
+</code></pre>
+<p>source.pyx同上面linux的</p>
+<p>编译后会生成.pyd文件和.pdb（在build文件夹里面），用ida打开.pyd就可以导入.pdb文件，再用源文件与ida生成的.idb文件用bindiff插件即可恢复符号（ctrl+6）。</p>
+<h3><span id="重建结构体">重建结构体</span></h3><p>_Pyx_CreateStringTabAndInitStrings()保存了要使用的字符串常量，用于加载字符串。</p>
+<p>_ Pyx_InitConstants()保存了要使用的数字常量。</p>
+<p>为了更容易阅读代码中对常量的引用我们要重建一下结构体。</p>
+<p>我们先在off_18000B6A8按”Y“把类型设置为”__int64*”</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121203045027.png" alt="image-20250121203045027"></p>
+<p>我们先定义一个结构体，结构体的大小最好大于等于n(off_18000B6A8 + n)，我这里是27，我们就创建一个有27个__int64元素的结构体。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121203541840.png" alt="image-20250121203541840"></p>
+<pre><code class="c">//一个结构体模板_Pyx_CreateStringTabAndInitStrings()
+typedef struct __strings &#123;
+    __int64* str_0;
+    __int64* str_1;
+    __int64* str_2;
+    __int64* str_3;
+    __int64* str_4;
+    __int64* str_5;
+    __int64* str_6;
+    __int64* str_7;
+    __int64* str_8;
+    __int64* str_9;
+    __int64* str_10;
+    __int64* str_11;
+    __int64* str_12;
+    __int64* str_13;
+    __int64* str_14;
+    __int64* str_15;
+    __int64* str_16;
+    __int64* str_17;
+    __int64* str_18;
+    __int64* str_19;
+    __int64* str_20;
+    __int64* str_21;
+    __int64* str_22;
+    __int64* str_23;
+    __int64* str_24;
+    __int64* str_25;
+    __int64* str_26;
+    __int64* str_27;
+    __int64* str_28;
+    __int64* str_29;
+    __int64* str_30;
+    __int64* str_31;
+    __int64* str_32;
+    __int64* str_33;
+    __int64* str_34;
+    __int64* str_35;
+    __int64* str_36;
+    __int64* str_37;
+    __int64* str_38;
+    __int64* str_39;
+    __int64* str_40;
+    __int64* str_41;
+    __int64* str_42;
+    __int64* str_43;
+    __int64* str_44;
+    __int64* str_45;
+    __int64* str_46;
+    __int64* str_47;
+    __int64* str_48;
+    __int64* str_49;
+    __int64* str_50;
+    __int64* str_51;
+    __int64* str_52;
+    __int64* str_53;
+    __int64* str_54;
+    __int64* str_55;
+    __int64* str_56;
+    __int64* str_57;
+    __int64* str_58;
+    __int64* str_59;
+    __int64* str_60;
+    __int64* str_61;
+    __int64* str_62;
+    __int64* str_63;
+&#125; str;
+</code></pre>
+<pre><code class="c">//一个结构体模板__Pyx_InitConstants()
+typedef struct _iint &#123;
+    __int64* int_0;
+    __int64* int_1;
+    __int64* int_2;
+    __int64* int_3;
+    __int64* int_4;
+    __int64* int_5;
+    __int64* int_6;
+    __int64* int_7;
+    __int64* int_8;
+    __int64* int_9;
+    __int64* int_10;
+    __int64* int_11;
+    __int64* int_12;
+    __int64* int_13;
+    __int64* int_14;
+    __int64* int_15;
+    __int64* int_16;
+    __int64* int_17;
+    __int64* int_18;
+    __int64* int_19;
+    __int64* int_20;
+    __int64* int_21;
+    __int64* int_22;
+    __int64* int_23;
+    __int64* int_24;
+    __int64* int_25;
+    __int64* int_26;
+    __int64* int_27;
+    __int64* int_28;
+    __int64* int_29;
+    __int64* int_30;
+    __int64* int_31;
+    __int64* int_32;
+    __int64* int_33;
+    __int64* int_34;
+    __int64* int_35;
+    __int64* int_36;
+    __int64* int_37;
+    __int64* int_38;
+    __int64* int_39;
+    __int64* int_40;
+    __int64* int_41;
+    __int64* int_42;
+    __int64* int_43;
+    __int64* int_44;
+    __int64* int_45;
+    __int64* int_46;
+    __int64* int_47;
+    __int64* int_48;
+    __int64* int_49;
+    __int64* int_50;
+    __int64* int_51;
+    __int64* int_52;
+    __int64* int_53;
+    __int64* int_54;
+    __int64* int_55;
+    __int64* int_56;
+    __int64* int_57;
+    __int64* int_58;
+    __int64* int_59;
+    __int64* int_60;
+    __int64* int_61;
+    __int64* int_62;
+    __int64* int_63;
+&#125; iint;
+</code></pre>
+<p>_Pyx_InitConstants()中数字常量结构体创建的脚本，看情况修改xxxxxxxxx处的值</p>
+<pre><code class="python">import re
+
+# 输入_Pyx_InitConstants()的内容
+content = &#39;&#39;&#39;
+
+&#39;&#39;&#39;
+
+def modify_struct(content):
+    # 创建一个字典映射 PyLong_FromLong 的值到结构体成员名称
+    mapping = &#123;&#125;
+    pattern = re.compile(r&#39;PyLong_FromLong\((\d+)LL\);&#39;)
+
+    # 查找 content 中所有 PyLong_FromLong 的值
+    for match,i in zip(re.finditer(pattern, content),range(64)):  #range()内表示数据的最大数量XXXXXXXX
+        num = int(match.group(1))
+        mapping[num] = i + 37  # 假设从 37 开始，结构体开始的位置XXXXXXX
+
+    # 替换结构体定义中的成员名
+    for num, idx in mapping.items():
+        # 计算成员名
+        old_member = f&#39;int_&#123;idx&#125;&#39;
+        new_member = f&#39;__int64* int_&#123;num&#125;&#39;
+        print(new_member)
+
+modify_struct(content)
+</code></pre>
+<p>先修改字符串的。按偏移量把元素名字修改成好阅读的</p>
+<pre><code class="c">typedef struct __strings &#123;
+    __int64* str_0;
+    __int64* str_1;
+    __int64* str_2;
+    __int64* str_3;
+    __int64* str_4;
+    __int64* str_5;
+    __int64* str_6;
+    __int64* str_7;
+    __int64* str_wenhao;
+    __int64* str_unk_180009078;
+    __int64* str_aadd;
+    __int64* str_asyncio_coroutines;
+    __int64* str_unk_1800090B0;
+    __int64* str_chr;
+    __int64* str___class_getitem__;
+    __int64* str_cline_in_traceback;
+    __int64* str_flag;
+    __int64* str_hellow_orld;
+    __int64* str_i;
+    __int64* str__is_coroutine;
+    __int64* str_j;
+    __int64* str_key;
+    __int64* str_keykey;
+    __int64* str_m;
+    __int64* str___main__;
+    __int64* str_n;
+    __int64* str___name__;
+    __int64* str_print;
+    __int64* str_r;
+    __int64* str_range;
+    __int64* str_rc4;
+    __int64* str_s;
+    __int64* str_sayhello;
+    __int64* str_source;
+    __int64* str_sourcedpyx;
+    __int64* str___test__;
+    __int64* str_x;
+&#125; str;
+</code></pre>
+<p>同样再重建一下_Pyx_InitConstants()内的结构体，数字常量的开头索引就是37，我们就截取从37开始的结构体，用脚本进行重命名，中间要是有不连续的索引记得看情况补上一个成员。</p>
+<pre><code>typedef struct _iint &#123;
+    __int64* int_37;
+    __int64* int_38;
+    __int64* int_39;
+    __int64* int_40;
+    __int64* int_41;
+    __int64* int_42;
+    __int64* int_43;
+    __int64* int_44;
+    __int64* int_45;
+    __int64* int_46;
+    __int64* int_47;
+    __int64* int_48;
+    __int64* int_49;
+    __int64* int_50;
+    __int64* int_51;
+    __int64* int_52;
+    __int64* int_53;
+    __int64* int_54;
+    __int64* int_55;
+    __int64* int_56;
+    __int64* int_57;
+    __int64* int_58;
+    __int64* int_59;
+    __int64* int_60;
+    __int64* int_61;
+    __int64* int_62;
+    __int64* int_63;
+&#125; iint;
+</code></pre>
+<pre><code class="python">import re
+
+# 输入文件的内容
+content = &#39;&#39;&#39;v0 = PyLong_FromLong(0LL);
+  *((_QWORD *)_pyx + 37) = v0;
+  if ( !v0 )
+    return 0xFFFFFFFFLL;
+  v1 = PyLong_FromLong(1LL);
+  *((_QWORD *)_pyx + 38) = v1;
+  if ( !v1 )
+    return 0xFFFFFFFFLL;
+  v2 = PyLong_FromLong(5LL);
+  *((_QWORD *)_pyx + 39) = v2;
+  if ( !v2 )
+    return 0xFFFFFFFFLL;
+  v3 = PyLong_FromLong(23LL);
+  *((_QWORD *)_pyx + 40) = v3;
+  if ( !v3 )
+    return 0xFFFFFFFFLL;
+  v4 = PyLong_FromLong(28LL);
+  *((_QWORD *)_pyx + 41) = v4;
+  if ( !v4 )
+    return 0xFFFFFFFFLL;
+  v5 = PyLong_FromLong(56LL);
+  *((_QWORD *)_pyx + 42) = v5;
+  if ( !v5 )
+    return 0xFFFFFFFFLL;
+  v6 = PyLong_FromLong(68LL);
+  *((_QWORD *)_pyx + 43) = v6;
+  if ( !v6 )
+    return 0xFFFFFFFFLL;
+  v7 = PyLong_FromLong(77LL);
+  *((_QWORD *)_pyx + 44) = v7;
+  if ( !v7 )
+    return 0xFFFFFFFFLL;
+  v8 = PyLong_FromLong(98LL);
+  *((_QWORD *)_pyx + 45) = v8;
+  if ( !v8 )
+    return 0xFFFFFFFFLL;
+  v9 = PyLong_FromLong(99LL);
+  *((_QWORD *)_pyx + 46) = v9;
+  if ( !v9 )
+    return 0xFFFFFFFFLL;
+  v10 = PyLong_FromLong(107LL);
+  *((_QWORD *)_pyx + 47) = v10;
+  if ( !v10 )
+    return 0xFFFFFFFFLL;
+  v11 = PyLong_FromLong(108LL);
+  *((_QWORD *)_pyx + 48) = v11;
+  if ( !v11 )
+    return 0xFFFFFFFFLL;
+  v12 = PyLong_FromLong(125LL);
+  *((_QWORD *)_pyx + 49) = v12;
+  if ( !v12 )
+    return 0xFFFFFFFFLL;
+  v13 = PyLong_FromLong(134LL);
+  *((_QWORD *)_pyx + 50) = v13;
+  if ( !v13 )
+    return 0xFFFFFFFFLL;
+  v14 = PyLong_FromLong(144LL);
+  *((_QWORD *)_pyx + 51) = v14;
+  if ( !v14 )
+    return 0xFFFFFFFFLL;
+  v15 = PyLong_FromLong(147LL);
+  *((_QWORD *)_pyx + 52) = v15;
+  if ( !v15 )
+    return 0xFFFFFFFFLL;
+  v16 = PyLong_FromLong(150LL);
+  *((_QWORD *)_pyx + 53) = v16;
+  if ( !v16 )
+    return 0xFFFFFFFFLL;
+  v17 = PyLong_FromLong(154LL);
+  *((_QWORD *)_pyx + 54) = v17;
+  if ( !v17 )
+    return 0xFFFFFFFFLL;
+  v18 = PyLong_FromLong(204LL);
+  *((_QWORD *)_pyx + 55) = v18;
+  if ( !v18 )
+    return 0xFFFFFFFFLL;
+  v19 = PyLong_FromLong(211LL);
+  *((_QWORD *)_pyx + 56) = v19;
+  if ( !v19 )
+    return 0xFFFFFFFFLL;
+  v20 = PyLong_FromLong(214LL);
+  *((_QWORD *)_pyx + 57) = v20;
+  if ( !v20 )
+    return 0xFFFFFFFFLL;
+  v21 = PyLong_FromLong(216LL);
+  *((_QWORD *)_pyx + 58) = v21;
+  if ( !v21 )
+    return 0xFFFFFFFFLL;
+  v22 = PyLong_FromLong(226LL);
+  *((_QWORD *)_pyx + 59) = v22;
+  if ( !v22 )
+    return 0xFFFFFFFFLL;
+  v23 = PyLong_FromLong(235LL);
+  *((_QWORD *)_pyx + 60) = v23;
+  if ( !v23 )
+    return 0xFFFFFFFFLL;
+  v24 = PyLong_FromLong(238LL);
+  *((_QWORD *)_pyx + 61) = v24;
+  if ( !v24 )
+    return 0xFFFFFFFFLL;
+  v25 = PyLong_FromLong(241LL);
+  *((_QWORD *)_pyx + 62) = v25;
+  if ( !v25 )
+    return 0xFFFFFFFFLL;
+  v26 = PyLong_FromLong(256LL);
+  *((_QWORD *)_pyx + 63) = v26;
+&#39;&#39;&#39;
+
+def modify_struct(content):
+    # 创建一个字典映射 PyLong_FromLong 的值到结构体成员名称
+    mapping = &#123;&#125;
+    pattern = re.compile(r&#39;PyLong_FromLong\((\d+)LL\);&#39;)
+
+    # 查找 content 中所有 PyLong_FromLong 的值
+    for match,i in zip(re.finditer(pattern, content),range(64)):  #range()内表示数据的最大数量XXXXXXXX
+        num = int(match.group(1))
+        mapping[num] = i + 37  # 假设从 37 开始，结构体开始的位置XXXXXXX
+
+    # 替换结构体定义中的成员名
+    for num, idx in mapping.items():
+        # 计算成员名
+        old_member = f&#39;int_&#123;idx&#125;&#39;
+        new_member = f&#39;__int64* int_&#123;num&#125;&#39;
+        print(new_member)
+
+modify_struct(content)
+</code></pre>
+<pre><code class="c">typedef struct _iint &#123;
+    __int64* int_0;
+    __int64* int_1;
+    __int64* int_5;
+    __int64* int_23;
+    __int64* int_28;
+    __int64* int_56;
+    __int64* int_68;
+    __int64* int_77;
+    __int64* int_98;
+    __int64* int_99;
+    __int64* int_107;
+    __int64* int_108;
+    __int64* int_125;
+    __int64* int_134;
+    __int64* int_144;
+    __int64* int_147;
+    __int64* int_150;
+    __int64* int_154;
+    __int64* int_204;
+    __int64* int_211;
+    __int64* int_214;
+    __int64* int_216;
+    __int64* int_226;
+    __int64* int_235;
+    __int64* int_238;
+    __int64* int_241;
+    __int64* int_256;
+&#125; iint;
+</code></pre>
+<p>如果_Pyx_CreateStringTabAndInitStrings()和_ Pyx_InitConstants()使用的是相同的基地址(都是off_18000B6A8)，我们把两个结构体合并，两个结构体之间连接的索引要连续。如果不相同，就分别修复结构体就行。</p>
+<pre><code>typedef struct data &#123;
+    __int64* str_0;
+    __int64* str_1;
+    __int64* str_2;
+    __int64* str_3;
+    __int64* str_4;
+    __int64* str_5;
+    __int64* str_6;
+    __int64* str_7;
+    __int64* str_wenhao;
+    __int64* str_unk_180009078;
+    __int64* str_aadd;
+    __int64* str_asyncio_coroutines;
+    __int64* str_unk_1800090B0;
+    __int64* str_chr;
+    __int64* str___class_getitem__;
+    __int64* str_cline_in_traceback;
+    __int64* str_flag;
+    __int64* str_hellow_orld;
+    __int64* str_i;
+    __int64* str__is_coroutine;
+    __int64* str_j;
+    __int64* str_key;
+    __int64* str_keykey;
+    __int64* str_m;
+    __int64* str___main__;
+    __int64* str_n;
+    __int64* str___name__;
+    __int64* str_print;
+    __int64* str_r;
+    __int64* str_range;
+    __int64* str_rc4;
+    __int64* str_s;
+    __int64* str_sayhello;
+    __int64* str_source;
+    __int64* str_sourcedpyx;
+    __int64* str___test__;
+    __int64* str_x;
+    __int64* int_0;
+    __int64* int_1;
+    __int64* int_5;
+    __int64* int_23;
+    __int64* int_28;
+    __int64* int_56;
+    __int64* int_68;
+    __int64* int_77;
+    __int64* int_98;
+    __int64* int_99;
+    __int64* int_107;
+    __int64* int_108;
+    __int64* int_125;
+    __int64* int_134;
+    __int64* int_144;
+    __int64* int_147;
+    __int64* int_150;
+    __int64* int_154;
+    __int64* int_204;
+    __int64* int_211;
+    __int64* int_214;
+    __int64* int_216;
+    __int64* int_226;
+    __int64* int_235;
+    __int64* int_238;
+    __int64* int_241;
+    __int64* int_256;
+&#125; data;
+</code></pre>
+<p>在local type窗口添加这个结构体。再按Y把off_18000B6A8的类型改为结构体的名字(这里是data)，再按n把off_18000B6A8重命名一下。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121212022308.png" alt="image-20250121212022308"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121224830153.png" alt="image-20250121224830153"></p>
+<p>记得检查一下结果是否对应正确。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2025 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+        <div>
+            备案号：
+            
+            <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">桂ICP备2024049894号</a>
+            
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
