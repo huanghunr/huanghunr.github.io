@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     Re学习
                 </a>
             </span>
@@ -218,6 +218,10 @@
 <li><a href="#to_bytes">to_bytes()</a></li>
 <li><a href="#hex">.hex()</a></li>
 <li><a href="#ord">ord()</a></li>
+<li><a href="#intfrom_bytes">int.from_bytes()</a></li>
+<li><a href="#map">map()</a></li>
+<li><a href="#bytearry">bytearry()</a></li>
+<li><a href="#z3%E6%B1%82%E8%A7%A3%E5%99%A8">z3求解器</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -276,6 +280,73 @@ for i in result:
 print(flag.hex())
 </code></pre>
 <h4><span id="ord">ord()</span></h4><pre><code class="python">ord(str)  #可以把字符转为ASCII值
+</code></pre>
+<h4><span id="intfrom_bytes">int.from_bytes()</span></h4><pre><code class="python">int.from_bytes(bytes) #把bytes转为int
+</code></pre>
+<h4><span id="map">map()</span></h4><pre><code class="python">map(func,arr) #把arr中的每一个元素为参数调用func函数 -&gt;以func函数返回值组成的可迭代对象
+</code></pre>
+<h4><span id="bytearry">bytearry()</span></h4><pre><code class="python">bytearry(bytes) #把bytes数据按1字节转为byte数组 -&gt;byte数组
+</code></pre>
+<h4><span id="z3求解器">z3求解器</span></h4><p>pip install z3-solver</p>
+<pre><code class="python">v5,v6, v7, v8, v9, v10= Ints(&#39;v5 v6 v7 v8 v9 v10&#39;) #定义多个整数变量
+x = z3.Real(&#39;x&#39;)  #创建实数变量
+x = z3.BitVec(&#39;x&#39;, 32) #创建向量变量，用于计算机位运算，第二个参数是大小，32位，即4字节
+p = z3.Bool(name = &#39;p&#39;) #创建布尔变量
+
+s = z3.Solver() #获取求解器实例
+s.add() #添加约束条件
+And() #与
+Or() #或
+Not() #否
+Implies() #依赖
+s.check() #检查解，有解为sat，无解为unsat
+s.model() #获取结果
+s.model()[x] #获取特定的解
+s.model()[x].as_long() #把值转为python整数，以便进行数据处理
+</code></pre>
+<p>一些脚本</p>
+<pre><code class="python">from z3 import *
+
+v5,v6, v7, v8, v9, v10= Ints(&#39;v5 v6 v7 v8 v9 v10&#39;)  #定义未知数
+
+a = Solver()
+a.add()   #方程组
+
+che = a.check()
+res = a.model()
+print(f&quot;求解结果&#123;res&#125;&quot;)
+
+variable_names = [v5, v6, v7, v8, v9, v10]  #输出的变量，按顺序排
+result_list = [res[var].as_long() for var in variable_names]
+print(f&quot;结果字符串&#123;result_list&#125;&quot;)
+
+flag = &quot;&quot;
+
+for i in result_list:
+    result = i.to_bytes(4, &#39;little&#39;)  #小端序输出,前面的参数为字节大小
+    flag += result.decode(&#39;utf-8&#39;)
+
+print(f&quot;flag: &#123;flag&#125;&quot;)
+</code></pre>
+<pre><code class="python">from z3 import*
+
+flag =&quot;&quot;
+for i in range(0, 8, 2):
+    data = []
+
+    v12 = BitVec(&quot;input&quot;, 32)
+    s = Solver()
+    dt = ((v12 &lt;&lt; 4) &amp; 4198170623) + (v12 &gt;&gt; 28)
+
+    s.add(And(data[i] - 0x10 &lt;= dt, dt &lt;= data[i] + 0x10))
+
+    while s.check() == sat:
+        module = s.model()
+        result = module[v12].as_long()
+        result_hex = hex(result)[2:]       
+        print(f&quot;&#123;result_hex&#125;&quot;)
+        flag += result_hex
+print(f&quot;flag&#123;&#123;&#123;flag&#125;&#125;&#125;&quot;)
 </code></pre>
 
     </div>

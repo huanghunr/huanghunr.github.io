@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
                     Re学习
                 </a>
             </span>
@@ -217,6 +217,9 @@
 <li><a href="#cython%E9%80%86%E5%90%91">Cython逆向</a><ul>
 <li><a href="#%E6%81%A2%E5%A4%8D%E7%AC%A6%E5%8F%B7">恢复符号</a></li>
 <li><a href="#%E9%87%8D%E5%BB%BA%E7%BB%93%E6%9E%84%E4%BD%93">重建结构体</a></li>
+<li><a href="#%E9%80%86%E5%90%91%E5%88%86%E6%9E%90">逆向分析</a></li>
+<li><a href="#dis%E5%AF%BC%E5%87%BA%E5%AF%86%E6%96%87">dis导出密文</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
 </ul>
 </li>
 </ul>
@@ -622,7 +625,6 @@ modify_struct(content)
 </code></pre>
 <pre><code class="python">import re
 
-# 输入文件的内容
 content = &#39;&#39;&#39;v0 = PyLong_FromLong(0LL);
   *((_QWORD *)_pyx + 37) = v0;
   if ( !v0 )
@@ -851,7 +853,776 @@ modify_struct(content)
 <p>在local type窗口添加这个结构体。再按Y把off_18000B6A8的类型改为结构体的名字(这里是data)，再按n把off_18000B6A8重命名一下。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121212022308.png" alt="image-20250121212022308"></p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250121224830153.png" alt="image-20250121224830153"></p>
-<p>记得检查一下结果是否对应正确。</p>
+<p>记得检查一下结果是否对应正确。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </p>
+<h3><span id="逆向分析">逆向分析</span></h3><p>不认识的函数可以查<a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/python-3.12.0-zh/c0e7cfb1b5168145.md">抽象对象层</a></p>
+<p>_Pyx_AddTraceback()用于记录调用栈信息，会写入当前函数在模块中的名字，一般为”模块名.函数名”，这使得我们可以在字符串表中找到我们需要逆向的函数。</p>
+<p>首先我们分析一下source.sayhello</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250122013829773.png" alt="image-20250122013829773"></p>
+<p>①处的处理逻辑(gpt辅助)</p>
+<p>在 Cython 编译成 C 代码后，Python 对象在底层是通过 <code>PyObject</code> 结构体来表示的，而这个结构体包含了对象的多种信息，其中就包括引用计数。</p>
+<pre><code class="c">typedef struct &#123;
+    PyObject_VAR_HEAD
+    PyObject *ob_type;  // 类型信息
+    Py_ssize_t ob_refcnt;  // 引用计数器
+&#125; PyObject;
+</code></pre>
+<ol>
+<li><p><strong>异常捕捉：</strong><br> 第一部分的 <code>if (v3)</code> 检查了一个条件，可能是一个对象指针。接下来的代码是尝试进行某种资源的释放或对象的内存管理：</p>
+<ul>
+<li>检查 <code>*v3 &gt;= 0</code>，这可能是在检查指针指向的对象的状态。</li>
+<li><code>v5 = (*(_QWORD *)v3)-- == 1LL;</code> <code>v3</code> 强制类型转换为指向 64 位整型的指针，直接访问 <code>v3</code> 指向的 <code>PyObject</code> 结构体中的 <code>ob_refcnt</code> 字段，检查对象引用计数是否为 1，并且在引用计数为 1 时调用 <code>Py_Dealloc</code> 来释放对象。</li>
+<li><code>v4 = Py_NoneStruct;</code> 和 <code>if (Py_NoneStruct != -1) ++Py_NoneStruct;</code> 这部分可能是与 <code>None</code> 对象的引用计数有关，<code>Py_NoneStruct</code> 是一个指向 Python <code>None</code> 的结构体指针。</li>
+</ul>
+</li>
+<li><p><strong>异常回溯：</strong><br> 如果 <code>v3</code> 为 <code>NULL</code> 或者其他异常情况，代码会调用 <code>_Pyx_AddTraceback</code> 记录调用栈信息：</p>
+<pre><code class="c">_Pyx_AddTraceback(&quot;source.sayhello&quot;, 2562LL, 3LL, &quot;source.pyx&quot;); //函数，行号，栈帧的深度，原文件名称
+</code></pre>
+<p>这表示在 <code>source.pyx</code> 文件的某个地方发生了问题。</p>
+</li>
+</ol>
+<p>source.aadd</p>
+<pre><code class="c">// write access to const memory has been detected, the output may be wrong!
+__int64 __fastcall _pyx_pw_6source_3aadd(__int64 a1, __int64 *a2, __int64 a3, __int64 a4)
+&#123;
+......
+  *(_QWORD *)&amp;input = _Pyx_GetKwValue_FASTCALL(a4, v5, _pyx-&gt;str_n);// 以字典获取关键字参数，a4是指向字典（kwargs）的指针,v5是存储返回结果的变量，n是参数名，结果返回到input[0]
+  input_b = input;
+  if ( !(_QWORD)input )
+  &#123;
+    if ( PyErr_Occurred() )
+    &#123;
+      v11 = 2684LL;
+      goto LABEL_26;
+    &#125;
+    goto LABEL_25;
+  &#125;
+  v7 = _pyx;
+  --v10;
+LABEL_13:
+  *((_QWORD *)&amp;input + 1) = _Pyx_GetKwValue_FASTCALL(a4, v5, v7-&gt;str_m);// 同上，返回参数m的值到input[1]中
+  if ( !*((_QWORD *)&amp;input + 1) )               // 一些异常处理
+  &#123;
+    if ( PyErr_Occurred() )
+    &#123;
+      v11 = 2692LL;
+    &#125;
+    else
+    &#123;
+      _Pyx_RaiseArgtupleInvalid(v13, v12, v14, v15, 1LL);// 检查函数参数个数
+      v11 = 2694LL;
+    &#125;
+    goto LABEL_26;
+  &#125;
+  --v10;
+LABEL_15:
+  if ( v10 &gt; 0 )
+  &#123;
+    if ( (int)_Pyx_ParseOptionalKeywords(a4, (_DWORD)v5, (unsigned int)v26, a4, (__int64)&amp;input, a3) &lt; 0 )// 处理函数调用中的可选关键字参数把值解析到对应的函数参数中
+    &#123;
+      v11 = 2699LL;
+LABEL_26:
+      _Pyx_AddTraceback(&quot;source.aadd&quot;, v11, 8LL, &quot;source.pyx&quot;);
+      return 0LL;
+    &#125;
+    input_b = input;                            // 赋值
+  &#125;
+LABEL_28:
+  input0 = _Pyx_PyInt_As_int(input_b);          // 从python对象里提出一个值转为c的int类型
+  if ( input0 == -1 &amp;&amp; PyErr_Occurred() )
+  &#123;
+    v18 = 2759LL;
+  &#125;
+  else
+  &#123;
+    input1 = _Pyx_PyInt_As_int(*((_QWORD *)&amp;input + 1));
+    if ( input1 == -1 &amp;&amp; PyErr_Occurred() )
+    &#123;
+      v18 = 2760LL;
+    &#125;
+    else
+    &#123;
+      input_add = input0 + input1;              // m + n 
+      if ( input_add == -1 &amp;&amp; PyErr_Occurred() )
+      &#123;
+        v18 = 2761LL;
+      &#125;
+      else
+      &#123;
+        input_add_pyint = PyLong_FromLong(input_add);// 结果转为python的数字对象
+        v22 = (int *)input_add_pyint;
+        if ( input_add_pyint )
+        &#123;
+          v23 = (int *)_Pyx_PyObject_CallOneArg(return, input_add_pyint);// 调用函数return返回相加结果  
+      ......
+</code></pre>
+<p>source.rc4</p>
+<pre><code class="c">// write access to const memory has been detected, the output may be wrong!
+__int64 _pyx_pf_6source_4rc4()
+&#123;
+ ......
+  s2 = 0LL;
+  sj_y256 = 0LL;
+  v2 = 0LL;
+  count3 = 0LL;
+  v4 = 25;
+  key_index = 0LL;
+  v80 = 0LL;
+  key = 0LL;
+  m1 = 0LL;
+  sbox2 = 0LL;
+  i2 = 0LL;
+  m5 = 0LL;
+  m = PyList_New(25LL);                         // 创建了一个大小为25的列表
+  if ( !m )
+  &#123;
+    v4 = 12;
+    v7 = 2845;
+    goto LABEL_290;
+  &#125;
+  v8 = _pyx;                                    // 赋值
+  int_28 = _pyx-&gt;int_28;   //把密文加载到列表m中
+  if ( *(_DWORD *)int_28 != -1 )
+    ++*(_DWORD *)int_28;
+  **(_QWORD **)(m + 24) = v8-&gt;int_28;
+......
+  if ( *(_DWORD *)int_56 != -1 )
+    ++*(_DWORD *)int_56;
+  v80 = (int *)m;
+  *(_QWORD *)(*(_QWORD *)(m + 24) + 192LL) = v8-&gt;int_56;// 上面都是在给列表赋值，值就是一些数字常量，这是密文
+  str_keykey = v8-&gt;str_keykey;
+  if ( *(_DWORD *)str_keykey != -1 )
+    ++*(_DWORD *)str_keykey;
+  str_7 = v8-&gt;str_7;
+  key = v8-&gt;str_keykey;                         // 加载密钥
+  if ( *(_DWORD *)str_7 != -1 )
+    ++*(_DWORD *)str_7;
+  int_0 = v8-&gt;int_0;
+  flag = v8-&gt;str_7;
+  if ( *(_DWORD *)int_0 != -1 )
+    ++*(_DWORD *)int_0;
+  j = (int *)v8-&gt;int_0;
+  v83 = j;
+  if ( *(_DWORD *)m != -1 )
+    ++*(_DWORD *)m;
+  m1 = (int *)m;
+  s = _Pyx_PyObject_Call(qword_18000BF48, v8[1].str_0);// 调用一个对象，参数分别是调用对象名和参数,猜测返回值是256的那个表
+  if ( !s )
+  &#123;
+    v4 = 17;
+    v7 = 2972;
+    goto LABEL_289;
+  &#125;
+  if ( *(_QWORD *)(s + 8) == PyList_Type &amp;&amp; *(_QWORD *)s == 1LL )// 判断返回值是否是列表，引用计数是否为1
+  &#123;
+    *(_DWORD *)s = 2;
+    s2 = s;                                     // 把列表赋值给v0
+  &#125;
+  else
+  &#123;
+    s2 = PySequence_List(s);                    // 把python对象转成列表，赋值给v0
+    if ( !s2 )
+    &#123;
+      v4 = 17;
+      v7 = 2974;
+LABEL_268:
+      if ( *(int *)s &gt;= 0 )                     // 判断是否释放对象
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      if ( !s2 )
+      &#123;
+LABEL_277:
+        if ( key_index )
+          goto LABEL_278;
+        goto LABEL_281;
+      &#125;
+LABEL_274:
+      if ( *(int *)s2 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s2)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s2);
+      &#125;
+      goto LABEL_277;
+    &#125;
+  &#125;
+  if ( *(int *)s &gt;= 0 )
+  &#123;
+    v39 = (*(_QWORD *)s)-- == 1LL;
+    if ( v39 )
+      Py_Dealloc(s);
+  &#125;
+  sbox1 = s2;                                   // 表
+  sbox2 = (int *)s2;                            // 表，暂时分不清类型是什么，感觉一个是地址，一个是元素
+  do
+  &#123;
+    count1 = PyLong_FromLong((unsigned int)count3);// v3的值是0，赋值给count1
+    i = (int *)count1;                          // 赋值count1给i，i由下面推出
+    if ( !count1 )
+    &#123;
+      v4 = 18;
+      v7 = 2988;
+      goto LABEL_287;
+    &#125;
+    v43 = i2;
+    i2 = (int *)count1;                         // 赋值count1到count2
+    if ( v43 )
+    &#123;
+      if ( *v43 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)v43)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(v43);
+      &#125;
+    &#125;
+    Item = _Pyx_PyObject_GetItem(sbox1, i);     // 从盒中获取元素s[i]
+    s2 = Item;
+    if ( !Item )
+    &#123;
+      v4 = 19;
+      v7 = 3000;
+      goto LABEL_287;
+    &#125;
+    s = PyNumber_Add(j, Item);                  // j的初始值是0，这里实现了j+s[i]
+    if ( !s )
+    &#123;
+      v4 = 19;
+      v7 = 3002;
+      goto LABEL_274;
+    &#125;
+    if ( *(int *)s2 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)s2)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(s2);
+    &#125;
+    s2 = 0LL;
+    if ( key[2] == -1 )                         // 这里使用了key，下面的操作可能有关于key
+    &#123;
+      v7 = 3005;
+      goto LABEL_267;
+    &#125;
+    keylen = PyLong_FromSsize_t();              // 由下面可以更确定i，同时得知这里在获取key的大小
+    s2 = keylen;
+    if ( !keylen )
+    &#123;
+      v7 = 3006;
+      goto LABEL_267;
+    &#125;
+    key_index = (int *)PyNumber_Remainder(i, keylen);// 取余，实现了i%keylen
+    if ( !key_index )
+    &#123;
+      v7 = 3008;
+      goto LABEL_267;
+    &#125;
+    if ( *(int *)s2 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)s2)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(s2);
+    &#125;
+    s2 = _Pyx_PyObject_GetItem(key, key_index); // 按下标从key中取出元素，这里保存到了s2中
+    if ( !s2 )
+    &#123;
+      v7 = 3011;
+      goto LABEL_267;
+    &#125;
+    if ( *key_index &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)key_index)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(key_index);
+    &#125;
+    v46 = *(_QWORD *)(s2 + 8);
+    key_index = 0LL;
+    v47 = *(_DWORD *)(v46 + 168);
+    if ( (v47 &amp; 0x10000000) != 0 )
+    &#123;
+      intkey = _Pyx_PyUnicode_AsPy_UCS4(s2);    // 这里把s2按ascii码转为数字
+      goto LABEL_104;
+    &#125;
+    if ( (v47 &amp; 0x8000000) != 0 )
+    &#123;
+      v49 = *(_QWORD *)(s2 + 16);
+      if ( v49 == 1 )
+      &#123;
+        intkey = *(unsigned __int8 *)(s2 + 32);
+        goto LABEL_104;
+      &#125;
+LABEL_102:
+      v50 = &quot;ord() expected a character, but string of length %zd found&quot;;// 熟悉的ord()函数，证实了上面的操作
+      goto LABEL_103;
+    &#125;
+    if ( v46 == PyByteArray_Type || (unsigned int)PyType_IsSubtype() )
+    &#123;
+      v49 = *(_QWORD *)(s2 + 16);
+      if ( v49 == 1 )
+      &#123;
+        intkey = **(unsigned __int8 **)(s2 + 40);
+        goto LABEL_104;
+      &#125;
+      goto LABEL_102;
+    &#125;
+    v50 = &quot;ord() expected string of length 1, but %.200s found&quot;;
+    v49 = *(_QWORD *)(*(_QWORD *)(s2 + 8) + 24LL);
+LABEL_103:
+    PyErr_Format(PyExc_TypeError, v50, v49);
+    intkey = -1;
+LABEL_104:
+    if ( intkey == -1 )
+    &#123;
+      v7 = 3014;
+      goto LABEL_267;
+    &#125;
+    if ( *(int *)s2 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)s2)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(s2);
+    &#125;
+    intkey1 = PyLong_FromLong(intkey);          // 把获取的ascii数转为转为python对象
+    s2 = intkey1;                               // 赋值给s2
+    if ( !intkey1 )
+    &#123;
+      v7 = 3016;
+      goto LABEL_267;
+    &#125;
+    key_index = (int *)PyNumber_Add(s, intkey1);// 加法运算，s是上面的j+s[i],这里实现了操作(j + s[i]) + ord(key[i % len(key)])
+    if ( !key_index )
+    &#123;
+      v7 = 3018;
+LABEL_267:
+      v4 = 19;
+      goto LABEL_268;
+    &#125;
+    if ( *(int *)s &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)s)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(s);
+    &#125;
+    if ( *(int *)s2 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)s2)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(s2);
+    &#125;
+    result = _Pyx_PyInt_RemainderObjC(key_index, _pyx-&gt;int_256);// 把加来的结果对256取余
+    if ( !result )
+    &#123;
+      v4 = 19;
+      v7 = 3022;
+      goto LABEL_278;
+    &#125;
+    if ( *key_index &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)key_index)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(key_index);
+    &#125;
+    v53 = v83;
+    j = (int *)result;                          // 赋值给j，这里一起实现了j = ((j + s[i]) + ord(key[i % len(key)])) % 256
+    v54 = (int *)v83;
+    v83 = (_QWORD *)result;
+    if ( *v54 &gt;= 0 )
+    &#123;
+      v39 = (*v53)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(v54);
+    &#125;
+    sbox1 = (__int64)sbox2;
+    s2 = _Pyx_PyObject_GetItem(sbox2, result);  // 获取s[result]
+    if ( !s2 )
+    &#123;
+      v4 = 20;
+      v7 = 3035;
+      count3 = sbox2;
+      goto LABEL_288;
+    &#125;
+    key_index = (int *)_Pyx_PyObject_GetItem(sbox2, i);// 获取s[i]
+    if ( !key_index )
+    &#123;
+      v4 = 20;
+      v7 = 3037;
+      goto LABEL_274;
+    &#125;
+    if ( (int)PyObject_SetItem(sbox2, i, s2) &lt; 0 )// s[i] = s2
+    &#123;
+      v4 = 20;
+      v7 = 3039;
+      goto LABEL_274;
+    &#125;
+    if ( *(int *)s2 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)s2)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(s2);
+    &#125;
+    if ( (int)PyObject_SetItem(sbox2, j, key_index) &lt; 0 )// s[j] = key_index,这里实现了s[i]和s[j]的互换
+    &#123;
+      v4 = 20;
+      v7 = 3041;
+      goto LABEL_278;
+    &#125;
+    if ( *key_index &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)key_index)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(key_index);
+    &#125;
+    LODWORD(count3) = (_DWORD)count3 + 1;       // 循环计数加一
+    key_index = 0LL;
+  &#125;
+  while ( (int)count3 &lt; 256 );                  // 循环255次
+  v55 = _pyx;
+  v56 = _pyx-&gt;int_0;
+  if ( *(_DWORD *)v56 != -1 )
+    ++*(_DWORD *)v56;
+  v2 = v55-&gt;int_0;
+  v83 = v2;
+  if ( *j &gt;= 0 )
+  &#123;
+    v39 = (*(_QWORD *)j)-- == 1LL;
+    if ( v39 )
+      Py_Dealloc(j);
+  &#125;
+  v57 = _pyx;
+  v58 = _pyx-&gt;int_0;
+  if ( *(_DWORD *)v58 != -1 )
+    ++*(_DWORD *)v58;
+  iint0 = v57-&gt;int_0;
+  i2 = (int *)iint0;                            // 这里是i，初始化i=1,往下看可以推出
+  if ( *i &gt;= 0 )
+  &#123;
+    v39 = (*(_QWORD *)i)-- == 1LL;
+    if ( v39 )
+      Py_Dealloc(i);
+  &#125;
+  v60 = m1;
+  key_index = m1;
+  if ( *m1 != -1 )
+    ++*m1;
+  count3 = sbox2;
+  s2 = 0LL;
+  count4 = 0LL;
+  if ( *((__int64 *)m1 + 2) &lt;= 0 )
+  &#123;
+LABEL_226:
+    if ( *v60 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)v60)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(v60);
+    &#125;
+    sj_y256 = (int *)flag;
+    v77 = (int *)_Pyx_PyObject_CallOneArg(callable, flag);
+    if ( !v77 )
+    &#123;
+      v4 = 29;
+      v7 = 3202;
+      goto LABEL_290;
+    &#125;
+    if ( *v77 &gt;= 0 )
+    &#123;
+      v39 = (*(_QWORD *)v77)-- == 1LL;
+      if ( v39 )
+        Py_Dealloc(v77);
+    &#125;
+    s2 = Py_NoneStruct;
+    if ( Py_NoneStruct != -1 )
+      ++Py_NoneStruct;
+  &#125;
+  else
+  &#123;
+    j2 = (int *)v2;                             // 由下面的判断这里是第二个循环的j,初始化j=0
+    m2 = m1;                                    // 密文
+    while ( 1 )
+    &#123;
+      m4 = *(int **)(*((_QWORD *)m2 + 3) + 8 * count4);// 截取了密文count4为密文索引，这里按顺序获取八位二进制密文
+      if ( *m4 != -1 )
+        ++*m4;
+      v65 = m5;
+      ++count4;                                 // 下一个密文的索引
+      m5 = m4;                                  // 赋值密文
+      if ( v65 )
+      &#123;
+        if ( *v65 &gt;= 0 )
+        &#123;
+          v39 = (*(_QWORD *)v65)-- == 1LL;
+          if ( v39 )
+            Py_Dealloc(v65);
+        &#125;
+      &#125;
+      i_add1 = _Pyx_PyInt_AddObjC(iint0, _pyx-&gt;int_1);// 这里的iint0在上面赋值给了i2，也就是i，在下面又会把i的值赋值给iint0，所以这个变量也是i,这里实现了i+1
+      s2 = i_add1;
+      if ( !i_add1 )
+        break;
+      iY256 = _Pyx_PyInt_RemainderObjC(i_add1, _pyx-&gt;int_256);// (i+1)%256
+      if ( !iY256 )
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 24;
+        v7 = 3100;
+        goto LABEL_274;
+      &#125;
+      if ( *(int *)s2 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s2)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s2);
+      &#125;
+      v68 = (int *)iint0;
+      i2 = (int *)iY256;                        // 可以确定s2是i,因为(i+1)%256杯赋值回了i
+      iY256_ = iY256;
+      if ( *v68 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)v68)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(v68);
+      &#125;
+      s_i = _Pyx_PyObject_GetItem(sbox2, iY256);// s[i]
+      s = s_i;
+      if ( !s_i )
+      &#123;
+        sj_y256 = 0LL;
+        v7 = 3113;
+        goto LABEL_278;
+      &#125;
+      s2 = PyNumber_Add(j2, s_i);               // j+s[i]
+      if ( !s2 )
+      &#123;
+        sj_y256 = 0LL;
+        v7 = 3115;
+        goto LABEL_268;
+      &#125;
+      if ( *(int *)s &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      j_add_si = _Pyx_PyInt_RemainderObjC(s2, _pyx-&gt;int_256);// (j+s[i])%256
+      if ( !j_add_si )
+      &#123;
+        sj_y256 = 0LL;
+        v7 = 3118;
+        goto LABEL_274;
+      &#125;
+      if ( *(int *)s2 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s2)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s2);
+      &#125;
+      v72 = j2;
+      v83 = (_QWORD *)j_add_si;
+      j2 = (int *)j_add_si;                     // 赋值回j
+      if ( *v72 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)v72)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(v72);
+      &#125;
+      s = _Pyx_PyObject_GetItem(sbox2, j_add_si);// 在盒中查找值s[j]
+      if ( !s )
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 26;
+        v7 = 3131;
+        goto LABEL_278;
+      &#125;
+      s2 = _Pyx_PyObject_GetItem(sbox2, iY256_);// s[i]
+      if ( !s2 )
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 26;
+        v7 = 3133;
+        goto LABEL_268;
+      &#125;
+      if ( (int)PyObject_SetItem(sbox2, iY256_, s) &lt; 0 )
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 26;
+        v7 = 3135;
+        goto LABEL_268;
+      &#125;
+      if ( *(int *)s &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      if ( (int)PyObject_SetItem(sbox2, j2, s2) &lt; 0 )// 交换s[i],s[j]
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 26;
+        v7 = 3137;
+        goto LABEL_274;
+      &#125;
+      if ( *(int *)s2 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s2)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s2);
+      &#125;
+      s2 = _Pyx_PyObject_GetItem(sbox2, iY256_);// s2 = s[i]
+      if ( !s2 )
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 27;
+        v7 = 3147;
+        goto LABEL_278;
+      &#125;
+      s_j2 = _Pyx_PyObject_GetItem(sbox2, j2);  // s[j]
+      s = s_j2;
+      if ( !s_j2 )
+      &#123;
+        sj_y256 = 0LL;
+        v4 = 27;
+        v7 = 3149;
+        goto LABEL_274;
+      &#125;
+      sj_y256 = (int *)_Pyx_PyInt_RemainderObjC(s_j2, _pyx-&gt;int_256);// s[j]%256
+      if ( !sj_y256 )
+      &#123;
+        v4 = 27;
+        v7 = 3151;
+        goto LABEL_268;
+      &#125;
+      if ( *(int *)s &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      s = PyNumber_Add(s2, sj_y256);            // s = s[i] + s[j] %256
+      if ( !s )
+      &#123;
+        v4 = 27;
+        v7 = 3154;
+        goto LABEL_274;
+      &#125;
+      if ( *(int *)s2 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s2)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s2);
+      &#125;
+      s2 = 0LL;
+      if ( *sj_y256 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)sj_y256)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(sj_y256);
+      &#125;
+      sj_y256 = (int *)_Pyx_PyInt_RemainderObjC(s, _pyx-&gt;int_256);// s %256
+      if ( !sj_y256 )
+      &#123;
+        v4 = 27;
+        v7 = 3158;
+        goto LABEL_268;
+      &#125;
+      if ( *(int *)s &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      v74 = v80;
+      v80 = sj_y256;
+      if ( *v74 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)v74)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(v74);
+      &#125;
+      s_j3 = _Pyx_PyObject_GetItem(sbox2, sj_y256);// s[sj_y256],这里实现了s[(s[i] + s[j] % 256) % 256]
+      sj_y256 = (int *)s_j3;
+      if ( !s_j3 )
+      &#123;
+        v4 = 28;
+        v7 = 3170;
+        goto LABEL_278;
+      &#125;
+      s = _Pyx_PyInt_RemainderObjC(s_j3, _pyx-&gt;int_256);// s[j]%256
+      if ( !s )
+      &#123;
+        v4 = 28;
+        v7 = 3172;
+        goto LABEL_278;
+      &#125;
+      if ( *sj_y256 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)sj_y256)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(sj_y256);
+      &#125;
+      sj_y256 = (int *)PyNumber_Xor(m5, s);     // 密文与得到的结果异或，m ^ s[j] % 256
+      if ( !sj_y256 )
+      &#123;
+        v4 = 28;
+        v7 = 3175;
+        goto LABEL_268;
+      &#125;
+      if ( *(int *)s &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      s = _Pyx_PyObject_CallOneArg(qword_18000BF40, sj_y256);// 猜这里是把异或的密文转成字符串
+      if ( !s )
+      &#123;
+        v4 = 28;
+        v7 = 3178;
+        goto LABEL_278;
+      &#125;
+      if ( *sj_y256 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)sj_y256)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(sj_y256);
+      &#125;
+      sj_y256 = (int *)PyNumber_InPlaceAdd(flag, s);// flag += s,这里实现了字符串加法
+      if ( !sj_y256 )
+      &#123;
+        v4 = 28;
+        v7 = 3181;
+        goto LABEL_268;
+      &#125;
+      if ( *(int *)s &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)s)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(s);
+      &#125;
+      v76 = (int *)flag;
+      flag = (__int64 *)sj_y256;                // 结果保存到flag中
+      if ( *v76 &gt;= 0 )
+      &#123;
+        v39 = (*(_QWORD *)v76)-- == 1LL;
+        if ( v39 )
+          Py_Dealloc(v76);
+      &#125;
+      m2 = m1;
+      iint0 = (__int64 *)i2;                    // 赋值i到iint0中进行准备下一轮循环
+      if ( count4 &gt;= *((_QWORD *)m1 + 2) )
+      &#123;
+        v2 = (__int64 *)j2;
+        v60 = m1;                               // 跳转到上面实现循环，进行下一轮加密
+        goto LABEL_226;
+      &#125;
+    &#125;
+ ......
+    _Pyx_AddTraceback(&quot;source.rc4&quot;, v7, v4, &quot;source.pyx&quot;);
+ ......
+  return s2;
+&#125;
+</code></pre>
+<h3><span id="dis导出密文">dis导出密文</span></h3><p>python中的dis()函数可以查看模块包含的对象，有时候可能会有密文之类的，可以直接print打印。</p>
+<h3><span id="总结">总结</span></h3><p>我们发现一个cython函数里面其实有很多我们不需要分析的东西，像一些由许多跳转的if其实我们根本就不需要管，这些代码把一个操作分成了许多步，有一些操作其实我们心理大概有数就行了，对一个cython函数的分析，我们需要大胆的猜，对变量进行追踪，弄清关键数据操作的作用就行了，数据操作比较复杂时可以自己写伪代码记录一下。</p>
 
     </div>
     

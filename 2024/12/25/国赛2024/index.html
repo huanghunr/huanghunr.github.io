@@ -209,6 +209,8 @@
 
 <ul>
 <li><a href="#dump">dump</a></li>
+<li><a href="#cython">cython</a></li>
+<li><a href="#rand0m">rand0m</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -302,6 +304,1240 @@ data = open(&quot;flag&quot;, &quot;rb&quot;).read() #读取密文
 for i in data:
     print(mp[i], end=&quot;&quot;) # 按键输出可打印字符
 
+</code></pre>
+<h3><span id="cython">cython</span></h3><p>key在python的test1pyc文件中，用pycdas人工或者AI读字节码，得到大概逻辑如下</p>
+<pre><code class="python">import ez
+
+flag = input(&quot;flag&quot;)
+flag1 = list(flag)
+value = []
+b = 0
+ck = 0
+if(len(flag1) != 24):
+    return 0
+for i in range(0,len(flag1),4):
+    b = ord(flag1[i]) &lt;&lt; 24 or ord(flag1[i+1]) &lt;&lt; 16 or ord(flag1[i+2]) &lt;&lt; 8 or ord(flag1[i+3])
+    value.append(b)
+key =[102, 108, 97, 103]
+flag_encrypt = []
+for i in range(0,6,2):
+    res = ez.encrypt(value[i],value[i+1],key)
+    flag_encrypt.append(res)
+ck = ez.check(flag_encrypt)
+if ck == 3:
+    print(&quot;yes!!!,you get right flag&quot;)
+else:
+    print(&quot;wrong&quot;)
+</code></pre>
+<p>分析pyd模块，创建一个python3.11的cython模块（有附件）用bindiff恢复符号。</p>
+<p>恢复结构体</p>
+<pre><code class="c">typedef struct __strings &#123;
+    __int64* int_0;
+    __int64* int_1;
+    __int64* int_2;
+    __int64* int_3;
+    __int64* int_4;
+    __int64* int_5;
+    __int64* int_6;
+    __int64* str_xinxin;
+    __int64* str_v0;
+    __int64* str_v1;
+    __int64* str_wenhao;
+    __int64* str_asyncio;
+    __int64* str_c_uubt32;
+    __int64* str_check;
+    __int64* str___class_getitem;
+    __int64* str_cline_in_traceback;
+    __int64* str_ctypes;
+    __int64* str_data;
+    __int64* str_delta;
+    __int64* str_encrypt;
+    __int64* str_ez;
+    __int64* str_ez_py;
+    __int64* str_flag_encrypt;
+    __int64* str_i;
+    __int64* str__inport_;
+    __int64* str__is_continue;
+    __int64* str_key;
+    __int64* str_main;
+    __int64* str_name;
+    __int64* str_range;
+    __int64* str_test;
+    __int64* str_total;
+    __int64* str_unk;
+    __int64* str_v1;
+    __int64* str_value;
+    __int64* int_0a
+    __int64* int_1a
+    __int64* int_3a
+    __int64* int_6a
+    __int64* int_11a
+    __int64* int_345309213a
+    __int64* int_947843023a
+    __int64* int_1415865428a
+    __int64* int_1592923520a
+    __int64* int_2248247555s;
+    __int64* int_3785781401s;
+    __int64* int_3805970057s;
+    __int64* int_47;
+    __int64* int_48;
+    __int64* int_49;
+    __int64* int_50;
+    __int64* int_51;
+    __int64* int_52;
+    __int64* int_53;
+    __int64* int_54;
+    __int64* int_55;
+    __int64* int_56;
+    __int64* int_57;
+    __int64* int_58;
+    __int64* int_59;
+    __int64* int_60;
+    __int64* int_61;
+    __int64* int_62;
+    __int64* int_63;
+&#125; str;
+</code></pre>
+<p>分析加密函数，函数名受到了恢复符号的影响，通过ez.encrypt这个字符串寻找就行，_Pyx_PyVectorcall_FastCallDict_kw函数是由__pyx_pymod_exec_ez函数调用的，把v0，v1，key通过参数传入_Pyx_PyVectorcall_FastCallDict_kw。</p>
+<pre><code class="c">__int64 __fastcall _Pyx_PyVectorcall_FastCallDict_kw(__int64 a1, __int64 v0, __int64 v1, __int64 a4)
+&#123;
+  _QWORD *v4; // rbp
+  _QWORD *v5; // rbx
+  __int64 v6; // rsi
+  _QWORD *AttrStrNoError; // r15
+  _QWORD *v111; // r13
+  __int64 *str_c_uint32; // rdi
+  __int64 *v12; // rdi
+  int v13; // ecx
+  _QWORD *v14; // rax
+  _QWORD *v15; // rcx
+  bool v16; // zf
+  _QWORD *v000; // rdi
+  unsigned int v18; // r12d
+  unsigned int v19; // r14d
+  __int64 *v20; // rbp
+  __int64 *v21; // rbp
+  int v22; // ecx
+  _QWORD *v23; // rax
+  _QWORD *v24; // rcx
+  __strings *data3; // r8
+  _QWORD *v1111; // r14
+  __int64 *int_1415865428a; // rsi
+  __int64 *v28; // rbx
+  __int64 *v29; // rbx
+  _QWORD *Item_KnownHash; // rax
+  _QWORD *v31; // rbx
+  unsigned int v32; // ecx
+  _QWORD *v33; // rax
+  _QWORD *v34; // rcx
+  _QWORD *v35; // rbp
+  __int64 *v36; // rbx
+  __int64 v37; // rdi
+  __int64 *str_value; // rdx
+  __int64 (__fastcall *v40)(_QWORD *, __int64 *); // r8
+  __int64 Attr; // rax
+  __int64 *v42; // rdx
+  __int64 (__fastcall *v43)(_QWORD *, __int64 *); // r8
+  unsigned __int64 v1_value; // rax
+  __int64 *v45; // rdx
+  __int64 (__fastcall *v46)(_QWORD *, __int64 *); // r8
+  __int64 v47; // rax
+  __int64 *v48; // rdx
+  __int64 (__fastcall *v49)(_QWORD *, __int64 *); // r8
+  __int64 v1_value2; // rax
+  __int64 *v51; // rdx
+  __int64 (__fastcall *v52)(__int64, __int64 *); // r8
+  __int64 sum_value; // rax
+  __int64 *v54; // rdx
+  __int64 (__fastcall *v55)(__int64, __int64 *); // r8
+  __int64 sum_value1; // rax
+  int v57; // ecx
+  __int64 sum_and_3; // rax
+  __int64 *v59; // rdx
+  __int64 (__fastcall *v60)(_QWORD *, __int64 *, _QWORD *); // r9
+  int v61; // eax
+  __int64 *v62; // rdx
+  __int64 (__fastcall *v63)(__int64, __int64 *); // r8
+  __int64 v64; // rax
+  __int64 *v65; // rdx
+  __int64 (__fastcall *v66)(__int64, __int64 *, _QWORD *); // r9
+  int v67; // eax
+  __int64 *v68; // rdx
+  __int64 (__fastcall *v69)(_QWORD *, __int64 *); // r8
+  __int64 v1_value3; // rax
+  __int64 *v71; // rdx
+  __int64 (__fastcall *v72)(_QWORD *, __int64 *); // r8
+  unsigned __int64 v0_value; // rax
+  __int64 *v74; // rdx
+  __int64 (__fastcall *v75)(_QWORD *, __int64 *); // r8
+  __int64 v76; // rax
+  __int64 *v77; // rdx
+  __int64 (__fastcall *v78)(_QWORD *, __int64 *); // r8
+  __int64 v0_value2; // rax
+  __int64 *v80; // rdx
+  __int64 (__fastcall *v81)(__int64, __int64 *); // r8
+  __int64 sum_value2; // rax
+  __int64 *v83; // rdx
+  __int64 (__fastcall *v84)(__int64, __int64 *); // r8
+  __int64 sum_value3; // rax
+  int v86; // ecx
+  __int64 v87; // rax
+  __int64 *v88; // rdx
+  __int64 (__fastcall *v89)(_QWORD *, __int64 *, _QWORD *); // r9
+  int v90; // eax
+  __int64 *v91; // rdx
+  __int64 (__fastcall *v92)(_QWORD *, __int64 *); // r8
+  __int64 v93; // rax
+  __int64 *v94; // rdx
+  __int64 (__fastcall *v95)(_QWORD *, __int64 *); // r8
+  __int64 v96; // rax
+  __int64 v97; // rax
+  _QWORD *v98; // [rsp+30h] [rbp-88h]
+  __int64 *delta; // [rsp+38h] [rbp-80h]
+  _QWORD *v100; // [rsp+40h] [rbp-78h]
+  __int64 sum; // [rsp+48h] [rbp-70h]
+  _QWORD v00[2]; // [rsp+58h] [rbp-60h] BYREF
+  _QWORD v11[2]; // [rsp+68h] [rbp-50h] BYREF
+  __int64 *int_0a; // [rsp+78h] [rbp-40h] BYREF
+  int v105; // [rsp+C0h] [rbp+8h]
+
+  v4 = 0LL;
+  v5 = 0LL;
+  v6 = 0LL;
+  AttrStrNoError = 0LL;
+  v98 = 0LL;
+  v100 = 0LL;
+  delta = 0LL;
+  sum = 0LL;
+  if ( qword_18000CEA8 == data-&gt;int_0[3] )
+  &#123;
+    if ( qword_18000CE80 )
+    &#123;
+      ++*(_QWORD *)qword_18000CE80;
+      v111 = (_QWORD *)qword_18000CE80;
+    &#125;
+    else
+    &#123;
+      str_c_uint32 = data-&gt;str_c_uint32;
+      v111 = (_QWORD *)_Pyx_PyObject_GetAttrStrNoError(data-&gt;int_1, str_c_uint32);
+      if ( !v111 &amp;&amp; !PyErr_Occurred() )
+        PyErr_Format(PyExc_NameError, &quot;name &#39;%U&#39; is not defined&quot;, str_c_uint32);
+    &#125;
+    goto LABEL_11;
+  &#125;
+  v12 = data-&gt;str_c_uint32;
+  v111 = (_QWORD *)PyDict_GetItem_KnownHash(data-&gt;int_0, v12, v12[3]);// 从data-&gt;int_0(一个字典,通过键的哈希查找)加载方法(uint32)到attrstrnoerror中
+  qword_18000CEA8 = data-&gt;int_0[3];
+  qword_18000CE80 = (__int64)v111;
+  if ( !v111 )
+  &#123;
+    if ( PyErr_Occurred() )
+      goto LABEL_320;
+    v111 = (_QWORD *)_Pyx_CyFunction_Vectorcall_CheckArgs(v12);// 检查参数
+LABEL_11:
+    if ( v111 )
+      goto LABEL_12;
+LABEL_320:
+    v18 = 5;
+    v19 = 2620;
+    goto LABEL_72;
+  &#125;
+  ++*v111;
+LABEL_12:
+  v13 = 0;
+  if ( v111[1] == PyMethod_Type )
+  &#123;
+    v4 = (_QWORD *)v111[3];
+    if ( v4 )
+    &#123;
+      v14 = (_QWORD *)v111[2];
+      v15 = v111;
+      ++*v4;
+      v111 = v14;
+      ++*v14;
+      v16 = (*v15)-- == 1LL;
+      if ( v16 )
+        Py_Dealloc(v15);
+      v13 = 1;
+    &#125;
+  &#125;
+  v00[0] = v0;
+  v000 = (_QWORD *)callfunc((__int64)v111, &amp;v00[-v13], (unsigned int)(v13 + 1));// c_uint32(v0)
+  if ( v4 )        //callfunc是自己命名的，进去分析一下猜的
+  &#123;
+    v16 = (*v4)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v4);
+  &#125;
+  if ( !v000 )
+  &#123;
+    v18 = 5;
+    v19 = 2640;
+    goto LABEL_300;
+  &#125;
+  v16 = (*v111)-- == 1LL;
+  if ( v16 )
+    Py_Dealloc(v111);
+  v111 = 0LL;
+  if ( qword_18000CEC0 == data-&gt;int_0[3] )
+  &#123;
+    if ( qword_18000CE70 )
+    &#123;
+      ++*(_QWORD *)qword_18000CE70;
+      AttrStrNoError = (_QWORD *)qword_18000CE70;
+    &#125;
+    else
+    &#123;
+      v20 = data-&gt;str_c_uint32;
+      AttrStrNoError = (_QWORD *)_Pyx_PyObject_GetAttrStrNoError(data-&gt;int_1, v20);
+      if ( !AttrStrNoError &amp;&amp; !PyErr_Occurred() )
+        PyErr_Format(PyExc_NameError, &quot;name &#39;%U&#39; is not defined&quot;, v20);
+    &#125;
+  &#125;
+  else
+  &#123;
+    v21 = data-&gt;str_c_uint32;
+    AttrStrNoError = (_QWORD *)PyDict_GetItem_KnownHash(data-&gt;int_0, v21, v21[3]);// 同上加载uint32
+    qword_18000CEC0 = data-&gt;int_0[3];
+    qword_18000CE70 = (__int64)AttrStrNoError;
+    if ( AttrStrNoError )
+    &#123;
+      ++*AttrStrNoError;
+      goto LABEL_32;
+    &#125;
+    if ( PyErr_Occurred() )
+    &#123;
+      AttrStrNoError = 0LL;
+      v19 = 2644;
+      v18 = 5;
+      goto LABEL_298;
+    &#125;
+    AttrStrNoError = (_QWORD *)_Pyx_CyFunction_Vectorcall_CheckArgs(v21);
+  &#125;
+  if ( !AttrStrNoError )
+  &#123;
+    v18 = 5;
+    v19 = 2644;
+LABEL_298:
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+LABEL_300:
+    if ( !v111 )
+      goto LABEL_308;
+    goto LABEL_306;
+  &#125;
+LABEL_32:
+  v22 = 0;
+  if ( AttrStrNoError[1] == PyMethod_Type )
+  &#123;
+    v6 = AttrStrNoError[3];
+    if ( v6 )
+    &#123;
+      v23 = (_QWORD *)AttrStrNoError[2];
+      v24 = AttrStrNoError;
+      ++*(_QWORD *)v6;
+      AttrStrNoError = v23;
+      ++*v23;
+      v16 = (*v24)-- == 1LL;
+      if ( v16 )
+        Py_Dealloc(v24);
+      v22 = 1;
+    &#125;
+  &#125;
+  v00[1] = v6;
+  v11[0] = v1;
+  v111 = (_QWORD *)callfunc((__int64)AttrStrNoError, &amp;v11[-v22], (unsigned int)(v22 + 1));// c_uint32(v1)
+  if ( v6 )
+  &#123;
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+  &#125;
+  v6 = 0LL;
+  if ( !v111 )
+  &#123;
+    v18 = 5;
+    v19 = 2664;
+    goto LABEL_298;
+  &#125;
+  v16 = (*AttrStrNoError)-- == 1LL;
+  if ( v16 )
+    Py_Dealloc(AttrStrNoError);
+  data3 = data;
+  AttrStrNoError = v000;                        // 赋值v0给 attrstr...
+  v98 = v000;                                   // 赋值v0到v98
+  v1111 = v111;
+  v100 = v111;
+  ++*data-&gt;int_1415865428a;
+  int_1415865428a = data3-&gt;int_1415865428a;
+  delta = int_1415865428a;
+  if ( qword_18000CE68 == data3-&gt;int_0[3] )
+  &#123;
+    if ( qword_18000CE90 )
+    &#123;
+      ++*(_QWORD *)qword_18000CE90;
+      v000 = (_QWORD *)qword_18000CE90;
+      goto LABEL_60;
+    &#125;
+    v28 = data3-&gt;str_c_uint32;
+    v000 = (_QWORD *)_Pyx_PyObject_GetAttrStrNoError(data3-&gt;int_1, v28);
+    if ( !v000 &amp;&amp; !PyErr_Occurred() )
+      PyErr_Format(PyExc_NameError, &quot;name &#39;%U&#39; is not defined&quot;, v28);
+  &#125;
+  else
+  &#123;
+    v29 = data3-&gt;str_c_uint32;
+    Item_KnownHash = (_QWORD *)PyDict_GetItem_KnownHash(data3-&gt;int_0, v29, v29[3]);
+    data3 = data;
+    v000 = Item_KnownHash;
+    qword_18000CE68 = data-&gt;int_0[3];
+    qword_18000CE90 = (__int64)Item_KnownHash;
+    if ( Item_KnownHash )
+    &#123;
+      ++*Item_KnownHash;
+      goto LABEL_61;
+    &#125;
+    if ( PyErr_Occurred() )
+    &#123;
+LABEL_319:
+      v18 = 8;
+      v19 = 2690;
+      goto LABEL_72;
+    &#125;
+    v000 = (_QWORD *)_Pyx_CyFunction_Vectorcall_CheckArgs(v29);
+  &#125;
+  data3 = data;
+LABEL_60:
+  if ( !v000 )
+    goto LABEL_319;
+LABEL_61:
+  v31 = 0LL;
+  v32 = 0;
+  if ( v000[1] == PyMethod_Type )
+  &#123;
+    v31 = (_QWORD *)v000[3];
+    if ( v31 )
+    &#123;
+      v33 = (_QWORD *)v000[2];
+      v34 = v000;
+      ++*v31;
+      v000 = v33;
+      ++*v33;
+      v16 = (*v34)-- == 1LL;
+      if ( v16 )
+      &#123;
+        Py_Dealloc(v34);
+        data3 = data;
+      &#125;
+      v32 = 1;
+    &#125;
+  &#125;
+  int_0a = data3-&gt;int_0a;
+  v11[1] = v31;
+  sum = callfunc((__int64)v000, &amp;(&amp;int_0a)[-v32], v32 + 1);// 同上加载一个初始为0的变量int_0a到sum中 uint32(int_0a),从下面的相加中可以看出是sum
+  v35 = (_QWORD *)sum;
+  v111 = (_QWORD *)sum;                         // 赋值sum给v111
+  if ( v31 )
+  &#123;
+    v16 = (*v31)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v31);
+  &#125;
+  if ( !sum )
+  &#123;
+    v98 = AttrStrNoError;
+    AttrStrNoError = 0LL;
+    delta = int_1415865428a;
+    v6 = 0LL;
+    v100 = v1111;
+    v5 = 0LL;
+    sum = 0LL;
+    v18 = 8;
+    v19 = 2710;
+    if ( !v000 )
+      goto LABEL_71;
+    goto LABEL_298;
+  &#125;
+  v16 = (*v000)-- == 1LL;
+  if ( v16 )
+    Py_Dealloc(v000);
+  v105 = 0;
+  v18 = 11;
+  do                                            // 开始加密循环
+  &#123;
+    str_value = data-&gt;str_value;
+    v40 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(AttrStrNoError[1] + 144LL);
+    if ( v40 )
+      Attr = v40(AttrStrNoError, str_value);
+    else
+      Attr = PyObject_GetAttr(AttrStrNoError, str_value);// 这里的attr...是v0,获取v0.value到Attr中
+    v111 = (_QWORD *)Attr;                      // 赋值Attr到v111
+    if ( !Attr )
+    &#123;
+      v18 = 10;
+      v19 = 2734;
+      goto LABEL_72;
+    &#125;
+    v42 = data-&gt;str_value;
+    v43 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v1111[1] + 144LL);
+    if ( v43 )
+      v1_value = v43(v1111, v42);
+    else
+      v1_value = PyObject_GetAttr(v1111, v42);
+    v000 = (_QWORD *)v1_value;
+    if ( !v1_value )
+    &#123;
+      v19 = 2736;
+      AttrStrNoError = 0LL;
+      goto LABEL_303;
+    &#125;
+    AttrStrNoError = (_QWORD *)sub_180005330(v1_value, (__int64)data-&gt;int_3a);// 进去看一眼就是PyNumber_Lshift(v2, a2)，这里就是v1&lt;&lt;3
+    if ( !AttrStrNoError )
+    &#123;
+      v6 = 0LL;
+      v19 = 2738;
+      goto LABEL_296;
+    &#125;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v45 = data-&gt;str_value;
+    v46 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v1111[1] + 144LL);
+    if ( v46 )
+      v47 = v46(v1111, v45);
+    else
+      v47 = PyObject_GetAttr(v1111, v45);
+    v000 = (_QWORD *)v47;
+    if ( !v47 )
+    &#123;
+      v19 = 2741;
+LABEL_303:
+      v6 = 0LL;
+      goto LABEL_304;
+    &#125;
+    v6 = sub_180005440(v47, data-&gt;int_6a, 6LL); // PyNumber_Rshift(),v1&gt;&gt;6
+    if ( !v6 )
+    &#123;
+      v19 = 2743;
+      goto LABEL_296;
+    &#125;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v000 = (_QWORD *)PyNumber_Xor(AttrStrNoError, v6);// 两个结果异或 (v1&lt;&lt;3)^(v1&gt;&gt;6),结果存到v000中
+    if ( !v000 )
+    &#123;
+      v19 = 2746;
+      goto LABEL_304;
+    &#125;
+    v16 = (*AttrStrNoError)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(AttrStrNoError);
+    AttrStrNoError = 0LL;
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+    v48 = data-&gt;str_value;
+    v49 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v1111[1] + 144LL);
+    if ( v49 )
+      v1_value2 = v49(v1111, v48);
+    else
+      v1_value2 = PyObject_GetAttr(v1111, v48); // v1.value
+    v6 = v1_value2;
+    if ( !v1_value2 )
+    &#123;
+      v19 = 2750;
+      goto LABEL_296;
+    &#125;
+    AttrStrNoError = (_QWORD *)PyNumber_Add(v000, v1_value2);// 把上面的结果与v1相加 (v1&lt;&lt;3)^(v1&gt;&gt;6) + v1
+    if ( !AttrStrNoError )
+    &#123;
+      v19 = 2752;
+LABEL_296:
+      v5 = 0LL;
+      goto LABEL_297;
+    &#125;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+    v51 = data-&gt;str_value;
+    v52 = *(__int64 (__fastcall **)(__int64, __int64 *))(*(_QWORD *)(sum + 8) + 144LL);
+    if ( v52 )
+      sum_value = v52(sum, v51);
+    else
+      sum_value = PyObject_GetAttr(sum, v51);   // sum.value
+    v6 = sum_value;
+    if ( !sum_value )
+    &#123;
+      v19 = 2756;
+      goto LABEL_304;
+    &#125;
+    v54 = data-&gt;str_value;
+    v55 = *(__int64 (__fastcall **)(__int64, __int64 *))(*(_QWORD *)(sum + 8) + 144LL);
+    if ( v55 )
+      sum_value1 = v55(sum, v54);
+    else
+      sum_value1 = PyObject_GetAttr(sum, v54);  // 再获取一个sum.value
+    v000 = (_QWORD *)sum_value1;
+    if ( !sum_value1 )
+    &#123;
+      v19 = 2758;
+LABEL_304:
+      v5 = 0LL;
+      goto LABEL_305;
+    &#125;
+    if ( *(_QWORD *)(sum_value1 + 8) == PyLong_Type[0] )
+    &#123;
+      v57 = *(_DWORD *)(sum_value1 + 24);
+      if ( *(__int64 *)(sum_value1 + 16) &lt;= 0 )
+        LOBYTE(v57) = -(char)v57;
+      sum_and_3 = PyLong_FromLong(v57 &amp; 3);
+    &#125;
+    else
+    &#123;
+      sum_and_3 = PyNumber_And(sum_value1, data-&gt;int_3a);// sum &amp; 3
+    &#125;
+    v5 = (_QWORD *)sum_and_3;
+    if ( !sum_and_3 )
+    &#123;
+      v19 = 2760;
+      goto LABEL_297;
+    &#125;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v000 = (_QWORD *)_Pyx_CyFunction_Init(a4, (__int64)v5);// 这里看似初始化一个函数其实是在通过索引寻找一个值，分析一下这个函数可以看到str___class_getitem，和一些index
+                                                // 这里是传进来的key[sum &amp; 3]
+    if ( !v000 )
+    &#123;
+      v19 = 2763;
+      goto LABEL_305;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = (_QWORD *)PyNumber_Add(v6, v000);      // 把结果相加v6是sum,这里实现了sum + key[sum&amp;3]
+    if ( !v5 )
+    &#123;
+      v19 = 2766;
+      goto LABEL_297;
+    &#125;
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+    v6 = 0LL;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v000 = (_QWORD *)PyNumber_Xor(AttrStrNoError, v5);// 异或最终结果 这里实现了 ((v1&lt;&lt;3)^(v1&gt;&gt;6) + v1) ^ (sum + key[sum &amp; 3])
+    if ( !v000 )
+    &#123;
+      v19 = 2770;
+LABEL_305:
+      v18 = 10;
+LABEL_306:
+      v16 = (*v111)-- == 1LL;
+      if ( v16 )
+        Py_Dealloc(v111);
+LABEL_308:
+      if ( AttrStrNoError )
+      &#123;
+        v16 = (*AttrStrNoError)-- == 1LL;
+        if ( v16 )
+          Py_Dealloc(AttrStrNoError);
+      &#125;
+      if ( v6 )
+      &#123;
+LABEL_312:
+        v16 = (*(_QWORD *)v6)-- == 1LL;
+        if ( v16 )
+          Py_Dealloc(v6);
+      &#125;
+      if ( v5 )
+      &#123;
+LABEL_315:
+        AttrStrNoError = v98;
+LABEL_316:
+        v16 = (*v5)-- == 1LL;
+        if ( v16 )
+          Py_Dealloc(v5);
+LABEL_72:
+        v36 = delta;
+        _pyx_find_code_object(&quot;ez.encrypt&quot;, v19, v18, &quot;ez.py&quot;);
+        v1111 = v100;
+        v37 = 0LL;
+        v35 = (_QWORD *)sum;
+        if ( AttrStrNoError )
+          goto LABEL_73;
+        goto LABEL_75;
+      &#125;
+LABEL_71:
+      AttrStrNoError = v98;
+      goto LABEL_72;
+    &#125;
+    v16 = (*AttrStrNoError)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(AttrStrNoError);
+    AttrStrNoError = 0LL;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = (_QWORD *)PyNumber_InPlaceAdd(v111, v000);// v111是v0，v000是上面的最终结果,这里是v0 += v000
+                                                // v0 += ((v1&lt;&lt;3)^(v1&gt;&gt;6) + v1) ^ (sum + key[sum &amp; 3])
+    if ( !v5 )
+    &#123;
+      v19 = 2774;
+LABEL_297:
+      v18 = 10;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v111)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v111);
+    v111 = 0LL;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v59 = data-&gt;str_value;
+    v60 = *(__int64 (__fastcall **)(_QWORD *, __int64 *, _QWORD *))(v98[1] + 152LL);
+    if ( v60 )
+      v61 = v60(v98, v59, v5);
+    else
+      v61 = PyObject_SetAttr(v98, v59, v5);     // 设置v0.value为v5也就是上面相加的结果
+    if ( v61 &lt; 0 )
+    &#123;
+      v18 = 10;
+      v19 = 2778;
+      goto LABEL_315;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v62 = data-&gt;str_value;
+    v63 = *(__int64 (__fastcall **)(__int64, __int64 *))(*(_QWORD *)(sum + 8) + 144LL);
+    if ( v63 )
+      v64 = v63(sum, v62);
+    else
+      v64 = PyObject_GetAttr(sum, v62);         // sum.value
+    v5 = (_QWORD *)v64;
+    if ( !v64 )
+    &#123;
+      v19 = 2788;
+      goto LABEL_71;
+    &#125;
+    v000 = (_QWORD *)PyNumber_InPlaceAdd(v64, delta);// sum += delta
+    if ( !v000 )
+    &#123;
+      v19 = 2790;
+      goto LABEL_315;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = 0LL;
+    v65 = data-&gt;str_value;
+    v66 = *(__int64 (__fastcall **)(__int64, __int64 *, _QWORD *))(*(_QWORD *)(sum + 8) + 152LL);
+    if ( v66 )
+      v67 = v66(sum, v65, v000);
+    else
+      v67 = PyObject_SetAttr(sum, v65, v000);   // 设置sum.value的值为上面的结果
+    if ( v67 &lt; 0 )
+    &#123;
+      v19 = 2793;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v68 = data-&gt;str_value;
+    v69 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v1111[1] + 144LL);
+    if ( v69 )
+      v1_value3 = v69(v1111, v68);
+    else
+      v1_value3 = PyObject_GetAttr(v1111, v68); // v1.value
+    v000 = (_QWORD *)v1_value3;
+    if ( !v1_value3 )
+    &#123;
+      v18 = 12;
+      v19 = 2803;
+      goto LABEL_71;
+    &#125;
+    v71 = data-&gt;str_value;
+    v72 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v98[1] + 144LL);
+    if ( v72 )
+      v0_value = v72(v98, v71);
+    else
+      v0_value = PyObject_GetAttr(v98, v71);    // v0.value
+    v5 = (_QWORD *)v0_value;
+    if ( !v0_value )
+    &#123;
+      v18 = 12;
+      v19 = 2805;
+      goto LABEL_298;
+    &#125;
+    v111 = (_QWORD *)sub_180005330(v0_value, (__int64)data-&gt;int_3a);// lshift, v0 &lt;&lt; 3
+    if ( !v111 )
+    &#123;
+      v18 = 12;
+      v19 = 2807;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v74 = data-&gt;str_value;
+    v75 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v98[1] + 144LL);
+    if ( v75 )
+      v76 = v75(v98, v74);
+    else
+      v76 = PyObject_GetAttr(v98, v74);
+    v5 = (_QWORD *)v76;
+    if ( !v76 )
+    &#123;
+      v18 = 12;
+      v19 = 2810;
+      goto LABEL_298;
+    &#125;
+    AttrStrNoError = (_QWORD *)sub_180005440(v76, data-&gt;int_6a, 6LL);// rshift,v0 &gt;&gt; 6
+    if ( !AttrStrNoError )
+    &#123;
+      v18 = 12;
+      v19 = 2812;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = (_QWORD *)PyNumber_Xor(v111, AttrStrNoError);// (v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6)
+    if ( !v5 )
+    &#123;
+      v18 = 12;
+      v19 = 2815;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v111)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v111);
+    v111 = 0LL;
+    v16 = (*AttrStrNoError)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(AttrStrNoError);
+    v77 = data-&gt;str_value;
+    v78 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v98[1] + 144LL);
+    if ( v78 )
+      v0_value2 = v78(v98, v77);
+    else
+      v0_value2 = PyObject_GetAttr(v98, v77);   // v0.value
+    AttrStrNoError = (_QWORD *)v0_value2;
+    if ( !v0_value2 )
+    &#123;
+      v18 = 12;
+      v19 = 2819;
+      goto LABEL_298;
+    &#125;
+    v111 = (_QWORD *)PyNumber_Add(v5, v0_value2);// (v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6) + v0
+    if ( !v111 )
+    &#123;
+      v18 = 12;
+      v19 = 2821;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = 0LL;
+    v16 = (*AttrStrNoError)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(AttrStrNoError);
+    v80 = data-&gt;str_value;
+    v81 = *(__int64 (__fastcall **)(__int64, __int64 *))(*(_QWORD *)(sum + 8) + 144LL);
+    if ( v81 )
+      sum_value2 = v81(sum, v80);
+    else
+      sum_value2 = PyObject_GetAttr(sum, v80);  // sum.value
+    AttrStrNoError = (_QWORD *)sum_value2;
+    if ( !sum_value2 )
+    &#123;
+      v18 = 12;
+      v19 = 2825;
+      goto LABEL_298;
+    &#125;
+    v83 = data-&gt;str_value;
+    v84 = *(__int64 (__fastcall **)(__int64, __int64 *))(*(_QWORD *)(sum + 8) + 144LL);
+    if ( v84 )
+      sum_value3 = v84(sum, v83);
+    else
+      sum_value3 = PyObject_GetAttr(sum, v83);  // sum.value3
+    v5 = (_QWORD *)sum_value3;
+    if ( !sum_value3 )
+    &#123;
+      v18 = 12;
+      v19 = 2827;
+      goto LABEL_298;
+    &#125;
+    v6 = sub_180005440(sum_value3, data-&gt;int_11a, 11LL);// rshift,sum &gt;&gt; 11
+    if ( !v6 )
+    &#123;
+      v18 = 12;
+      v19 = 2829;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    if ( *(_QWORD *)(v6 + 8) == PyLong_Type[0] )
+    &#123;
+      v86 = *(_DWORD *)(v6 + 24);
+      if ( *(__int64 *)(v6 + 16) &lt;= 0 )
+        LOBYTE(v86) = -(char)v86;
+      v87 = PyLong_FromLong(v86 &amp; 3);
+    &#125;
+    else
+    &#123;
+      v87 = PyNumber_And(v6, data-&gt;int_3a);     // (sum &gt;&gt; 11) &amp; 3
+    &#125;
+    v5 = (_QWORD *)v87;
+    if ( !v87 )
+    &#123;
+      v18 = 12;
+      v19 = 2832;
+      goto LABEL_298;
+    &#125;
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+    v6 = _Pyx_CyFunction_Init(a4, (__int64)v5); // key[(sum &gt;&gt; 11) &amp; 3]
+    if ( !v6 )
+    &#123;
+      v18 = 12;
+      v19 = 2835;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = (_QWORD *)PyNumber_Add(AttrStrNoError, v6);// sum + key[(sum &gt;&gt; 11) &amp; 3]
+    if ( !v5 )
+    &#123;
+      v18 = 12;
+      v19 = 2838;
+      goto LABEL_298;
+    &#125;
+    v16 = (*AttrStrNoError)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(AttrStrNoError);
+    AttrStrNoError = 0LL;
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+    v6 = PyNumber_Xor(v111, v5);                // ((v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3])
+    if ( !v6 )
+    &#123;
+      v18 = 12;
+      v19 = 2842;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v111)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v111);
+    v111 = 0LL;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    v5 = (_QWORD *)PyNumber_InPlaceAdd(v000, v6);// v000是v1，v1 += ((v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3])
+    if ( !v5 )
+    &#123;
+      v18 = 12;
+      v19 = 2846;
+      goto LABEL_298;
+    &#125;
+    v16 = (*v000)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v000);
+    v16 = (*(_QWORD *)v6)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v6);
+    v88 = data-&gt;str_value;
+    v89 = *(__int64 (__fastcall **)(_QWORD *, __int64 *, _QWORD *))(v1111[1] + 152LL);
+    if ( v89 )
+      v90 = v89(v1111, v88, v5);
+    else
+      v90 = PyObject_SetAttr(v1111, v88, v5);   // 设置v1.value的值
+    if ( v90 &lt; 0 )
+    &#123;
+      v18 = 12;
+      v19 = 2850;
+      goto LABEL_315;
+    &#125;
+    v16 = (*v5)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v5);
+    AttrStrNoError = v98;
+    ++v105;
+  &#125;
+  while ( v105 &lt; 64 );                          // 循环64次
+  v91 = data-&gt;str_value;
+  v92 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v98[1] + 144LL);
+  if ( v92 )
+    v93 = v92(v98, v91);
+  else
+    v93 = PyObject_GetAttr(v98, v91);           // v0.value
+  v5 = (_QWORD *)v93;                           // 赋值到v5
+  if ( !v93 )
+  &#123;
+    v18 = 14;
+    v19 = 2862;
+    goto LABEL_72;
+  &#125;
+  v94 = data-&gt;str_value;
+  v95 = *(__int64 (__fastcall **)(_QWORD *, __int64 *))(v1111[1] + 144LL);
+  if ( v95 )
+    v96 = v95(v1111, v94);
+  else
+    v96 = PyObject_GetAttr(v1111, v94);         // v1.value
+  v6 = v96;                                     // 赋值到v6
+  if ( !v96 )
+  &#123;
+    v18 = 14;
+    v19 = 2864;
+    goto LABEL_316;
+  &#125;
+  v97 = PyTuple_New(2LL);                       // 创建一个两个元素的元组
+  v37 = v97;
+  if ( !v97 )
+  &#123;
+    v18 = 14;
+    v19 = 2866;
+    goto LABEL_312;
+  &#125;
+  *(_QWORD *)(v97 + 24) = v5;                   // 把v0,v1保存到元组中用于返回
+  v36 = delta;
+  *(_QWORD *)(v97 + 32) = v6;
+LABEL_73:
+  v16 = (*AttrStrNoError)-- == 1LL;
+  if ( v16 )
+    Py_Dealloc(AttrStrNoError);
+LABEL_75:
+  if ( v1111 )
+  &#123;
+    v16 = (*v1111)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v1111);
+  &#125;
+  if ( v36 )
+  &#123;
+    v16 = (*v36)-- == 1;
+    if ( v16 )
+      Py_Dealloc(v36);
+  &#125;
+  if ( v35 )
+  &#123;
+    v16 = (*v35)-- == 1LL;
+    if ( v16 )
+      Py_Dealloc(v35);
+  &#125;
+  return v37;
+&#125;
+</code></pre>
+<p>ez.check函数就是在比对密文。</p>
+<p>大概逻辑，魔改xtea</p>
+<pre><code>v0 
+v1
+delta = 1415865428
+sum = 0
+
+v0 += ((v1&lt;&lt;3)^(v1&gt;&gt;6) + v1) ^ (sum + key[sum &amp; 3])
+sum += delta
+v1 += ((v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3])
+rounds 64
+</code></pre>
+<p>密文是下面这些，在_Pyx_InitConstants(_)函数中，这里被保存到了一个列表中，里面的值就是上面的整数常量。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250127191838471.png" alt="image-20250127191838471"></p>
+<p>也可以用dir查看对象，直接打印密文。运行的时候记得要用相同的python版本运行这里是python3.11</p>
+<pre><code class="python">import ez
+
+print(dir(ez))
+print(ez.data)
+</code></pre>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250127192256014.png" alt="image-20250127192256014"></p>
+<p>最终解密脚本</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+#include&lt;stdint.h&gt;
+
+void encrypt(unsigned int num_rounds, uint32_t v[2], uint32_t const key[4]) &#123;
+    unsigned int i;
+    uint32_t v0 = v[0], v1 = v[1], sum = 0, delta = 0x9E3779B9;
+    
+    for (i = 0; i &lt; num_rounds; i++) &#123;
+        v0 += (((v1 &lt;&lt; 3) ^ (v1 &gt;&gt; 6)) + v1) ^ (sum + key[sum &amp; 3]);
+        sum += delta;
+        v1 += (((v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6)) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3]);
+    &#125;
+    v[0] = v0; v[1] = v1;
+&#125;
+
+void decipher(unsigned int num_rounds, uint32_t v[2], uint32_t const key[4]) &#123;
+    unsigned int i;
+    uint32_t v0 = v[0], v1 = v[1], delta = 1415865428, sum = delta * num_rounds;
+
+    for (i = 0; i &lt; num_rounds; i++) &#123;
+        v1 -= (((v0 &lt;&lt; 3) ^ (v0 &gt;&gt; 6)) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3]);
+        sum -= delta;
+        v0 -= (((v1 &lt;&lt; 3) ^ (v1 &gt;&gt; 6)) + v1) ^ (sum + key[sum &amp; 3]);
+    &#125;
+    v[0] = v0; v[1] = v1;
+&#125;
+
+int main() &#123;
+    uint32_t v[6] = &#123; 2248247555, 947843023, 345309213, 3805970057, 1592923520, 3785781401 &#125;;//不同附件密文不同
+    uint32_t const k[4] = &#123; 102, 108, 97, 103 &#125;;
+    unsigned int r = 64;				
+    printf(&quot;\n&quot;);
+    for (int i = 0; i &lt; 6; i+=2) &#123;
+        decipher(r, &amp;v[i], k);
+    &#125;
+    
+    for (int i = 0; i &lt; 6; i++) &#123;
+        for (int j = 0; j &lt; 4; j++) &#123;
+            printf(&quot;%c&quot;, (v[i] &gt;&gt; ((3 - j) * 8)) &amp; 0xff);
+        &#125;
+    &#125;
+    return 0;
+&#125;
+//flag&#123;8dMPY8sj2caUUlqmxK&#125;
+</code></pre>
+<h3><span id="rand0m">rand0m</span></h3><p>pyd逆向，先看python层。调用了rand0m函数加密并检查了flag{}内的内容。用help()和dir()函数也没看到有用的信息。</p>
+<p>dia打开pyd文件发现是python3.12，编译一个相同版本的pyd文件用bindiff恢复符号。</p>
+<p>恢复结构体</p>
+<pre><code class="c">typedef struct _iint &#123;
+    __int64* int_0;
+    __int64* int_1;
+    __int64* int_2;
+    __int64* int_3;
+    __int64* int_4;
+    __int64* int_5;
+    __int64* int_6;
+    __int64* str_wenhao;
+    __int64* str_asy;
+    __int64* str_check;
+    __int64* str___class_getitem__;
+    __int64* str_cline_in_traceback;
+    __int64* str_delta;
+    __int64* str_enc;
+    __int64* str_flag;
+    __int64* str_i;
+    __int64* str__is_continue;
+    __int64* str_main;
+    __int64* str_name;
+    __int64* str_rand0m;
+    __int64* str_rand0m_py;
+    __int64* str_range;
+    __int64* str_ret;
+    __int64* str_right;
+    __int64* str_seed;
+    __int64* str_sum;
+    __int64* str_test_;
+    __int64* str_tmp;
+    __int64* str_x;
+    __int64* int_0a;
+    __int64* int_1a;
+    __int64* int_2a;
+    __int64* int_4a;
+    __int64* int_5a;
+    __int64* int_8a;
+    __int64* int_11a;
+    __int64* int_16a;
+    __int64* int_23a;
+    __int64* int_65537a;
+    __int64* int_37360232a;
+    __int64* int_304643896a;
+    __int64* int_1244723021a;
+    __int64* int_2282784775a;
+    __int64* int_2563918650a;
+    __int64* int_2654435769a;
+    __int64* int_2918417411a;
+    __int64* int_3628702646a;
+    __int64* int_3773946743a;
+    __int64* int_4198170623a;
+    __int64* int_4294967293a;
+    __int64* int_50;
+    __int64* int_51;
+    __int64* int_52;
+    __int64* int_53;
+    __int64* int_54;
+    __int64* int_55;
+    __int64* int_56;
+    __int64* int_57;
+    __int64* int_58;
+    __int64* int_59;
+    __int64* int_60;
+    __int64* int_61;
+    __int64* int_62;
+    __int64* int_63;
+&#125; iint;
+</code></pre>
+<p>在字符串表找到”rand0m.check”交叉引用查看check函数，这里因为恢复了符号的关系，函数名有点问题，不过不影响。</p>
+<p>发现有两处引用先看第一处，其实就是在初始化上下文信息并调用check函数，也就是_Pyx_VerifyCachedType_0()</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250128021530782.png" alt="image-20250128021530782"></p>
+<p>check函数的逻辑大概是</p>
+<pre><code class="python">check：
+data=[304643896,2563918650,1244723021,3773946743,37360232,2918417411,2282784775,3628702646]
+
+i=0
+result = rand0m(input[i * 8:(i+1)*8:]) # 对我们输入的字符串8个字符切片，由rand0m函数可知这是4字节的数据
+compare(result[1],data[i]) #比较结果
+compare(result[0],data[i+1])
+i++
+#循环多次知道字符串处理完毕
+</code></pre>
+<p>再看rand0m函数，用搜索字符串方式找到，同样会有一个是初始化函数。逻辑大概如下</p>
+<pre><code class="python">rand0m:
+
+v12 = int(input,16) #会把我们的输入从16进制转为10进制，说明我们的输入是16进制字符，一共4字节
+
+v12 ^ 2654435769
+v12 &gt;&gt; 5 &gt;&gt; 23
+(v12 &lt;&lt; 4) &amp; 4198170623
+
+((v12 &lt;&lt; 4) &amp; 4198170623) + (v12 &gt;&gt; 5 &gt;&gt; 23)
+(((v12 ^ 2654435769) &gt;&gt; 11) ** 65537) % 4294967293
+
+res[0] = (((v12 ^ 2654435769) &gt;&gt; 11) ** 65537) % 4294967293
+res[1] = ((v12 &lt;&lt; 4) &amp; 4198170623) + (v12 &gt;&gt; 5 &gt;&gt; 23)
+return res
+</code></pre>
+<p>从上面可以看到res的两个结果是由同一个值（我们的输入）计算出来的，其中涉及到一些位运算，这可以用z3求解器求解，而另一个涉及到了模和幂的运算是几乎不可能被反推的。但是z3求解器只能求解出其中一个解，而((v12 &lt;&lt; 4) &amp; 4198170623) + (v12 &gt;&gt; 5 &gt;&gt; 23)有很多的解。或许我们可以可以用res[0]的值来确定这个唯一解。即用z3求出来的一个结果传入rand0m.rand0m函数，拿res的值和正确的值比较，并不断添加条件，知道我们求出与原密文相同的解。</p>
+<p>脚本如下</p>
+<pre><code class="python">from z3 import*
+import rand0m
+
+
+flag =&quot;&quot;
+for i in range(0, 8, 2):
+    data = [304643896,2563918650,1244723021,3773946743,37360232,2918417411,2282784775,3628702646]
+
+    v12 = BitVec(&quot;input&quot;, 32) #创建一个向量未知量，用于位运算
+    s = Solver() 
+    dt = ((v12 &lt;&lt; 4) &amp; 4198170623) + (v12 &gt;&gt; 28) # 运算逻辑
+
+    s.add(And(data[i] - 0x10 &lt;= dt, dt &lt;= data[i] + 0x10)) #位运算有误差，把满足的条件放大会更好找答案
+
+    while s.check() == sat:  #如果有解
+        module = s.model()
+        result = module[v12].as_long() #获取结果为python整数，以便进行下面的操作
+        result_hex = hex(result)[2:] #转16进制字符串并去掉开头的0x
+        check = rand0m.rand0m(result_hex) #传入rand0m函数获取res值
+        if check[0] == data[i+1] and check[1] == data[i]: #验证res的两个值是否符合，注意这里比较的顺序
+            print(f&quot;&#123;result_hex&#125;&quot;)
+            flag += result_hex
+            break
+        s.add(v12 != result) #如果不符合则添加条件排除当前值
+print(f&quot;flag&#123;&#123;&#123;flag&#125;&#125;&#125;&quot;) #输出flag
+# flag&#123;813a97f3d4b34f74802ba12678950880&#125;
 </code></pre>
 
     </div>

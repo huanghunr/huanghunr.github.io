@@ -230,6 +230,7 @@
 </ul>
 </li>
 <li><a href="#frida_win_processes">frida_win_processes</a></li>
+<li><a href="#%E5%AE%9E%E7%94%A8%E8%84%9A%E6%9C%AC%E6%80%BB%E7%BB%93">实用脚本总结</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -331,7 +332,7 @@ Java.perform(function()&#123;
                     this.logs = &quot;&quot;;
                     this.params = [];
                     // @ts-ignore
-                    this.logs=this.logs.concat(&quot;So: &quot; + module.name + &quot;  Method: Java_work_pangbai_debugme_MainActivity_g4tk4y offset: &quot; + ptr(funcPtr).sub(module.base) + &quot;\n&quot;);
+                    this.logs=this.logs.concat(&quot;So: &quot; + module.name + &quot;  Method: Java_ offset: &quot; + ptr(funcPtr).sub(module.base) + &quot;\n&quot;);
                     for (let i = 0; i &lt; paramsNum; i++) &#123;
                         this.params.push(args[i]);
                         this.logs=this.logs.concat(&quot;this.args&quot; + i + &quot; onEnter: &quot; + print_arg(args[i]));
@@ -465,7 +466,47 @@ this.context  //访问当前hook的上下文信息，其中this.context.rax可�
 <pre><code class="js">var f = new NativeFunction(ptr(addr), &#39;void&#39;, [&#39;int&#39;]); //函数地址，返回类型，参数类型，调用函数
 f(1911); //调用函数并串参
 </code></pre>
-<p>实用脚本，一般dump寄存器的值</p>
+<h1><span id="实用脚本总结">实用脚本总结</span></h1><p>hookjava函数</p>
+<pre><code class="js">Java.perform(function()&#123; 
+    let MainActivity = Java.use(&quot;com.exa.n.MainActivity&quot;);
+    MainActivity[&quot;func&quot;].implementation = function (data) &#123;
+    console.log(`func is called: data=$&#123;data&#125;`);
+    
+    var result;
+    result = this[&quot;func&quot;](data);
+    return result;
+    &#125;;
+&#125;)
+
+function printstack() &#123; //打印堆栈
+console.log(Java.use(&quot;android.util.Log&quot;).getStackTraceString(Java.use(&quot;java.lang.Exception&quot;).$new()));
+&#125;
+</code></pre>
+<p>hookso</p>
+<pre><code class="js">
+var libapp = null;
+
+function onLibappLoaded() &#123;
+    const fn_addr = 0x2FE7F0;   
+    Interceptor.attach(libapp.add(fn_addr), &#123;
+        onEnter: function () &#123;
+            var rdi = this.context.rdi;  
+            console.log(rdi)
+            console.log(hexdump(ptr(rdi), &#123; length: 100, ansi: true &#125;))
+        &#125;
+    &#125;);
+&#125;
+
+function tryLoadLibapp() &#123;  
+    libapp = Module.findBaseAddress(&#39;libapp.so&#39;);
+    if (libapp === null)
+        setTimeout(tryLoadLibapp, 500);
+    else
+        onLibappLoaded();
+&#125;
+tryLoadLibapp();
+</code></pre>
+<p>windows一般dump寄存器的值</p>
 <pre><code class="js">var inter=setInterval(function () &#123;
     var process = Process.findModuleByName(&quot;1.exe&quot;);
     var baseaddr = process.base
@@ -481,6 +522,74 @@ f(1911); //调用函数并串参
         console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
     &#125;&#125;),
 &#125;,1)
+</code></pre>
+<p>修改寄存器的值</p>
+<p>（用python处理数据）</p>
+<pre><code class="js">function hookinput(data)&#123;
+    var baseaddr = Module.findBaseAddress(&quot;applib.so&quot;);
+    Interceptor.attach(baseaddr.add(0x001E7F), &#123; 
+        onEnter: function (args) &#123;
+            var rdi=this.context.rdi;
+            console.log(&quot;hook&quot; +rdi);
+            console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
+            rdi.writeByteArray(data)
+            console.log(&quot;edit_after&quot; +rdi);
+            console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
+        &#125;&#125;)
+    &#125;
+RTCPeerConnection.export = &#123;
+    hookinput:hookinput
+&#125;
+</code></pre>
+<pre><code class="python">import time
+import frida
+import sys
+
+def on_message(message, data):
+    if message[&#39;type&#39;] == &#39;send&#39;:
+        print(&quot;[*] &#123;0&#125;&quot;.format(message[&#39;payload&#39;]))
+    else:
+        print(message)
+
+device8 = frida.get_usb_device()
+pid = device8.spawn(&quot;com.example.aaar&quot;)
+device8.resume(pid)
+time.sleep(1)
+session = device8.attach(pid)
+with open(&quot;hook.js&quot;) as f:
+    script = session.create_script(f.read())
+script.on(&#39;message&#39;, on_message)
+print(&#39;[*] Hook Start Running&#39;)
+script.load()
+
+ad = &quot;&quot;.join(&#39;a&#39; * 42)
+test = f&quot;flag&#123;&#123;&#123;ad&#125;&#125;&#125;&quot;
+input_arr_byte = bytearray(test.encode())
+data = list(map(int,input_arr_byte))
+
+script.export.inputhook(data)
+
+</code></pre>
+<p>单js脚本处理，适用于简单数据</p>
+<pre><code class="js">function stringToAsciiArray(str) &#123;
+    return Array.from(str).map(char =&gt; char.charCodeAt(0));
+&#125;
+const input = &quot;flag&#123;&#125;&quot;;
+const data = stringToAsciiArray(input);
+
+function hookinput(data)&#123;
+    var baseaddr = Module.findBaseAddress(&quot;libflutter.so&quot;);
+    Interceptor.attach(baseaddr.add(0x001E7F), &#123; 
+        onEnter: function (args) &#123;
+            var rdi=this.context.rdi;
+            console.log(&quot;hook&quot; +rdi);
+            console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
+            rdi.writeByteArray(data)
+            console.log(&quot;edit_after&quot; +rdi);
+            console.log(hexdump(ptr(rax),&#123;length: 48,ansi:true&#125;));
+        &#125;&#125;)
+    &#125;
+hookinput(data);
 </code></pre>
 
     </div>
