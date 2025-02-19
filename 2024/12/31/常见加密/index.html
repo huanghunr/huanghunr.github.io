@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     Re学习
                 </a>
             </span>
@@ -2551,8 +2551,24 @@ if __name__ == &#39;__main__&#39;:
 </code></pre>
 <hr>
 <h2><span id="des">DES</span></h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1eh4y1m75A/?share_source=copy_web&vd_source=3c5a9c55a0916c3bbdeb89727b25cf20">演示动画</a></p>
-<p>分块对称加密算法，用64位明文被分为一组进行加密，使用64位密钥。若有多于64位的明文需要进行多组加密。</p>
-<p>密钥拓展-&gt;二分明文-&gt;(半部分操作)明文ip置换-&gt;明文E拓展-&gt;轮密钥异或-&gt;加密分组s盒代换-&gt;p盒置换操作-&gt;继续右半部分相同操作-&gt;重复左右操作多轮加密-&gt;左右拼接ip逆置换</p>
+<p>分组对称加密算法，用64位明文被分为一组进行加密，使用64位密钥。若有多于64位的明文需要进行多组加密。</p>
+<ul>
+<li><p>64bit密钥经过PC-1盒的变换去除校验位并打乱为56bit密钥，平分成两个28bit密文C0，D0，通过移位次数表进行16次循环左移，得到C10,D0到C15,D15,共16组，把Cn，Dn，每两个拼接成一个值，再通过PC-2进行变换，得到16个48bit的密钥。</p>
+</li>
+<li><p>64bit的明文ip置换，把ip置换盒值指向的位，与ip盒值所在位置索引的位进行二进制交换</p>
+</li>
+<li><p>64bit明文平分分成两部分L0和R0。R0先经过轮函数F()的变换。先把R0分为8个4bit的数据，并把每一个组的最前端加上前面一组的最后一位，最后端加上后一组的第一位。以此类推，把每组4bit数据转为6bit，最终得到48bit的数据。</p>
+</li>
+<li><p>48bit数据与48bit的密钥异或。</p>
+</li>
+<li><p>异或结果分为8组6bit数据，以每组数据的中间4bit为列坐标，两端的1bit组为2bit数据作为行坐标。在s盒中按坐标寻找值并替换，把数据压缩为32bit。</p>
+</li>
+<li><p>再次进行一次p盒置换，与ip置换逻辑相同，并与L0异或得到R1。</p>
+</li>
+<li><p>把R0赋值给L1,继续对R1进行加密，进行16轮。最后互换左右数据拼接成64bit的密文。</p>
+</li>
+</ul>
+<p>DES解密逻辑相同，但是子密钥的使用顺序相反，我们可以通过写内存的方式修改子密钥的顺序，并输入密文得到解密结果。</p>
 <h4><span id="加解密实现代码">加解密实现代码</span></h4><p>来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_62107003/article/details/142746369">python实现DES算法-CSDN博客</a></p>
 <pre><code class="python">import re
 

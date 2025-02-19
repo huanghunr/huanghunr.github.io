@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
                     Re学习
                 </a>
             </span>
@@ -241,7 +241,7 @@
 adb root
 adb shell chmod +x /data/local/tmp/fridaad64
 adb shell /data/local/tmp/frida-server -l 0.0.0.0:27042 #默认27042端口
-adb forward tcp:27042 tcp:27043
+adb forward tcp:27042 tcp:27042
 </code></pre>
 <pre><code class="s">Frida -U -f 包 -l hookbool.js
 </code></pre>
@@ -590,6 +590,31 @@ function hookinput(data)&#123;
         &#125;&#125;)
     &#125;
 hookinput(data);
+</code></pre>
+<p>文件删除前转移，用于脱壳</p>
+<pre><code class="js">File.delete.implementation = function() &#123;
+        var filePath = this.getAbsolutePath();  // 获取文件路径
+        console.log(&quot;文件将在删除之前被保存: &quot; + filePath);
+
+        // 在删除之前复制文件到其他位置
+        var newFile = Java.use(&#39;java.io.File&#39;);
+        var destPath = &quot;/data/data/com.nobody.zunjia/files/savedDexFile.dex&quot;;  // 新文件路径
+        var sourceFile = this;
+        var inputStream = Java.use(&#39;java.io.FileInputStream&#39;).$new(sourceFile);
+        var outputStream = Java.use(&#39;java.io.FileOutputStream&#39;).$new(destPath);
+        
+        var buffer = Java.array(&#39;byte&#39;, [1024]);  // 缓冲区
+        var bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) !== -1) &#123;
+            outputStream.write(buffer, 0, bytesRead);
+        &#125;
+        inputStream.close();
+        outputStream.close();
+        console.log(&quot;文件已保存到: &quot; + destPath);
+
+        // 执行原本的删除操作
+        return this.delete();
+    &#125;;
 </code></pre>
 
     </div>

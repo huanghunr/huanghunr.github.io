@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>2025n1CTF_Re Writeup | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>2025n1CTF_Re Writeup</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/2/9
+        </span>
+        
+        <span class="category">
+            <a href="/categories/2025n1CTF/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                2025n1CTF
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/2025n1CTF-Re-Writeup/" style="color: #ff7d73">
+                    2025n1CTF_Re Writeup
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#5mc">5mc</a></li>
+<li><a href="#sf5">sf5</a></li>
+<li><a href="#easy-re">easy-re</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h2><span id="5mc">5mc</span></h2><p>virtureprotect动态修改函数，用ida动态调试，给输入的数据下硬件断点运行分析就可以发现正确的逻辑。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250211014951000.png" alt="image-20250211014951000"></p>
+<p>但是不能反汇编，选中按c恢复成汇编代码。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250211015025210.png" alt="image-20250211015025210"></p>
+<p>直接读汇编写出加密代码，注意一下细节，每次循环左移的值都是不一样的，以防万一还是每次加密都细看了一下。一共有四种加密方法，四种加密循环进行一共十六次加密，顺序大概是box()–&gt;index()–&gt;shift(stat&#x3D;&#x3D;0)–&gt;shift(stat&#x3D;&#x3D;1)–&gt;……。直接写出逆向函数就行，密文就在比对的位置。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+//加密函数
+int box(unsigned char* data) &#123;
+    unsigned char sbox[] = &#123; 0xB0, 0xF0, 0x21, 0xCF, 0xF2, 0x04, 0x3A, 0x68, 0x84, 0x7B, 0x39, 0x86, 0x36, 0x87, 0x9B, 0xF7,
+    0x3D, 0x18, 0x1E, 0x61, 0x1B, 0x2E, 0x6C, 0xDF, 0x2C, 0xAE, 0x65, 0x9D, 0xEB, 0x2F, 0xDA, 0xF4,
+    0xDE, 0xCA, 0x56, 0x92, 0x75, 0x3B, 0x62, 0x45, 0x06, 0x3C, 0x52, 0x33, 0x6E, 0x25, 0xCE, 0xA3,
+    0xD2, 0x44, 0xA1, 0x4A, 0x58, 0xB1, 0xA0, 0x2A, 0x47, 0x0A, 0x02, 0xAF, 0x50, 0xC3, 0xDC, 0xEA,
+    0xE5, 0x0D, 0x67, 0x91, 0xE1, 0x51, 0xE3, 0xC1, 0xAA, 0x95, 0x5C, 0x79, 0x72, 0x1C, 0x3F, 0xB8,
+    0xE8, 0x1F, 0xFF, 0x7A, 0x73, 0x26, 0x54, 0x9E, 0xED, 0xA9, 0x41, 0x20, 0xEF, 0xA6, 0x48, 0x97,
+    0x4F, 0xD4, 0xBB, 0x23, 0x66, 0xD9, 0xE4, 0x0B, 0x30, 0x15, 0xD7, 0x6B, 0x19, 0xCD, 0xC4, 0x08,
+    0xB4, 0xC8, 0x14, 0xFD, 0x7F, 0x28, 0x0E, 0x05, 0x0F, 0x4B, 0x6F, 0xF5, 0x90, 0x76, 0xBF, 0x60,
+    0xE7, 0x24, 0x78, 0x6D, 0x71, 0xA8, 0x43, 0xB5, 0x0C, 0x31, 0xF9, 0xA2, 0x9C, 0x99, 0xF6, 0x2D,
+    0xDB, 0xB7, 0xC9, 0x85, 0x81, 0x03, 0x64, 0x1D, 0x07, 0x34, 0x5A, 0xBD, 0x37, 0x4C, 0xA7, 0x5F,
+    0x46, 0xE9, 0x35, 0x93, 0x8D, 0xA5, 0xFB, 0x42, 0x01, 0xC2, 0x17, 0x12, 0x1A, 0x77, 0xC6, 0x53,
+    0x83, 0x4D, 0xB2, 0x10, 0x2B, 0xF8, 0x88, 0x6A, 0x3E, 0xD0, 0x7C, 0x63, 0x40, 0x27, 0xBE, 0xD5,
+    0x38, 0xD1, 0x74, 0xB6, 0x57, 0x94, 0xAB, 0x8A, 0xB9, 0xBC, 0x7D, 0xB3, 0x96, 0x7E, 0xFC, 0xAD,
+    0x22, 0x4E, 0xFA, 0xE0, 0xCB, 0x8B, 0xEE, 0x32, 0xA4, 0x16, 0xFE, 0x5B, 0x13, 0xDD, 0xC0, 0x9A,
+    0x5E, 0x8E, 0x29, 0xF3, 0x8F, 0x49, 0xE6, 0x9F, 0xF1, 0xC5, 0x70, 0x55, 0x8C, 0x11, 0xCC, 0x5D,
+    0xEC, 0x00, 0xAC, 0x89, 0xD3, 0x82, 0x69, 0xD6, 0xBA, 0xD8, 0x59, 0x98, 0x09, 0x80, 0xE2, 0xC7
+    &#125;;
+    
+    for (int i = 0; i &lt; 32;i++) &#123;
+        data[i] = sbox[data[i]];
+    &#125;
+    return 0;
+&#125;
+int index(unsigned char* data) &#123;
+    unsigned char tmp[32], table[32] = &#123; 0x13, 0x1F, 0x10, 0x1D, 0x01, 0x0D, 0x07, 0x15, 0x08, 0x06, 0x16, 0x00, 0x0F, 0x0C, 0x02, 0x05, 0x0E,0x03, 0x12, 0x04, 0x18, 0x14, 0x1A, 0x1C, 0x1E, 0x19, 0x09, 0x1B, 0x11, 0x0B, 0x17, 0x0A &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        tmp[table[i]] = data[i];
+    &#125;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[table[i]] = tmp[i];
+    &#125;
+    
+    return 0;
+&#125;
+
+int shift(int l, int r, unsigned char* data,int stat) &#123;
+    unsigned char indext2[] = &#123; 0x7D, 0xB7, 0x24, 0x7E, 0xC3, 0x6B, 0xBD, 0xD8, 0x7F, 0x13, 0x6E, 0x0F, 0x43, 0xCD, 0x6B, 0xCF, 0x18,
+               0x4F, 0x26, 0x18, 0x12, 0x2A, 0x7E, 0x9B, 0x27, 0x4C, 0x33, 0x67, 0x40, 0xC9, 0x9E, 0xC4 &#125;,
+        indextb2[] = &#123; 0x91, 0xDB, 0x9F, 0x5F, 0x26, 0x27, 0xD6, 0xA8, 0xBF, 0x41, 0x16, 0x79, 0xDE, 0x73, 0x16, 0xF8, 0x1E,
+                0xBA, 0x6A, 0xBE, 0xC6, 0x12, 0xB2, 0x39, 0x9E, 0xF3, 0x12, 0x4E, 0x02, 0x1C, 0xE2, 0x43 &#125;;
+    if (stat == 0) &#123;
+        for (int i = 0; i &lt; 32; i++) &#123;
+            unsigned char c;
+            c = data[i] ^ indext2[i];
+            data[i] = c + indextb2[i];
+            data[i] = (data[i] &lt;&lt; l) | (data[i] &gt;&gt; r);
+        &#125;
+    &#125;
+    else &#123;
+        for (int i = 0; i &lt; 32; i++) &#123;
+            data[i] = (data[i] + indextb2[i]) ^ indext2[i];
+            data[i] = (data[i] &lt;&lt; l) | (data[i] &gt;&gt; r);
+        &#125;
+    &#125;
+    
+    return 0;
+&#125;
+//解密函数
+
+int rebox(unsigned char* data) &#123;
+    unsigned char sbox[] = &#123; 0xB0, 0xF0, 0x21, 0xCF, 0xF2, 0x04, 0x3A, 0x68, 0x84, 0x7B, 0x39, 0x86, 0x36, 0x87, 0x9B, 0xF7,
+    0x3D, 0x18, 0x1E, 0x61, 0x1B, 0x2E, 0x6C, 0xDF, 0x2C, 0xAE, 0x65, 0x9D, 0xEB, 0x2F, 0xDA, 0xF4,
+    0xDE, 0xCA, 0x56, 0x92, 0x75, 0x3B, 0x62, 0x45, 0x06, 0x3C, 0x52, 0x33, 0x6E, 0x25, 0xCE, 0xA3,
+    0xD2, 0x44, 0xA1, 0x4A, 0x58, 0xB1, 0xA0, 0x2A, 0x47, 0x0A, 0x02, 0xAF, 0x50, 0xC3, 0xDC, 0xEA,
+    0xE5, 0x0D, 0x67, 0x91, 0xE1, 0x51, 0xE3, 0xC1, 0xAA, 0x95, 0x5C, 0x79, 0x72, 0x1C, 0x3F, 0xB8,
+    0xE8, 0x1F, 0xFF, 0x7A, 0x73, 0x26, 0x54, 0x9E, 0xED, 0xA9, 0x41, 0x20, 0xEF, 0xA6, 0x48, 0x97,
+    0x4F, 0xD4, 0xBB, 0x23, 0x66, 0xD9, 0xE4, 0x0B, 0x30, 0x15, 0xD7, 0x6B, 0x19, 0xCD, 0xC4, 0x08,
+    0xB4, 0xC8, 0x14, 0xFD, 0x7F, 0x28, 0x0E, 0x05, 0x0F, 0x4B, 0x6F, 0xF5, 0x90, 0x76, 0xBF, 0x60,
+    0xE7, 0x24, 0x78, 0x6D, 0x71, 0xA8, 0x43, 0xB5, 0x0C, 0x31, 0xF9, 0xA2, 0x9C, 0x99, 0xF6, 0x2D,
+    0xDB, 0xB7, 0xC9, 0x85, 0x81, 0x03, 0x64, 0x1D, 0x07, 0x34, 0x5A, 0xBD, 0x37, 0x4C, 0xA7, 0x5F,
+    0x46, 0xE9, 0x35, 0x93, 0x8D, 0xA5, 0xFB, 0x42, 0x01, 0xC2, 0x17, 0x12, 0x1A, 0x77, 0xC6, 0x53,
+    0x83, 0x4D, 0xB2, 0x10, 0x2B, 0xF8, 0x88, 0x6A, 0x3E, 0xD0, 0x7C, 0x63, 0x40, 0x27, 0xBE, 0xD5,
+    0x38, 0xD1, 0x74, 0xB6, 0x57, 0x94, 0xAB, 0x8A, 0xB9, 0xBC, 0x7D, 0xB3, 0x96, 0x7E, 0xFC, 0xAD,
+    0x22, 0x4E, 0xFA, 0xE0, 0xCB, 0x8B, 0xEE, 0x32, 0xA4, 0x16, 0xFE, 0x5B, 0x13, 0xDD, 0xC0, 0x9A,
+    0x5E, 0x8E, 0x29, 0xF3, 0x8F, 0x49, 0xE6, 0x9F, 0xF1, 0xC5, 0x70, 0x55, 0x8C, 0x11, 0xCC, 0x5D,
+    0xEC, 0x00, 0xAC, 0x89, 0xD3, 0x82, 0x69, 0xD6, 0xBA, 0xD8, 0x59, 0x98, 0x09, 0x80, 0xE2, 0xC7
+    &#125;;
+    for (int i = 0; i &lt; 32;i++) &#123;
+        for (int j = 0; j &lt; 256;j++) &#123;
+            if (data[i] == sbox[j]) &#123;
+                data[i] = j;
+                break;
+            &#125;
+            
+        &#125;
+    &#125;
+    return 0;
+&#125;
+
+int reindex(unsigned char *data) &#123;
+    unsigned char tmp[32], table[32] = &#123; 0x13, 0x1F, 0x10, 0x1D, 0x01, 0x0D, 0x07, 0x15, 0x08, 0x06, 0x16, 0x00, 0x0F, 0x0C, 0x02, 0x05, 0x0E,0x03, 0x12, 0x04, 0x18, 0x14, 0x1A, 0x1C, 0x1E, 0x19, 0x09, 0x1B, 0x11, 0x0B, 0x17, 0x0A &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        tmp[i] = data[table[i]];
+    &#125;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] = tmp[table[i]];
+    &#125;
+    return 0;
+&#125;
+
+int reshift(int l, int r, unsigned char* data,int stat) &#123;
+    unsigned char indext2[] = &#123; 0x7D, 0xB7, 0x24, 0x7E, 0xC3, 0x6B, 0xBD, 0xD8, 0x7F, 0x13, 0x6E, 0x0F, 0x43, 0xCD, 0x6B, 0xCF, 0x18,
+               0x4F, 0x26, 0x18, 0x12, 0x2A, 0x7E, 0x9B, 0x27, 0x4C, 0x33, 0x67, 0x40, 0xC9, 0x9E, 0xC4 &#125;,
+        indextb2[] = &#123; 0x91, 0xDB, 0x9F, 0x5F, 0x26, 0x27, 0xD6, 0xA8, 0xBF, 0x41, 0x16, 0x79, 0xDE, 0x73, 0x16, 0xF8, 0x1E,
+                0xBA, 0x6A, 0xBE, 0xC6, 0x12, 0xB2, 0x39, 0x9E, 0xF3, 0x12, 0x4E, 0x02, 0x1C, 0xE2, 0x43 &#125;;
+    if (stat == 1) &#123;
+        for (int i = 0; i &lt; 32; i++) &#123;
+            unsigned char c;
+            data[i] = (data[i] &gt;&gt; l) | (data[i] &lt;&lt; r);
+            c = data[i] - indextb2[i];
+            data[i] = c ^ indext2[i];
+        &#125;
+    &#125;
+    else &#123;
+        for (int i = 0; i &lt; 32; i++) &#123;
+            unsigned char c;
+            data[i] = (data[i] &gt;&gt; l) | (data[i] &lt;&lt; r);
+            data[i] = (data[i] ^ indext2[i]) - indextb2[i];
+        &#125;
+    &#125;
+    
+    return 0;
+&#125;
+
+void prlhex(unsigned char* data,const char *hit) &#123;
+    printf(&quot;\n--------------------------------------------------------------------------------------\n&quot;);
+    printf(&quot;--------%s\n&quot;, hit);
+    for (int i = 0; i &lt; 32; i++) &#123;
+        printf(&quot;%02x &quot;, data[i]);
+    &#125;
+&#125;
+
+int main() &#123;
+    unsigned char data[] = &#123; 0x5B, 0x2D, 0xE9, 0x66, 0xED, 0x39, 0x90, 0x23, 0xAF, 0xDA, 0xEB, 0x2E, 0xD1, 0x0D, 0xBB, 0xBD, 0x57, 0x52, 0x02, 0xB0, 0xBA, 0x9D, 0x52, 0xFA, 0x67, 0xEE, 0xA3, 0x85, 0xA9, 0x84, 0xE2, 0x6F &#125;;
+    reshift(1, 7, data,0);  //逆向解密
+    reshift(2, 6, data,1);
+    reindex(data);
+    rebox(data);
+    reshift(5, 3, data,0);
+    reshift(3, 5, data,1);
+    reindex(data);
+    rebox(data);
+    reshift(4, 4, data,0);
+    reshift(6, 2, data,1);
+    reindex(data);
+    rebox(data);
+    reshift(7, 1, data,0);
+    reshift(3, 5, data,1);
+    reindex(data);
+    rebox(data);
+    for (int i = 0; i &lt; 32; i++) &#123;
+        printf(&quot;%c&quot;, data[i]);
+    &#125;
+    return 0;
+&#125;
+//flag&#123;Master_of_5mc_XoR_aDD_r0r!&#125;
+</code></pre>
+<hr>
+<h2><span id="sf5">sf5</span></h2><p>有四个加密函数被存储在了数组v28里，并以每次加密次数为索引获取加密前的数据然后进行按位或操作(Buf1[v3++] &amp; 3)，以这个结果为索引加载数组v28中的函数进行加密。先分析四个加密函数，</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250211014819413.png" alt="image-20250211014819413"></p>
+<p>v28[0]是一个盒的查找替换，v28[1]以一个索引表对数据进行打乱，v28[2]把输入与两串常量异或并相加，v28[3]把数据每一字节循环右移了3位。值得注意的是这里的v28[2]是有点难看懂的，要结合汇编动调才能完全理解，下面是一些理解。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250211014737831.png" alt="image-20250211014737831"></p>
+<p>加密逻辑大概如下</p>
+<pre><code class="c">//encode
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdint.h&gt;
+
+int enc1(uint8_t* data) &#123;
+    uint8_t sbox[256] = &#123; 0xB0, 0xF0, 0x21, 0xCF, 0xF2, 0x04, 0x3A, 0x68, 0x84, 0x7B, 0x39, 0x86, 0x36, 0x87, 0x9B, 0xF7, 0x3D, 0x18,
+            0x1E, 0x61, 0x1B, 0x2E, 0x6C, 0xDF, 0x2C, 0xAE, 0x65, 0x9D, 0xEB, 0x2F, 0xDA, 0xF4, 0xDE, 0xCA, 0x56, 0x92,
+            0x75, 0x3B, 0x62, 0x45, 0x06, 0x3C, 0x52, 0x33, 0x6E, 0x25, 0xCE, 0xA3, 0xD2, 0x44, 0xA1, 0x4A, 0x58, 0xB1,
+            0xA0, 0x2A, 0x47, 0x0A, 0x02, 0xAF, 0x50, 0xC3, 0xDC, 0xEA, 0xE5, 0x0D, 0x67, 0x91, 0xE1, 0x51, 0xE3, 0xC1,
+            0xAA, 0x95, 0x5C, 0x79, 0x72, 0x1C, 0x3F, 0xB8, 0xE8, 0x1F, 0xFF, 0x7A, 0x73, 0x26, 0x54, 0x9E, 0xED, 0xA9,
+            0x41, 0x20, 0xEF, 0xA6, 0x48, 0x97, 0x4F, 0xD4, 0xBB, 0x23, 0x66, 0xD9, 0xE4, 0x0B, 0x30, 0x15, 0xD7, 0x6B,
+            0x19, 0xCD, 0xC4, 0x08, 0xB4, 0xC8, 0x14, 0xFD, 0x7F, 0x28, 0x0E, 0x05, 0x0F, 0x4B, 0x6F, 0xF5, 0x90, 0x76,
+            0xBF, 0x60, 0xE7, 0x24, 0x78, 0x6D, 0x71, 0xA8, 0x43, 0xB5, 0x0C, 0x31, 0xF9, 0xA2, 0x9C, 0x99, 0xF6, 0x2D,
+            0xDB, 0xB7, 0xC9, 0x85, 0x81, 0x03, 0x64, 0x1D, 0x07, 0x34, 0x5A, 0xBD, 0x37, 0x4C, 0xA7, 0x5F, 0x46, 0xE9,
+            0x35, 0x93, 0x8D, 0xA5, 0xFB, 0x42, 0x01, 0xC2, 0x17, 0x12, 0x1A, 0x77, 0xC6, 0x53, 0x83, 0x4D, 0xB2, 0x10,
+            0x2B, 0xF8, 0x88, 0x6A, 0x3E, 0xD0, 0x7C, 0x63, 0x40, 0x27, 0xBE, 0xD5, 0x38, 0xD1, 0x74, 0xB6, 0x57, 0x94,
+            0xAB, 0x8A, 0xB9, 0xBC, 0x7D, 0xB3, 0x96, 0x7E, 0xFC, 0xAD, 0x22, 0x4E, 0xFA, 0xE0, 0xCB, 0x8B, 0xEE, 0x32,
+            0xA4, 0x16, 0xFE, 0x5B, 0x13, 0xDD, 0xC0, 0x9A, 0x5E, 0x8E, 0x29, 0xF3, 0x8F, 0x49, 0xE6, 0x9F, 0xF1, 0xC5,
+            0x70, 0x55, 0x8C, 0x11, 0xCC, 0x5D, 0xEC, 0x00, 0xAC, 0x89, 0xD3, 0x82, 0x69, 0xD6, 0xBA, 0xD8, 0x59, 0x98,
+            0x09, 0x80, 0xE2, 0xC7 &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] = sbox[data[i]];
+    &#125;
+    return 0;
+&#125;
+
+int enc2(uint8_t* data) &#123;
+    unsigned char tmp[32], table[32] = &#123; 0x13, 0x1F, 0x10, 0x1D, 0x01, 0x0D, 0x07, 0x15, 0x08, 0x06, 0x16, 0x00, 0x0F, 0x0C, 0x02, 0x05, 0x0E,0x03, 0x12, 0x04, 0x18, 0x14, 0x1A, 0x1C, 0x1E, 0x19, 0x09, 0x1B, 0x11, 0x0B, 0x17, 0x0A &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        tmp[table[i]] = data[i];
+    &#125;
+    for (int i = 0; i &lt; 32; i++) &#123;
+       data[table[i]] = tmp[i];
+    &#125;
+    return 0;
+&#125;
+
+int enc3(uint8_t* data) &#123;
+    uint8_t index1[] = &#123; 0x7D, 0xB7, 0x24, 0x7E, 0xC3, 0x6B, 0xBD, 0xD8, 0x7F, 0x13, 0x6E, 0x0F, 0x43, 0xCD, 0x6B, 0xCF,
+    0x18, 0x4F, 0x26, 0x18, 0x12, 0x2A, 0x7E, 0x9B, 0x27, 0x4C, 0x33, 0x67, 0x40, 0xC9, 0x9E, 0xC4 &#125;;
+    uint8_t index2[] = &#123; 0x91, 0xDB, 0x9F, 0x5F, 0x26, 0x27, 0xD6, 0xA8, 0xBF, 0x41, 0x16, 0x79, 0xDE, 0x73, 0x16, 0xF8,
+    0x1E, 0xBA, 0x6A, 0xBE, 0xC6, 0x12, 0xB2, 0x39, 0x9E, 0xF3, 0x12, 0x4E, 0x02, 0x1C, 0xE2, 0x43 &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] ^= index1[i];
+        data[i] += index2[i];
+
+    &#125;
+    return 0;
+
+&#125;
+int enc4(uint8_t* data) &#123;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] = (data[i] &gt;&gt; 3) | (data[i] &lt;&lt; 5);
+    &#125;
+    return 0；
+&#125;
+
+</code></pre>
+<p>因为不知道明文，我们每一次的解密有4种可能性，题目也提示dfs，我们就用dfs遍历解密路径就行。我们可以检查在解密后31减去解密次数与3进行与操作(data[31-step] &amp; 3)是不是当前解密函数的下标，以确定路径，减少遍历的时间。结尾检查flag输出即可。</p>
+<p>写出解密函数和dfs，脚本如下。</p>
+<pre><code class="c">//decode
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;string.h&gt;
+
+void prlhex(uint8_t* data, const char* hit);
+
+int refun4(uint8_t* data) &#123;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] = (data[i] &lt;&lt; 3) | (data[i] &gt;&gt; 5);
+    &#125;
+    return 0;
+&#125;
+
+int refun2(uint8_t *data) &#123;
+    unsigned char tmp[32], table[32] = &#123; 0x13, 0x1F, 0x10, 0x1D, 0x01, 0x0D, 0x07, 0x15, 0x08, 0x06, 0x16, 0x00, 0x0F, 0x0C, 0x02, 0x05, 0x0E,0x03, 0x12, 0x04, 0x18, 0x14, 0x1A, 0x1C, 0x1E, 0x19, 0x09, 0x1B, 0x11, 0x0B, 0x17, 0x0A &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        tmp[i] = data[table[i]];
+    &#125;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] = tmp[table[i]];
+    &#125;
+    
+    return 0;
+&#125;
+
+int refun3(uint8_t* data) &#123;
+    uint8_t index1[] = &#123; 0x7D, 0xB7, 0x24, 0x7E, 0xC3, 0x6B, 0xBD, 0xD8, 0x7F, 0x13, 0x6E, 0x0F, 0x43, 0xCD, 0x6B, 0xCF,
+    0x18, 0x4F, 0x26, 0x18, 0x12, 0x2A, 0x7E, 0x9B, 0x27, 0x4C, 0x33, 0x67, 0x40, 0xC9, 0x9E, 0xC4 &#125;;
+    uint8_t index2[] = &#123; 0x91, 0xDB, 0x9F, 0x5F, 0x26, 0x27, 0xD6, 0xA8, 0xBF, 0x41, 0x16, 0x79, 0xDE, 0x73, 0x16, 0xF8,
+    0x1E, 0xBA, 0x6A, 0xBE, 0xC6, 0x12, 0xB2, 0x39, 0x9E, 0xF3, 0x12, 0x4E, 0x02, 0x1C, 0xE2, 0x43 &#125;;
+    for (int i = 0; i &lt; 32; i++) &#123;
+
+        data[i] = (data[i] - index2[i]) ^ index1[i];
+
+    &#125;
+    return 0;
+&#125;
+
+int refun1(uint8_t* data) &#123;
+    uint8_t sbox[256] = &#123; 0xB0, 0xF0, 0x21, 0xCF, 0xF2, 0x04, 0x3A, 0x68, 0x84, 0x7B, 0x39, 0x86, 0x36, 0x87, 0x9B, 0xF7, 0x3D, 0x18,
+            0x1E, 0x61, 0x1B, 0x2E, 0x6C, 0xDF, 0x2C, 0xAE, 0x65, 0x9D, 0xEB, 0x2F, 0xDA, 0xF4, 0xDE, 0xCA, 0x56, 0x92,
+            0x75, 0x3B, 0x62, 0x45, 0x06, 0x3C, 0x52, 0x33, 0x6E, 0x25, 0xCE, 0xA3, 0xD2, 0x44, 0xA1, 0x4A, 0x58, 0xB1,
+            0xA0, 0x2A, 0x47, 0x0A, 0x02, 0xAF, 0x50, 0xC3, 0xDC, 0xEA, 0xE5, 0x0D, 0x67, 0x91, 0xE1, 0x51, 0xE3, 0xC1,
+            0xAA, 0x95, 0x5C, 0x79, 0x72, 0x1C, 0x3F, 0xB8, 0xE8, 0x1F, 0xFF, 0x7A, 0x73, 0x26, 0x54, 0x9E, 0xED, 0xA9,
+            0x41, 0x20, 0xEF, 0xA6, 0x48, 0x97, 0x4F, 0xD4, 0xBB, 0x23, 0x66, 0xD9, 0xE4, 0x0B, 0x30, 0x15, 0xD7, 0x6B,
+            0x19, 0xCD, 0xC4, 0x08, 0xB4, 0xC8, 0x14, 0xFD, 0x7F, 0x28, 0x0E, 0x05, 0x0F, 0x4B, 0x6F, 0xF5, 0x90, 0x76,
+            0xBF, 0x60, 0xE7, 0x24, 0x78, 0x6D, 0x71, 0xA8, 0x43, 0xB5, 0x0C, 0x31, 0xF9, 0xA2, 0x9C, 0x99, 0xF6, 0x2D,
+            0xDB, 0xB7, 0xC9, 0x85, 0x81, 0x03, 0x64, 0x1D, 0x07, 0x34, 0x5A, 0xBD, 0x37, 0x4C, 0xA7, 0x5F, 0x46, 0xE9,
+            0x35, 0x93, 0x8D, 0xA5, 0xFB, 0x42, 0x01, 0xC2, 0x17, 0x12, 0x1A, 0x77, 0xC6, 0x53, 0x83, 0x4D, 0xB2, 0x10,
+            0x2B, 0xF8, 0x88, 0x6A, 0x3E, 0xD0, 0x7C, 0x63, 0x40, 0x27, 0xBE, 0xD5, 0x38, 0xD1, 0x74, 0xB6, 0x57, 0x94,
+            0xAB, 0x8A, 0xB9, 0xBC, 0x7D, 0xB3, 0x96, 0x7E, 0xFC, 0xAD, 0x22, 0x4E, 0xFA, 0xE0, 0xCB, 0x8B, 0xEE, 0x32,
+            0xA4, 0x16, 0xFE, 0x5B, 0x13, 0xDD, 0xC0, 0x9A, 0x5E, 0x8E, 0x29, 0xF3, 0x8F, 0x49, 0xE6, 0x9F, 0xF1, 0xC5,
+            0x70, 0x55, 0x8C, 0x11, 0xCC, 0x5D, 0xEC, 0x00, 0xAC, 0x89, 0xD3, 0x82, 0x69, 0xD6, 0xBA, 0xD8, 0x59, 0x98,
+            0x09, 0x80, 0xE2, 0xC7 &#125;;
+    for (int i = 0; i &lt; 32;i++) &#123;
+        for (int j = 0; j &lt; 256;j++) &#123;
+            if (data[i] == sbox[j]) &#123;
+                data[i] = j;
+                break;
+            &#125;
+            
+        &#125;
+    &#125;
+    return 0;
+&#125;
+
+int backupdata(uint8_t *data,uint8_t *data2) &#123;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        data[i] = data2[i];
+    &#125;
+    return 0;
+&#125;
+
+int (*refun[4])(uint8_t*) = &#123; refun1, refun2, refun3, refun4 &#125;; 
+
+int check(unsigned char* data) &#123;
+    if (!strncmp((char*)data, &quot;flag&quot;, 4)) &#123;
+        prlhex(data, &quot;result&quot;);  //flag
+    &#125;
+    return 0;
+&#125;
+
+int dfs(uint8_t* data, int step, int* path) &#123;
+    if (step == 32) &#123;  
+        check(data); //检查结果
+        return 1;
+    &#125;
+
+    uint8_t backup[256];
+    backupdata(backup, data);  //备份密文
+
+    for (int i = 0; i &lt; 4; i++) &#123;  //四个解密函数进行解密
+        refun[i](data);
+        if ((data[31-step] &amp; 3) == i) &#123;  //用&amp;3剪枝
+            path[step] = i;
+            dfs(data, step + 1, path);
+        &#125;
+        backupdata(data,backup);
+    &#125;
+
+    return 0;
+&#125;
+
+void prlhex(uint8_t* data,const char *hit) &#123;
+    printf(&quot;\n------------------------------------------------------------------------------\n&quot;);
+    printf(&quot;--------%s\n&quot;, hit);
+    for (int i = 0; i &lt; 32; i++) &#123;
+        printf(&quot;%c&quot;, data[i]);
+    &#125;
+&#125;
+
+int main() &#123;
+    
+    uint8_t ciphertext[] = &#123; 0x65, 0x3E, 0x43, 0xB8, 0xBA, 0xDB, 0xF6, 0x88, 0x25, 0x1B, 0x28, 0xC7, 0xC0, 0x54, 0xA6, 0x4A,
+    0x90, 0x37, 0xBC, 0x29, 0x41, 0xAA, 0x28, 0xDB, 0x9A, 0x59, 0x63, 0x9E, 0x4B, 0xCF, 0x2E, 0x41 &#125;;
+    int path[32];
+
+    dfs(ciphertext, 0, path);
+
+    return 0;
+&#125;
+//flag&#123;Ea5y_enCrypt_And_decrYpt!!&#125;
+</code></pre>
+<h2><span id="easy-re">easy-re</span></h2><p>拿下来是一个Android elf文件，用真机运行几次发现报错先分析代码。</p>
+<p>看了一下main函数才知道要带参数运行。加了许多混淆，c代码难以阅读，不过还是看到了一些rc4加密。字符串也被加密了，写个脚本用于dnmp。</p>
+<pre><code class="js">var inter =setInterval(function() &#123; dump(); &#125;, 3);
+function dump() &#123;
+
+var libxx = Process.getModuleByName(&quot;easy-re&quot;);
+var exe_s_size=0x0
+console.log(&quot;*****************************************************&quot;);
+console.log(&quot;name: &quot; +libxx.name);
+console.log(&quot;base: &quot; +libxx.base);
+console.log(&quot;size: &quot; +ptr(libxx.size));
+var file_path =  libxx.name + &quot;_&quot; + libxx.base + &quot;_&quot; + ptr(libxx.size) + &quot;.so&quot;;
+console.log(file_path);
+var file_handle = new File(file_path, &quot;wb&quot;);
+if (file_handle &amp;&amp; file_handle != null) &#123;
+    Memory.protect(ptr(libxx.base), libxx.size, &#39;rwx&#39;);
+
+    var buffer = ptr(libxx.base).add(exe_s_size).readByteArray(libxx.size-exe_s_size);
+    file_handle.write(buffer);
+    file_handle.flush();
+    file_handle.close();
+    console.log(&quot;[dump]:&quot;, file_path);
+&#125;
+clearInterval(inter)
+&#125;
+</code></pre>
+<p>再用Sofixer修复一下偏移。</p>
+<p>重新在ida中分析，在Init_array有一个ptrace检测,可以通过字符串看出来。如果程序执行被检测到ptrace就会出现异常的结果。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250211012945175.png" alt="image-20250211012945175"></p>
+<p>c代码太难看了，尝试动调，发现ida调试是可以用的（ptrace检测没有直接结束程序），我们可以用Ida调试elf并利用trace来分析程序算法。Trace结果过长就不展示了。</p>
+<p>大概逻辑就是flag_char ^ index ^一个表 ^ 异或前一个char，那个表估计是rc4的。主要的难点是这个表，当前调试是被ptrace检测的，测试过多次，直接使用常规frida调试也是被检测了的。</p>
+<p>由于ptrace检测，不是很好patch，打算用环境变量加载frida_gadget来启动frida，PRE_LOAD&#x3D;&#x2F;data&#x2F;local&#x2F;tmp&#x2F;frida-gadget.so .&#x2F;easy-re AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAB</p>
+<p>hook脚本</p>
+<pre><code class="js">function time(num)
+&#123;
+let sum=0
+for(let i=0;i&lt;num*1024;i++)&#123;
+sum+=i;
+&#125;
+&#125;
+var mInterval = setInterval(function () &#123;
+    var sgame = Process.findModuleByName(&quot;easy-re&quot;);
+    if (sgame == null) &#123;
+        console.log(&quot;无&quot;);
+        return;
+    &#125;
+    clearInterval(mInterval);
+    //  var addr = sgame.base.add(0x1400012A0-0x140000000) //windows
+    var addr = sgame.base.add(0x05BC0309280 - 0x005BC0307000)
+    console.log(&quot;&quot; + addr);
+    console.log(Instruction.parse(addr).toString());
+    Interceptor.attach(addr, &#123;
+        onEnter: function (args) &#123;
+            var rax = this.context.x10;
+            console.log( rax,&quot;,&quot;);
+            time(5451)
+        &#125;
+    &#125;)
+
+    addr = sgame.base.add(0x5BC03094F0 - 0x005BC0307000)
+    console.log(&quot;&quot; + addr);
+    console.log(Instruction.parse(addr).toString());
+    Interceptor.attach(addr, &#123;
+        onEnter: function (args) &#123;
+            var rax = this.context.x1;
+            // var mm=[68,39,43,160,45,33,116,240,251,156,45,31,225,255,45,22,140,155,112,144,214,47,152,233,164,146,168,3,253,29,123,37]
+            // ptr(rax).writeByteArray(mm); 
+        &#125;
+    &#125;)
+   addr = sgame.base.add(0x5DF1A811A0 - 0x05DF1A7F000)
+    console.log(&quot;&quot; + addr);
+    console.log(Instruction.parse(addr).toString());
+    Interceptor.attach(addr, &#123;
+        onEnter: function (args) &#123;
+            var rax = this.context.x8;
+             console.log(hexdump(ptr(rax), &#123; length: 50, ansi: true &#125;));
+             time(5451)
+        &#125;
+    &#125;)
+&#125;, 1) 
+</code></pre>
+<p>直接可以拿到表</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250211013915246.png" alt="image-20250211013915246"></p>
+<p>写出解密代码</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+char flag[]=&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot;;
+unsigned char mm[32] = &#123;
+    0x50, 0x4C, 0x8B, 0x94, 0x86, 0x6D, 0x72, 0xFB, 0x54, 0xF3, 0x17, 0x0F, 0xEE, 0xE4, 0xC5, 0x1E, 
+    0xB8, 0x1A, 0xC7, 0xDF, 0x2D, 0x3D, 0x4E, 0x51, 0xE7, 0xAD, 0x97, 0x55, 0xF3, 0xF5, 0x41, 0x79
+&#125;;
+unsigned char box[]=&#123;0x36,0x71,0xf4,0x67,0xfa,0x9a,0xf9,0x0a,0x5e,0xa0,0xb6,0xb0,0x11,0xab,0x7a,0x2d,0xd0,0xd3,0x0a,0xca,0xe8,0x91,0x9a,0xc2,0x64,0x8e,0x12,0x08,0xba,0x46,0x4a,0x6e&#125;;
+int main()&#123;
+    // int n=0;
+   unsigned char xor2=0;
+   unsigned char keys[40];
+    for (size_t i = 0; i &lt; 32; i++)
+    &#123;
+        if (i!=0) &#123;
+        	xor2^=mm[i-1];
+        	keys[i]=xor2;
+    	&#125;
+   	&#125;
+        for (size_t i = 0; i &lt;32; i++)
+    &#123;
+        // flag[i]^=i;
+        if (i!=0)
+        &#123;
+            mm[i]^=keys[i];
+        &#125;    
+    &#125;
+    for (size_t i = 0; i &lt; 32; i++)
+    &#123;
+        mm[i]^=i;
+        mm[i]^=box[i];
+        printf(&quot;%c&quot;, mm[i]);
+    &#125;
+&#125;
+//flag&#123;welcome-re-world!go!go!go!&#125;
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2025 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+        <div>
+            备案号：
+            
+            <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">桂ICP备2024049894号</a>
+            
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
                     Re学习
                 </a>
             </span>
@@ -272,8 +272,16 @@ adb shell dumpsys activity top  #获取前端的包名
 示例: adb shell am start -D -n com.test.app/.MainActivity
 </code></pre>
 <p>在ddms中记住调试进程的端口。现在来到ida中配置，选择debugger，process options，在hostname中填入127.0.0.1，port默认23946，然后再到debugger中选择attath to process，选择要调试的安卓进程。记得打上一个断点，进入后会卡住，这时候我们输入,其中port后面的数字就是我们记住的端口。</p>
-<pre><code class="s">jdb -connect com.sun.jdi.SocketAttach:hostname=127.0.0.1,port=8700
+<pre><code class="cmd">jdb -connect com.sun.jdi.SocketAttach:hostname=127.0.0.1,port=8700
 </code></pre>
+<p>如果ddms里面不显示进程可以尝试打开全局调试，下面是在magsk下的方案</p>
+<p>在adb shell su下输入以下命令</p>
+<pre><code class="cmd">magisk resetprop ro.secure 0
+magisk resetprop ro.debuggable 1
+
+getprop ro.debuggable #若结果为1则成功开启
+</code></pre>
+<p>重启手机。</p>
 
     </div>
     
