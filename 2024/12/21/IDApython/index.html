@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     Re学习
                 </a>
             </span>
@@ -369,6 +369,11 @@ pattern_jzjnz2 = [0x74, 0x00, 0x75, 0x00, 0xE9] # jmp
 #nop_jzjnz(start_addr,end_addr,pattern_jzjnz1)
 #nop_range(0x04010C3,0x04010CB)
 #remount()
+</code></pre>
+<pre><code class="python">import ida_dbg
+ecx = ida_dbg.get_reg_val(&quot;ecx&quot;)
+print(&quot;,&quot;,ecx,end=&quot;&quot;)
+#在断点处右键edit用三个点输入脚本以dump寄存器的值
 </code></pre>
 <pre><code class="python">idc.get_bytes() #获取指定范围内指定地址的字节码并返回成列表
 

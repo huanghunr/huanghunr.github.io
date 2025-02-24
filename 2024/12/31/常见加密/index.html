@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
                     Re学习
                 </a>
             </span>
@@ -260,6 +260,7 @@
 <li><a href="#%E8%A7%A3%E5%AF%86%E8%84%9A%E6%9C%AC%E7%89%B9%E5%BE%81">解密脚本(特征)</a></li>
 </ul>
 </li>
+<li><a href="#crc32">crc32</a></li>
 <li><a href="#hash">Hash</a><ul>
 <li><a href="#md5%E7%89%B9%E5%BE%81%E5%B8%B8%E9%87%8F">MD5特征常量</a></li>
 </ul>
@@ -2934,6 +2935,47 @@ def main():
 
 if __name__ == &#39;__main__&#39;:
     main()
+</code></pre>
+<h2><span id="crc32">crc32</span></h2><pre><code class="c">#include &lt;stdint.h&gt;  
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;  
+
+#define CRC32_POLYNOMIAL 0xEDB88320  
+
+uint32_t crc32_table[256];
+
+void generate_crc32_table() &#123;
+    uint32_t crc;
+    for (int i = 0; i &lt; 256; i++) &#123;
+        crc = i;
+        for (int j = 0; j &lt; 8; j++) &#123;
+            if (crc &amp; 1) &#123;
+                crc = (crc &gt;&gt; 1) ^ CRC32_POLYNOMIAL;
+            &#125;
+            else &#123;
+                crc &gt;&gt;= 1;
+            &#125;
+        &#125;
+        crc32_table[i] = crc;
+    &#125;
+&#125;
+
+uint32_t crc32(const uint8_t* data, size_t length) &#123;
+    uint32_t crc = 0xFFFFFFFF;
+    for (size_t i = 0; i &lt; length; i++) &#123;
+        crc = (crc &gt;&gt; 8) ^ crc32_table[(crc ^ data[i]) &amp; 0xFF];
+    &#125;
+    return crc ^ 0xFFFFFFFF;
+&#125;
+int main() &#123;
+    uint8_t data[100] = &#123;&#125;;
+    uint32_t result[10];
+    result[0] = crc32(data, 100);
+    for (int i = 0; i &lt; 1; i++) &#123;
+        printf(&quot;%2x&quot;, data[i]);
+    &#125;
+&#125;
 </code></pre>
 <h2><span id="hash">Hash</span></h2><ul>
 <li>数据摘要算法，可以理解为有损压缩</li>
