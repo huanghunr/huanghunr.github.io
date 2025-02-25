@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
                     C语言学习
                 </a>
             </span>
@@ -208,13 +208,33 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#%E9%A1%BA%E5%BA%8F%E8%A1%A8">顺序表</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C1-%E9%A1%BA%E5%BA%8F%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C">实验1 顺序表的基本操作</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C2-%E9%93%BE%E8%A1%A8%E5%8F%8A%E5%85%B6%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9B%B8%E5%8A%A0">实验2 链表及其多项式相加</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C3-%E5%AE%9E%E8%B7%B5%E6%A0%88%E7%BB%93%E6%9E%84-%E6%8B%AC%E5%8F%B7%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95">实验3 实践栈结构-括号匹配算法</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C4-%E5%AE%9E%E8%B7%B5%E6%A0%88%E7%BB%93%E6%9E%84-%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%80%BC%E9%97%AE%E9%A2%98">实验4 实践栈结构-编译器中的表达式求值问题</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C5-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8Dkmp">实验5 字符串的模式匹配(KMP)</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C6-%E7%A8%80%E7%96%8F%E7%9F%A9%E9%98%B5%E7%9A%84%E5%BB%BA%E7%AB%8B%E4%B8%8E%E8%BD%AC%E7%BD%AE">实验6 稀疏矩阵的建立与转置</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C7-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%88%9B%E5%BB%BA%E5%8F%8A%E9%81%8D%E5%8E%86">实验7 二叉树的创建及遍历</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C8-%E6%A0%91%E7%9A%84%E5%BB%BA%E7%AB%8B%E4%B8%8E%E9%81%8D%E5%8E%86">实验8 树的建立与遍历</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C9-%E5%9B%BE%E7%9A%84%E5%BB%BA%E7%AB%8B%E4%B8%8E%E9%81%8D%E5%8E%86%E5%A4%9A%E5%9F%8E%E5%B8%82%E9%97%B4%E9%81%8D%E5%8E%86">实验9 图的建立与遍历（多城市间遍历）</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C10-%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91prim%E7%AE%97%E6%B3%95">实验10 最小生成树prim算法</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C11-%E5%9F%8E%E5%B8%82%E7%95%85%E9%80%9A%E5%B7%A5%E7%A8%8B%E7%9A%84%E9%97%AE%E9%A2%98">实验11 城市畅通工程的问题</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C12-%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84">实验12 单源最短路径</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C13-%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F">实验13 拓扑排序</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C14-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E6%9E%84%E5%BB%BA%E4%B8%8E%E5%BA%94%E7%94%A8">实验14 二叉搜索树的构建与应用</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C15-%E5%AF%B9%E5%A4%A7%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">实验15 对大量数据快速排序</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C16-%E5%A0%86%E7%9A%84%E5%BB%BA%E7%AB%8B%E5%92%8C%E7%BB%B4%E6%8A%A4">实验16 堆的建立和维护</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<h3><span id="顺序表">顺序表</span></h3><pre><code class="c++">#include &lt;iostream&gt;
+<p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md">原文件</a></p>
+<h3><span id="实验1-顺序表的基本操作">实验1 顺序表的基本操作</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3070/view">https://acm.zjnu.edu.cn/problem/3070/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<pre><code class="c++">#include &lt;iostream&gt;
 using namespace std;
 #define OK 1
 #define ERROR 0
@@ -259,6 +279,11 @@ ElemType LocateIndex_sq(Sqlist L, int i)&#123;
 
 Status ListInsert_sq(Sqlist &amp;L, int i, ElemType e)&#123;
     if(i&lt;1|| i&gt;L.length+1) return ERROR;
+    if(L.length+1&gt;L.listsize)&#123;
+        ElemType *newlist = (ElemType *)realloc(L.elem,(L.listsize +1) * sizeof(ElemType));
+        L.elem = newlist;
+        L.sizelist++;
+    &#125;
     ElemType *q = &amp;(L.elem[i-1]);
     for(ElemType *p = &amp;(L.elem[L.length-1]);p&gt;=q;--p) *(p+1) = *p;
     *q = e;
@@ -314,6 +339,97 @@ int main()&#123;
     return 0;
 &#125;
 </code></pre>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验2-链表及其多项式相加">实验2 链表及其多项式相加</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3049/view">https://acm.zjnu.edu.cn/problem/3049/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验3-实践栈结构-括号匹配算法">实验3 实践栈结构-括号匹配算法</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3050/view">https://acm.zjnu.edu.cn/problem/3050/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验4-实践栈结构-编译器中的表达式求值问题">实验4 实践栈结构-编译器中的表达式求值问题</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3052/view">https://acm.zjnu.edu.cn/problem/3052/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验5-字符串的模式匹配kmp">实验5 字符串的模式匹配(KMP)</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3053/view">https://acm.zjnu.edu.cn/problem/3053/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验6-稀疏矩阵的建立与转置">实验6 稀疏矩阵的建立与转置</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3054/view">https://acm.zjnu.edu.cn/problem/3054/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验7-二叉树的创建及遍历">实验7 二叉树的创建及遍历</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3055/view">https://acm.zjnu.edu.cn/problem/3055/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验8-树的建立与遍历">实验8 树的建立与遍历</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3093/view">https://acm.zjnu.edu.cn/problem/3093/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验9-图的建立与遍历多城市间遍历">实验9 图的建立与遍历（多城市间遍历）</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1416/view">https://acm.zjnu.edu.cn/problem/1416/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验10-最小生成树prim算法">实验10 最小生成树prim算法</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1408/view">https://acm.zjnu.edu.cn/problem/1408/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验11-城市畅通工程的问题">实验11 城市畅通工程的问题</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1414/view">https://acm.zjnu.edu.cn/problem/1414/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验12-单源最短路径">实验12 单源最短路径</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3933/view">https://acm.zjnu.edu.cn/problem/3933/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验13-拓扑排序">实验13 拓扑排序</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1413/view">https://acm.zjnu.edu.cn/problem/1413/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验14-二叉搜索树的构建与应用">实验14 二叉搜索树的构建与应用</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3065/view">https://acm.zjnu.edu.cn/problem/3065/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验15-对大量数据快速排序">实验15 对大量数据快速排序</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1479/view">https://acm.zjnu.edu.cn/problem/1479/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
+<hr>
+<h3><span id="实验16-堆的建立和维护">实验16 堆的建立和维护</span></h3><p><strong>一、实验内容与要求</strong></p>
+<p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3067/view">https://acm.zjnu.edu.cn/problem/3067/view</a></p>
+<p><strong>二、算法思路与流程</strong></p>
+<p><strong>三、程序代码及运行结果</strong></p>
+<p><strong>四、收获总结</strong></p>
 
     </div>
     
