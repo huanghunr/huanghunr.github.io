@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
                     C语言学习
                 </a>
             </span>
@@ -208,6 +208,7 @@
 <!-- toc -->
 
 <ul>
+<li><a href="#%E5%AE%9E%E9%AA%8C">实验</a><ul>
 <li><a href="#%E5%AE%9E%E9%AA%8C1-%E9%A1%BA%E5%BA%8F%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C">实验1 顺序表的基本操作</a></li>
 <li><a href="#%E5%AE%9E%E9%AA%8C2-%E9%93%BE%E8%A1%A8%E5%8F%8A%E5%85%B6%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9B%B8%E5%8A%A0">实验2 链表及其多项式相加</a></li>
 <li><a href="#%E5%AE%9E%E9%AA%8C3-%E5%AE%9E%E8%B7%B5%E6%A0%88%E7%BB%93%E6%9E%84-%E6%8B%AC%E5%8F%B7%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95">实验3 实践栈结构-括号匹配算法</a></li>
@@ -225,16 +226,22 @@
 <li><a href="#%E5%AE%9E%E9%AA%8C15-%E5%AF%B9%E5%A4%A7%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">实验15 对大量数据快速排序</a></li>
 <li><a href="#%E5%AE%9E%E9%AA%8C16-%E5%A0%86%E7%9A%84%E5%BB%BA%E7%AB%8B%E5%92%8C%E7%BB%B4%E6%8A%A4">实验16 堆的建立和维护</a></li>
 </ul>
+</li>
+<li><a href="#%E4%BD%9C%E4%B8%9A">作业</a><ul>
+<li><a href="#%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8%E7%9A%84%E5%90%88%E5%B9%B6">两个有序链表的合并</a></li>
+</ul>
+</li>
+</ul>
 <!-- tocstop -->
 
 </div>
 
 <p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md">原文件</a></p>
-<h3><span id="实验1-顺序表的基本操作">实验1 顺序表的基本操作</span></h3><p><strong>一、实验内容与要求</strong></p>
+<h2><span id="实验">实验</span></h2><h3><span id="实验1-顺序表的基本操作">实验1 顺序表的基本操作</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3070/view">https://acm.zjnu.edu.cn/problem/3070/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
-<pre><code class="c++">#include &lt;iostream&gt;
+<pre><code class="c++">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 #define OK 1
 #define ERROR 0
@@ -261,7 +268,6 @@ Status ClearList_sq(Sqlist &amp;L)&#123;
     if(L.length==0) return ERROR;
     L.length = 0;
     return OK;
-
 &#125;
 
 int LocateElem_sq(Sqlist L, ElemType e)&#123;
@@ -430,6 +436,348 @@ int main()&#123;
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
 <p><strong>四、收获总结</strong></p>
+<h2><span id="作业">作业</span></h2><h3><span id="两个有序链表的合并">两个有序链表的合并</span></h3><pre><code class="c">#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+
+typedef int ElemType;
+typedef struct Lnode
+&#123;
+    ElemType data;
+    struct Lnode* next;
+&#125; Lnode, * linkLnode;
+
+int h_insert_Lnode(Lnode* H, ElemType m) &#123;
+    Lnode* p = H;
+    for (int i = 0; i &lt; m; i++) &#123;
+        ElemType val = 0;
+        Lnode* n = (Lnode*)malloc(sizeof(Lnode));
+        scanf(&quot;%d&quot;, &amp;val);
+        n-&gt;data = val;
+        n-&gt;next = NULL;
+        p-&gt;next = n;
+        p = p-&gt;next;
+    &#125;
+    return 0;
+&#125;
+
+void print_Lnode(Lnode* h) &#123;
+    Lnode* p = h-&gt;next;
+    int sum = 0, t = 1;
+    while (p != NULL) &#123;
+        printf(&quot;%d &quot;, p-&gt;data);
+        if (t % 2 == 1)sum += p-&gt;data;
+        t++;
+        p = p-&gt;next;
+    &#125;
+    printf(&quot;\n&quot;);
+    printf(&quot;%d\n&quot;, sum);
+&#125;
+
+
+struct Lnode* mergeTwoLists(struct Lnode* l1, struct Lnode* l2) &#123;
+    Lnode* la = l1-&gt;next, * lb = l2-&gt;next, * lc, * ld;
+    lc = (Lnode*)malloc(sizeof(Lnode));
+    ld = lc;
+
+    while (la&amp;&amp; lb) &#123;
+        if (la-&gt;data &lt;= lb-&gt;data) &#123;
+            lc-&gt;next = la;
+            la = la-&gt;next;
+        &#125;
+        else &#123;
+            lc-&gt;next = lb;
+            lb = lb-&gt;next;
+        &#125;
+        lc = lc-&gt;next;
+    &#125;
+    lc-&gt;next = la ? la : lb;
+    return ld;
+&#125;
+
+
+int main() &#123;
+    Lnode* A = (Lnode*)malloc(sizeof(Lnode));
+    A-&gt;next = NULL;
+    Lnode* B = (Lnode*)malloc(sizeof(Lnode));
+    B-&gt;next = NULL;
+    int n = 0;
+    int m = 0;
+    scanf(&quot;%d %d&quot;, &amp;n, &amp;m);
+    h_insert_Lnode(A, n);
+    h_insert_Lnode(B, m);
+    Lnode* C = mergeTwoLists(A, B);
+    print_Lnode(C);
+    return 0;
+&#125;
+</code></pre>
+<p>链表的删除</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define OK 1
+#define ERROR 0
+#define LIST_SIZE 100
+#define LISTINCREMENT 10
+#define OVERFLOW -2
+typedef int Status;
+typedef int ElemType;
+typedef struct Lnode
+&#123;
+    ElemType data;
+    struct Lnode* next;
+&#125; Lnode, * LinkList;
+
+int ListLength(LinkList L) &#123;
+    Lnode* p = L;
+    int k = 0;
+    while (p-&gt;next) &#123;
+        p = p-&gt;next;
+        k++;
+    &#125;
+    return k;
+&#125;
+
+Status GetElem(Lnode* L, int i, ElemType &amp;e) &#123;
+    Lnode* p = L-&gt;next;
+    int j = 1;
+    while (p &amp;&amp; j &lt; i) &#123;
+        p = p-&gt;next;
+        j++;
+    &#125;
+    if (!p || j &gt; i) return ERROR;
+    e = p-&gt;data;
+    return OK;
+&#125;
+
+Status ListInsert_L(LinkList L, int i, ElemType&amp; e) &#123;
+    Lnode* p = L,*s;
+    int j = 0;
+    while (!p || j &lt; i - 1) &#123; p = p-&gt;next; j++;&#125;
+    if (!p || j &gt; i - 1) return ERROR;
+    s = (Lnode*)malloc(sizeof(Lnode));
+    s-&gt;data = e;
+    s-&gt;next = p-&gt;next;
+    p-&gt;next = s;
+    return OK;
+&#125;
+
+Status ListDelete_L(LinkList L, int i, ElemType *e) &#123;
+    Lnode* p = L, * s;
+    int j = 0;
+    while (p-&gt;next &amp;&amp; j &lt; i-1) &#123; p = p-&gt;next; j++; &#125;
+    if (!p-&gt;next || j &gt; i-1) return ERROR;
+    s = p-&gt;next;
+    *e = s-&gt;data;
+    p-&gt;next = s-&gt;next;
+    free(s);
+    return OK;
+&#125;
+
+Status CreateList_L(LinkList L, int n) &#123;
+    Lnode* p,*m;
+    ElemType q;
+    m = L;
+    for (int i = 0; i &lt; n; i++) &#123;
+        p = (LinkList)malloc(sizeof(Lnode));
+        p-&gt;next = NULL;
+        scanf(&quot;%d &quot;, &amp;q);
+        p-&gt;data = q;
+        m-&gt;next = p;
+        m = m-&gt;next;
+    &#125;
+    return OK;
+&#125;
+
+void ClearList(LinkList&amp; L) &#123;
+    Lnode* p;
+    while (L-&gt;next) &#123;
+        p = L-&gt;next;
+        L-&gt;next = p-&gt;next;
+        free(p);
+    &#125;
+&#125;
+
+struct Lnode* mergeTwoLists(struct Lnode* l1, struct Lnode* l2) &#123;
+    Lnode* la = l1-&gt;next, * lb = l2-&gt;next, * lc, * ld;
+    lc = (Lnode*)malloc(sizeof(Lnode));
+    ld = lc;
+
+    while (la &amp;&amp; lb) &#123;
+        if (la-&gt;data &lt;= lb-&gt;data) &#123;
+            lc-&gt;next = la;
+            la = la-&gt;next;
+        &#125;
+        else &#123;
+            lc-&gt;next = lb;
+            lb = lb-&gt;next;
+        &#125;
+        lc = lc-&gt;next;
+    &#125;
+    lc-&gt;next = la ? la : lb;
+    return ld;
+&#125;
+
+int main() &#123;
+    int n,count,q;
+    ElemType e;
+    Lnode *h = NULL;
+    h = (LinkList)malloc(sizeof(Lnode));
+    h-&gt;next = NULL;
+    scanf(&quot;%d&quot;, &amp;n);
+    CreateList_L(h,n);
+    scanf(&quot;%d&quot;, &amp;count);
+    for (int i = 0; i &lt; count; i++) &#123;
+        scanf(&quot;%d&quot;, &amp;q);
+        if (!ListDelete_L(h, q, &amp;e)) printf(&quot;-1\n&quot;);
+        else printf(&quot;%d\n&quot;, e);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>链表操作</p>
+<pre><code class="c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+#define OK 1
+#define ERROR 0
+#define LIST_SIZE 100
+#define LISTINCREMENT 10
+#define OVERFLOW -2
+
+typedef int Status;
+typedef int ElemType;
+typedef struct Lnode
+&#123;
+    ElemType data;
+    struct Lnode* next;
+&#125; Lnode, * LinkList;
+
+Status GetElem(Lnode* L, int i, ElemType&amp; e) &#123;
+    Lnode* p = L-&gt;next;
+    int j = 1;
+    while (p &amp;&amp; j &lt; i) &#123;
+        p = p-&gt;next;
+        j++;
+    &#125;
+    if (!p || j &gt; i) return ERROR;
+    e = p-&gt;data;
+    return OK;
+&#125;
+
+ElemType LocateElem_L(LinkList L, ElemType *q) &#123;
+    Lnode* p = L-&gt;next;
+    int k = 1;
+    while (p) &#123;
+        if (*q = p-&gt;data) return k;
+        k++;
+        p = p-&gt;next;
+    &#125;
+    return ERROR;
+&#125;
+
+Status ListInsert_L(LinkList L, int i, ElemType&amp; e) &#123;
+    Lnode* p = L, * s;
+    int j = 0;
+    while (!p || j &lt; i - 1) &#123; p = p-&gt;next; j++; &#125;
+    if (!p || j &gt; i - 1) return ERROR;
+    s = (Lnode*)malloc(sizeof(Lnode));
+    s-&gt;data = e;
+    s-&gt;next = p-&gt;next;
+    p-&gt;next = s;
+    return OK;
+&#125;
+
+Status ListDelete_L(LinkList L, int i, ElemType* e) &#123;
+    Lnode* p = L, * s;
+    int j = 0;
+    while (p-&gt;next &amp;&amp; j &lt; i - 1) &#123; p = p-&gt;next; j++; &#125;
+    if (!p-&gt;next || j &gt; i - 1) return ERROR;
+    s = p-&gt;next;
+    *e = s-&gt;data;
+    p-&gt;next = s-&gt;next;
+    free(s);
+    return OK;
+&#125;
+
+Status CreateList_L(LinkList L, int n) &#123;
+    Lnode* p, * m;
+    ElemType q;
+    m = L;
+    for (int i = 0; i &lt; n; i++) &#123;
+        p = (LinkList)malloc(sizeof(Lnode));
+        p-&gt;next = NULL;
+        scanf(&quot;%d &quot;, &amp;q);
+        p-&gt;data = q;
+        m-&gt;next = p;
+        m = m-&gt;next;
+    &#125;
+    return OK;
+&#125;
+
+void ClearList(LinkList&amp; L) &#123;
+    Lnode* p;
+    while (L-&gt;next) &#123;
+        p = L-&gt;next;
+        L-&gt;next = p-&gt;next;
+        free(p);
+    &#125;
+&#125;
+
+struct Lnode* mergeTwoLists(struct Lnode* l1, struct Lnode* l2) &#123;
+    Lnode* la = l1-&gt;next, * lb = l2-&gt;next, * lc, * ld;
+    lc = (Lnode*)malloc(sizeof(Lnode));
+    ld = lc;
+
+    while (la &amp;&amp; lb) &#123;
+        if (la-&gt;data &lt;= lb-&gt;data) &#123;
+            lc-&gt;next = la;
+            la = la-&gt;next;
+        &#125;
+        else &#123;
+            lc-&gt;next = lb;
+            lb = lb-&gt;next;
+        &#125;
+        lc = lc-&gt;next;
+    &#125;
+    lc-&gt;next = la ? la : lb;
+    return ld;
+&#125;
+
+int main() &#123;
+    Lnode* h = (LinkList)malloc(sizeof(Lnode));
+    h-&gt;next = NULL;
+    int n, m, index;
+    ElemType e, a, b;
+    cin &gt;&gt; n &gt;&gt; m;
+    CreateList_L(h, n);
+    string s;
+    for (int i = 1; i &lt;= m; i++) &#123;
+        cin &gt;&gt; s;
+        if (s[0] == &#39;I&#39;) &#123;
+            cin &gt;&gt; a &gt;&gt; b;
+            ListInsert_L(h, a, b);
+        &#125;
+        else if (s[0] == &#39;D&#39;) &#123;
+            cin &gt;&gt; index;
+            ListDelete_L(h, index, &amp;b);
+            cout &lt;&lt; b &lt;&lt; endl;
+        &#125;
+        else if (s[0] == &#39;G&#39;) &#123;
+            cin &gt;&gt; index;
+            GetElem(h, index, e);
+            cout &lt;&lt; e &lt;&lt; endl;
+        &#125;
+        else if (s[0] == &#39;L&#39;) &#123;
+            cin &gt;&gt; b;
+            index = LocateElem_L(h, &amp;b);
+            cout &lt;&lt; index &lt;&lt; endl;
+        &#125;
+        else &#123;
+            ClearList(h);
+        &#125;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 
     </div>
     
