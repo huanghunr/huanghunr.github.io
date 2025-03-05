@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2025VNCTF-Re-Writeup/" style="color: #00bcd4">
+                <a href="/tags/2025VNCTF-Re-Writeup/" style="color: #00a596">
                     2025VNCTF_Re Writeup
                 </a>
             </span>
@@ -209,17 +209,16 @@
 
 <ul>
 <li><a href="#hook_fish">hook_fish</a></li>
-</ul>
-<ul>
 <li><a href="#kotlindroid">kotlindroid</a></li>
 <li><a href="#%E5%B9%B8%E8%BF%90%E8%BD%AC%E7%9B%98">幸运转盘</a></li>
 <li><a href="#androidlux">AndroidLux</a></li>
+<li><a href="#fukos_starfish">Fuko’s_starfish</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<h3><span id="hook_fish">hook_fish</span></h3><p>运行应用提示输入一串字符并要求联网。</p>
+<h2><span id="hook_fish">hook_fish</span></h2><p>运行应用提示输入一串字符并要求联网。</p>
 <p>jadx分析，发现在main中，在点击按钮后会调用encrypt()方法对我们输入的数据加密，然后调用fish()方法下载了一个“hook_fish.dex”文件。通过下面的registerReceiver方法创注册了一个广播接收器，只要收到系统下载完成的广播时，就会调用onReceive()方法。</p>
 <pre><code class="java">registerReceiver(this.downloadCompleteReceiver, new IntentFilter(&quot;android.intent.action.DOWNLOAD_COMPLETE&quot;));
 </code></pre>
@@ -600,7 +599,7 @@ print(flag)
 # VNCTF&#123;JUst_$ne_Iast_dance_2025!&#125; 
 </code></pre>
 <h2><span id="androidlux">AndroidLux</span></h2><p>程序在java层用socket与linux虚拟环境进行通信，把输入传给linux进行判断。在Init类下发现解压了assert中的env文件进行初始化，我们解压下来就可以看到linux的rootfs文件。在Service类下可以看到启动了一个服务，就是启动了一个linux虚拟环境并设置执行目录为&#x2F;root并执行了&#x2F;root下的env文件。我们在rootfs文件中找到env文件，ida打开分析。里面有些用B和B.IM构成的花指令，用E0 03 00 AA字节码修改掉。发现main函数和一个魔改的base64的加密逻辑。main函数实现了对数据的接受，进行base64编码和最后的比较。直接写出解密脚本发现解密不出。感觉是什么地方被修改了。于是我提取env文件在手机上自启linux虚拟环境运行，同时运行frida进行hook。发现输入的数据并没有被修改。这就纳闷了。那么数据的修改不在env文件里，也不再java层里，那么就在虚拟linux系统上了。</p>
-<p>最后看官方的文档，原来是修改了&#x2F;etc&#x2F;ld.so.preload配置文件加载了另一个so文件（<a target="_blank" rel="noopener" href="https://blog.csdn.net/whatday/article/details/108890018">参考</a>），对read()和strcmp()做了手脚。至于怎么找到的，用文件的修改时间对env内所有文件排序就可以看到了。</p>
+<p>最后看官方的文档，原来是修改了&#x2F;etc&#x2F;ld.so.preload配置文件加载了另一个so文件（<a target="_blank" rel="noopener" href="https://blog.csdn.net/whatday/article/details/108890018">参考</a>），对read()和strcmp()做了手脚。至于怎么找到的，官方文档说用文件的修改时间对env内所有文件排序就可以看到了。</p>
 <pre><code class="bash">find . -type f -printf &quot;%T@ %p\n&quot; | sort -nr | head -20 | cut -d&#39; &#39; -f2-
 </code></pre>
 <p>&#x2F;etc&#x2F;ld.so.preload，里面指向的是”\usr\libexec\libexec.so”，ida打开就可以看到逻辑。</p>
@@ -700,6 +699,29 @@ int main() &#123;
     
 &#125;
 </code></pre>
+<p>这题的逻辑是proot通过ptrace拦截系统调用，并修改调用指向虚拟环境的位置，从而在虚拟机中执行root命令。同时也限制了调试。<a target="_blank" rel="noopener" href="https://blog.csdn.net/happyblreay/article/details/139357900">参考</a></p>
+<h2><span id="fukos_starfish">Fuko’s_starfish</span></h2><p>有些多余的东西可以pacth掉，最后有个反调试，在汇编里把判断改成jz就行。前面的游戏都可以patch一下，比如把猜数字的值改成0，贪吃蛇的分数改成0就通过。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250303132754704.png" alt="image-20250303132754704"></p>
+<p>搜索字符串可以找到最终的逻辑，里面有两个aes加密。开头加载密钥，交叉引用一下可以看到密钥初始的位置。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250303132830708.png" alt="image-20250303132830708"></p>
+<p>下面还有一个CheckRemoteDebuggerPresent函数，如果不处于调试，密钥异或0x17。写脚本解拿到密钥解AES即可。密文在比较的位置。</p>
+<p>查找srand的引用可以找到种子114514<img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250303133324237.png" alt="image-20250303133324237"></p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main() &#123;
+    srand(114514);
+
+    for (int i = 0; i &lt; 16; i++) &#123;
+        int a = rand();
+        printf(&quot;%.2x&quot;, (a % 255)^0x17);
+    &#125;
+    
+&#125;
+//09e5fdeb683175b6b13b840891eb78d2
+</code></pre>
+<p>密文(3D011C190BA090815F672731A89AA47497362167AB2EB4A09418D37D93E646E7)</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250303134804011.png" alt="image-20250303134804011"></p>
 
     </div>
     
