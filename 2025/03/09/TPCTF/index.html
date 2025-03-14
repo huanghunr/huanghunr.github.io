@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2025TPCTF-Re-Writeup/" style="color: #03a9f4">
+                <a href="/tags/2025TPCTF-Re-Writeup/" style="color: #ffa2c4">
                     2025TPCTF_Re Writeup
                 </a>
             </span>
@@ -213,22 +213,12 @@
 
 </div>
 
-<p>fceux RAM search看到0085和0084，85是当前level，84是当前吃的豆，我在debugger里下了断点发现一个cmp 5，也就是检查当前level的，大于等于5时，会提示了hacker，level是从0开始的，改成4就可以通关第五关。</p>
-<p>用这个方法成功通关，在每次房间进入之前</p>
-<p>00:DBEF: A5 85     LDA $85 &#x3D; #$01 00:DBF1: C9 05     CMP #$05 00:DBF3: 90 D8     BCC $DBCD</p>
-<p>都会cmp 85也就是当前的关卡，这里LDA之后把A内容改成5就可以跳转，</p>
-<blockquote>
-<p>00:DC01: A9 00     LDA #$00 00:DC03: 85 29     STA $29 &#x3D; #$02 00:DC05: A5 29     LDA $29 &#x3D; #$02 00:DC07: C9 05     CMP #$05 00:DC09: B0 18     BCS $DC23 00:DC0B: A4 29     LDY $29 &#x3D; #$02 00:DC0D: B9 00 03  LDA $0300,Y @ $0300 &#x3D; #$01 00:DC10: D0 0C     BNE $DC1E 00:DC12: A9 01     LDA #$01 00:DC14: 85 8C     STA $8C &#x3D; #$00 00:DC16: A9 08     LDA #$08 00:DC18: 20 4E CE  JSR $CE4E 00:DC1B: 4C 23 DC  JMP $DC23 00:DC1E: E6 29     INC $29 &#x3D; #$02 00:DC20: 4C 05 DC  JMP $DC05 00:DC23: A5 8C     LDA $8C &#x3D; #$00 00:DC25: D0 83     BNE $DBAA 00:DC27: A9 07     LDA #$07 00:DC29: 20 4E CE  JSR $CE4E 00:DC2C: 4C AA DB  JMP $DBAA</p>
-</blockquote>
-<p>但是跳转之后，有一段很长的循环逻辑大致是→</p>
-<p>for i in range(5):</p>
-<p>if $300[i]&#x3D;&#x3D;0 :</p>
-<p>jmp xxx(输出hacker）</p>
-<p>print(success)</p>
-<p>这个300开始记录的就是是否通关，这里其实在for循环的时候，就可以让i&#x3D;&#x3D;5，然后直接跳出</p>
+<p>用fceux进行调试，amr search在吃豆的时候寻找改变的值，就可以发现0x84的数据是用于存储当前吃豆的数量，0x85好像是当前的关卡，是从0开始的。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image.png" alt="image"></p>
+<p>用hexeditor修改值可以发现0x83就是目标的豆子数，直接修改关卡值好像会被检测输出hacker，于是继续修改豆子数来逐个通关，通过第五关后可以拿到第一段flag。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image.png" alt="image"></p>
 <p>得到第一部分flag</p>
-<p>在fceux中通关界面时查看PPU viewer，可以看到flag的part3：</p>
+<p>在ppu viewer中看到了第三段flag</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/c4a6dff380cf02c5b1b3e31fffbd1b0d.png" alt="c4a6dff380cf02c5b1b3e31fffbd1b0d"></p>
 <p>第三部分</p>
 <p>在PPU viewer页面还可以看到字符表。 查询资料可知，NES 游戏中Tile是游戏中所使用一个图案块。游戏的一个画面就是由多个Tile组成的，每个Tile都有一个索引值便于调用显示。</p>

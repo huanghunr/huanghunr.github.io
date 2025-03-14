@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2025GHCTF-Re-Writeup/" style="color: #03a9f4">
+                <a href="/tags/2025GHCTF-Re-Writeup/" style="color: #ff7d73">
                     2025GHCTF_Re Writeup
                 </a>
             </span>
@@ -214,6 +214,7 @@
 <li><a href="#mioryosoyo">Mio？Ryo？Soyo？</a></li>
 <li><a href="#timespacerescue">TimeSpaceRescue</a></li>
 <li><a href="#canon">Canon</a></li>
+<li><a href="#room-0">Room 0</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -221,7 +222,7 @@
 
 <h3><span id="asmsignin">ASM?Signin!</span></h3><p>读汇编就行，可以用AI辅助。</p>
 <p>要注意的是下面这里的数据</p>
-<pre><code class="clike">ENC PROC
+<pre><code class="asm">ENC PROC
     PUSH CX
     MOV SI,OFFSET BUFFER1 + 2
     MOV DI,OFFSET DATA1
@@ -240,7 +241,7 @@ ENC ENDP
 </code></pre>
 <p>就一个异或加密，异或回来就行。</p>
 <p>大概逻辑和解密脚本</p>
-<pre><code class="clike">#include &lt;stdio.h&gt;
+<pre><code class="c">#include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
 
 unsigned char DATA1[32] = &#123;
@@ -299,10 +300,11 @@ int main() &#123;
 &#125;
 NSSCTF&#123;W0w_y0u&#39;re_g00d_@t_@5M!!&#125;
 </code></pre>
+<p>法2：用dosbox编译运行，结合ida分析找到处理完后的盒直接异或解密。</p>
 <h3><span id="fishingkit">FishingKit</span></h3><p>主函数里面有一个方程</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192545122.png" alt="image-20250309192545122"></p>
 <p>用z3解</p>
-<pre><code class="javascript">from z3 import *
+<pre><code class="py">from z3 import *
 s = Solver()
 x = [BitVec(f&quot;a_&#123;i&#125;&quot;,8) for i in range(10)]
 
@@ -331,12 +333,14 @@ for i in range (10):
 </code></pre>
 <p>解出的字符串”DeluxeBait”作为密钥进行RC4加密。解密后会发现RC4加密是假的，会解出假flag，NSSCTF{Fake!Fake!Fake!}。</p>
 <p>查看main函数之前的函数我们会发现一些其他的函数。</p>
+<p>这里获取strcmp的地址，然后传入到VirtualProtect中，然后修改了strcmp的逻辑达到hook的目的。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313231431194.png" alt="image-20250313231431194"></p>
 <p>这里利用了VirtualProtect修改了函数。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192602402.png" alt="image-20250309192602402"></p>
 <p>在这里下面还有一个enc函数，里面有许多被加密的字符串，看来这里的加密逻辑就是真正的加密逻辑。在enc之前还有一个getsecret函数获取了真正的密文。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192614403.png" alt="image-20250309192614403"></p>
 <p>enc函数里是一个xtea加密，魔改了delta，轮数为24，输入被分为4字节两两加密。动调可以获取密钥就是”DeluxeBait”后面补0。</p>
-<pre><code class="clike">#include&lt;stdio.h&gt;
+<pre><code class="c">#include&lt;stdio.h&gt;
 #include&lt;stdint.h&gt;
 void decipher(unsigned int num_rounds, uint32_t v[2], uint32_t const key[4]) &#123;
     unsigned int i;
@@ -370,8 +374,8 @@ NSSCTF&#123;Wh@t_@_b1g_F1sh&#125;
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192654175.png" alt="image-20250309192654175"></p>
 <p>加密逻辑就在_main里，第一个函数是用于异或处理密钥的，第二个是一个tea加密。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192702993.png" alt="image-20250309192702993"></p>
-<p>不知道为什么IDA给我识别成这鸟样。写出加密逻辑后动调看了好久发现数据对不上后面看一下汇编才发现v12和v5那些那里的那一长串是假的，其实就只有类似v1 +&#x3D; ((v0 &lt;&lt; 4) + k2) ^ (v0 + sum) ^ ((v0 &gt;&gt; 5) + k3);的操作，其实就是普通的tea加密逻辑。所以这里的轮数只有八轮。密钥的话直接动调获取k的值就行，delta就是开始的值1579382783，最后还异或了一个0xf。不用管之前的那些操作。密文也同理动调获取就行，4字节分组两两解密。</p>
-<pre><code class="clike">#include &lt;stdio.h&gt;
+<p>不知道为什么IDA给我识别成这鸟样<del>，用Ghidra和BN分析会更好，但是解题的时候没想到</del>。写出加密逻辑后动调看了好久发现数据对不上后面看一下汇编才发现v12和v5那些那里的那一长串是假的，其实就只有类似v1 +&#x3D; ((v0 &lt;&lt; 4) + k2) ^ (v0 + sum) ^ ((v0 &gt;&gt; 5) + k3);的操作，其实就是普通的tea加密逻辑。所以这里的轮数只有八轮。密钥的话直接动调获取k的值就行，delta就是开始的值1579382783，最后还异或了一个0xf。不用管之前的那些操作。密文也同理动调获取就行，4字节分组两两解密。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
 #include &lt;stdint.h&gt;
 
 void encrypt(uint32_t* v, uint32_t* k) &#123; //加密逻辑
@@ -434,8 +438,8 @@ int main() &#123;
 &#125;
 NSSCTF&#123;!!!Y0u_g3t_th3_s3cr3t!!!&#125;
 </code></pre>
-<h3><span id="mioryosoyo">Mio？Ryo？Soyo？</span></h3><p>secret模块在子包里面。用pycdc反编译后让AI给我们重命名一下</p>
-<pre><code class="clike">class Base85Encoder:
+<h3><span id="mioryosoyo">Mio？Ryo？Soyo？</span></h3><p>解包的时候要用相同的python版本3.8。secret模块在子包里面。用pycdc反编译后让AI给我们重命名一下</p>
+<pre><code class="py">class Base85Encoder:
     CHARSET = &#39;&#39;.join(chr(c) for c in range(33, 118))
 
     @staticmethod
@@ -515,7 +519,7 @@ def decrypt_data(data: str) -&gt; str:
     return final_result
 </code></pre>
 <p>换表base45，base85，和位移加密。直接写出解密就行，不过不知道base解码有点问题一，所以输出用赛博厨师解base。</p>
-<pre><code class="clike">def reshift(text: str, shift: int) -&gt; str:
+<pre><code class="py">def reshift(text: str, shift: int) -&gt; str:
     result = []
     for char in text:
         if &#39;a&#39; &lt;= char &lt;= &#39;z&#39;:
@@ -561,10 +565,22 @@ print(decdata)
 </code></pre>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192735653.png" alt="image-20250309192735653"></p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192744353.png" alt="image-20250309192744353"></p>
-<p>\</p>
 <h3><span id="timespacerescue">TimeSpaceRescue</span></h3><p>大概逻辑就是获取系统的年月日保存到一个数组中，然后用这些值生成MD5值，把MD5值作为密钥进行魔改AES加密。</p>
+<pre><code class="c">struct tm
+&#123;
+    int tm_sec;  /*秒，正常范围0-59， 但允许至61*/
+    int tm_min;  /*分钟，0-59*/
+    int tm_hour; /*小时， 0-23*/
+    int tm_mday; /*日，即一个月中的第几天，1-31*/
+    int tm_mon;  /*月， 从一月算起，0-11*/
+    int tm_year; /*年， 从1900至今已经多少年*/
+    int tm_wday; /*星期，一周中的第几天， 从星期日算起，0-6*/
+    int tm_yday; /*从今年1月1日到目前的天数，范围0-365*/
+    int tm_isdst;/*日光节约时间的旗标*/
+&#125;;
+</code></pre>
 <p>函数中隐藏了一花指令如下，nop掉就可以发现一些异或。</p>
-<pre><code class="clike">.text:00401407                 push    eax
+<pre><code class="asm">.text:00401407                 push    eax
 .text:00401408                 xor     eax, eax
 .text:0040140A                 call    $+5
 .text:0040140F                 add     eax, 5
@@ -585,7 +601,7 @@ print(decdata)
 <p>AES中多加了一些异或。因为在最后a3+&#x3D;16执行了两次，所以a3的索引已经没有指向我们的数据了。直接忽略掉就行，对数据没有影响。xor1和xor2的逻辑直接写出来就行，不需要修改。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250309192817948.png" alt="image-20250309192817948"></p>
 <p>解密时把xor1和下面的xor2互换一下就行。题目提示是2024年的一天，直接爆破获得MD5值解密就行。</p>
-<pre><code class="clike">#include &lt;stdint.h&gt;
+<pre><code class="c">#include &lt;stdint.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
 #include &lt;stdlib.h&gt;
@@ -1478,7 +1494,7 @@ int main()
 <p>现在去逆向加密函数里面的每一个操作</p>
 <p>case1是一个位移加密。case2没有用到就不管了。case3把数据按列存储按行读出，即行列互换。</p>
 <p>case4把最一个元素放到第一位去，后面的元素向后移一位。case5把输入与密文异或并进行换表base64加密。case6是一个魔改rc4加密，异或完后加上57，然后进行换表base64编码。把所有加密逆向一遍按控制流反向执行就行。一些要注意的问题写在脚本注释里了。解密后有些数据里面有0，用strlen会直接得到错误的长度。尽量别用strlen。</p>
-<pre><code class="clike">#include &lt;stdio.h&gt;
+<pre><code class="c">#include &lt;stdio.h&gt;
 #include&lt;string.h&gt;
 #include &lt;stdlib.h&gt;
 
@@ -1735,6 +1751,58 @@ int decodeBase64(char* str, int len) &#123;
 &#125;
 //NSSCTF&#123;P4ch3Lbel&#39;s_C@n0n_1n_D_mAjOr&#125;
 </code></pre>
+<h3><span id="room-0">Room 0</span></h3><p>多看看main前面的函数就可以发现一个smc函数，用一个传进来的密钥对enc段进行异或解密，动调可以发现其实密钥就是我们输入进来的key。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313234627190.png" alt="image-20250313234627190"></p>
+<p>交叉引用发现了异常处理中调用了函数，加上之前在main里面看到的中有一个除法运算可以推测出我们输入的密钥应该是要触发除0异常，于是打算直接把运算函数拿下来进行爆破。我们可以知道函数开头3字节的值是固定的55 8b ec，我们可以先提取出enc函数的前三字节进行异或得到前三位密钥再进行爆破。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313234707169.png" alt="image-20250313234707169"></p>
+<p>这个函数把hex字符串转为对应的整数。我们的输入应该是结果的十六进制字符串。<img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313234202659.png" alt="image-20250313234202659"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250314002311700.png" alt="image-20250314002311700"></p>
+<p>前3字节是75 5f f0直接提取出伪代码爆破最后一字节</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+
+unsigned int __cdecl sub_402000(unsigned int inputInt)
+&#123;
+
+    int iterator; // [esp+4h] [ebp-18h]
+    int byte1; // [esp+8h] [ebp-14h]
+    int byte2; // [esp+Ch] [ebp-10h]
+    int v6; // [esp+10h] [ebp-Ch]
+    int tempResult; // [esp+10h] [ebp-Ch]
+    unsigned int highByte; // [esp+14h] [ebp-8h]
+    int inputInt_1; // [esp+18h] [ebp-4h]
+
+    if (!inputInt)
+        return 0;
+    v6 = 0;
+    inputInt_1 = inputInt;
+    highByte = inputInt &gt;&gt; 24 &amp; 0xff;
+    byte2 = inputInt &gt;&gt; 16 &amp; 0xff;
+    byte1 = inputInt &gt;&gt; 8 &amp; 0xff;
+    for (iterator = 0; iterator &lt; 32; ++iterator)
+    &#123;
+        tempResult = v6 * (highByte + 1415881080) * (inputInt_1 - 1467486175) * ((highByte - inputInt_1) ^ (highByte &gt;&gt; 4));
+        byte2 = (inputInt_1 + byte2) ^ (8 * byte1);
+        byte1 = (inputInt_1 + highByte) ^ (8 * byte2);
+        highByte = (inputInt_1 + byte1) ^ (8 * byte2);
+        inputInt_1 -= byte1 + byte2 + highByte;
+        if (inputInt_1 - 1415881080 == 0)return inputInt;
+        v6 = tempResult
+            + (highByte + 1467486175)
+            * (((highByte - inputInt_1) ^ (unsigned __int64)(highByte &gt;&gt; 4))
+                / (unsigned int)(inputInt_1 - 1415881080));
+    &#125;
+    return 0;
+&#125;
+int main() &#123;
+    for (unsigned int i = 0x755ff000; i &lt; 0x755ff0ff; i++) &#123;
+        printf(&quot;%x\n&quot;, sub_402000(i));
+    &#125;
+&#125;
+
+//755ff0d3
+</code></pre>
+<p>得到密钥775ff0d3</p>
+<p>提取汇编指令，对dia内的数据进行异或处理</p>
 
     </div>
     

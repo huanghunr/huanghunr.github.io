@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>常见反调试的初步学习 | huanghunr&#39;s Blog</title>
+    <title>DOS程序逆向 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>常见反调试的初步学习</h1>
+        <h1>DOS程序逆向</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/12/5
+            2025/3/13
         </span>
         
         <span class="category">
-            <a href="/categories/Re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+            <a href="/categories/re%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                Re基础学习
+                re基础学习
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
-                    Re学习
+                <a href="/tags/re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                    re学习
                 </a>
             </span>
             
@@ -208,26 +208,55 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#smc">SMC</a></li>
-<li><a href="#isdebuggerpresent">IsDebuggerPresent()</a></li>
-<li><a href="#tracerpid">TracerPid</a></li>
+<li><a href="#dos%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Dos常用命令</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%B9%B6%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F">编译并运行程序</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%B9%B6%E8%BF%90%E8%A1%8C%E6%B1%87%E7%BC%96%E7%A8%8B%E5%BA%8F">编译并运行汇编程序</a></li>
+<li><a href="#%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F">调试程序</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
 
-<h2><span id="smc">SMC</span></h2><p>动态保护。</p>
-<p>去除时断点在解密后，然后按P，再按C，再按P即可。</p>
-<hr>
-<h2><span id="isdebuggerpresent">IsDebuggerPresent()</span></h2><p>此函数允许应用程序确定是否正在调试它，以便它可以修改其行为。</p>
-<p>如果当前进程在调试器的上下文中运行，则返回值为非零。</p>
-<p>如果当前进程未在调试器的上下文中运行，则返回值为零。</p>
-<hr>
-<h2><span id="tracerpid">TracerPid</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tianyeming/article/details/78415864?fromshare=blogdetail&sharetype=blogdetail&sharerId=78415864&sharerefer=PC&sharesource=huanghunr&sharefrom=from_link">参考文章</a></p>
-<p>linux下 &#x2F;proc&#x2F;PID&#x2F;status 文件包含了执行程序的一些信息，包括TracerPid，也就是调试程序进程的pid。程序也就可以通过检测这个pid来判断当前程序是否被调试跟踪。</p>
-<p>实现方式也很简单，写一个读文件的代码按行读取status，如果读取到TracerPid，就判断后面的数是不是0即可。</p>
-<p>我们可以通过path的方式修改源程序逻辑，还可以通过修改修改内核的方式，修改TracerPid的获取逻辑来绕过检测。或者通过类似frida-Gadget的方式不通过进程来监控程序，而是直接把监控程序作为程序的一部分，就像加载一个动态链接库一样，而不是加载一个进程。</p>
+<h3><span id="dos常用命令">Dos常用命令</span></h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/BaroC/p/3330090.html">参考</a></p>
+<pre><code class="cmd">dir #查看目录
+cd 	#切换目录
+d:	#切换盘符到d
+md	#新建目录
+rmdir	#删除目录
+rmdir /s	#删除非空目录
+xcopy /e [source] [destination]	#复制文件
+move [sourcr] [destination] #移动文件
+ren [oldname] [newname]	#重命名
+type nul&gt;[name].xxx	#创建空文件
+echo [content]&gt;[filename]	#新建非空文件
+echo [content]&gt;&gt;[filname]	#追加文件内容
+type [filename]	#查看文件
+del [filename]	#删除文件
+start /d &quot;[path]&quot;[exename] #启动程序
+explorer #打开文件管理器
+ipconfig #查看ip地址
+mount c [filepath] #挂载文件夹到c盘
+</code></pre>
+<h3><span id="编译并运行程序">编译并运行程序</span></h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Jiang_13314/article/details/142991548">参考</a></p>
+<p>1.下载Turboc2，并创建目录，用mount挂载</p>
+<p>2.创建.c文件放到挂载目录下</p>
+<p>3.在挂载盘中找到Turboc2并进入文件夹</p>
+<p>4.运行tc，在file下load c文件，按f9编译，退出输入程序exe名即可运行</p>
+<h3><span id="编译并运行汇编程序">编译并运行汇编程序</span></h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_52196532/article/details/120373082">参考</a></p>
+<p>使用<a target="_blank" rel="noopener" href="https://blog.csdn.net/lk990908/article/details/88581384">MASM</a>编译。</p>
+<p>改汇编代码文件后缀为.asm</p>
+<pre><code class="cmd">masm [filename].asm
+link [filename].obj
+</code></pre>
+<h3><span id="调试程序">调试程序</span></h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38785018/article/details/123252531">参考</a></p>
+<p>命令</p>
+<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1o25HoEWTu7Mp3gEZEg6I0Q?pwd=5vhx">参考</a></p>
+<p>A [地址] 输入汇编指令<br>C [范围] 起始地址 对由“范围”指定的区域与“起始地址”指定的同大小区域进行比较，显示不相同的单元<br>D [范围] 显示指定范围内的内存单元内容<br>E 地址 字节值表 用值表中的值替换从“地址”开始的内存单元内容<br>F 范围 字节值表 用指定的字节值表来填充内存区域<br>G [&#x3D;起始地址] [断点地址] 从起点（或当前地点）开始执行，到终点结束<br>H 数值1 数值2 显示两个十六进制数值之和、差<br>I 端口地址 从端口输入<br>L [地址 [驱动器号 扇区 扇区数]] 从磁盘读取数据<br>M 范围 地址 把“范围”内的字节值传送到从“地址”开始的单元<br>N 文件标识符 [文件标识符…] 指定文件名，为读&#x2F;写文件做准备<br>O 端口地址 字节值 向端口输出数据<br>P [&#x3D;地址] [指令数] 按执行过程，但不进入子程序调用或软中断<br>Q 退出 DEBUG，不保存正在调试的文件<br>R [寄存器名] 显示和修改寄存器内容<br>S 范围 字节值表 在内存区域内搜索指定的字节值表。如果找到，显示起始地址，否则不显示任何内容<br>T [&#x3D;地址] [指令数] 跟踪执行，从起点（或当前地点）执行若干条指令<br>U [范围] 反汇编，显示机器码所对应的汇编指令<br>W [地址 [驱动器号 扇区 扇区数]] 向磁盘写内容，（BX、CX）为写入字节数  </p>
+<p>在ida中查看地址</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313205203696.png" alt="image-20250313205203696"></p>
+<p>hello world字符被加载到ax打印，数据在cs:0200被存储，我们直接用t 201运行到位置后的位置。然后查看AX的值，定位到AX指向的位置用d 194查看内存。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313205500381.png" alt="image-20250313205500381"></p>
 
     </div>
     

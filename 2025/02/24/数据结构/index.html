@@ -556,171 +556,167 @@ int main()&#123;
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3052/view">https://acm.zjnu.edu.cn/problem/3052/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <pre><code class="c++">#include &lt;cstdio&gt;
-#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
 #include &lt;cstring&gt;
+
+#define OVERFLOW -2
+#define UNDERFLOW -1
 #define OK 1
-#define ERROR 0
 
-typedef int Status;
+using namespace std;
 
-typedef int SElemType;
+typedef char Dataoptr;
+typedef int Dataopnd;
 
-typedef struct sqstack
+typedef struct stdacknode_optr&#123;
+    Dataoptr data;
+    struct stdacknode_optr*next;
+&#125; Stacknode_optr;
 
-&#123;
-    SElemType *base;
-    SElemType *top;
-    int stacksize;
-&#125; sqstack;
+typedef struct &#123;
+    Stacknode_optr *top;
+    Stacknode_optr *base;
+&#125; Stack_optr;
 
-Status init_sqstack(sqstack &amp;s)
+typedef struct stdacknode_opnd&#123;
+    Dataopnd data;
+    struct stdacknode_opnd*next;
+&#125; Stacknode_opnd;
 
-&#123;
-    s.base = (SElemType *)malloc(1000 * sizeof(SElemType));
-    s.top = s.base;
-    s.stacksize = 1000;
-    return OK;
+typedef struct &#123;
+    Stacknode_opnd *top;
+    Stacknode_opnd *base;
+&#125; Stack_opnd;
+
+
+void InitStack_optr(Stack_optr &amp;S) &#123;
+    S.top == NULL;
 &#125;
 
-Status push_sqstack(sqstack &amp;s, SElemType e)
-
-&#123;
-    if (s.top - s.base &gt;= s.stacksize)
-    &#123;
-        s.base = (SElemType *)realloc(s.base, (s.stacksize + 10) * sizeof(SElemType));
-        s.top = s.base + s.stacksize;
-        s.stacksize += 10;
-    &#125;
-    *s.top = e;
-    s.top++;
-    return OK;
+void Push_optr(Stack_optr &amp;S, Dataoptr x) &#123;
+    Stacknode_optr *p = (Stacknode_optr *)malloc(sizeof(Stacknode_optr));
+    p-&gt;data = x;
+    p-&gt;next = S.top;
+    S.top = p;
 &#125;
 
-Status pop_sqstack(sqstack &amp;s)
-&#123;
-
-    if (s.top == s.base)
-    &#123;
-        return ERROR;
+Dataoptr Pop_optr(Stack_optr &amp;S) &#123;
+    if (S.top == NULL) &#123;
+        return UNDERFLOW;
     &#125;
-    s.top--;
-    return OK;
+    Dataoptr x;
+    Stacknode_optr *p = S.top;
+    x = p-&gt;data;
+    S.top = p-&gt;next;
+    free(p);
+    return x;
 &#125;
 
-SElemType gettop_sqstack(sqstack &amp;s)
-&#123;
-    if (s.base == s.top)
-    &#123;
-        return ERROR;
-    &#125;
-    return *(s.top - 1);
+Dataoptr GetTopnode_optr(Stack_optr &amp;S)&#123;
+    return S.top-&gt;data;
 &#125;
 
-Status empty_sqstack(sqstack &amp;s)
-&#123;
-    return s.base == s.top;
-&#125;
-int Oprate(int a, int b, char op)
-&#123;
-    switch (op)
-    &#123;
-    case &#39;+&#39;:
-        return a + b;
-    case &#39;-&#39;:
-        return a - b;
-    case &#39;*&#39;:
-        return a * b;
-    case &#39;/&#39;:
-        return a / b;
-    &#125;
+Dataopnd GetTopnode_opnd(Stack_opnd &amp;S)&#123;
+    return S.top-&gt;data;
 &#125;
 
-char Precede(char x, char y)
+void InitStack_opnd(Stack_opnd &amp;S) &#123;
+    S.top == NULL;
+&#125;
+
+void Push_opnd(Stack_opnd &amp;S, Dataopnd x) &#123;
+    Stacknode_opnd *p = (Stacknode_opnd *)malloc(sizeof(Stacknode_opnd));
+    p-&gt;data = x;
+    p-&gt;next = S.top;
+    S.top = p;
+&#125;
+
+Dataopnd Pop_opnd(Stack_opnd &amp;S) &#123;
+    if (S.top == NULL) &#123;
+        return UNDERFLOW;
+    &#125;
+    Dataopnd x;
+    Stacknode_opnd *p = S.top;
+    x = p-&gt;data;
+    S.top = p-&gt;next;
+    free(p);
+    return x;
+&#125;
+
+bool in (char c) &#123;
+    return c&lt;=&#39;9&#39;&amp;&amp;c&gt;=&#39;0&#39;;
+&#125;
+Dataopnd Operate(Dataopnd a,Dataoptr op, Dataopnd b) &#123;
+    switch (op) &#123;
+        case &#39;+&#39;:return a+b;
+        case &#39;-&#39;:return a-b;
+        case &#39;*&#39;:return a*b;
+        case &#39;/&#39;:return a/b;
+    &#125;
+    return 0;
+&#125;
+
+char Precede(char x1, char x2)
 &#123;
-    if (x == &#39;(&#39; &amp;&amp; y == &#39;)&#39; || x == &#39;#&#39; &amp;&amp; y == &#39;#&#39;;
-    &#123;
-        return &#39;=&#39;;
-    &#125;
-    else if (x == &#39;(&#39; || x == &#39;#&#39; || y == &#39;(&#39; || (x == &#39;+&#39; || x == &#39;-&#39;) &amp;&amp; (y == &#39;*&#39; || y == &#39;/&#39;))
-    &#123;
-        return &#39;&lt;&#39;;
-    &#125;
-    else
-    &#123;
-        return &#39;&gt;&#39;;
-    &#125;
+    if((x1==&#39;(&#39;&amp;&amp;x2==&#39;)&#39;)|| x1==&#39;#&#39;&amp;&amp;x2==&#39;#&#39;) return &#39;=&#39;;
+    else if((x1==&#39;(&#39;||x1==&#39;#&#39;||x2==&#39;(&#39;)||(x1==&#39;+&#39;||x1==&#39;-&#39;)&amp;&amp;(x2==&#39;*&#39;||x2==&#39;/&#39;)) return &#39;&lt;&#39;;
+    else return &#39;&gt;&#39;;
 &#125;
 
 int EvaluateExpression(char *s)
-
+ 
 &#123;
-    sqstack OPTR; // str stack
-
-    sqstack OPND; // number stack
-
+    Stack_optr OPTR;
+    Stack_opnd OPND; 
     int idx = 0;
-
     int a, b;
-
     char op;
-
-    init_sqstack(OPTR);
-    init_sqstack(OPND);
-
-    push_sqstack(OPTR, &#39;#&#39;);
-
-    while (s[idx] != &#39;#&#39; || gettop_sqstack(OPTR) != &#39;#&#39;)
-
+ 
+    InitStack_optr(OPTR);
+    InitStack_opnd(OPND);
+ 
+    Push_optr(OPTR, &#39;#&#39;);
+ 
+    while (s[idx] != &#39;#&#39; || GetTopnode_optr(OPTR) != &#39;#&#39;)
     &#123;
-        if (s[idx] &gt;= &#39;0&#39; &amp;&amp; s[idx] &lt;= &#39;9&#39;)
+        if (in(s[idx]))
         &#123;
-            push_sqstack(OPND, s[idx] - &#39;0&#39;);
+            Push_opnd(OPND, s[idx] - &#39;0&#39;);
             printf(&quot;%d &quot;, s[idx] - &#39;0&#39;);
             idx++;
         &#125;
         else
         &#123;
-            switch (Precede(gettop_sqstack(OPTR), s[idx]))
+            switch (Precede(GetTopnode_optr(OPTR), s[idx]))
             &#123;
             case &#39;&gt;&#39;:
-                op = gettop_sqstack(OPTR);
-                pop_sqstack(OPTR);
-
-                b = gettop_sqstack(OPND);
-                pop_sqstack(OPND);
-
-                a = gettop_sqstack(OPND);
-                pop_sqstack(OPND);
-
+                op = Pop_optr(OPTR);
+                b = Pop_opnd(OPND);
+                a = Pop_opnd(OPND);
                 printf(&quot;%c &quot;, op);
-
-                push_sqstack(OPND, Oprate(a, b, op));
+                Push_opnd(OPND, Operate(a, op ,b));
                 break;
             case &#39;=&#39;:
-                pop_sqstack(OPTR);
+                Pop_optr(OPTR);
                 idx++;
                 break;
             case &#39;&lt;&#39;:
-
-                push_sqstack(OPTR, s[idx++]);
+                Push_optr(OPTR, s[idx++]);
             &#125;
         &#125;
     &#125;
-
-    return gettop_sqstack(OPND);
+    return GetTopnode_opnd(OPND);
 &#125;
 
-int main()
-
-&#123;
+int main() &#123;
     char str[2000] = &#123;0&#125;;
-
+ 
     scanf(&quot;%s&quot;, str);
     int num;
     str[strlen(str)] = &#39;#&#39;;
     num = EvaluateExpression(str);
     printf(&quot;\n%d\n&quot;, num);
-    
+    return 0;
 &#125;
 </code></pre>
 <p><strong>三、程序代码及运行结果</strong></p>
