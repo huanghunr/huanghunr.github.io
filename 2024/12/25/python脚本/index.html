@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     Re学习
                 </a>
             </span>
@@ -347,6 +347,25 @@ for i in range(0, 8, 2):
         print(f&quot;&#123;result_hex&#125;&quot;)
         flag += result_hex
 print(f&quot;flag&#123;&#123;&#123;flag&#125;&#125;&#125;&quot;)
+</code></pre>
+<p>shell数据提取发送</p>
+<pre><code class="python">from functools import cmp_to_key
+import re
+from pwn import *
+
+
+r = remote(&quot;node2.anna.nssctf.cn&quot;, 28376)
+
+for i in range(100):
+    read = r.recvline()
+    data = read.split(b&quot;: &quot;)[1].strip().decode() #以：分隔数据，取后面的字符串得到数字的字符串形式
+
+    strs = data.split(&#39; &#39;) #以空格分割成数组
+    n = len(strs) #字符串个数
+   ...
+    r.sendline(senddata) # 发送结果
+    print(r.recvline())# 跳过一行，以便读取下一行
+print(r.recv())# 读取结果
 </code></pre>
 
     </div>

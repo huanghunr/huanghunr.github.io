@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2025TPCTF-Re-Writeup/" style="color: #ffa2c4">
+                <a href="/tags/2025TPCTF-Re-Writeup/" style="color: #00a596">
                     2025TPCTF_Re Writeup
                 </a>
             </span>
@@ -267,6 +267,1617 @@ FLAG PT.2 FOR YOU IS !2 !8PLAY1N9_6@M3S_ ! !# !# !#-!# !0 ! /////&lt;L&#125;/2BR
 <p>解密得到flag的第二部分。</p>
 <p>PLAY1N9_6@M3S_</p>
 <p>最后的flag:  TPCTF{D0_Y0U_L1KE_PLAY1N9_6@M3S_ON_Y0UR_N3S?}</p>
+<p>大佬的wp先记一下用来复现，后面再写wp</p>
+<p>magicfile</p>
+<pre><code>$ strings magicfile_c970e3503feebf8274571f09d27cdd2f | grep File:
+@(#)$File: magic.c,v 1.115 2021/09/20 17:45:41 christos Exp $
+@(#)$File: apprentice.c,v 1.309 2021/09/24 13:59:19 christos Exp $
+@(#)$File: encoding.c,v 1.32 2021/04/27 19:37:14 christos Exp $
+@(#)$File: compress.c,v 1.129 2020/12/08 21:26:00 christos Exp $
+@(#)$File: print.c,v 1.89 2021/06/30 10:08:48 christos Exp $
+@(#)$File: fsmagic.c,v 1.81 2019/07/16 13:30:32 christos Exp $
+@(#)$File: funcs.c,v 1.122 2021/06/30 10:08:48 christos Exp $
+@(#)$File: cdf_time.c,v 1.19 2019/03/12 20:43:05 christos Exp $
+@(#)$File: readcdf.c,v 1.74 2019/09/11 15:46:30 christos Exp $
+@(#)$File: buffer.c,v 1.8 2020/02/16 15:52:49 christos Exp $
+@(#)$File: softmagic.c,v 1.315 2021/09/03 13:17:52 christos Exp $
+@(#)$File: ascmagic.c,v 1.109 2021/02/05 23:01:40 christos Exp $
+@(#)$File: is_csv.c,v 1.6 2020/08/09 16:43:36 christos Exp $
+@(#)$File: is_json.c,v 1.15 2020/06/07 19:05:47 christos Exp $
+@(#)$File: is_tar.c,v 1.44 2019/02/20 02:35:27 christos Exp $
+@(#)$File: readelf.c,v 1.178 2021/06/30 10:08:48 christos Exp $
+@(#)$File: der.c,v 1.21 2020/06/15 00:58:10 christos Exp $
+@(#)$File: cdf.c,v 1.120 2021/09/24 13:59:19 christos Exp $
+</code></pre>
+<p>版本是 file-5.41, 在 <a target="_blank" rel="noopener" href="https://sourceforge.net/projects/immortalwrt/files/sources/file-5.41.tar.gz/download">https://sourceforge.net/projects/immortalwrt/files/sources/file-5.41.tar.gz/download</a> 可以找到对应版本的源码</p>
+<p>对照函数，得到 main 函数的实现：</p>
+<pre><code class="c">  scanf(&quot;%100s&quot;, flag);
+  if ( strlen(flag) == 48 )
+  &#123;
+    magic_t m = magic_open(0);
+    magic_load_buffers(m, &amp;off_119B018, &amp;off_119B010, 1LL);
+    flag_len = strlen(flag);
+    message = magic_buffer(m, flag, flag_len);
+    puts(message);
+    magic_close(m);
+  &#125;
+  else
+  &#123;
+    puts(&quot;Try again.&quot;);
+  &#125;
+</code></pre>
+<p>阅读 libmagic 代码，还原 magic 结构</p>
+<p>size &#x3D; 0x116F9F8 正好整除 sizeof magic &#x3D; 376</p>
+<p>在 Congrats 作为 minetype（也就是正确反馈）之前的 value 正好连成 flag 的后 41 字节，猜测 flag 头 TPCTF{ 后是 Y 得到正确 flag</p>
+<pre><code class="python">data = open(&quot;magicfile_c970e3503feebf8274571f09d27cdd2f&quot;, &quot;rb&quot;).read()
+data = data[0x21004:][376:0x116f9f8]
+
+MAGIC = [
+  [2, &quot;cont_level&quot;],
+  [1, &quot;flag&quot;],
+  [1, &quot;factor&quot;],
+  
+  [1, &quot;reln&quot;],
+  [1, &quot;vallen&quot;],
+  [1, &quot;type&quot;],
+  [1, &quot;intype&quot;],
+  
+  [1, &quot;in_op&quot;],
+  [1, &quot;mask_op&quot;],
+  [1, &quot;cond&quot;],
+  [1, &quot;factor_op&quot;],
+  
+  [4, &quot;offset&quot;],
+  [4, &quot;in_offset&quot;],
+  [4, &quot;lineno&quot;],
+  [8, &quot;union&quot;],
+  
+  [64, &quot;value&quot;],
+  [64, &quot;desc&quot;],
+  [80, &quot;mimetype&quot;],
+  [8, &quot;apple&quot;],
+  [64, &quot;ext&quot;],
+  
+  [64, &quot;idk_whats_this&quot;],
+]
+
+flag = b&quot;&quot;
+
+for offset in range(48625):
+    c = data[376 * offset: 376 * (offset + 1)]
+    
+    print(&quot;===&quot;, offset)
+    cur = 0
+    for a, b in MAGIC:
+        d = c[cur:cur+a] if sum(c[cur:cur+a]) else b&quot;(null)&quot;
+        if b in [&quot;in_op&quot;, &quot;mask_op&quot;, &quot;type&quot;, &quot;vallen&quot;]: d = c[cur:cur+a][0]
+        if b in [&quot;cont_level&quot;, &quot;lineno&quot;, &quot;offset&quot;]: d = int.from_bytes(c[cur:cur+a], &quot;little&quot;)
+        if b in [&quot;value&quot;, &quot;mimetype&quot;]: d = d.rstrip(b&quot;\\x00&quot;)
+        if d == b&quot;(null)&quot;: d = d.decode()
+        print(str(b).ljust(16, &quot; &quot;), d)
+        cur += a
+        
+        if b == &quot;value&quot; and d != &quot;(null)&quot;: flag += d
+    print(&quot;\\n\\n&quot;)
+    assert cur == 376
+    
+    if b&quot;Congratulations&quot; in c: break
+
+print(flag[-48:])
+
+# TPCTF&#123;YoU_AR3_SO_5m@R7_TO_cRACk_Th1$_m@9iC_f1le&#125;
+</code></pre>
+<p>stonegame</p>
+<p>pyinstaller</p>
+<p><a target="_blank" rel="noopener" href="https://pyinstxtractor-web.netlify.app/">https://pyinstxtractor-web.netlify.app/</a> 解压</p>
+<p>然后用 pycdc&#x2F;pycdas 逆向（或者手动交互，根据程序的行为进行猜测）</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://idafchev.github.io/blog/Decompile_python/">https://idafchev.github.io/blog/Decompile_python/</a></p>
+<p>石子游戏</p>
+<p>有 7 堆，初始时石子数量在 1~100 中随机</p>
+<pre><code class="python">CYCLES = [[1, 2, 4, 5], [1, 3, 4, 6], [2, 4, 5, 7], [3, 4, 6, 7], [1, 2, 3, 7, 5, 6], [2, 4, 6, 7, 5], [3, 4, 5, 7, 6]]
+</code></pre>
+<p>每次可以取多个，不能形成 cycle</p>
+<p>无法操作的玩家输</p>
+<p>AI 使用了某种蒙特卡罗算法，在终局不是最优的</p>
+<p>一种策略是：</p>
+<ul>
+<li>第一轮取完 1 2 3</li>
+<li>AI 一般只是随便取一个</li>
+<li>第二轮取完 4 5 6 7</li>
+</ul>
+<p>这样两轮能获胜</p>
+<p>因为每局 sleep 2s 所以要耐心等待</p>
+<pre><code class="python">from pwn import *
+
+io = remote(&quot;1.95.128.179&quot;, 3675, level=&quot;debug&quot;)
+io.sendline(b&quot;&quot;)
+
+while True:
+    # io.recvuntil(b&quot;Current stone count:\\n&quot;, timeout=10)
+    a = []
+    for i in range(1, 8):
+        io.recvuntil(b&quot;Segment &quot;)
+        a.append(int(io.recvline().decode().strip().split()[1]))
+    
+    io.recvuntil(b&quot;Current player: &quot;)
+    player = io.recvline().decode().strip()
+    
+    if player.lower() == &quot;you&quot;:
+        io.recvline()
+        if &quot;Enter the number of stones&quot; in io.recvline().decode():
+            if any(a[:3]): b = a[:3] + [0, 0, 0, 0]
+            else: b = [0, 0, 0] + a[3:]
+            io.sendline(&quot; &quot;.join(map(str, b)).encode())
+
+# TPCTF&#123;M0nt3_C4rl0_S34rch_1s_4w3s0m3_f0r_g4m3s&#125;
+...
+    b&#39;You won this round!\\n&#39;
+    b&#39;Score after round 100: 100/100\\n&#39;
+    b&#39;\\n&#39;
+    b&#39;=== Challenge Complete ===\\n&#39;
+    b&#39;Final score: 100/100\\n&#39;
+    b&#39;\\n&#39;
+    b&quot;Congratulations! You&#39;ve beaten the AI enough times to earn the flag:\\n&quot;
+    b&#39;TPCTF&#123;M0nt3_C4rl0_S34rch_1s_4w3s0m3_f0r_g4m3s&#125;\\n&#39;
+</code></pre>
+<p>protable</p>
+<p><a target="_blank" rel="noopener" href="https://justine.lol/ape.html">https://justine.lol/ape.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jart/cosmopolitan">https://github.com/jart/cosmopolitan</a></p>
+<p>binwalk 提取特征字符串得到 APE 程序</p>
+<p>根据 repo 中的 specification 文档</p>
+<pre><code>APE MZ Magic
+- ASCII: `MZqFpD=&#39;`
+- Hex: 4d 5a 71 46 70 44 3d 27
+</code></pre>
+<p>查找 magic 在 portable 文件的位置，直接取 0x10000 开始的程序</p>
+<p>main 在 sub_407F30</p>
+<p>静态链接的 binary</p>
+<p>看上去是用 c++ string 处理</p>
+<p>校验：</p>
+<ul>
+<li>len(flag) &#x3D; 73</li>
+<li>flag[0…6] &#x3D; “TPCTF{”</li>
+<li>flag[72…73] &#x3D; “}”</li>
+<li>flag[i+6] xor key[i%12] &#x3D; enc[i] for i &#x3D; 0…65</li>
+</ul>
+<pre><code>enc: 34 2A 42 0E 00 1D 5C 33 5E 44 3E 1A 0B 5C 2C 3A 5F 22 03 28 36 1B 07 31 8D DE 10 A2 EB B2 DA A2 D8 18 0D 17 1C 1F BD D9 1D BF EB A2 D8 16 0D A0 F6 30 BD D8 17 BE DA 0F AB C1 AE EA 8D DE 11 01 A1 C5
+key: Cosmopolitan
+</code></pre>
+<p>xor 得到是 flag 的一半</p>
+<pre><code class="python">b&#39;wE1com3_70_tH3_W0RlD_of_\\xce\\xb1c\\xcf\\x84\\xc2\\xb5\\xce\\xb1lly_p\\xce\\xb4r\\xcf\\x84\\xce\\xb1bl\\xce\\xb5_\\xce\\xb5x\\xce\\xb5c\\xc2\\xb5\\xcf\\x84\\xce\\xb1bl\\xce\\xb5&#39;
+</code></pre>
+<p>在 linux 中运行，结果是 flag 正确?</p>
+<p>原来 flag 不全是 ascii…</p>
+<pre><code>TPCTF&#123;wE1com3_70_tH3_W0RlD_of_αcτµαlly_pδrταblε_εxεcµταblε&#125;
+</code></pre>
+<p>大概是 windows 也要逆向一遍?</p>
+<p>windows main 在 sub_4070BC(?)</p>
+<p>有一个虚拟机 (?)</p>
+<p>[已完成] elf → js</p>
+<p>[已完成] js → wasm</p>
+<p>[已完成] wasm → flag</p>
+<p>这是 wasm 文件：</p>
+<p><a href="attachment:ba0ddba0-afeb-4c15-bb07-cef31447779c:code.txt">code</a></p>
+<p>wasm 的字符串里有编译的命令，其中包含了参数的值：</p>
+<pre><code>-X &#39;main.encryptedFlag=5ab82be11ac991707e166bbfcbf05cb5776b0ecb34ce659e6209542fecba7ab6ec82f44c1ab55e4f4fb06b37ef935b08&#39;
+-X &#39;main.maskedKey=960937ed01e77d7662565988a67abbfe0a2c11742abd00d6cf74de094447f7d3&#39;
+-X &#39;main.maskedIV=a7ccfe57d2af1deb1a0088517c0a9240&#39;
+-X &#39;main.mask=5dabc0b2b7296eefeaadd177746adb4acb2439e7990792cc7fdb7124b1a2633d&#39;
+</code></pre>
+<p>根据程序内字符串（Error unmasking key&#x2F;IV）猜测 maskedKey &#x3D; Key xor mask, maskedIV &#x3D; IV xor mask，AES 解密得到 flag</p>
+<pre><code class="python">ct       = bytes.fromhex(&quot;5ab82be11ac991707e166bbfcbf05cb5776b0ecb34ce659e6209542fecba7ab6ec82f44c1ab55e4f4fb06b37ef935b08&quot;)
+mask_key = bytes.fromhex(&quot;960937ed01e77d7662565988a67abbfe0a2c11742abd00d6cf74de094447f7d3&quot;)
+mask_iv  = bytes.fromhex(&quot;a7ccfe57d2af1deb1a0088517c0a9240&quot;)
+mask     = bytes.fromhex(&quot;5dabc0b2b7296eefeaadd177746adb4acb2439e7990792cc7fdb7124b1a2633d&quot;)
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+def xor(x, y): return bytes([i ^ j for i, j in zip(x, y)])
+key = xor(mask_key, mask)
+iv = xor(mask_iv, mask)
+cipher = AES.new(key, AES.MODE_CBC, iv=iv)
+pt = unpad(cipher.decrypt(ct), AES.block_size)
+print(pt.decode())
+
+# TPCTF&#123;m47r3shk4_h4ppy_r3v3r53_g@_w45m&#125;
+</code></pre>
+<p>这题确实套娃……</p>
+<hr>
+<p>obfuscator</p>
+<p>这题用的是 d3n0l4nd （<a target="_blank" rel="noopener" href="https://github.com/denoland/deno%EF%BC%89%E5%B0%86">https://github.com/denoland/deno）将</a> javascript 包装成 elf</p>
+<p>在可执行文件末尾有 js 文件</p>
+<hr>
+<p>js 文件中有大量混淆，而且 deobfuscator 都去除不了……</p>
+<p>js 中间有一行 <code>import &#123;unzipSync as u&#125; from &quot;node:zlib&quot;;import &#123;Buffer as l&#125; from &quot;node:buffer&quot;;</code></p>
+<p>这一行前面的部分：</p>
+<pre><code class="jsx">let HbGI;!function()&#123;const Aevx=Array.prototype.slice.call(arguments);return eval(&quot;......&quot;)&#125;();
+</code></pre>
+<p>其中省略了一个 2 MB 的字符串，这个字符串 unquote 后去混淆，大致逻辑是</p>
+<pre><code class="jsx">(function Y4QD(HkYv) &#123;
+  const jS0v = Tr5t(HkYv, bIQv(Y4QD.toString()))
+  try &#123;
+    let DfTv = eval(jS0v)
+    return DfTv.apply(null, Aevx)
+  &#125; catch (fNVv) &#123;
+    // if   fNVv instanceof SyntaxError
+    // then console.log(&#39;Error: the code has been tampered!&#39;)
+    // else throw fNVv
+  &#125;
+  function bIQv(bKnw) &#123;
+    // returns 8-letter key from hash(bKnw)
+  &#125;
+  function Tr5t(vZ7t, Pm0t) &#123;
+    // returns decodeURI(vZ7t) xor Pm0t
+  &#125;
+&#125;)(&quot;......&quot;)
+</code></pre>
+<p>其中省略了一个 1 MB 的字符串，这个字符串 URI 解码后异或 key &#x3D; <code>ipgslcfa</code> （key 可以用明文攻击得到，因为 js 里有大量的函数定义）得到的是</p>
+<pre><code>(function() &#123;
+    function AYnQ() &#123;
+        return (IqhF()) + (QIKN())
+    &#125;
+
+    function UTeQ() &#123;
+        return cypN() + AUkK() + EjQI() + EHOF() + sqiD() + glTI()
+    &#125;
+
+    function wVhQ() &#123;
+        return (sqiD())[wtgN()]()
+    &#125;
+
+    function QQYP() &#123;
+        return (+!+[] + (++[+[]][+[]])) + (+[] + !+[])
+    &#125;
+    HbGI = &#123;&#125;;
+
+    function sSbQ() &#123;
+        return EjQI() + ceKC() + wVhQ() + ULQN()
+    &#125;
+
+    function smPQ() &#123;
+        gJRF = [];
+        const UnSQ = AUsA();
+        const ojJQ = MxyB();
+        const QkMQ = seBO();
+        const kgDQ = wFNB();
+        const MhGQ = MdDK();
+        var gdxQ = (196698 % 0o200026);
+        &#123;
+            let IeAQ;
+            while (gdxQ &lt; (196664 % 0o200011)) &#123;
+                switch (gdxQ) &#123;
+                    case (0x102D0 - 0o201270):
+                        gdxQ = (262208 % 0o200014);
+                        IeAQ = (0x75bcd15 - 0O726746425);
+                        break;
+                    case (262225 % 0o200017):
+                        gdxQ = (0O264353757 % 8);
+                        &#123;
+                            let kEBN = &quot;&quot;;
+                            const MFEN = QofD[IeAQ];
+                            var gBvN = (0o201510 - 0x1032C);
+                            &#123;
+                                let ICyN;
+                                while (gBvN &lt; (0x4009E % 0o200036)) &#123;
+                                    switch (gBvN) &#123;
+                                        case (0x10C4E - 0o206053):
+                                            gBvN = (0o1000247 % 0x10023);
+                                            &#123;
+                                                kEBN += UnSQ[ojJQ](MFEN[QkMQ](ICyN) ^ (0O264353757 % 8));
+                                            &#125;
+                                            break;
+                                        case (68056 - 0o204674):
+                                            gBvN = (0o1000301 % 0x10027);
+                                            ICyN = (0x21786 % 3);
+                                            break;
+                                        case (262319 % 0o200045):
+                                            gBvN = (0o201344 - 0x102BF);
+                                            ICyN++;
+                                            break;
+                                        case (0o600243 % 0x1002A):
+                                            gBvN = ICyN &lt; MFEN[kgDQ] ? (262319 % 0o200043) : (0o1000246 % 0x10020);
+                                            break;
+                                    &#125;
+                                &#125;
+                            &#125;
+                            gJRF[MhGQ](kEBN);
+                        &#125;
+                        break;
+                    case (0o1000104 % 65549):
+                        gdxQ = IeAQ &lt; QofD[kgDQ] ? (131113 % 0o200012) : (0o202652 - 66957);
+                        break;
+                    case (0O264353757 % 8):
+                        gdxQ = (0x40058 % 0o200022);
+                        IeAQ++;
+                        break;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    function cypN() &#123;
+        return (typeof([] + []))[+!+[] + !+[]]
+    &#125;
+
+    function EzsN() &#123;
+        return ((+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]]) * (orfJ())) + (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ])
+    &#125;
+
+    function YujN() &#123;
+        return (AILL())[kYoO()](AoYK())
+    &#125;
+
+    function AwmN() &#123;
+        return EbCG() + MVoI() + EvpH() + EjQI()
+    &#125;
+
+    function AQZN() &#123;
+        return oPdG() + kMXF() + kwnL() + wNTN()
+    &#125;
+    HbGI.t = ([null] == &#39;&#39;);
+
+    function cScO() &#123;
+        return ([][gViO()] + [])[cWnK()]
+    &#125;
+
+    function wNTN() &#123;
+        return (EvpH())[wtgN()]()
+    &#125;
+
+    function YOWN() &#123;
+        return (AQhE())[wtgN()]()
+    &#125;
+
+    function sKNN() &#123;
+        return cypN() + oPdG() + YiSE() + wNTN() + oPdG() + kMXF() + kwnL() + wNTN()
+    &#125;
+
+    function ULQN() &#123;
+        return (AUkK())[wtgN()]()
+    &#125;
+
+    function oHHN() &#123;
+        return function() &#123;&#125;;
+    &#125;
+
+    function QIKN() &#123;
+        return (UrdN()) + (sCHB())
+    &#125;
+    var QcyO = [(263359 % 0o200361), (86096 - 0o247517), (0x2935494a % 7), (0x20451009 % 9)];
+
+    function seBO() &#123;
+        return gtpB() + UbBI() + AUkK() + cypN() + kwnL() + sqiD() + EHOF() + AsjH() + ULQN() + cOZH() + wVpG()
+    &#125;
+
+    function MZrO() &#123;
+        return (++[+[]][+[]]) + ((QQYP()) * (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]]))
+    &#125;
+
+    function obvO() &#123;
+        return UXxC() + EHOF() + EDDJ() + wNTN()
+    &#125;
+
+    function IWlO() &#123;
+        return gZtK() + EHOF() + EHOF() + ofGK() + IaxK() + kAyH() + ETfO() + EDDJ()
+    &#125;
+
+    function kYoO() &#123;
+        return wVpG() + sqiD() + QoXM() + wVpG() + cypN() + MVoI() + EjQI() + EvpH()
+    &#125;
+
+    function ETfO() &#123;
+        return (IGJJ()) + []
+    &#125;
+
+    function gViO() &#123;
+        return AQhE() + MVoI() + EjQI() + EHOF()
+    &#125;
+    var gpWO = [(0o217620 - 0x11F2B), (0x3015A % 0o200121), (0o400345 % 65597), (0o216716 - 73057), (73446 - 0o217165)];
+
+    function IqZO(cmQO, EnTO, YiKO) &#123;
+        let AkNO = &quot;&quot;;
+        var UfEO = (0o205120 - 0x10A3A);
+        &#123;
+            let whHO;
+            YWkQ: while (UfEO &lt; (0x10E74 - 0o207117)) &#123;
+                switch (UfEO) &#123;
+                    case (0o400136 % 0x1001D):
+                        UfEO = (0o400124 % 65561);
+                        &#123;
+                            var YGIL = (262237 % 0o200017);
+                            while (YGIL &lt; (131179 % 0o200043)) switch (YGIL) &#123;
+                                case (66616 - 0o202024):
+                                    YGIL = (0x20075 % 0o200050);
+                                    break YWkQ;
+                                case (0o400075 % 0x1000E):
+                                    YGIL = whHO &gt;= cmQO.length ? (0x400B4 % 0o200044) : (0x1073A - 0o203425);
+                                    break;
+                            &#125;
+                            AkNO += cmQO[whHO];
+                        &#125;
+                        break;
+                    case (0o600074 % 0x10009):
+                        UfEO = whHO &lt; EnTO + (YiKO === undefined ? cmQO.length : YiKO) ? (196737 % 0o200037) : (0x11158 - 0o210463);
+                        break;
+                    case (0o205240 - 68222):
+                        UfEO = (0x3005D % 0o200024);
+                        whHO++;
+                        break;
+                    case (0o205120 - 68154):
+                        UfEO = (0x107BC - 0o203633);
+                        whHO = EnTO;
+                        break;
+                &#125;
+            &#125;
+        &#125;
+        return AkNO;
+    &#125;
+
+    function AILL() &#123;
+        return ((+[] + !+[] + (++[+[]][+[] + []])) * (wlSK())) + (+[] + !+[])
+    &#125;
+
+    function UDCL(wFFL) &#123;
+        return gJRF[wFFL];
+    &#125;
+
+    function QAwL() &#123;
+        return (+!+[] + !+[]) + (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+[]]
+        ])
+    &#125;
+
+    function sCzL() &#123;
+        return YmdB() + YGQB() + AsjH() + EjQI() + wVpG() + QoXM() + wVpG() + sqiD() + cypN() + AUkK() + EvpH() + AsjH()
+    &#125;
+
+    function MxqL() &#123;
+        return (YCFF())[kYoO()](MlZC())
+    &#125;
+
+    function oztL() &#123;
+        return &#39;\\u0055&#39;
+    &#125;
+    let oTgM;
+
+    function QUjM() &#123;
+        return gZtK() + EHOF() + EHOF() + ofGK()
+    &#125;
+
+    function kQaM() &#123;
+        return glTI() + MVoI() + EjQI()
+    &#125;
+
+    function MRdM() &#123;
+        return (EjQI())[wtgN()]()
+    &#125;
+
+    function gNUL() &#123;
+        return (&#39;&#39; [koZI()]())[ErmB()]
+    &#125;
+
+    function IOXL() &#123;
+        return YGQB() + EbCG() + cypN() + ULQN()
+    &#125;
+
+    function cKOL() &#123;
+        return (QQYP()) + (AILL())
+    &#125;
+
+    function ELRL() &#123;
+        return EreL() + kMXF() + cqjB() + EDDJ()
+    &#125;
+    HbGI[(UXpM()) + (MBBH())] = function(EfFM, ghIM, AczM) &#123;
+        var ceCM = (262229 % 0o200020);
+        while (ceCM &lt; (0o206534 - 68918)) switch (ceCM) &#123;
+            case (0x9D8DE4 - 0O47306735):
+                ceCM = (0o1000222 % 0x1001B);
+                &#123;
+                    return QcyO[IWlO()]()[UzzF()][ghIM];
+                &#125;
+                break;
+            case (0o1000131 % 0x10011):
+                ceCM = EfFM === (+[
+                    [+[
+                        [+[]] + [+[]]
+                    ] + []][+[]][+!+[]]
+                ]) ? (0x9D8DE4 - 0O47306735) : (0x1076C - 0o203506);
+                break;
+        &#125;
+        EfFM = sqaN()[ETnE()][kQaM()](EfFM, kUlI());
+        const wZsM = IqhF() + sqaN()[ETnE()][ICGD()](EfFM / (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]]) - (MpcJ()), EfFM) - QIKN();
+        var YawM = (0o203004 - 67054);
+        while (YawM &lt; (69976 - 0o210463)) switch (YawM) &#123;
+            case (0x30045 % 0o200014):
+                YawM = (0x20073 % 0o200047);
+                &#123;
+                    var sWmM = (0o1000265 % 65572);
+                    while (sWmM &lt; (0o600175 % 0x1001D)) switch (sWmM) &#123;
+                        case (0o204254 - 0x10887):
+                            sWmM = AczM ? (0x1015E - 0o200473) : (0x102F8 - 0o201322);
+                            break;
+                        case (0o600214 % 0x10023):
+                            sWmM = (262306 % 0o200037);
+                            &#123;
+                                AczM();
+                                return QcyO[(QUjM()) + (EXyA())]()[kgLG()](EfFM, ghIM);
+                            &#125;
+                            break;
+                    &#125;
+                &#125;
+                break;
+            case (0x2003E % 0o200024):
+                YawM = EfFM + (QAwL()) &lt; (+[]) ? (0o201224 - 0x10273) : (0o600221 % 65572);
+                break;
+        &#125;
+        return gpWO[kgLG()](wZsM, ghIM, AczM);
+    &#125;;
+
+    function UXpM() &#123;
+        return ojRG() + IeIG() + oztL() + wNTN()
+    &#125;
+
+    function UrdN() &#123;
+        return (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[]]) * (+[
+            [+[
+                [+![] + !+[]] + [+[]]
+            ] + []][+[]][+[]]
+        ]) + (++[+[]][+[]] + (++[+[]][+[]]))
+    &#125;
+
+    function wtgN() &#123;
+        return wVpG() + sqiD() + oztL() + QEHH() + QEHH() + AsjH() + cypN() + kwnL() + AUkK() + EbCG() + AsjH()
+    &#125;
+
+    function QoXM() &#123;
+        return (EbCG())[wtgN()]()
+    &#125;
+
+    function sqaN() &#123;
+        var MlRM = (0o600127 % 65555);
+        while (MlRM &lt; (262347 % 0o200053)) switch (MlRM) &#123;
+            case (0o205670 - 68506):
+                MlRM = !oTgM ? (73639709 % 9) : (0x20075 % 0o200053);
+                break;
+            case (0O3153050563 - 0x19AC516B):
+                MlRM = (0x1026C - 0o201115);
+                &#123;
+                    const onUM = oTgM = Function(cWvA(IukL(), MNaG(), AILL(), UHNH()))();
+                    oncD();
+                    let IiLM = onUM[gNcC() + sCzL()];
+                    var kkOM = (0x30039 % 0o200010);
+                    while (kkOM &lt; (0x400D9 % 0o200055)) switch (kkOM) &#123;
+                        case (0o204160 - 67660):
+                            kkOM = (0o600246 % 0x1002B);
+                            &#123;
+                                oTgM[MZzE()] = onUM[EfNC() + UnaH()];
+                                onUM[smXG()] = oHHN;
+                            &#125;
+                            break;
+                        case (0x30039 % 0o200010):
+                            kkOM = !IiLM ? (0o1000264 % 0x10024) : (0o400171 % 0x1002A);
+                            break;
+                    &#125;
+                &#125;
+                break;
+        &#125;
+        return oTgM;
+    &#125;
+
+    function MJPJ() &#123;
+        return cypN() + EreL() + kwnL() + YmdB() + oPdG() + EnbF() + MFMD() + YmdB()
+    &#125;
+
+    function oLSJ() &#123;
+        return AQhE() + YmdB() + EreL() + EDDJ()
+    &#125;
+    HbGI[kkWC()] = (wlSK()) - sCHB();
+
+    function IGJJ() &#123;
+        return (++[+[]][+[]]) + (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]]) + (+!+[] + (++[+[]][+[]]))
+    &#125;
+
+    function kIMJ() &#123;
+        return IaxK() + MVoI() + EjQI() + EHOF()
+    &#125;
+
+    function EDDJ() &#123;
+        return ([][IusB()]() + [])[cWnK()]
+    &#125;
+
+    function gFGJ(AAxJ) &#123;
+        return gJRF[AAxJ];
+    &#125;
+
+    function cCAJ() &#123;
+        return EjQI() + wNTN() + YOWN() + wNTN()
+    &#125;
+
+    function cWnK() &#123;
+        return (++[+[]][+[]] + (++[+[]][+[]])) + (QIKN())
+    &#125;
+
+    function EXqK() &#123;
+        return AQhE() + wNTN() + AUkK() + ofGK()
+    &#125;
+    let YShK = MZrO() + (sqaN() ? +[] : +[] + !+[] + (++[+[]][+[] + []]));
+
+    function AUkK() &#123;
+        return (![] + [])[+!+[]]
+    &#125;
+
+    function UPbK() &#123;
+        return ((QIKN()) * (cumH())) + (QQYP())
+    &#125;
+
+    function wReK() &#123;
+        return (MpcJ()) + (MZrO())
+    &#125;
+
+    function QMVJ() &#123;
+        return (+!+[]) + ((wReK()) * (QAwL()))
+    &#125;
+
+    function sOYJ() &#123;
+        return ((wReK()) * (++[+[]][+[]] + (++[+[]][+[]]))) + (++[+[]][+[]] + (++[+[]][+[]]) - +!+[])
+    &#125;
+
+    function siMK() &#123;
+        return EjQI() + sqiD() + YqgH()
+    &#125;
+
+    function UjPK() &#123;
+        return ((+[] + !+[] + (++[+[]][+[] + []])) * (QsiJ())) + (+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ])
+    &#125;
+    QcyO[IWlO()]()[(kYwE()) + (wdEI())] = function() &#123;
+        YShK = (YShK + (0O57060516 - 0xbc614d)) % (AwuD());
+        return HbGI.nGFGP5zE[YShK] &gt; (QIKN());
+    &#125;;
+
+    function ofGK() &#123;
+        return (YujN())[wtgN()]()
+    &#125;
+
+    function QgJK() &#123;
+        return this[(oLSJ()) + (EXqK())];
+    &#125;
+
+    function kcAK() &#123;
+        return (MhOG())[wtgN()]()
+    &#125;
+
+    function MdDK() &#123;
+        return QEHH() + MFMD() + EbCG() + UbBI()
+    &#125;
+
+    function gZtK() &#123;
+        return (UbBI())[wtgN()]()
+    &#125;
+
+    function IaxK() &#123;
+        return (typeof ![])[+[]]
+    &#125;
+
+    function IukL() &#123;
+        return YqgH() + YqgH() + gpeF() + EnbF() + ISiI() + QYuI() + MRdM() + YeHI() + ciNI() + YaEC() + ofGK() + wVpG() + MFMD() + AsjH() + cypN() + AQhE() + QYuI() + cScO() + IiTC() + MhOG() + EbCG() + QEHH() + gNUL() + EjQI() + wVpG() + UXxC() + MVoI() + cypN() + QoXM() + QoXM() + YOWN() + oPdG() + oPdG() + YGQB() + UbBI() + kskF() + gNUL()
+    &#125;
+    QcyO[(QUjM()) + (EXyA())]()[sKNN()] = (IqhF()) - MZrO();
+
+    function kwnL() &#123;
+        return &#39;\\u0043&#39;
+    &#125;
+
+    function EreL() &#123;
+        return (EHOF())[wtgN()]()
+    &#125;
+
+    function gthL() &#123;
+        return AQhE() + MVoI() + AEIF() + kwnL()
+    &#125;
+
+    function AoYK() &#123;
+        return (+[]) + ((+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]]) * (oDEH()))
+    &#125;
+
+    function cqbL() &#123;
+        return ojRG() + MhOG() + YqgH() + ULQN()
+    &#125;
+
+    function wlSK() &#123;
+        return (+!+[]) + ((++[+[]][+[]] + (++[+[]][+[]])) * (UrdN()))
+    &#125;
+
+    function YmVK(AMWH) &#123;
+        return gJRF[AMWH];
+    &#125;
+    wBCF();
+
+    function cOZH() &#123;
+        const wJQH = sqaN()[gBDD()];
+        return wJQH ? (wJQH + [])[wpdH % QsiJ()] : IqZO(wJQH + [], AILL());
+    &#125;
+
+    function YKTH() &#123;
+        return AQhE() + AUkK() + YmdB() + ULQN()
+    &#125;
+
+    function sGKH() &#123;
+        return kcAK() + QQgG() + EnbF() + ULQN()
+    &#125;
+
+    function UHNH() &#123;
+        return (QQYP()) + (sOYJ())
+    &#125;
+
+    function oDEH() &#123;
+        return ((QQYP()) * (MpcJ())) + (+[])
+    &#125;
+
+    function QEHH() &#123;
+        return &#39;\\u0070&#39;
+    &#125;
+
+    function QYuI() &#123;
+        return (wlSK()) + []
+    &#125;
+    let sayI;
+
+    function MVoI() &#123;
+        return (typeof([] + []))[+!+[] + !+[] + !+[]]
+    &#125;
+
+    function oXrI() &#123;
+        return UXxC() + ETfO() + ojRG() + YmdB()
+    &#125;
+
+    function ISiI() &#123;
+        return (((+!+[]) / (++[+[]][+[]] + (++[+[]][+[]]))) + [])[+!+[]]
+    &#125;
+
+    function kUlI() &#123;
+        return (++[+[]][+[]]) + ((+!+[] + (++[+[]][+[]])) * (sCHB()))
+    &#125;
+
+    function EPcI() &#123;
+        return EreL() + AUkK() + wVpG() + AsjH()
+    &#125;
+
+    function gRfI() &#123;
+        return kcAK() + YGQB() + EnbF() + EDDJ()
+    &#125;
+
+    function glTI() &#123;
+        return (cKOL())[kYoO()](AoYK())
+    &#125;
+    let ImWI = &#123;
+        [kUlI()]: AoYK() &lt; AYvG(),
+        [UjPK()]: kwvB() &gt; UHNH(),
+        [YCFF()]: oHPD() &lt; ghQC(),
+        [wxrJ()]: AgKI() &lt; AILL(),
+        [AoYK()]: ErmB() &lt; wReK(),
+        [QMVJ()]: AoYK() &gt; ovqF()
+    &#125;;
+
+    function ciNI() &#123;
+        return (wVpG())[wtgN()]()
+    &#125;
+
+    function EjQI() &#123;
+        return ([][
+            []
+        ] + [])[+[] + !+[]]
+    &#125;
+
+    function YeHI() &#123;
+        return (MxqL())[wtgN()]()
+    &#125;
+
+    function AgKI() &#123;
+        return (++[+[]][+[]] + (++[+[]][+[]]) - +!+[]) + ((+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[]]) * (cWnK()))
+    &#125;
+
+    function UbBI() &#123;
+        return (kUlI())[kYoO()](oHPD())
+    &#125;
+
+    function wdEI() &#123;
+        return oPdG() + EnbF() + MFMD() + YmdB()
+    &#125;
+
+    function wxrJ() &#123;
+        return ((QQYP()) * (QsiJ())) + (+!+[] + !+[])
+    &#125;
+    HbGI.u = (function(YyuJ) &#123;
+        var sulJ = (66976 - 0o202574);
+        while (sulJ &lt; (131187 % 0o200047)) switch (sulJ) &#123;
+            case (0x30075 % 0o200033):
+                sulJ = !sayI ? (67236 - 0o203202) : (0x11158 - 0o210463);
+                break;
+            case (65876 - 0o200462):
+                sulJ = (0x20079 % 0o200052);
+                &#123;
+                    (function(UvoJ) &#123;
+                        sayI = UvoJ;
+                    &#125;)(ImWI)
+                &#125;
+                break;
+        &#125;
+        return sayI[YyuJ] ^ (gpWO.nGFGP5zE[YShK] &lt; (QIKN()));
+    &#125;);
+
+    function orfJ() &#123;
+        return (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]]) + ((MpcJ()) * (gdFG()))
+    &#125;
+
+    function QsiJ() &#123;
+        return ((++[+[]][+[]] + (++[+[]][+[]])) * (gxsH())) + (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ])
+    &#125;
+
+    function koZI() &#123;
+        return AQhE() + sqiD() + EjQI() + wVpG() + gtpB() + sqiD() + cyxD() + sqiD() + cypN()
+    &#125;
+
+    function MpcJ() &#123;
+        return (QAwL()) + (QQYP())
+    &#125;
+
+    function oPdG() &#123;
+        return (cyxD())[wtgN()]()
+    &#125;
+
+    function QQgG() &#123;
+        return (+[] + !+[]) + []
+    &#125;
+
+    function kMXF() &#123;
+        return (sCHB()) + []
+    &#125;
+
+    function MNaG() &#123;
+        return (+!+[] + !+[]) + (IWtE())
+    &#125;
+    let gJRF;
+
+    function IKUF(cGLF) &#123;
+        return gJRF[cGLF];
+    &#125;
+
+    function EHOF() &#123;
+        return ([][
+            []
+        ] + [])[++[++[
+            []
+        ][+[]]][+[]]]
+    &#125;
+
+    function EbCG() &#123;
+        return (![] + [])[+!+[] + !+[] + !+[]]
+    &#125;
+
+    function gdFG() &#123;
+        return (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]) + ((QQYP()) * (MZrO()))
+    &#125;
+
+    function AYvG() &#123;
+        return ((MpcJ()) * (sCHB())) + (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ])
+    &#125;
+
+    function cazG() &#123;
+        return EjQI() + wNTN() + YOWN() + wNTN() + UXxC() + ETfO() + ojRG() + YmdB()
+    &#125;
+
+    function wVpG() &#123;
+        return (typeof([] + []))[+!+[]]
+    &#125;
+    HbGI[gthL()] = YmVK;
+
+    function YWsG() &#123;
+        return MFMD() + EjQI() + ceKC() + EjQI() + sqiD() + YqgH() + EjQI()
+    &#125;
+
+    function sSjG(UTmG) &#123;
+        return gJRF[UTmG];
+    &#125;
+
+    function UnaH() &#123;
+        return EjQI() + EbCG() + sqiD() + cyxD() + AsjH()
+    &#125;
+
+    function wpdH() &#123;
+        return sqaN()[EPcI()][siMK()]();
+    &#125;
+
+    function QkUG() &#123;
+        return (cypN())[wtgN()]()
+    &#125;
+
+    function smXG() &#123;
+        return ULQN() + IaxK() + sqiD() + cypN() + wVpG() + QoXM() + MVoI() + EvpH() + EjQI() + AUkK() + cyxD() + QkUG() + AsjH() + EjQI() + EHOF() + AsjH() + cypN() + AsjH() + cypN()
+    &#125;
+
+    function MhOG() &#123;
+        return (QcGE())[kYoO()](cSkE())
+    &#125;
+    HbGI[AcHC()] = wZAC;
+
+    function ojRG() &#123;
+        return (IWtE())[kYoO()](AoYK())
+    &#125;
+
+    function IeIG() &#123;
+        return (YGQB())[wtgN()]()
+    &#125;
+
+    function kgLG() &#123;
+        return ojRG() + IeIG() + oztL() + wNTN() + ciNI() + MVoI() + MRdM() + wNTN()
+    &#125;
+
+    function kAyH() &#123;
+        return (IaxK())[wtgN()]()
+    &#125;
+
+    function MBBH() &#123;
+        return ciNI() + MVoI() + MRdM() + wNTN()
+    &#125;
+
+    function gxsH() &#123;
+        return (+[
+            [+[
+                [+![] + !+[]] + [+[]]
+            ] + []][+[]][+[]]
+        ]) + (+[] + !+[] + (++[+[]][+[] + []])) + (+!+[] + !+[])
+    &#125;
+
+    function IyvH() &#123;
+        return (+(((+!+[]) + []) + ((!![] + [])[+!+[] + !+[] + !+[]]) + (+!+[]) + (+[]) + (+[]) + (+[])) + [])[+!+[] + !+[] + !+[] + !+[] + !+[] + !+[] + !+[]]
+    &#125;
+    HbGI[YKTH()] = AogB;
+
+    function cumH() &#123;
+        return (++[+[]][+[]] + (++[+[]][+[]])) * (+[
+            [+[
+                [+![] + !+[]] + [+[]]
+            ] + []][+[]][+[]]
+        ]) + (+[] + !+[] + (++[+[]][+[] + []]))
+    &#125;
+
+    function EvpH() &#123;
+        return (typeof([] + []))[+!+[] + !+[] + !+[] + !+[] + !+[]]
+    &#125;
+
+    function YqgH() &#123;
+        return (wxrJ())[kYoO()](QcGE())
+    &#125;
+
+    function AsjH() &#123;
+        return ([][
+            []
+        ] + [])[+!+[] + !+[] + !+[]]
+    &#125;
+
+    function cSkE() &#123;
+        return (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[]]) + (wxrJ())
+    &#125;
+
+    function ETnE() &#123;
+        return AEIF() + AUkK() + wVpG() + UbBI()
+    &#125;
+
+    function YOeE() &#123;
+        HbGI[AkVE()] = sqaN()[gBDD()];
+        sqaN()[EfNC() + UnaH()] = HbGI[YWsG()];
+    &#125;
+    HbGI[UrlD()] = UDCL;
+
+    function AQhE() &#123;
+        return ([][
+            []
+        ] + [])[+!+[] + !+[] + !+[] + !+[]]
+    &#125;
+
+    function ULYD(wNbE, QISD) &#123;
+        let sKVD = - ++[+[]][+[]];
+        var seJE = (0o201224 - 66163);
+        &#123;
+            let UfME;
+            while (seJE &lt; (0o205036 - 68089)) &#123;
+                switch (seJE) &#123;
+                    case (131145 % 0o200024):
+                        seJE = (0o204160 - 67660);
+                        UfME = +[
+                            [+[
+                                [+!+[]] + [+[]]
+                            ] + []][+[]][+!+[]]
+                        ];
+                        break;
+                    case (67856 - 0o204363):
+                        seJE = (0o202070 - 0x10414);
+                        UfME++;
+                        break;
+                    case (0x10BF4 - 0o205722):
+                        seJE = (0o400057 % 65545);
+                        &#123;
+                            var obDE = (0o201510 - 0x10333);
+                            while (obDE &lt; (0x4007E % 0o200026)) switch (obDE) &#123;
+                                case (0x9D8DE4 - 0O47306735):
+                                    obDE = (0x10A64 - 0o205076);
+                                    return UfME;
+                                case (68056 - 0o204703):
+                                    obDE = wNbE[UfME] === QISD[+[
+                                        [+[
+                                            [+[]] + [+[]]
+                                        ] + []][+[]][+!+[]]
+                                    ]] ? (0O144657447 ^ 0x1935F20) : (0o400114 % 0x10013);
+                                    break;
+                            &#125;
+                        &#125;
+                        break;
+                    case (0x105A0 - 0o202574):
+                        seJE = UfME &lt; wNbE.length ? (0x40092 % 0o200034) : (67386 - 0o203425);
+                        break;
+                &#125;
+            &#125;
+        &#125;
+        return sKVD;
+    &#125;
+
+    function QcGE() &#123;
+        return (+[] + !+[]) + ((++[+[]][+[]] + (++[+[]][+[]])) * (cmYE()))
+    &#125;
+
+    function kYwE() &#123;
+        return cypN() + EreL() + kwnL() + YmdB()
+    &#125;
+
+    function MZzE() &#123;
+        return YqgH() + AsjH() + IaxK() + ceKC() + MVoI() + wVpG() + YmdB() + YGQB() + AsjH() + EjQI() + wVpG() + QoXM() + wVpG() + sqiD() + cypN() + AUkK() + EvpH() + AsjH()
+    &#125;
+
+    function gVqE() &#123;
+        sqaN()[gBDD()] = HbGI[AkVE()];
+    &#125;
+
+    function IWtE() &#123;
+        return (QQYP()) + ((cumH()) * (sCHB()))
+    &#125;
+    HbGI[cqbL()] = kEJD;
+
+    function IqhF() &#123;
+        return (+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[]]) + ((QQYP()) * (QQYP()))
+    &#125;
+
+    function kskF() &#123;
+        return ([][gViO()] + [])[wReK()]
+    &#125;
+
+    function EnbF() &#123;
+        return (+[
+            [+[
+                [+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ]) + []
+    &#125;
+
+    function gpeF() &#123;
+        return (&#39;&#39; [koZI()]())[AYnQ()]
+    &#125;
+
+    function AkVE() &#123;
+        return gtpB() + UbBI()
+    &#125;
+
+    function cmYE() &#123;
+        return ((+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[]]) * (sCHB())) + (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ])
+    &#125;
+
+    function whPE() &#123;
+        return YGQB() + YeHI() + UXxC() + wNTN()
+    &#125;
+    HbGI[IOXL()] = gFGJ;
+
+    function YiSE() &#123;
+        return (ceKC())[wtgN()]()
+    &#125;
+
+    function YCFF() &#123;
+        return ((+([+[
+            [!+[] + !+[]] + [+[]]
+        ]] + [])[+[]]) * (wReK())) + (+[
+            [+[
+                [+!+[]] + [+[]]
+            ] + []][+[]][+!+[]]
+        ])
+    &#125;
+
+    function AEIF() &#123;
+        return (glTI())[wtgN()]()
+    &#125;
+
+    function UzzF() &#123;
+        return EreL() + kMXF() + cqjB() + EDDJ() + kcAK() + YGQB() + EnbF() + EDDJ()
+    &#125;
+
+    function wBCF() &#123;
+        QcyO[IWlO()]()[(cCAJ()) + (oXrI())] = [];
+        var QwtF = (0o200764 - 0x101EA);
+        &#123;
+            let sywF;
+            while (QwtF &lt; (68536 - 0o205637)) &#123;
+                switch (QwtF) &#123;
+                    case (0o1000151 % 0x10017):
+                        QwtF = (0x10226 - 0o201033);
+                        sywF++;
+                        break;
+                    case (0o202114 - 66625):
+                        QwtF = sywF &lt; EzsN() ? (0o202520 - 0x1053F) : (67286 - 0o203275);
+                        break;
+                    case (0x102A8 - 0o201227):
+                        QwtF = (0o400057 % 65553);
+                        &#123;
+                            const MtnF = sqaN()[ETnE()][kQaM()](HbGI[(whPE()) + (obvO())], QcyO[(QUjM()) + (EXyA())]()[(YurD()) + (AQZN())]) || (QAwL());
+                            QcyO[IWlO()]()[cazG()][MdDK()](sqaN()[ETnE()][AwmN()](MtnF) * sqaN()[ETnE()][cKWB()](sqaN()[ETnE()][UTeQ()]() * (EzsN()) + (++[+[]][+[]] + (++[+[]][+[]]) - +!+[])) + (QIKN()));
+                        &#125;
+                        break;
+                    case (196681 % 0o200025):
+                        QwtF = (0x103DE - 0o201723);
+                        sywF = +[
+                            [+[
+                                [+[]] + [+[]]
+                            ] + []][+[]][+[]]
+                        ];
+                        break;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    function ovqF() &#123;
+        return ((wReK()) * (UrdN())) + (+[])
+    &#125;
+
+    function QUrC(sWuC, MRlC) &#123;
+        let oToC = &quot;&quot;;
+        var IOfC = (0o201774 - 0x103EB);
+        &#123;
+            let kQiC;
+            while (IOfC &lt; (0o201750 - 0x103CF)) &#123;
+                switch (IOfC) &#123;
+                    case (0o400073 % 65559):
+                        IOfC = kQiC &gt;= +[
+                            [+[
+                                [+[]] + [+[]]
+                            ] + []][+[]][+[]]
+                        ] ? (0x100F0 - 0o200330) : (0x20049 % 0o200030);
+                        break;
+                    case (0x3006B % 0o200036):
+                        IOfC = (66576 - 0o202003);
+                        kQiC = sWuC - (++[+[]][+[]]);
+                        break;
+                    case (0o1000054 % 0x10007):
+                        IOfC = (0o200606 - 0x10179);
+                        kQiC--;
+                        break;
+                    case (0x40070 % 0o200026):
+                        IOfC = (0o600100 % 65552);
+                        &#123;
+                            oToC += MRlC;
+                        &#125;
+                        break;
+                &#125;
+            &#125;
+        &#125;
+        return oToC;
+    &#125;
+    HbGI[sGKH()] = sSjG;
+
+    function ELZB() &#123;
+        return AQhE() + YmdB() + EreL() + EDDJ() + AQhE() + wNTN() + AUkK() + ofGK()
+    &#125;
+
+    function gNcC() &#123;
+        return YqgH() + AsjH() + IaxK() + ceKC() + MVoI() + wVpG()
+    &#125;
+
+    function ghQC() &#123;
+        return (+!+[] + (++[+[]][+[]])) + (UPbK())
+    &#125;
+
+    function IiTC() &#123;
+        return ([][gViO()] + [])[sCHB()]
+    &#125;
+
+    function ceKC() &#123;
+        return (UjPK())[kYoO()](gdFG())
+    &#125;
+
+    function EfNC() &#123;
+        return gtpB() + sqiD()
+    &#125;
+
+    function YaEC() &#123;
+        return (&#39;&#39; [koZI()]())[+[]]
+    &#125;
+    HbGI[sSbQ()] = IKUF;
+
+    function AcHC() &#123;
+        return IaxK() + EHOF() + gZtK() + kwnL()
+    &#125;
+
+    function UXxC() &#123;
+        return (QEHH())[wtgN()]()
+    &#125;
+
+    function wZAC(wtoD) &#123;
+        return gJRF[wtoD];
+    &#125;
+
+    function YurD() &#123;
+        return cypN() + oPdG() + YiSE() + wNTN()
+    &#125;
+
+    function sqiD() &#123;
+        return (typeof [])[+[]]
+    &#125;
+
+    function UrlD() &#123;
+        return IaxK() + ETfO() + IyvH() + ULQN()
+    &#125;
+
+    function oncD() &#123;
+        QcyO[ELZB()] = HbGI;
+        QcyO[IWlO()] = QgJK[kIMJ()](QcyO);
+        gpWO = QcyO[(QUjM()) + (EXyA())]();
+        gpWO[(ELRL()) + (gRfI())] = [];
+    &#125;
+
+    let QofD = [ ...... ];
+
+    function kkWC() &#123;
+        return YGQB() + YeHI() + UXxC() + wNTN() + UXxC() + EHOF() + EDDJ() + wNTN()
+    &#125;
+
+    function MlZC() &#123;
+        return (QQYP()) + ((IGJJ()) * (gxsH()))
+    &#125;
+
+    function MFMD() &#123;
+        return ([][
+            []
+        ] + [])[+[]]
+    &#125;
+
+    function oHPD() &#123;
+        return (MpcJ()) + (ErmB())
+    &#125;
+
+    function ICGD() &#123;
+        return glTI() + AUkK() + MhOG()
+    &#125;
+
+    function kEJD(EzAD) &#123;
+        return gJRF[EzAD];
+    &#125;
+
+    function gBDD() &#123;
+        return gtpB() + sqiD() + EjQI() + EbCG() + sqiD() + cyxD() + AsjH()
+    &#125;
+    YOeE();
+
+    function AwuD() &#123;
+        return (cumH()) + ((MpcJ()) * (cmYE()))
+    &#125;
+
+    function cyxD() &#123;
+        return (![] + [])[+!+[] + !+[]]
+    &#125;
+
+    function EXyA() &#123;
+        return IaxK() + kAyH() + ETfO() + EDDJ()
+    &#125;
+
+    function gZBA() &#123;
+        return QoXM() + wVpG() + cypN() + MVoI() + EjQI() + EvpH()
+    &#125;
+
+    function AUsA() &#123;
+        return sqaN()[gZBA()];
+    &#125;
+
+    function cWvA(wRmA, YSpA, sOgA, UPjA) &#123;
+        const UjXA = IqZO(wRmA, wRmA.length - (++[+[]][+[]] + (++[+[]][+[]]) - +!+[]));
+        let wlaB = QUrC(YSpA - (+!+[]), UjXA);
+        let QgRA = UPjA;
+        var siUA = (0x10E9C - 0o207172);
+        &#123;
+            let MdLA;
+            while (siUA &lt; (131165 % 0o200035)) &#123;
+                switch (siUA) &#123;
+                    case (0o1000124 % 65549):
+                        siUA = (0o201604 - 66427);
+                        &#123;
+                            const ofOA = wRmA[MdLA];
+                            wlaB = IqZO(wlaB, +[
+                                [+[
+                                    [+!+[]] + [+[]]
+                                ] + []][+[]][+!+[]]
+                            ], QgRA - (+[] + !+[])) + ofOA + IqZO(wlaB, QgRA);
+                            QgRA = (QgRA * sOgA) % YSpA;
+                        &#125;
+                        break;
+                    case (0o203314 - 0x106AF):
+                        siUA = MdLA &lt; YSpA - (+[
+                            [+[
+                                [+![] + !+[]] + [+[]]
+                            ] + []][+[]][+[]]
+                        ]) ? (196685 % 0o200017) : (0o202032 - 66551);
+                        break;
+                    case (0o207234 - 69242):
+                        siUA = (0x10122 - 0o200405);
+                        MdLA = +[
+                            [+[
+                                [!+[] + !+[]] + [+[]]
+                            ] + []][+[]][+!+[]]
+                        ];
+                        break;
+                    case (0o600077 % 0x10012):
+                        siUA = (0o202652 - 0x1058D);
+                        MdLA++;
+                        break;
+                &#125;
+            &#125;
+        &#125;
+        const IaFA = ULYD(wlaB, UjXA);
+        var kcIA = (0x105DC - 0o202715);
+        while (kcIA &lt; (0x103A2 - 0o201603)) switch (kcIA) &#123;
+            case (0o1000102 % 0x1000C):
+                kcIA = (0o1000247 % 65570);
+                &#123;
+                    wlaB = IqZO(wlaB, +[
+                        [+[
+                            [!+[] + !+[]] + [+[]]
+                        ] + []][+[]][+!+[]]
+                    ], IaFA);
+                &#125;
+                break;
+            case (66886 - 0o202467):
+                kcIA = IaFA &gt;= +[
+                    [+[
+                        [+[]] + [+[]]
+                    ] + []][+[]][+[]]
+                ] ? (0o1000066 % 65545) : (262311 % 0o200042);
+                break;
+        &#125;
+        return wlaB;
+    &#125;
+
+    function kwvB() &#123;
+        return ((QAwL()) * (QIKN())) + (+!+[] + (++[+[]][+[]]))
+    &#125;
+    smPQ();
+
+    function MxyB() &#123;
+        return AQhE() + cypN() + sqiD() + glTI() + kwnL() + UbBI() + AUkK() + cOZH() + cypN() + kwnL() + sqiD() + EHOF() + AsjH()
+    &#125;
+
+    function gtpB() &#123;
+        return ([][gViO()] + [])[+!+[] + !+[] + !+[]]
+    &#125;
+
+    function IusB() &#123;
+        return AsjH() + EjQI() + wVpG() + cypN() + MVoI() + AsjH() + EbCG()
+    &#125;
+
+    function cqjB() &#123;
+        return (MZrO()) + []
+    &#125;
+
+    function ErmB() &#123;
+        return (+[
+            [+[
+                [+![] + !+[]] + [+[]]
+            ] + []][+[]][+[]]
+        ]) + ((MpcJ()) * (cumH()))
+    &#125;
+
+    function YmdB() &#123;
+        return (AsjH())[wtgN()]()
+    &#125;
+
+    function AogB(AITB) &#123;
+        return gJRF[AITB];
+    &#125;
+    gVqE();
+
+    function cKWB() &#123;
+        return AQhE() + cyxD() + sqiD() + sqiD() + cypN()
+    &#125;
+
+    function wFNB() &#123;
+        return cyxD() + AsjH() + EjQI() + EvpH() + cOZH() + wVpG() + UbBI()
+    &#125;
+
+    function YGQB() &#123;
+        return (oHPD())[kYoO()](IWtE())
+    &#125;
+
+    function sCHB() &#123;
+        return (cumH()) + (cumH())
+    &#125;
+    HbGI.Q4lG = function() &#123;
+        return 24
+    &#125;;
+    HbGI.Q6SG = function() &#123;
+        return 16
+    &#125;;
+    HbGI.sEVG = function() &#123;
+        return 21
+    &#125;;
+    HbGI.M1NG = function() &#123;
+        return 7
+    &#125;;
+    HbGI.ozQG = function() &#123;
+        return 29
+    &#125;;
+    HbGI.IWIG = function() &#123;
+        return 30
+    &#125;;
+    HbGI.ERDG = function() &#123;
+        return 28
+    &#125;;
+    HbGI.gpGG = function() &#123;
+        return 37
+    &#125;;
+    HbGI.IOAE = function() &#123;
+        return 35
+    &#125;;
+    HbGI.kmDE = function() &#123;
+        return 27
+    &#125;;
+    HbGI.EJvE = function() &#123;
+        return 38
+    &#125;;
+    HbGI.ghyE = function() &#123;
+        return 39
+    &#125;;
+    HbGI.cctE = function() &#123;
+        return 22
+    &#125;;
+    HbGI.wzlE = function() &#123;
+        return 33
+    &#125;;
+    HbGI.Y6nE = function() &#123;
+        return 36
+    &#125;;
+    HbGI.Y8UE = function() &#123;
+        return 34
+    &#125;;
+    HbGI.orIE = function() &#123;
+        return 8
+    &#125;;
+    HbGI.otfF = function() &#123;
+        return 14
+    &#125;;
+    HbGI.Q0hF = function() &#123;
+        return 31
+    &#125;;
+    HbGI.koaF = function() &#123;
+        return 32
+    &#125;;
+    HbGI.ENzF = function() &#123;
+        return 10
+    &#125;;
+    HbGI.glCF = function() &#123;
+        return 11
+    &#125;;
+    HbGI.AIuF = function() &#123;
+        return 17
+    &#125;;
+    HbGI.cgxF = function() &#123;
+        return 13
+    &#125;;
+    HbGI.wDpF = function() &#123;
+        return 25
+    &#125;;
+    HbGI.YasF = function() &#123;
+        return 26
+    &#125;;
+    HbGI.wvhD = function() &#123;
+        return 9
+    &#125;;
+    HbGI.sqcD = function() &#123;
+        return 15
+    &#125;;
+    HbGI.UXeD = function() &#123;
+        return 18
+    &#125;;
+    HbGI.cEpv = function() &#123;
+        return 20
+    &#125;;
+    HbGI.Yykv = function() &#123;
+        return 12
+    &#125;
+&#125;)
+</code></pre>
+<p>其中省略了一个字符串数组 QofD 的内容（这里的字符串 由于未知原因 因为 xor 加密 有大量的 0x7F 字符）</p>
+<p>检查混淆，它将 QofD 的每个字符串都异或了 7</p>
+<p>解异或后得到一串 base64，解码然后解压 gzip 得到一个 wasm 文件</p>
+<hr>
+<p>后面的部分：</p>
+<pre><code class="python">const UDKB=HbGI.faEA(2);(()=&gt;&#123;const ozBB=()=&gt;&#123;const QAEB=new Error(HbGI.b5yA(3));return QAEB[HbGI.zxwA(4)]=HbGI.vsrA(5),QAEB;&#125;;if(!globalThis[HbGI.X10A(6)])&#123;let saGy=HbGI.nkOA(7);globalThis[HbGI.X10A(6)]=&#123;[HbGI.fiMC(8)]:&#123;[HbGI.bdHC(9)]:-(0O57060516-0xbc614d),[HbGI.faEA(10)]:-(0O57060516-0xbc614d),[HbGI.b5yA(11)]:-(0O57060516-0xbc614d),[HbGI.zxwA(12)]:-(0O57060516-0xbc614d),[HbGI.vsrA(13)]:-(0O57060516-0xbc614d),[HbGI.X10A(14)]:-(0O57060516-0xbc614d),[HbGI.nkOA(15)]:-(0O57060516-0xbc614d)&#125;,[HbGI.fiMC(16)](UbJy,oXzy)&#123;saGy+=cGTv[HbGI.bdHC(17)](oXzy);const QYCy=saGy[HbGI.faEA(18)](`$&#123;HbGI.b5yA(19)&#125;`);return QYCy!=-(0O57060516-0xbc614d)&amp;&amp;(console[HbGI.zxwA(20)](saGy[HbGI.vsrA(21)](HbGI.u(17)?0:-9,QYCy)),saGy=saGy[HbGI.vsrA(21)](QYCy+(0O57060516-0xbc614d))),oXzy[HbGI.X10A(22)];&#125;,[HbGI.nkOA(23)](kUty,MVwy,gRny,ISqy,Imez,kohz)&#123;if(gRny!==(0x75bcd15-0O726746425)||ISqy!==MVwy[HbGI.X10A(22)]||Imez!==null)&#123;kohz(ozBB());return;&#125;const EjYy=this[HbGI.fiMC(16)](kUty,MVwy);kohz(null,EjYy);&#125;,[HbGI.fiMC(24)](glbz,AgSy,ciVy)&#123;ciVy(ozBB());&#125;,[HbGI.bdHC(25)](wdMy,YePy,YyCz,AAFz)&#123;AAFz(ozBB());&#125;,[HbGI.faEA(26)](Uvwz,wxzz)&#123;wxzz(ozBB());&#125;,[HbGI.b5yA(27)](Qsqz,sutz,Mpkz)&#123;Mpkz(ozBB());&#125;,[HbGI.zxwA(28)](ornz,oLaA,QMdA,kIUz)&#123;kIUz(ozBB());&#125;,[HbGI.vsrA(29)](MJXz,gFOz)&#123;gFOz(ozBB());&#125;,[HbGI.X10A(30)](IGRz,cCIz)&#123;cCIz(null);&#125;,[HbGI.nkOA(31)](EDLz,gdNw,IeQw)&#123;IeQw(ozBB());&#125;,[HbGI.fiMC(32)](caHw,EbKw,YWAw,AYDw)&#123;AYDw(ozBB());&#125;,[HbGI.bdHC(33)](UTuw,wVxw,wplx)&#123;wplx(ozBB());&#125;,[HbGI.faEA(34)](Yqox,smfx)&#123;smfx(ozBB());&#125;,[HbGI.b5yA(35)](Unix,ojZw,Qkcx)&#123;Qkcx(ozBB());&#125;,[HbGI.zxwA(36)](kgTw,MhWw,MBJx,oDMx)&#123;oDMx(ozBB());&#125;,[HbGI.vsrA(37)](IyDx,kAGx,Evxx,gxAx,Asrx,cuux)&#123;cuux(ozBB());&#125;,[HbGI.X10A(38)](cOhy,EPky)&#123;EPky(ozBB());&#125;,[HbGI.nkOA(39)](YKby,AMey)&#123;AMey(ozBB());&#125;,[HbGI.fiMC(40)](UHVx,wJYx,QEPx)&#123;QEPx(ozBB());&#125;,[HbGI.bdHC(41)](sGSx,UfUu)&#123;UfUu(ozBB());&#125;,[HbGI.faEA(42)](whXu,QcOu)&#123;QcOu(ozBB());&#125;,[HbGI.b5yA(43)](seRu,MZHu,obLu)&#123;obLu(ozBB());&#125;,[HbGI.zxwA(44)](IWBu,kYEu,kssv)&#123;kssv(ozBB());&#125;,[HbGI.vsrA(45)](Mtvv,gpmv)&#123;gpmv(ozBB());&#125;,[HbGI.X10A(46)](Iqpv,cmgv,Enjv,Yiav)&#123;Yiav(ozBB());&#125;&#125;;&#125;if(globalThis[HbGI.nkOA(47)]||(globalThis[HbGI.nkOA(47)]=&#123;[HbGI.fiMC(48)]()&#123;return -(0O57060516-0xbc614d);&#125;,[HbGI.bdHC(49)]()&#123;return -(0O57060516-0xbc614d);&#125;,[HbGI.faEA(50)]()&#123;return -(0O57060516-0xbc614d);&#125;,[HbGI.b5yA(51)]()&#123;return -(0O57060516-0xbc614d);&#125;,[HbGI.zxwA(52)]()&#123;throw ozBB();&#125;,[HbGI.vsrA(53)]:-(0O57060516-0xbc614d),[HbGI.X10A(54)]:-(0O57060516-0xbc614d),[HbGI.nkOA(55)]()&#123;throw ozBB();&#125;,[HbGI.fiMC(56)]()&#123;throw ozBB();&#125;,[HbGI.bdHC(57)]()&#123;throw ozBB();&#125;&#125;),globalThis[HbGI.faEA(58)]||(globalThis[HbGI.faEA(58)]=&#123;[HbGI.b5yA(59)](...Akdv)&#123;return Akdv[HbGI.zxwA(60)](HbGI.vsrA(61));&#125;&#125;),!globalThis[HbGI.X10A(62)])throw new Error(HbGI.nkOA(63));if(!globalThis[HbGI.fiMC(64)])throw new Error(HbGI.bdHC(65));if(!globalThis[HbGI.faEA(66)])throw new Error(HbGI.b5yA(67));if(!globalThis[HbGI.zxwA(68)])throw new Error(HbGI.vsrA(69));const AEQv=new TextEncoder(HbGI.X10A(70)),cGTv=new TextDecoder(HbGI.X10A(70));globalThis[HbGI.nkOA(71)]=class&#123;constructor()&#123;this[HbGI.fiMC(72)]=[HbGI.bdHC(73)],this[HbGI.faEA(74)]=&#123;&#125;,this[HbGI.b5yA(75)]=YCNv=&gt;&#123;YCNv!==(0x75bcd15-0O726746425)&amp;&amp;console[HbGI.zxwA(76)](HbGI.vsrA(77),YCNv);&#125;,this[HbGI.X10A(78)]=new Promise(syEv=&gt;&#123;this[HbGI.nkOA(79)]=syEv;&#125;),this[HbGI.fiMC(80)]=null,this[HbGI.bdHC(81)]=new Map(),this[HbGI.faEA(82)]=(0O57060516-0xbc614d);const UzHv=(EHWv,gJZv)=&gt;&#123;this[HbGI.b5yA(83)][HbGI.zxwA(84)](EHWv+(0x75bcd15-0O726746425),gJZv,!(0x75bcd15-0O726746425)),this[HbGI.b5yA(83)][HbGI.zxwA(84)](EHWv+(0x5E30A78-0O570605164),Math[HbGI.vsrA(85)](gJZv/4294967296),!(0x75bcd15-0O726746425));&#125;,ovyv=Iibt=&gt;&#123;const kket=this[HbGI.b5yA(83)][HbGI.X10A(86)](Iibt+(0x75bcd15-0O726746425),!(0x75bcd15-0O726746425)),EfVs=this[HbGI.b5yA(83)][HbGI.nkOA(87)](Iibt+(0x5E30A78-0O570605164),!(0x75bcd15-0O726746425));return kket+EfVs*4294967296;&#125;,QwBv=ghYs=&gt;&#123;const AcPs=this[HbGI.b5yA(83)][HbGI.fiMC(88)](ghYs,!(0x75bcd15-0O726746425));if(AcPs===(0x75bcd15-0O726746425))return;if(!isNaN(AcPs))return AcPs;const ceSs=this[HbGI.b5yA(83)][HbGI.X10A(86)](ghYs,!(0x75bcd15-0O726746425));return this[HbGI.bdHC(89)][ceSs];&#125;,QQow=(wZIs,YaMs)=&gt;&#123;if(typeof YaMs==HbGI.faEA(90)&amp;&amp;YaMs!==(0x75bcd15-0O726746425))&#123;if(isNaN(YaMs))&#123;this[HbGI.b5yA(83)][HbGI.zxwA(84)](wZIs+(0x5E30A78-0O570605164),HbGI.u(20)?2146959360:2146959366,!(0x75bcd15-0O726746425)),this[HbGI.b5yA(83)][HbGI.zxwA(84)](wZIs,HbGI.u(26)?0:-11,!(0x75bcd15-0O726746425));return;&#125;this[HbGI.b5yA(83)][HbGI.b5yA(91)](wZIs,YaMs,!(0x75bcd15-0O726746425));return;&#125;if(YaMs===void (0x75bcd15-0O726746425))&#123;this[HbGI.b5yA(83)][HbGI.b5yA(91)](wZIs,HbGI.u(32)?-10:0,!(0x75bcd15-0O726746425));return;&#125;let Yuzt=this[HbGI.zxwA(92)][HbGI.vsrA(93)](YaMs);Yuzt===void (0x75bcd15-0O726746425)&amp;&amp;(Yuzt=this[HbGI.X10A(94)][HbGI.nkOA(95)](),Yuzt===void (0x75bcd15-0O726746425)&amp;&amp;(Yuzt=this[HbGI.bdHC(89)][HbGI.X10A(22)]),this[HbGI.bdHC(89)][Yuzt]=YaMs,this[HbGI.fiMC(96)][Yuzt]=(0x75bcd15-0O726746425),this[HbGI.zxwA(92)][HbGI.bdHC(97)](YaMs,Yuzt)),this[HbGI.fiMC(96)][Yuzt]++;let AwCt=(0x75bcd15-0O726746425);switch(typeof YaMs)&#123;case HbGI.faEA(98):YaMs!==null&amp;&amp;(AwCt=(0O57060516-0xbc614d));break;case HbGI.b5yA(99):AwCt=(15658734^0O73567354);break;case HbGI.zxwA(100):AwCt=(0O334664274-0x37368B9);break;case HbGI.vsrA(101):AwCt=(0x5E30A78-0O570605164);break;&#125;this[HbGI.b5yA(83)][HbGI.zxwA(84)](wZIs+(0x5E30A78-0O570605164),2146959360|AwCt,!(0x75bcd15-0O726746425)),this[HbGI.b5yA(83)][HbGI.zxwA(84)](wZIs,Yuzt,!(0x75bcd15-0O726746425));&#125;,sSrw=Urtt=&gt;&#123;const wtwt=ovyv(Urtt+(0x75bcd15-0O726746425)),Qont=ovyv(Urtt+(0O347010110&amp;0x463A71D));return new Uint8Array(this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.b5yA(83)][HbGI.fiMC(104)],wtwt,Qont);&#125;,MNiw=sqqt=&gt;&#123;const Mlht=ovyv(sqqt+(0x75bcd15-0O726746425)),onkt=ovyv(sqqt+(0O347010110&amp;0x463A71D)),oHXt=new Array(onkt);for(let QIau=(0x75bcd15-0O726746425);QIau&lt;onkt;QIau++)oHXt[QIau]=QwBv(Mlht+QIau*(0O347010110&amp;0x463A71D));return oHXt;&#125;,oPlw=kERt=&gt;&#123;const MFUt=ovyv(kERt+(0x75bcd15-0O726746425)),gBLt=ovyv(kERt+(0O347010110&amp;0x463A71D));return cGTv[HbGI.bdHC(17)](new DataView(this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.b5yA(83)][HbGI.fiMC(104)],MFUt,gBLt));&#125;,IKcw=(ICOt,cyFt)=&gt;((this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.bdHC(105)](),this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.faEA(106)](ICOt,cyFt))),kMfw=Date[HbGI.b5yA(107)]()-performance[HbGI.b5yA(107)]();this[HbGI.zxwA(108)]=&#123;[HbGI.vsrA(109)]:&#123;[HbGI.X10A(110)]:(EzIt,ETvu)=&gt;EzIt+ETvu,[HbGI.nkOA(111)]:IKcw&#125;,[HbGI.fiMC(112)]:&#123;[HbGI.bdHC(113)]:gVyu=&gt;&#123;gVyu&gt;&gt;&gt;=(0x75bcd15-0O726746425);const AQpu=this[HbGI.b5yA(83)][HbGI.nkOA(87)](gVyu+(0O347010110&amp;0x463A71D),!(0x75bcd15-0O726746425));this[HbGI.faEA(114)]=!(0x75bcd15-0O726746425),delete this[HbGI.X10A(102)],delete this[HbGI.bdHC(89)],delete this[HbGI.fiMC(96)],delete this[HbGI.zxwA(92)],delete this[HbGI.X10A(94)],this[HbGI.b5yA(75)](AQpu);&#125;,[HbGI.b5yA(115)]:cSsu=&gt;&#123;cSsu&gt;&gt;&gt;=(0x75bcd15-0O726746425);const wNju=ovyv(cSsu+(0O347010110&amp;0x463A71D)),YOmu=ovyv(cSsu+16),sKdu=this[HbGI.b5yA(83)][HbGI.nkOA(87)](cSsu+24,!(0x75bcd15-0O726746425));fs[HbGI.fiMC(16)](wNju,new Uint8Array(this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.b5yA(83)][HbGI.fiMC(104)],YOmu,sKdu));&#125;,[HbGI.zxwA(116)]:ULgu=&gt;&#123;this[HbGI.b5yA(83)]=new DataView(this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.b5yA(83)][HbGI.fiMC(104)]);&#125;,[HbGI.vsrA(117)]:wlir=&gt;&#123;wlir&gt;&gt;&gt;=(0x75bcd15-0O726746425),UzHv(wlir+(0O347010110&amp;0x463A71D),(kMfw+performance[HbGI.b5yA(107)]())*1e6);&#125;,[HbGI.X10A(118)]:Ymlr=&gt;&#123;Ymlr&gt;&gt;&gt;=(0x75bcd15-0O726746425);const sicr=(new Date())[HbGI.nkOA(119)]();UzHv(Ymlr+(0O347010110&amp;0x463A71D),sicr/1e3),this[HbGI.b5yA(83)][HbGI.fiMC(120)](Ymlr+16,sicr%1e3*1e6,!(0x75bcd15-0O726746425));&#125;,[HbGI.bdHC(121)]:Ujfr=&gt;&#123;Ujfr&gt;&gt;&gt;=(0x75bcd15-0O726746425);const ofWq=this[HbGI.faEA(82)];this[HbGI.faEA(82)]++,this[HbGI.bdHC(81)][HbGI.bdHC(97)](ofWq,setTimeout(()=&gt;&#123;for(this[HbGI.faEA(122)]();this[HbGI.bdHC(81)][HbGI.b5yA(123)](ofWq);)console[HbGI.zxwA(76)](HbGI.zxwA(124)),this[HbGI.faEA(122)]();&#125;,ovyv(Ujfr+(0O347010110&amp;0x463A71D)))),this[HbGI.b5yA(83)][HbGI.fiMC(120)](Ujfr+16,ofWq,!(0x75bcd15-0O726746425));&#125;,[HbGI.vsrA(125)]:QgZq=&gt;&#123;QgZq&gt;&gt;&gt;=(0x75bcd15-0O726746425);const kcQq=this[HbGI.b5yA(83)][HbGI.nkOA(87)](QgZq+(0O347010110&amp;0x463A71D),!(0x75bcd15-0O726746425));clearTimeout(this[HbGI.bdHC(81)][HbGI.vsrA(93)](kcQq)),this[HbGI.bdHC(81)][HbGI.X10A(126)](kcQq);&#125;,[HbGI.nkOA(127)]:MdTq=&gt;&#123;MdTq&gt;&gt;&gt;=(0x75bcd15-0O726746425),crypto[HbGI.fiMC(128)](sSrw(MdTq+(0O347010110&amp;0x463A71D)));&#125;,[HbGI.bdHC(129)]:MxGr=&gt;&#123;MxGr&gt;&gt;&gt;=(0x75bcd15-0O726746425);const ozJr=this[HbGI.b5yA(83)][HbGI.X10A(86)](MxGr+(0O347010110&amp;0x463A71D),!(0x75bcd15-0O726746425));if(this[HbGI.fiMC(96)][ozJr]--,this[HbGI.fiMC(96)][ozJr]===(0x75bcd15-0O726746425))&#123;const IuAr=this[HbGI.bdHC(89)][ozJr];this[HbGI.bdHC(89)][ozJr]=null,this[HbGI.zxwA(92)][HbGI.X10A(126)](IuAr),this[HbGI.X10A(94)][HbGI.faEA(130)](ozJr);&#125;&#125;,[HbGI.b5yA(131)]:kwDr=&gt;&#123;kwDr&gt;&gt;&gt;=(0x75bcd15-0O726746425),QQow(kwDr+24,oPlw(kwDr+(0O347010110&amp;0x463A71D)));&#125;,[HbGI.zxwA(132)]:Erur=&gt;&#123;Erur&gt;&gt;&gt;=(0x75bcd15-0O726746425);const gtxr=Reflect[HbGI.vsrA(93)](QwBv(Erur+(0O347010110&amp;0x463A71D)),oPlw(Erur+16));Erur=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(Erur+32,gtxr);&#125;,[HbGI.X10A(134)]:Aoor=&gt;&#123;Aoor&gt;&gt;&gt;=(0x75bcd15-0O726746425),Reflect[HbGI.bdHC(97)](QwBv(Aoor+(0O347010110&amp;0x463A71D)),oPlw(Aoor+16),QwBv(Aoor+32));&#125;,[HbGI.nkOA(135)]:cqrr=&gt;&#123;cqrr&gt;&gt;&gt;=(0x75bcd15-0O726746425),Reflect[HbGI.fiMC(136)](QwBv(cqrr+(0O347010110&amp;0x463A71D)),oPlw(cqrr+16));&#125;,[HbGI.bdHC(137)]:cKes=&gt;&#123;cKes&gt;&gt;&gt;=(0x75bcd15-0O726746425),QQow(cKes+24,Reflect[HbGI.vsrA(93)](QwBv(cKes+(0O347010110&amp;0x463A71D)),ovyv(cKes+16)));&#125;,[HbGI.faEA(138)]:ELhs=&gt;&#123;ELhs&gt;&gt;&gt;=(0x75bcd15-0O726746425),Reflect[HbGI.bdHC(97)](QwBv(ELhs+(0O347010110&amp;0x463A71D)),ovyv(ELhs+16),QwBv(ELhs+24));&#125;,[HbGI.b5yA(139)]:YGYr=&gt;&#123;YGYr&gt;&gt;&gt;=(0x75bcd15-0O726746425);try&#123;const AIbs=QwBv(YGYr+(0O347010110&amp;0x463A71D)),UDSr=Reflect[HbGI.vsrA(93)](AIbs,oPlw(YGYr+16)),wFVr=MNiw(YGYr+32),QAMr=Reflect[HbGI.zxwA(140)](UDSr,AIbs,wFVr);YGYr=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(YGYr+56,QAMr),this[HbGI.b5yA(83)][HbGI.vsrA(141)](YGYr+64,HbGI.u(36)?5:1);&#125;catch(sCPr)&#123;YGYr=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(YGYr+56,sCPr),this[HbGI.b5yA(83)][HbGI.vsrA(141)](YGYr+64,HbGI.u(17)?0:1);&#125;&#125;,[HbGI.X10A(142)]:sWCs=&gt;&#123;sWCs&gt;&gt;&gt;=(0x75bcd15-0O726746425);try&#123;const UXFs=QwBv(sWCs+(0O347010110&amp;0x463A71D)),oTws=MNiw(sWCs+16),QUzs=Reflect[HbGI.zxwA(140)](UXFs,void (0x75bcd15-0O726746425),oTws);sWCs=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(sWCs+40,QUzs),this[HbGI.b5yA(83)][HbGI.vsrA(141)](sWCs+48,HbGI.u(40)?2:1);&#125;catch(kQqs)&#123;sWCs=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(sWCs+40,kQqs),this[HbGI.b5yA(83)][HbGI.vsrA(141)](sWCs+48,HbGI.u(17)?0:-7);&#125;&#125;,[HbGI.nkOA(143)]:MRts=&gt;&#123;MRts&gt;&gt;&gt;=(0x75bcd15-0O726746425);try&#123;const gNks=QwBv(MRts+(0O347010110&amp;0x463A71D)),IOns=MNiw(MRts+16),kopp=Reflect[HbGI.fiMC(144)](gNks,IOns);MRts=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(MRts+40,kopp),this[HbGI.b5yA(83)][HbGI.vsrA(141)](MRts+48,HbGI.u(36)?-8:1);&#125;catch(Mpsp)&#123;MRts=this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(133)]()&gt;&gt;&gt;(0x75bcd15-0O726746425),QQow(MRts+40,Mpsp),this[HbGI.b5yA(83)][HbGI.vsrA(141)](MRts+48,HbGI.u(26)?0:11);&#125;&#125;,[HbGI.bdHC(145)]:gljp=&gt;&#123;gljp&gt;&gt;&gt;=(0x75bcd15-0O726746425),UzHv(gljp+16,parseInt(QwBv(gljp+(0O347010110&amp;0x463A71D))[HbGI.X10A(22)]));&#125;,[HbGI.faEA(146)]:Immp=&gt;&#123;Immp&gt;&gt;&gt;=(0x75bcd15-0O726746425);const cidp=AEQv[HbGI.b5yA(147)](String(QwBv(Immp+(0O347010110&amp;0x463A71D))));QQow(Immp+16,cidp),UzHv(Immp+24,cidp[HbGI.X10A(22)]);&#125;,[HbGI.zxwA(148)]:Ejgp=&gt;&#123;Ejgp&gt;&gt;&gt;=(0x75bcd15-0O726746425);const YeXo=QwBv(Ejgp+(0O347010110&amp;0x463A71D));sSrw(Ejgp+16)[HbGI.bdHC(97)](YeXo);&#125;,[HbGI.vsrA(149)]:Agap=&gt;&#123;Agap&gt;&gt;&gt;=(0x75bcd15-0O726746425),this[HbGI.b5yA(83)][HbGI.vsrA(141)](Agap+24,QwBv(Agap+(0O347010110&amp;0x463A71D)) instanceof QwBv(Agap+16)?(0O57060516-0xbc614d):(0x75bcd15-0O726746425));&#125;,[HbGI.X10A(150)]:AANp=&gt;&#123;AANp&gt;&gt;&gt;=(0x75bcd15-0O726746425);const cCQp=sSrw(AANp+(0O347010110&amp;0x463A71D)),wxHp=QwBv(AANp+32);if(!(wxHp instanceof Uint8Array||wxHp instanceof Uint8ClampedArray))&#123;this[HbGI.b5yA(83)][HbGI.vsrA(141)](AANp+48,HbGI.u(20)?0:-8);return;&#125;const YyKp=wxHp[HbGI.nkOA(151)](HbGI.u(32)?-7:0,cCQp[HbGI.X10A(22)]);cCQp[HbGI.bdHC(97)](YyKp),UzHv(AANp+40,YyKp[HbGI.X10A(22)]),this[HbGI.b5yA(83)][HbGI.vsrA(141)](AANp+48,HbGI.u(40)?1:1);&#125;,[HbGI.fiMC(152)]:suBp=&gt;&#123;suBp&gt;&gt;&gt;=(0x75bcd15-0O726746425);const UvEp=QwBv(suBp+(0O347010110&amp;0x463A71D)),orvp=sSrw(suBp+16);if(!(UvEp instanceof Uint8Array||UvEp instanceof Uint8ClampedArray))&#123;this[HbGI.b5yA(83)][HbGI.vsrA(141)](suBp+48,HbGI.u(20)?0:-10);return;&#125;const Qsyp=orvp[HbGI.nkOA(151)](HbGI.u(32)?10:0,UvEp[HbGI.X10A(22)]);UvEp[HbGI.bdHC(97)](Qsyp),UzHv(suBp+40,Qsyp[HbGI.X10A(22)]),this[HbGI.b5yA(83)][HbGI.vsrA(141)](suBp+48,HbGI.u(40)?12:1);&#125;,[HbGI.bdHC(153)]:QMlq=&gt;&#123;console[HbGI.zxwA(20)](QMlq);&#125;&#125;&#125;;&#125;async [HbGI.faEA(154)](sOoq)&#123;if(!(sOoq instanceof WebAssembly[HbGI.b5yA(155)]))throw new Error(HbGI.zxwA(156));this[HbGI.X10A(102)]=sOoq,this[HbGI.b5yA(83)]=new DataView(this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.b5yA(83)][HbGI.fiMC(104)]),this[HbGI.bdHC(89)]=[NaN,(0x75bcd15-0O726746425),null,!(0x75bcd15-0O726746425),!(0O57060516-0xbc614d),globalThis,this],this[HbGI.fiMC(96)]=new Array(this[HbGI.bdHC(89)][HbGI.X10A(22)])[HbGI.vsrA(157)]((0O57060516-0xbc614d)/(0x75bcd15-0O726746425)),this[HbGI.zxwA(92)]=new Map([[(0x75bcd15-0O726746425),(0O57060516-0xbc614d)],[null,(15658734^0O73567354)],[!(0x75bcd15-0O726746425),(0O334664274-0x37368B9)],[!(0O57060516-0xbc614d),(0x5E30A78-0O570605164)],[globalThis,(0O507646144^0x51F4C61)],[this,(1011010-0O3666474)]]),this[HbGI.X10A(94)]=[],this[HbGI.faEA(114)]=!(0O57060516-0xbc614d);let MJfq=4096;const oLiq=EDTp=&gt;&#123;const gFWp=MJfq,gZJq=AEQv[HbGI.b5yA(147)](EDTp+HbGI.X10A(158));return new Uint8Array(this[HbGI.b5yA(83)][HbGI.fiMC(104)],MJfq,gZJq[HbGI.X10A(22)])[HbGI.bdHC(97)](gZJq),MJfq+=gZJq[HbGI.X10A(22)],MJfq%(0O347010110&amp;0x463A71D)!==(0x75bcd15-0O726746425)&amp;&amp;(MJfq+=(0O347010110&amp;0x463A71D)-MJfq%(0O347010110&amp;0x463A71D)),gFWp;&#125;,IGZp=this[HbGI.fiMC(72)][HbGI.X10A(22)],kIcq=[];this[HbGI.fiMC(72)][HbGI.nkOA(159)](IaNq=&gt;&#123;kIcq[HbGI.faEA(130)](oLiq(IaNq));&#125;),kIcq[HbGI.faEA(130)](HbGI.u(17)?0:-7),Object[HbGI.fiMC(160)](this[HbGI.faEA(74)])[HbGI.bdHC(161)]()[HbGI.nkOA(159)](cWDq=&gt;&#123;kIcq[HbGI.faEA(130)](oLiq(`$&#123;cWDq&#125;$&#123;HbGI.faEA(162)&#125;$&#123;this[HbGI.faEA(74)][cWDq]&#125;`));&#125;),kIcq[HbGI.faEA(130)](HbGI.u(32)?11:0);const EXGq=MJfq;if(kIcq[HbGI.nkOA(159)](YSxq=&gt;&#123;this[HbGI.b5yA(83)][HbGI.zxwA(84)](MJfq,YSxq,!(0x75bcd15-0O726746425)),this[HbGI.b5yA(83)][HbGI.zxwA(84)](MJfq+(0x5E30A78-0O570605164),HbGI.u(36)?-5:0,!(0x75bcd15-0O726746425)),MJfq+=(0O347010110&amp;0x463A71D);&#125;),MJfq&gt;=12288)throw new Error(HbGI.b5yA(163));this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.faEA(154)](IGZp,EXGq),this[HbGI.faEA(114)]&amp;&amp;this[HbGI.nkOA(79)](),await this[HbGI.X10A(78)];&#125;[HbGI.faEA(122)]()&#123;if(this[HbGI.faEA(114)])throw new Error(HbGI.zxwA(164));this[HbGI.X10A(102)][HbGI.nkOA(103)][HbGI.vsrA(165)](),this[HbGI.faEA(114)]&amp;&amp;this[HbGI.nkOA(79)]();&#125;[HbGI.X10A(166)](AUAq)&#123;const UPrq=this;return function()&#123;const wRuq=&#123;[HbGI.nkOA(167)]:AUAq,[HbGI.fiMC(168)]:this,[HbGI.bdHC(169)]:arguments&#125;;return UPrq[HbGI.fiMC(80)]=wRuq,UPrq[HbGI.faEA(122)](),wRuq[HbGI.faEA(170)];&#125;;&#125;&#125;;&#125;)();process[HbGI.fiMC(72)][HbGI.X10A(22)]!==(0O334664274-0x37368B9)&amp;&amp;(console[HbGI.zxwA(20)](`$&#123;HbGI.b5yA(171)&#125;`),process[HbGI.b5yA(75)](HbGI.u(20)?1:8));const Yqwn=new Go();Yqwn[HbGI.fiMC(72)]=[];Yqwn[HbGI.faEA(74)]=&#123;[HbGI.zxwA(172)]:HbGI.vsrA(173),[HbGI.X10A(174)]:process[HbGI.fiMC(72)][(15658734^0O73567354)]&#125;;Yqwn[HbGI.b5yA(75)]=process[HbGI.b5yA(75)];fetch(UDKB)[HbGI.nkOA(175)](Aszn=&gt;Aszn[HbGI.fiMC(176)]())[HbGI.nkOA(175)](Unqn=&gt;u(l[HbGI.bdHC(177)](Unqn)))[HbGI.nkOA(175)](wptn=&gt;WebAssembly[HbGI.faEA(178)](wptn,Yqwn[HbGI.zxwA(108)]))[HbGI.nkOA(175)](Qkkn=&gt;((process[HbGI.b5yA(179)](HbGI.b5yA(75),smnn=&gt;&#123;smnn===(0x75bcd15-0O726746425)&amp;&amp;!Yqwn[HbGI.faEA(114)]&amp;&amp;(Yqwn[HbGI.fiMC(80)]=&#123;[HbGI.nkOA(167)]:0&#125;,Yqwn[HbGI.faEA(122)]());&#125;),Yqwn[HbGI.faEA(154)](Qkkn[HbGI.zxwA(180)]),Qkkn)))[HbGI.vsrA(181)](Mhen=&gt;&#123;console[HbGI.X10A(182)](Mhen),process[HbGI.b5yA(75)](HbGI.u(36)?-3:1);&#125;);
+</code></pre>
+<p>不知道是什么，但是不重要了</p>
 
     </div>
     

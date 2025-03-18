@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>军事理论课后测试答案 | huanghunr&#39;s Blog</title>
+    <title>2025UTCTF_Re Writeup | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,22 +164,22 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>军事理论课后测试答案</h1>
+        <h1>2025UTCTF_Re Writeup</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/10/26
+            2025/3/15
         </span>
         
         <span class="category">
-            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/">
+            <a href="/categories/2025UTCTF/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                学习资料
+                2025UTCTF
             </a>
         </span>
         
@@ -192,8 +192,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-%E7%AD%94%E6%A1%88/" style="color: #03a9f4">
-                    学习资料-答案
+                <a href="/tags/2025UTCTF-Re-Writeup/" style="color: #ff7d73">
+                    2025UTCTF_Re Writeup
                 </a>
             </span>
             
@@ -203,93 +203,126 @@
     
     
     <div class="content" v-pre>
-        <h4><span id="tips多选题中-o-代表全选判断题中-d-为正确x-为错误">Tips:多选题中 O 代表全选，判断题中 D 为正确，X 为错误</span></h4><h2><span id="第一章">第一章</span></h2><pre><code class="C">1~5   DBDCC  
-6~10  BCBCB  
-11~15 DAADA  
-16~20 ABCBD  
-21~25 CDBAB  
-26~30 AC CD O O BCD  
-31~35 OABC O O CD  
-36~40 ABC ABC O BCD ABC  
-41~45 O O ABD ABD O
-46~50 O AB BCD AC O
-51~55 DDDDX  
-56~60 DXDDX  
-61~65 DDDXD  
-66~70 DXDXX
-71~75 XXDDD
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#ostrich-algorithm">Ostrich Algorithm</a></li>
+<li><a href="#safe-word">Safe Word</a></li>
+<li><a href="#map">map</a></li>
+<li><a href="#retro-cookie-clicker">Retro Cookie Clicker</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h2><span id="ostrich-algorithm">Ostrich Algorithm</span></h2><p>还可以在汇编里面把call exit nop掉，直接动调到最后可以拿到md5值</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250315124146972.png" alt="image-20250315124146972"></p>
+<h2><span id="safe-word">Safe Word</span></h2><p>逻辑上可能有点不好理解，我们先理一下逻辑。</p>
+<p>下面是main函数和一个sub_11e9()和sub_11fc(arg1)，使用了BN反编译。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250316231654996.png" alt="image-20250316231654996"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250316231440997.png" alt="image-20250316231440997"></p>
+<p>main函数开头使用了一个mmap函数分配了一块可以用于执行的内存，也就是说data_16020中的内容可以被作为代码执行。我们的输入被放入了rax_2中。并且还初始化了一个值var_20&#x3D;0x5b。然后以我们的输入和var_30计算出索引获取rax_5中的值，作为参数传入sub_11fc()中，在上面分析sub_11fc()函数其实就是把rax_5的值作为了函数(代码)执行。既然是作为指令执行。那么这肯定就是是汇编的字节码，这四字节数据是一段汇编代码，被sub_11fc()执行，并把返回值赋给var_20用作下一次索引的计算。依次遍历完我们的输入。</p>
+<pre><code class="py">for i in range(32):
+    var_20 = f( rax5[ (input[i] + var_20 &lt;&lt; 8) &lt;&lt; 3 ] )
 </code></pre>
-<hr>
-<h2><span id="第二章">第二章</span></h2><pre><code class="C">1~5    BCCDB
-6~10   DACDA
-11~15  DABCA
-16~20  DCAAD
-21~23  AAB
-24~28  AD AC ABC BC ABC
-29~33  ABC BC O ABC CD
-34~38  ABD O BCD CD O
-39~43  AB AC AC ABC BCD
-44~48  ACD ABC O BCD O
-49~53  DXDDD
-54~58  XDDDD
-59~63  XDDXD
-64~68  DXDXD
-69~73  XXDDX
-74~75  DD
+<p>我们的输入在一次的循环中是可以不同的，范围是(32–&gt;127)，而var_20在一次循环中是不变的，有没有想过var_20的本质是什么？var_20在每次计算时都被左移了8位，假设var_20是0xff那么 0xff&lt;&lt;8 &#x3D;&#x3D; 0xff00;此时与input[i]相加刚好构成了一个范围(0xff20–&gt;0xff7f)。那么外面的”&lt;&lt; 3”是干嘛的？观察一下rax_5的索引间隔是8，”&lt;&lt;3”其实就是乘8，所以我们计算出的值要*8才是rax_5的索引。每次执行完代码后都会更新var_20的值，于是范围发生了改变，假设改变后的var_20 &#x3D; 0x11于是范围改变，(0xff20–&gt;0xff7f) –&gt; (0x1120–&gt;0x117f)。有没有一种感觉，rax_5被分成了许多的块，而var_20其实就是某一个块的索引，每一个块中又会指定下一个块的索引?再想一下，这和函数的跳转是不是有异曲同工之处？看一下rax_5的值发现确实是分块的。我们知道flag的开头是”utflag{“不妨动调看看执行的指令到底是什么。在call处下断点进去查看。再继续运行几次看看，发现指令形式也是一样的。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250317001514509.png" alt="image-20250317001514509"></p>
+<p>函数直接返回了0x0B，也就是下一个块的索引，这下就真相大白了。</p>
+<p>其实主要的逻辑就是函数跳转，var_20是函数的基地址，我们要用输入的字符控制函数执行指令的地址(基地址+字符)，使函数直接跳转到下一个函数，只要遍历完所有的函数，我们的输入就是flag。</p>
+<p>我们可以计算出每一段函数的基地址，然后遍历所有可见字符，如果匹配到”0x6a, l[i + 1], 0x58, 0xc3(push xx pop rax   retn)”这条指令，说明这个字符就是正确的(这里的执行顺序就是函数的排布顺序)。</p>
+<p>那么这题目的意义是什么呢?我们的输入可以看作是一个漏洞，我们可以通过构造一个输入来控制函数的执行流程（控制流入侵），达到自己想要的目的，那么这就完成了一次入侵。<del>我们逆向自己的pwn题</del></p>
+<pre><code class="py">
+def parse_data(data):
+    entries = data.strip().split(&quot;;&quot;)
+    values = dict()
+    for entry in entries:
+        if &quot;=&quot; in entry:
+            str = entry.split(&quot;=&quot;)
+            index  = str[0].strip()[3::].replace(&#39;]&#39;,&#39;&#39;)
+            value = str[1].strip()
+            values[int(index)]=list(int(value.replace(&quot;LL&quot;,&#39;&#39;)).to_bytes(4,&quot;little&quot;))
+    return values
+
+data = &quot;&quot;&quot;
+  v7[23296] = 1933468268LL;
+  v7[23297] = 729031286LL;
+  v7[23298] = 2575079303LL;
+  v7[23299] = 1475628389LL;
+  v7[23300] = 243385641LL;
+  v7[23301] = 1799261851LL;
+ ......
+  &quot;&quot;&quot;
+
+code = parse_data(data)
+l = []
+op = 91
+path = []
+path.append(91)
+
+i =1
+
+for j in code:
+    dex = j // 256
+    if dex == path[i-1] : continue
+    path.append(dex)
+    i+=1
+
+print(path)
+
+flag =&#39;&#39;
+for l in range(len(path)):
+    for char in range(32,128):
+        try:
+            if code[(char + op * 256)]==[0x6a,path[l+1],0x58,0xc3]:
+                flag += chr(char)
+                op = path[l+1]
+                break
+        except:
+            continue
+
+print(flag,len(flag),len(path))
+
+#utflag&#123;1_w4nna_pl4y_hypix3l_in_c&#125;
 </code></pre>
-<hr>
-<h2><span id="第三章">第三章</span></h2><pre><code class="C">1~5    BBBAC
-6~10   CDBDC
-11~15  DBADD
-16~18  CABCA
-21~25  ACDBD
-26~30  O AC AB O ABC
-31~35  BC BCD BC AC ABC
-36~40  O BCD AB O O
-41~45  ABC O ABC BC O
-46~50  ABC CD ABC ABD O
-51~55  DDXDD
-56~60  XDXDD
-61~65  DDDXD
-66~70  XDXDD
-71~75  DDDXD
+<h2><span id="map">map</span></h2><p>就是把字符用五个数字表示，输入所有可见字符然后导出表就行。</p>
+<pre><code class="python">text =&quot;&quot;
+
+for i in range(32,127):
+    text += chr(i)
+print(text)
+
+str1 = text[:35:]
+str2 = text[35:35+35:]
+str3 = text[35+35::]
+
+print(str1,str2,str3)
+
+table = dict()
+output1 =&quot;4916849171491704917349172491754917449161491604916349162491654916449167491664915349152491554915449157491564915949158492094920849211492104921349212492154921449201492004920349265&quot;
+output2 = &quot;4920249205492044920749206491934919249195491944919749196491994919849185491844918749186491894918849191491904936949368493714937049373493724937549374493614936049363493624936549364&quot;
+output3 =&quot;4936749366493534935249355493544935749356493594935849345493444934749346493494934849351493504940149400494034940249405494044940749265492654926549265492654926549265492654926549265&quot;
+
+a = output1 + output2 + output3
+
+value1 = [a[i:i+5] for i in range(0,len(a),5)]
+for i,j in zip(text,value1):
+    table[j] =i
+print(table)
+
+m = &quot;4934849349493674935749360493664940249346493534935849348493574936549351493644937449348493464936449365493744935349360493464935449364493574935749374493494935349358493594935449404&quot;
+mm =[m[i:i+5] for i in range(0,len(m),5)]
+
+for i in mm:
+    print(table[i],end=&#39;&#39;)
+# utflag&#123;shouldve_used_haskell_thonk&#125;
 </code></pre>
-<hr>
-<h2><span id="第四章">第四章</span></h2><pre><code class="C">1~5    BAAAC
-6~10   AADDA
-11~15  CBDCA
-16~20  ABCDC
-21~23  CDB
-24~28  ABC O CD ABD O
-29~33  O AB O ABC O 
-34~38  BC ABC ACD ABC BCD 
-39~43  O ABC O ABC ABC 
-44~48  O ACD ABC BD AC 
-49     AB
-50~54  XDDXD
-55~59  DXXDX
-60~64  DXDDX
-65~69  XDDDD
-70~73  DDDX
-</code></pre>
-<hr>
-<h2><span id="第五章">第五章</span></h2><pre><code class="C">1~5    CBCDA
-6~10   BDDAB
-11~15  CBBAA
-16~20  DADDA
-21~25  BCBAC
-26~30  O AB ABC ABC ABC
-31~35  BCD ABC ABD BCD AD
-36~40  O AB O O BD
-41~45  ABC ABC BCD ACD O
-46~50  O O O ABC O
-51~55  DDDDD
-56~60  DXDDD 
-61~65  XXDDX
-66~70  XXDDD
-71~75  DXDXD
-</code></pre>
-<hr>
+<h2><span id="retro-cookie-clicker">Retro Cookie Clicker</span></h2><p>gameboy游戏用gbg模拟器运行。通过不断的改变值搜索内存中的值来找到关键内存位置。</p>
+<p>这里我们搜索豆子的值，当豆子为3时发现只有CB94处的值为3。这类游戏的变量存储一般就在一块内存内，不会相隔太远，运行游戏改变donze的值，发现CB96处的值改变这里就是donze的值，因为要获取最大值直接输入ff，发现它往CB97的位置进了1位，于是把两边都改成FF FF发现值变成了负数，说明是有符号的，所以最大值应该是0111 1111 1111 1111，转成小端序就是FF 7F修改后就可以获得flag。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250318000931403.png" alt="image-20250318000931403"></p>
+<p>flag</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250318001901990.png" alt="image-20250318001901990"></p>
 
     </div>
     

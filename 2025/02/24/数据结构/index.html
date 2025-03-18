@@ -208,6 +208,7 @@
 <!-- toc -->
 
 <ul>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%9A%84%E4%BD%9C%E4%B8%9A">学习通的作业</a></li>
 <li><a href="#%E5%AE%9E%E9%AA%8C">实验</a><ul>
 <li><a href="#%E5%AE%9E%E9%AA%8C1-%E9%A1%BA%E5%BA%8F%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C">实验1 顺序表的基本操作</a></li>
 <li><a href="#%E5%AE%9E%E9%AA%8C2-%E9%93%BE%E8%A1%A8%E5%8F%8A%E5%85%B6%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9B%B8%E5%8A%A0">实验2 链表及其多项式相加</a></li>
@@ -233,6 +234,7 @@
 <li><a href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E6%93%8D%E4%BD%9C">链表的操作</a></li>
 <li><a href="#%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9A%84%E9%80%86%E8%BD%AC%E6%B1%82%E5%92%8C">单链表的逆转求和</a></li>
 <li><a href="#%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98">汉诺塔问题</a></li>
+<li><a href="#%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97%E6%8F%92%E5%85%A5%E4%B8%8E%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C">循环队列插入与删除操作</a></li>
 </ul>
 </li>
 </ul>
@@ -240,7 +242,8 @@
 
 </div>
 
-<p><a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md">原文件</a></p>
+<h2><span id="学习通的作业">学习通的作业</span></h2><p>学习通的作业已存放在<a target="_blank" rel="noopener" href="https://alist.huanghunr.top/CFZ2/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%BD%9C%E4%B8%9A">网盘(点击进入)</a></p>
+<p><del>最好还是不要让太多人知道了，好东西独自享受喵。</del></p>
 <h2><span id="实验">实验</span></h2><h3><span id="实验1-顺序表的基本操作">实验1 顺序表的基本操作</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3070/view">https://acm.zjnu.edu.cn/problem/3070/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
@@ -292,7 +295,7 @@ Status ListInsert_sq(Sqlist &amp;L, int i, ElemType e)&#123;
     if(L.length+1&gt;L.listsize)&#123;
         ElemType *newlist = (ElemType *)realloc(L.elem,(L.listsize +1) * sizeof(ElemType));
         L.elem = newlist;
-        L.sizelist++;
+        L.listsize++;
     &#125;
     ElemType *q = &amp;(L.elem[i-1]);
     for(ElemType *p = &amp;(L.elem[L.length-1]);p&gt;=q;--p) *(p+1) = *p;
@@ -1271,6 +1274,63 @@ int main()&#123;
     char a,b,c;
     scanf(&quot;%d %c %c %c&quot;,&amp;n,&amp;a,&amp;c,&amp;b);
     hanoi(n,a,b,c);
+&#125;
+</code></pre>
+<h3><span id="循环队列插入与删除操作">循环队列插入与删除操作</span></h3><pre><code class="c++">#include&lt;cstdio&gt;
+#include&lt;cstdlib&gt;
+#include&lt;cstring&gt;
+#define QUEUE_INIT_SIZE 31000
+#define OK 1
+#define OVERFLOW -2
+#define error -1
+
+typedef int DataType;
+typedef int Status;
+typedef struct duilie&#123;
+    int f;
+    int r;
+    DataType *base;
+&#125;queue;
+int dlength(&amp;s)&#123;
+    return (s.r - s.f + QUEUE_INIT_SIZE) % QUEUE_INIT_SIZE;
+&#125;
+Status init(queue &amp;s)&#123;
+    s.base = (DataType*)malloc(QUEUE_INIT_SIZE*sizeof(DataType));
+    if(s.f==NULL)return -1;
+    s.f = s.r = 0;
+    return OK;
+&#125;
+Status in(queue &amp;s,DataType e)&#123;
+    if(s.f == (s.r +1)%QUEUE_INIT_SIZE) exit(OVERFLOW);
+    s.base[s.r]=e;
+    s.r = (s.r +1)%QUEUE_INIT_SIZE;
+    return OK;
+&#125;
+int del(queue &amp;s)&#123;
+    if(s.f ==s.r) return -1;
+    DataType q = s.base[s.f];
+    s.f =(s.f+1) %QUEUE_INIT_SIZE;
+    return q;
+&#125;
+int main()&#123;
+    queue d;
+    init(d);
+    int n,i;
+    scanf(&quot;%d&quot;,&amp;n);getchar(); 
+    for(i=0;i&lt;n;i++)&#123;
+        char a[100];
+        int x,t;
+        scanf(&quot;%s&quot;, a);
+        if(strcmp(a,&quot;enqueue&quot;)==0)&#123;
+            scanf(&quot;%d&quot;,&amp;x);
+            in(d,x);
+        &#125;
+        if(strcmp(a,&quot;dequeue&quot;)==0)&#123;
+            t=del(d);
+            printf(&quot;%d\n&quot;,t);
+        &#125;
+    &#125;
+    return 0;
 &#125;
 </code></pre>
 
