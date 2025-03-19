@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2025TPCTF-Re-Writeup/" style="color: #00a596">
+                <a href="/tags/2025TPCTF-Re-Writeup/" style="color: #ffa2c4">
                     2025TPCTF_Re Writeup
                 </a>
             </span>
@@ -207,13 +207,206 @@
 
 <!-- toc -->
 
-
-
+<ul>
+<li><a href="#linuxpdf">linuxpdf</a></li>
+<li><a href="#chase">chase</a></li>
+<li><a href="#magicfile">magicfile</a></li>
+<li><a href="#stonegame">stonegame</a></li>
+</ul>
 <!-- tocstop -->
 
 </div>
 
-<p>用fceux进行调试，amr search在吃豆的时候寻找改变的值，就可以发现0x84的数据是用于存储当前吃豆的数量，0x85好像是当前的关卡，是从0开始的。</p>
+
+
+<h2><span id="linuxpdf">linuxpdf</span></h2><p>pdf里运行Linux，010打开发现有一个base64解密函数，一些文件名以及文件对应的base64编码，通过正则匹配 ”文件名”: “文件内容“ 获取文件名和文件内容，直接用脚本导出。随便拿个文件看看信息，发现是zlib格式的压缩文件，用python的zlib库解压就行，查看解压出来有许多二进制文件，有一百多个有点不好看，于是寻找看是不是有elf可执行文件，写个函数遍历一下(脚本是AI写的)。</p>
+<p>![image (3)](<a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image">https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image</a> (3).png)</p>
+<pre><code class="py">import os
+import re
+import base64
+import zlib
+
+def extract_and_decode(filename):
+    # 以二进制方式读取文件内容
+    with open(filename, &#39;rb&#39;) as f:
+        content = f.read()
+
+    try:
+        # 尝试 UTF-8 解码，不可解码时忽略错误字符
+        text_content = content.decode(&#39;utf-8&#39;, errors=&#39;ignore&#39;)
+    except UnicodeDecodeError:
+        print(&quot;文件解码失败，可能包含非 UTF-8 编码数据。&quot;)
+        return
+
+    # 正则匹配 &quot;字符串1&quot;:&quot;字符串2&quot;
+    pattern = r&#39;&quot;(.*?)&quot;: &quot;(.*?)&quot;&#39;
+    matches = re.findall(pattern, text_content)
+
+    for filename, encoded_data in matches:
+        try:
+            # Base64 解码
+            decoded_data = base64.b64decode(encoded_data)
+
+            # 将解码内容以二进制方式写入对应文件
+            f = open(rf&quot;outdata/&#123;filename.replace(&#39;/&#39;, &#39;_&#39;).replace(&#39;\\&#39;, &#39;_&#39;)&#125;&quot;,&#39;wb&#39;)
+            de = zlib.decompress(decoded_data)
+            f.write(decoded_data)
+
+            print(f&quot;已创建文件: &#123;filename&#125;&quot;)
+        except Exception as e:
+            print(f&quot;处理 &#123;filename&#125; 时出错: &#123;e&#125;&quot;)
+
+
+def dedata():
+    input_dir = &quot;outdata&quot;  # 你的 zlib 文件所在的文件夹
+    output_dir = &quot;outdata\\dec&quot;  # 解压后的文件存放位置
+
+    # 确保输出目录存在
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 遍历 zlib 文件
+    for filename in os.listdir(input_dir):
+        input_path = os.path.join(input_dir, filename)
+        output_path = os.path.join(output_dir, filename + &quot;.bin&quot;)  # 你可以改成合适的扩展名
+
+        try:
+            # 读取文件内容
+            with open(input_path, &quot;rb&quot;) as f:
+                compressed_data = f.read()
+
+            # 尝试解压
+            decompressed_data = zlib.decompress(compressed_data)
+
+            # 写入解压后的文件
+            with open(output_path, &quot;wb&quot;) as f:
+                f.write(decompressed_data)
+
+            print(f&quot;解压成功: &#123;filename&#125; -&gt; &#123;output_path&#125;&quot;)
+
+        except zlib.error:
+            print(f&quot;跳过文件（解压失败）: &#123;filename&#125;&quot;)
+        except Exception as e:
+            print(f&quot;其他错误: &#123;filename&#125; - &#123;e&#125;&quot;)
+
+    print(&quot;所有文件处理完成！&quot;)
+
+def iself():
+    input_dir = &quot;outdata\\dec&quot;  # 解压后数据的文件夹
+
+    for filename in os.listdir(input_dir):
+        input_path = os.path.join(input_dir, filename)
+
+        try:
+            with open(input_path, &quot;rb&quot;) as f:
+                fdata = f.read()
+                if b&quot;ELF&quot; in fdata:
+                    print(input_path)
+        except:
+            print(&quot;error&quot;)
+if __name__ == &quot;__main__&quot;:
+    input_file = &quot;linux.pdf&quot;
+    extract_and_decode(input_file)
+    dedata()
+    iself()
+    
+&quot;&quot;&quot;
+......
+outdata\dec\kernel-riscv64.bin.bin
+outdata\dec\root_files_0000000000000002.bin
+outdata\dec\root_files_0000000000000003.bin
+outdata\dec\root_files_0000000000000039.bin
+outdata\dec\root_files_000000000000003c.bin
+outdata\dec\root_files_000000000000003d.bin
+outdata\dec\root_files_000000000000003e.bin
+outdata\dec\root_files_000000000000003f.bin
+outdata\dec\root_files_0000000000000040.bin
+outdata\dec\root_files_0000000000000041.bin
+outdata\dec\root_files_0000000000000042.bin
+outdata\dec\root_files_0000000000000043.bin
+outdata\dec\root_files_0000000000000044.bin
+outdata\dec\root_files_0000000000000045.bin
+outdata\dec\root_files_0000000000000046.bin
+outdata\dec\root_files_0000000000000047.bin
+outdata\dec\root_files_0000000000000048.bin
+outdata\dec\root_files_000000000000004a.bin
+outdata\dec\root_files_000000000000004b.bin
+outdata\dec\root_files_000000000000004c.bin
+outdata\dec\root_files_000000000000004d.bin
+outdata\dec\root_files_000000000000004e.bin
+outdata\dec\root_files_000000000000004f.bin
+outdata\dec\root_files_0000000000000050.bin
+outdata\dec\root_files_0000000000000051.bin
+outdata\dec\root_files_0000000000000052.bin
+outdata\dec\root_files_0000000000000089.bin
+outdata\dec\root_files_00000000000000a6.bin
+outdata\dec\root_files_00000000000000a7.bin
+outdata\dec\root_files_00000000000000a9.bin
+error
+error
+error
+outdata\dec\root_files_00000000000000aa.bin
+&quot;&quot;&quot;
+</code></pre>
+<p>最后发现在root_files_00000000000000a9.bin中有flag的逻辑。</p>
+<p>![image (4)](<a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image">https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image</a> (4).png)</p>
+<p>![image (5)](<a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image">https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image</a> (5).png)</p>
+<p>MD5的特征值。</p>
+<p>逻辑大概就是从前往后比较flag后n位（n从28到1，flag总共28字节）生成的MD5值。</p>
+<p>爆破一下就行，注意密文中每组哈希值间有0作为分隔符，所以17字节为一组MD5。</p>
+<pre><code class="py">import hashlib
+
+hash = [0x38, 0xF8, 0x8A, 0x3B, 0xC5, 0x70, 0x21, 0x0F, 0x8A, 0x8D, 0x95, 0x58, 0x5B, 0x46, 0xB0, 0x65,
+    0x00, 0x83, 0x05, 0x5A, 0xE8, 0x0C, 0xDC, 0x8B, 0xD5, 0x93, 0x78, 0xB8, 0x62, 0x8D, 0x73, 0x3F,
+    0xCB, 0x00, 0xFA, 0x7D, 0xAF, 0xFB, 0xD7, 0xAC, 0xEC, 0x13, 0xB0, 0x69, 0x5D, 0x93, 0x5A, 0x04,
+    0xBC, 0x0F, 0x00, 0xC2, 0x9C, 0xC0, 0xFD, 0x38, 0x01, 0xC7, 0xFD, 0xD3, 0x15, 0xC7, 0x82, 0x99,
+    0x9B, 0xD4, 0xCB, 0x00, 0x2B, 0xA2, 0xD0, 0x1A, 0xF1, 0x2D, 0x9B, 0xE3, 0x1A, 0x2B, 0x44, 0x32,
+    0x3C, 0x1A, 0x4F, 0x47, 0x00, 0xDD, 0xEE, 0xBA, 0xF0, 0x02, 0x52, 0x7A, 0x9E, 0xAD, 0x78, 0xBD,
+    0x16, 0x68, 0x45, 0x73, 0xCC, 0x00, 0xBF, 0x95, 0xB8, 0x99, 0x34, 0xA1, 0xB5, 0x55, 0xE1, 0x09,
+    0x0F, 0xEC, 0xDF, 0xD3, 0xDA, 0x9F, 0x00, 0xB6, 0x42, 0x2C, 0x30, 0xB0, 0x29, 0x38, 0x53, 0x5F,
+    0x8E, 0x64, 0x8D, 0x60, 0xA8, 0x7B, 0x94, 0x00, 0x08, 0xC1, 0xB7, 0x66, 0x43, 0xAF, 0x8D, 0xD5,
+    0x0C, 0xB0, 0x6D, 0x7F, 0xDD, 0x3C, 0xF8, 0xED, 0x00, 0x42, 0xD6, 0x97, 0x19, 0xF9, 0x70, 0x88,
+    0xF0, 0x65, 0x40, 0xF4, 0x12, 0xDC, 0x17, 0x06, 0xFB, 0x00, 0xA1, 0xF2, 0x3D, 0xA6, 0x16, 0x15,
+    0x40, 0x0E, 0x7B, 0xD9, 0xEA, 0x72, 0xD6, 0x35, 0x67, 0xEB, 0x00, 0x4E, 0x24, 0x6F, 0x0A, 0x5D,
+    0xD3, 0xCE, 0x59, 0x46, 0x5F, 0xF3, 0xD0, 0x2E, 0xC4, 0xF9, 0x84, 0x00, 0xB8, 0xCF, 0x25, 0xF9,
+    0x63, 0xE8, 0xE9, 0xF4, 0xC3, 0xFD, 0xDA, 0x34, 0xF6, 0xF0, 0x1A, 0x35, 0x00, 0x2D, 0x98, 0xD8,
+    0x20, 0x83, 0x5C, 0x75, 0xA9, 0xF9, 0x81, 0xAD, 0x4D, 0xB8, 0x26, 0xBF, 0x8E, 0x00, 0x70, 0x2E,
+    0xAD, 0x08, 0xA3, 0xDD, 0x56, 0xB3, 0x13, 0x4C, 0x7C, 0x38, 0x41, 0xA6, 0x52, 0xAA, 0x00, 0xD2,
+    0xD5, 0x57, 0xB6, 0x13, 0x66, 0x2B, 0x92, 0xF3, 0x99, 0xD6, 0x12, 0xFB, 0x91, 0x59, 0x1E, 0x00,
+    0xE4, 0x42, 0x2B, 0x63, 0x20, 0xED, 0x98, 0x9E, 0x7E, 0x3C, 0xB9, 0x7F, 0x36, 0x9C, 0xBA, 0x38,
+    0x00, 0x71, 0x80, 0x35, 0x86, 0xC6, 0x70, 0x59, 0xDD, 0xA3, 0x25, 0x25, 0xCE, 0x84, 0x4C, 0x50,
+    0x79, 0x00, 0x83, 0xB3, 0x71, 0x80, 0x1D, 0x0A, 0xDE, 0x07, 0xB5, 0xC4, 0xF5, 0x1E, 0x8C, 0x62,
+    0x15, 0xE2, 0x00, 0xB0, 0xD1, 0xB4, 0x88, 0x5B, 0xC2, 0xFD, 0xC5, 0xA6, 0x65, 0x26, 0x69, 0x24,
+    0x48, 0x6C, 0x5F, 0x00, 0x79, 0x2C, 0x9E, 0x7F, 0x05, 0xC4, 0x07, 0xC5, 0x6F, 0x3B, 0xEC, 0x4C,
+    0xA7, 0xE5, 0xC1, 0x71, 0x00, 0x38, 0x55, 0xE5, 0xA5, 0xBB, 0xC1, 0xCB, 0xE1, 0x8A, 0x6E, 0xAB,
+    0x5D, 0xD9, 0x7C, 0x06, 0x3C, 0x00, 0x88, 0x6D, 0x45, 0xE0, 0x45, 0x1B, 0xBB, 0xA7, 0xC0, 0x34,
+    0x1F, 0xE9, 0x0A, 0x95, 0x4F, 0x34, 0x00, 0x3A, 0x43, 0x7C, 0xBE, 0x65, 0x91, 0xEA, 0x34, 0x89,
+    0x64, 0x25, 0x85, 0x6E, 0xAE, 0x7B, 0x65, 0x00, 0x34, 0x30, 0x49, 0x67, 0xA0, 0x67, 0x30, 0x8A,
+    0x76, 0x70, 0x1F, 0x05, 0xC0, 0x66, 0x85, 0x51, 0x00, 0xD6, 0xAF, 0x7C, 0x4F, 0xED, 0xCF, 0x2B,
+    0x67, 0x77, 0xDF, 0x8E, 0x83, 0xC9, 0x32, 0xF8, 0x83, 0x00, 0xDF, 0x88, 0x93, 0x1E, 0x7E, 0xEF,
+    0xDF, 0xCC, 0x2B, 0xB8, 0x0D, 0x4A, 0x4F, 0x57, 0x10, 0xFB, 0x00, 0xCB, 0x0F, 0xC8, 0x13, 0x75,
+    0x5A, 0x45, 0xCE, 0x59, 0x84, 0xBF, 0xBA, 0x15, 0x84, 0x7C, 0x1E, 0x00]
+
+datalist = [hash[i*17:17*(i+1):] for i in range(len(hash))] #每十七个作为一组哈希值，末尾的0是分隔符
+
+flag =&quot;&#125;&quot;
+for i in datalist[::-1]:
+    tmp=&quot;&quot;
+    for j in i: # 先把哈希值拼成一个字符串
+        strtmp = hex(j)[2::]
+        if len(strtmp) &lt;2:
+            strtmp = &quot;0&quot;*(2-len(strtmp)) + strtmp #补0
+        tmp+= strtmp
+
+    for char in range(32, 127):# 遍历所有可打印字符
+        has = hashlib.md5((chr(char) + flag).encode()).hexdigest() #拼接字符到flag中生成md5值
+        print(has,chr(char)+flag)
+        if tmp.rstrip(&quot;0&quot;) == has: #去掉结尾的0（分隔符），判断相等，如果相等拼接到flag中生成下一组hash
+            flag = chr(char) + flag
+
+print(flag)
+TPCTF&#123;mag1c_RISC-V_linux-PDF&#125;
+</code></pre>
+<h2><span id="chase">chase</span></h2><p>用fceux进行调试，amr search在吃豆的时候寻找改变的值，就可以发现0x84的数据是用于存储当前吃豆的数量，0x85好像是当前的关卡，是从0开始的。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image.png" alt="image"></p>
 <p>用hexeditor修改值可以发现0x83就是目标的豆子数，直接修改关卡值好像会被检测输出hacker，于是继续修改豆子数来逐个通关，通过第五关后可以拿到第一段flag。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image.png" alt="image"></p>
@@ -267,9 +460,87 @@ FLAG PT.2 FOR YOU IS !2 !8PLAY1N9_6@M3S_ ! !# !# !#-!# !0 ! /////&lt;L&#125;/2BR
 <p>解密得到flag的第二部分。</p>
 <p>PLAY1N9_6@M3S_</p>
 <p>最后的flag:  TPCTF{D0_Y0U_L1KE_PLAY1N9_6@M3S_ON_Y0UR_N3S?}</p>
-<p>大佬的wp先记一下用来复现，后面再写wp</p>
-<p>magicfile</p>
-<pre><code>$ strings magicfile_c970e3503feebf8274571f09d27cdd2f | grep File:
+<h2><span id="magicfile">magicfile</span></h2><p>文件一般存储一个特征值来确定文件类型。linux通过一个libmagic.so来检测文件类型。文件类型被存储在一个magic文件内(magicfile)，里面记录了文件类型(要比较的字节)和要比较的字节地址偏移，以及比较的数据类型。检测原理就是读取文件内容然后根据偏移的地址来获取数据与magic存储的内容进行比较。</p>
+<p>本题模拟了libmagic.so的原理，我们输入的flag被作为文件内容进行文件检查。即flag与magic内的内容进行比较，正确则输出congratulations。我们的flag为48字节，如果直接存储在一个类型里那么就可以直接字符串找到flag，所以我们的flag一定是被分块了，而且是单字节。所以我们只需要挨个读取magic文件里比较的内容就行了。本题的magicfile已经被保存在数据段了，所以实现了自定义magic的比较。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250318213438858.png" alt="image-20250318213438858"></p>
+<p>首先我们需要了解magic文件是怎么存储信息的。我们在github上可以找到libmagic的<a target="_blank" rel="noopener" href="https://sourceforge.net/projects/immortalwrt/files/sources/file-5.41.tar.gz/download">源码</a>，查看magic结构体</p>
+<pre><code class="c">struct magic &#123;
+    /* Word 1 */
+    uint16_t cont_level;	/* level of &quot;&gt;&quot; */
+    uint8_t flag;
+    uint8_t factor
+    /* Word 2 */
+    uint8_t reln;		/* relation (0=eq, &#39;&gt;&#39;=gt, etc) */
+    uint8_t vallen;		/* length of string value, if any */
+    uint8_t type;		/* comparison type (FILE_*) */
+    uint8_t in_type;	/* type of indirection */
+    /* Word 3 */
+    uint8_t in_op;		/* operator for indirection */
+    uint8_t mask_op;	/* operator for mask */
+    uint8_t cond;		/* conditional type */
+    uint8_t factor_op;
+    /* Word 4 */
+    int32_t offset;		/* offset to magic number */
+    /* Word 5 */
+    int32_t in_offset;	/* offset from indirection */
+    /* Word 6 */
+    uint32_t lineno;	/* line number in magic file */
+    /* Word 7,8 */
+    union &#123;
+        uint64_t _mask;	/* for use with numeric and date types */
+        struct &#123;
+            uint32_t _count;	/* repeat/line count */
+            uint32_t _flags;	/* modifier flags */
+        &#125; _s;		/* for use with string types */
+    &#125; _u;
+    /* Words 9-24 */
+    union VALUETYPE value;	/* either number or string */
+    /* Words 25-40 */
+    char desc[MAXDESC];	/* description */
+    /* Words 41-60 */
+    char mimetype[MAXMIME]; /* MIME type */
+    /* Words 61-62 */
+    char apple[8];		/* APPLE CREATOR/TYPE */
+    /* Words 63-78 */
+    char ext[64];		/* Popular extensions */
+&#125;;
+</code></pre>
+<p>value节点中是需要进行比较的内容，看一下value的定义，联合体的大小是最大类型的大小</p>
+<pre><code class="c">union VALUETYPE &#123;
+    uint8_t b;
+    uint16_t h;
+    uint32_t l;
+    uint64_t q;
+    uint8_t hs[2];	/* 2 bytes of a fixed-endian &quot;short&quot; */
+    uint8_t hl[4];	/* 4 bytes of a fixed-endian &quot;long&quot; */
+    uint8_t hq[8];	/* 8 bytes of a fixed-endian &quot;quad&quot; */
+    char s[MAXstring];	/* the search string or regex pattern */
+    unsigned char us[MAXstring];
+    uint64_t guid[2];
+    float f;
+    double d;
+&#125;;
+</code></pre>
+<p>计算一下就可以知道magic结构体大小是376byte。我们可以遍历所有magic结构体，提取所有value位char的内容，flag估计就在里面。。看magic_load的magicfile变量可以看到程序的magic文件存在地址0x21004，后面的magiclen是magic文件大小。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250318231837447.png" alt="image-20250318231837447"></p>
+<p>最后的flag要猜一下前面是个Y，最后结果是TPCTF{YoU_AR3_SO_5m@R7_TO_cRACk_Th1$_m@9iC_f1le}</p>
+<pre><code class="py">
+data = open(&quot;magicfile_c970e3503feebf8274571f09d27cdd2f&quot;, &quot;rb&quot;).read()
+data = data[0x21004:][376:0x116f9f8]
+
+res =&#39;&#39;
+
+for i in range(0,0x116f9f8,376):
+    value = data[i:i+376:][32:96:].decode().replace(chr(0),&#39;&#39;)
+    res += value
+    if value == &#39;&#125;&#39;:break
+
+print(res)
+# TPCTF&#123;YoU_AR3_SO_5m@R7_TO_cRACk_Th1$_m@9iC_f1le&#125;
+</code></pre>
+<p>下面是大佬的脚本参考复现</p>
+<p>下面这些是libmagic编译时包含的文件，可以查看特征</p>
+<pre><code class="bash">$ strings magicfile_c970e3503feebf8274571f09d27cdd2f | grep File:
 @(#)$File: magic.c,v 1.115 2021/09/20 17:45:41 christos Exp $
 @(#)$File: apprentice.c,v 1.309 2021/09/24 13:59:19 christos Exp $
 @(#)$File: encoding.c,v 1.32 2021/04/27 19:37:14 christos Exp $
@@ -289,30 +560,10 @@ FLAG PT.2 FOR YOU IS !2 !8PLAY1N9_6@M3S_ ! !# !# !#-!# !0 ! /////&lt;L&#125;/2BR
 @(#)$File: der.c,v 1.21 2020/06/15 00:58:10 christos Exp $
 @(#)$File: cdf.c,v 1.120 2021/09/24 13:59:19 christos Exp $
 </code></pre>
-<p>版本是 file-5.41, 在 <a target="_blank" rel="noopener" href="https://sourceforge.net/projects/immortalwrt/files/sources/file-5.41.tar.gz/download">https://sourceforge.net/projects/immortalwrt/files/sources/file-5.41.tar.gz/download</a> 可以找到对应版本的源码</p>
-<p>对照函数，得到 main 函数的实现：</p>
-<pre><code class="c">  scanf(&quot;%100s&quot;, flag);
-  if ( strlen(flag) == 48 )
-  &#123;
-    magic_t m = magic_open(0);
-    magic_load_buffers(m, &amp;off_119B018, &amp;off_119B010, 1LL);
-    flag_len = strlen(flag);
-    message = magic_buffer(m, flag, flag_len);
-    puts(message);
-    magic_close(m);
-  &#125;
-  else
-  &#123;
-    puts(&quot;Try again.&quot;);
-  &#125;
-</code></pre>
-<p>阅读 libmagic 代码，还原 magic 结构</p>
-<p>size &#x3D; 0x116F9F8 正好整除 sizeof magic &#x3D; 376</p>
-<p>在 Congrats 作为 minetype（也就是正确反馈）之前的 value 正好连成 flag 的后 41 字节，猜测 flag 头 TPCTF{ 后是 Y 得到正确 flag</p>
 <pre><code class="python">data = open(&quot;magicfile_c970e3503feebf8274571f09d27cdd2f&quot;, &quot;rb&quot;).read()
 data = data[0x21004:][376:0x116f9f8]
 
-MAGIC = [
+MAGIC = [ #定义的结构体，理解更加清晰
   [2, &quot;cont_level&quot;],
   [1, &quot;flag&quot;],
   [1, &quot;factor&quot;],
@@ -367,8 +618,7 @@ print(flag[-48:])
 
 # TPCTF&#123;YoU_AR3_SO_5m@R7_TO_cRACk_Th1$_m@9iC_f1le&#125;
 </code></pre>
-<p>stonegame</p>
-<p>pyinstaller</p>
+<h2><span id="stonegame">stonegame</span></h2><p>pyinstaller</p>
 <p><a target="_blank" rel="noopener" href="https://pyinstxtractor-web.netlify.app/">https://pyinstxtractor-web.netlify.app/</a> 解压</p>
 <p>然后用 pycdc&#x2F;pycdas 逆向（或者手动交互，根据程序的行为进行猜测）</p>
 <p>参考 <a target="_blank" rel="noopener" href="https://idafchev.github.io/blog/Decompile_python/">https://idafchev.github.io/blog/Decompile_python/</a></p>
