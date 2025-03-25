@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
                     C语言学习
                 </a>
             </span>
@@ -789,6 +789,77 @@ int main()&#123;
 <h3><span id="实验6-稀疏矩阵的建立与转置">实验6 稀疏矩阵的建立与转置</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3054/view">https://acm.zjnu.edu.cn/problem/3054/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
+<pre><code class="c++">#include &lt;cstdio&gt;
+using namespace std;
+
+#define MAXSIZE 12500
+#define OK 1
+
+typedef int ElemType;
+typedef int Status;
+
+typedef struct &#123;
+    int i,j;
+    ElemType e;
+&#125; Triple;
+
+typedef struct &#123;
+    Triple data[MAXSIZE+1];
+    int mu,nu,tu;
+&#125; TSMatrix;
+
+Status TransposeSMatrix(TSMatrix M, TSMatrix &amp;T)&#123;
+    int p, q, col;
+    T.mu = M.nu; T.nu = M.mu; T.tu = M.tu;
+    if(T.tu)&#123;
+        q = 1;
+        for (col = 0;col&lt;=M.nu;col++)&#123; // 这里col从0开始
+            for (p = 1;p&lt;=M.tu;p++)&#123;
+                if(M.data[p].j == col)&#123;
+                    T.data[q].i = M.data[p].j;
+                    T.data[q].j = M.data[p].i;
+                    T.data[q].e = M.data[p].e;
+                    q++;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    return OK;
+&#125;
+
+void printMatrix(TSMatrix M)&#123;
+    int count = 1;
+    for (int i =0;i&lt;M.mu;i++)&#123;
+        for (int j=0;j&lt;M.nu;j++)&#123;
+            if(M.data[count].i ==i&amp;&amp;M.data[count].j==j)&#123;
+                printf(&quot;%5d&quot;, M.data[count].e);
+                count++;
+            &#125;
+            else&#123;
+                printf(&quot;%5d&quot;, 0);
+            &#125;
+        &#125;
+        printf(&quot;\n&quot;);
+    &#125;
+&#125;
+
+int main()&#123;
+    TSMatrix A;
+    TSMatrix B;
+
+    scanf(&quot;%d %d %d&quot;, &amp;A.mu, &amp;A.nu, &amp;A.tu);
+    for (int i =1;i&lt;=A.tu;i++)&#123;
+        scanf(&quot;%d %d %d&quot;, &amp;A.data[i].i, &amp;A.data[i].j, &amp;A.data[i].e);
+    &#125;
+
+    TransposeSMatrix(A, B);
+
+    printMatrix(A);
+    printf(&quot;\n&quot;);
+    printMatrix(B);
+    return 0;
+&#125; 
+</code></pre>
 <p><strong>三、程序代码及运行结果</strong></p>
 <p><strong>四、收获总结</strong></p>
 <hr>

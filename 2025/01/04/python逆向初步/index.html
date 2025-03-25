@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     Re学习
                 </a>
             </span>
@@ -208,20 +208,78 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#magic%E5%A4%B4">magic头</a></li>
+<li><a href="#pyexe">pyexe</a><ul>
+<li><a href="#nuitka">nuitka</a></li>
+<li><a href="#pyinstaller">pyinstaller</a></li>
+</ul>
+</li>
+<li><a href="#%E8%A7%A3%E5%8C%85">解包</a></li>
+<li><a href="#%E5%8F%8D%E7%BC%96%E8%AF%91pyc">反编译pyc</a></li>
+<li><a href="#pycdc">pycdc</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
-<p>反编译pyc文件时可能要修复magic头</p>
-<h2><span id="magic头">magic头</span></h2><pre><code>    MAGIC_1_0 = 0x00999902,
-    MAGIC_1_1 = 0x00999903, /* Also covers 1.2 */
+<h2><span id="pyexe">pyexe</span></h2><p>pyexe是打包后的python的exe可执行文件常见的打包有pyinstaller等</p>
+<h3><span id="nuitka">nuitka</span></h3><p>(作为开发使用，nuitka暂时没有有效的逆向方法)</p>
+<p>安装</p>
+<pre><code class="cmd">pip install nuitka
+</code></pre>
+<p>构建</p>
+<pre><code>python -m nuitka main.py
+</code></pre>
+<p>可选参数</p>
+<pre><code class="cmd">--mode=onefile #打包成一个exe,便于分发
+--include-package-data=package_name #打包所有文件
+--windows-icon-from-ico=your-icon.png #图标
+</code></pre>
+<h3><span id="pyinstaller">pyinstaller</span></h3><p><a target="_blank" rel="noopener" href="https://pyinstaller.org/en/stable/usage.html">使用 PyInstaller — PyInstaller 6.12.0 文档 — Using PyInstaller — PyInstaller 6.12.0 documentation</a></p>
+<p>安装</p>
+<pre><code class="cmd">pip install pyinstaller
+</code></pre>
+<p>打包</p>
+<pre><code>pyinstaller -op main.py
+</code></pre>
+<p>选项(-op)</p>
+<pre><code class="cmd">-F  #打包成一个exe
+-D	#打包成文件夹
+--runtime-hook RUNTIME_HOOKS #设置hook，在任何其他代码或模块之前执行，以设置运行时环境的特殊功能
+--additional-hooks-dir HOOKSPATH	#搜索hook的附加路径
+--hidden-import ， --hiddenimport 模块名称	#隐藏导入模块
+--upx-dir UPX_DIR	#导入UPX路径，并用upx压缩
+--add-data SOURCE:DEST	#添加文件,其中 source 是要收集的文件（或目录）的路径，dest_dir 是相对于顶
+                         #级应用程序目录的目标目录，两个路径以冒号 (:) 
+--upx-exclude &quot;name&quot;	#排除upx加固
+--icon=*.ico	#添加图标，可能需要--add-data
+</code></pre>
+<h2><span id="解包">解包</span></h2><p>注意要使用相同版本的python解包。</p>
+<p>pyinstxtractor.py     </p>
+<p>archive_viewer.py</p>
+<h2><span id="反编译pyc">反编译pyc</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qfcy_/article/details/118890362">Python pyc文件 bytecode 字节码详解，及插入、编辑_python 字节码-CSDN博客</a></p>
+<p>借助dis库可以分析字节码文件。</p>
+<pre><code class="py">import dis
+
+pycf = marshal.loads(open(&quot;main.pyc&quot;,&#39;rb&#39;).read()[16:]) #去除magic头，py2为8byte，py3为16byte
+
+dis.dis(pycf)	#反编译字节码
+dis.opmap	#返回所opname的字节码值
+hex(len(pycf.co_code))	#返回字节码的长度
+</code></pre>
+<p>uncompyle6，也可以反编译pyc不过不支持python3.9后的版本，就不说了。</p>
+<p>pycdc,pycdas很好用。</p>
+<h2><span id="pycdc">pycdc</span></h2><p>解包出来的pyc文件有可能要修复magic头(python版本加修改时间)。</p>
+<p>magic头在pyc文件的前8字节或者16字节，由python版本和修改时间组成，一般在E3之前。</p>
+<p>修复magic头只需要在我们的解包的文件中找到struct.pyc文件，把这个文件的头复制到要修复的文件首行就行。一般PYZ-00.pyz_extracted文件夹里的pyc的magic头也可用。</p>
+<p>一些magic头</p>
+<pre><code>
+    MAGIC_1_0 = 0x00999902,
+    MAGIC_1_1 = 0x00999903, 
     MAGIC_1_3 = 0x0A0D2E89,
     MAGIC_1_4 = 0x0A0D1704,
     MAGIC_1_5 = 0x0A0D4E99,
     MAGIC_1_6 = 0x0A0DC4FC,
-
+ 
     MAGIC_2_0 = 0x0A0DC687,
     MAGIC_2_1 = 0x0A0DEB2A,
     MAGIC_2_2 = 0x0A0DED2D,
@@ -230,7 +288,7 @@
     MAGIC_2_5 = 0x0A0DF2B3,
     MAGIC_2_6 = 0x0A0DF2D1,
     MAGIC_2_7 = 0x0A0DF303,
-
+ 
     MAGIC_3_0 = 0x0A0D0C3A,
     MAGIC_3_1 = 0x0A0D0C4E,
     MAGIC_3_2 = 0x0A0D0C6C,
@@ -242,7 +300,12 @@
     MAGIC_3_7 = 0x0A0D0D42,
     MAGIC_3_8 = 0x0A0D0D55,
     MAGIC_3_9 = 0x0A0D0D61,
+    MAGIC_3_10 = 0x0A0D0D6F,
+    MAGIC_3_11 = 0x0A0D0DA7,
+    MAGIC_3_12 = 0x0A0D0DCB,
+    MAGIC_3_13 = 0x0A0D0DF3,
 </code></pre>
+<p>pycdc可以直接反编译成python代码，但是其中也会有一些操作码不支持，这时候我们可以用pycdas看字节码手动写出python代码。我们也可以修改pycdc的源码，来添加指令支持，让pycdc继续工作，也可以减轻读字节码的工作量。</p>
 
     </div>
     
