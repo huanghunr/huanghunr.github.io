@@ -3,7 +3,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
-    <title>xdbg手工脱壳学习 | huanghunr&#39;s Blog</title>
+    <title>windows内核调试 | huanghunr&#39;s Blog</title>
     <meta name="author" content="huanghunr" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -164,14 +164,14 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>xdbg手工脱壳学习</h1>
+        <h1>windows内核调试</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/11/16
+            2025/3/28
         </span>
         
         <span class="category">
@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     Re学习
                 </a>
             </span>
@@ -208,33 +208,33 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#%E5%AF%B9%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F%E5%A3%B3%E7%9A%84%E7%90%86%E8%A7%A3"><strong>对一个程序壳的理解</strong></a></li>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4">具体步骤</a></li>
+<li><a href="#%E5%85%88%E6%90%AD%E5%BB%BA%E5%86%85%E6%A0%B8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83">先搭建内核调试环境</a></li>
 </ul>
 <!-- tocstop -->
 
 </div>
 
 
-<h2><span id="对一个程序壳的理解"><strong>对一个程序壳的理解</strong></span></h2><p>一个程序被加壳，在我的理解下就是一个程序的代码被加密，从而使ida等反编译工具不能识别为代码数据，然后再在程序前嵌入一块代码，在程序运行时会先进行解密然后再运行。既然如此，我们就可以在运行时解密完程序就把程序提取出来。</p>
-<p>下面的程序中，这是我们一开始的点，程序从这里开始。对于一个加了壳的程序而言，它必须先运行解密代码，这段解密代码一般会被xdbg识别为Enterpoint（主入口），而一个函数的执行必须先压入栈，结束时又要弹出栈，且先入栈的最后弹出，那么在第一个被压入的栈被弹出时，也就意味着一个函数的结束，我们可以在第一个入栈时的栈顶RSP下断点，那么在出栈时就会断在函数结束的位置，从而走完解密程序我们只要把解密后的程序dump下来就行了。那么思路就清晰了，步骤就是</p>
-<blockquote>
-<ul>
-<li>寻找解密开始点</li>
-<li>在push上下硬件断点</li>
-<li>运行到pop的位置（解密结束的位置）</li>
-<li>找jmp到主程序的点</li>
-<li>在jmp处断点，用scylla进行dump</li>
-</ul>
-</blockquote>
-<h2><span id="具体步骤">具体步骤</span></h2><p>找到程序的入口，运行一步push，在RSP处下硬件断点</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-46-46.png"></p>
-<p>运行后停在这个位置，上面有一堆pop，我们执行到下面jmp的位置，然后用scylla，dump程序</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-49-23.png"></p>
-<p>dump程序，要获取一下ITA，然后转储。</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-52-15.png"></p>
-<p>脱壳成功</p>
-<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/Snipaste_2024-11-17_20-53-55.png"></p>
+
+<h2><span id="先搭建内核调试环境">先搭建内核调试环境</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guapi_poe/article/details/115051071">windows系统内核调试 环境搭建（保姆级）_dsigntool-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/download-the-wdk#download-icon-for-sdk-step-2-install-sdk">下载 Windows 驱动程序工具包 (WDK) - Windows drivers | Microsoft Learn</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ddosi.org/drivers-reverse-engineering/">Windows驱动程序逆向工程方法 - 🔰雨苁ℒ🔰</a></p>
+<p>驱动开发环境配置</p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/gettingstarted/writing-a-very-small-kmdf--driver">编写 Hello World Windows 驱动程序（内核模式） - Windows drivers | Microsoft Learn</a></p>
+<p>串行接口</p>
+<pre><code>\\.\pipe\com_2
+</code></pre>
+<p>符号表环境变量</p>
+<pre><code>_NT_SYMBOL_PATH         SRV*D:\Myself_Software\Windows_soft\symbols*http://msdl.microsoft.com/download/symbols
+</code></pre>
+<p>windbg内核调试操作</p>
+<p>开启调试服务（需要关闭安全引导）</p>
+<pre><code>bcdedit /debug on
+bcdedit /dbgsettings serial debugport:2 baudrate:115200
+</code></pre>
+<pre><code>.reload #加载内核符号
+</code></pre>
+<p>需要找到一个内核挂载程序</p>
 
     </div>
     

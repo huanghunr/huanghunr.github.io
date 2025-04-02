@@ -230,9 +230,8 @@
 </div>
 # reverse
 [(・∀・)つ原题](https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs) 
-## base64
 
-<p>Die 发现是 PE64，直接丢入 ide64，函数名混乱，直接 shift+f12，查找用”Enter the flag: “ 进入主函数，发现输入的值 str 为 26 位然后被 sub_7FF706EE14E0(Str, 26, Str1)加密输出为 str1，再与 g84Gg6m2ATtVeYqUZ9xRnaBpBvOVZYtj+Tc&#x3D;比较相等即 str 是 flag 值.<br>进入sub_7FF706EE14E0()函数，再由题目提示的 base64 丁帧为 base64 加密函数，并找到了一个字符串 WHydo3sThiS7ABLElO0k5trange+CZfVIGRvup81NKQbjmPzU4MDc9Y6q2XwFxJ&#x2F; ,一眼就是密钥 .</p>
+<h2><span id="base64">base64</span></h2><p>Die 发现是 PE64，直接丢入 ide64，函数名混乱，直接 shift+f12，查找用”Enter the flag: “ 进入主函数，发现输入的值 str 为 26 位然后被 sub_7FF706EE14E0(Str, 26, Str1)加密输出为 str1，再与 g84Gg6m2ATtVeYqUZ9xRnaBpBvOVZYtj+Tc&#x3D;比较相等即 str 是 flag 值.<br>进入sub_7FF706EE14E0()函数，再由题目提示的 base64 丁帧为 base64 加密函数，并找到了一个字符串 WHydo3sThiS7ABLElO0k5trange+CZfVIGRvup81NKQbjmPzU4MDc9Y6q2XwFxJ&#x2F; ,一眼就是密钥 .</p>
 <p>直接用密钥 base64 解密得 flag</p>
 <hr>
 <h2><span id="ezandroidstudy">ezAndroidStudy</span></h2><p>apk 先安装看一看，全是提示就跟着提示来<br>activity 有个 work.pangbai.ezandroidstudy.Homo 的页面,直接搜索进入拿下 flag 第一段 flag{Y0u<br>发现flag字符转被定义在一个名为flag1的变量里，于是推测有flag2,直接搜索 flag2，拿下flag2的值为 _@r4。<br>同样搜索 flag3，直接拿下 flag3 的值为_900d。<br>flag4 在提示的目录下为_andr01d.<br>第五步提示要逆向 so 文件（c 语言），于是找到在 lib&#x2F;arm64-v8a 下的so 文件，提取出来直接丢入 ida64，shift+f12 在libezandroidstudy.so 文件中找到最后flag，_r4V4rs4r}</p>

@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     Re学习
                 </a>
             </span>
@@ -217,6 +217,7 @@
 </ul>
 </li>
 <li><a href="#idc_idc%E5%BA%93%E8%8E%B7%E5%BE%97%E5%B1%9E%E6%80%A7">idc_idc库获得属性</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9Bida9%E7%9A%84api%E6%9B%BF%E6%8D%A2">一些ida9的api替换</a></li>
 <li><a href="#%E5%8E%BB%E8%8A%B1%E6%8C%87%E4%BB%A4">去花指令</a></li>
 </ul>
 </li>
@@ -321,6 +322,9 @@ ida.inf_get_max_ea()  #()-&gt;(程序最大地址)
 ida.inf_get_min_ea()  #()-&gt;(程序最小地址)
 ida.inf_get_start_ip() #()-&gt;(start的地址/入口点)
 
+</code></pre>
+<h3><span id="一些ida9的api替换">一些ida9的api替换</span></h3><pre><code class="py">ida_search.find_binary() --&gt; ida_bytes.bin_search()
+ida_bytes.compiled_binpat_vec_t() #ida内部定义的类型，要使用此类型需要通过ida_bytes.parse_binpat_str(data,ea,bin_str,16)转化
 </code></pre>
 <h3><span id="去花指令">去花指令</span></h3><pre><code class="python">import idautils
 import idc

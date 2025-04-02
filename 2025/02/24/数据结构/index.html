@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     C语言学习
                 </a>
             </span>
@@ -866,6 +866,70 @@ int main()&#123;
 <h3><span id="实验7-二叉树的创建及遍历">实验7 二叉树的创建及遍历</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3055/view">https://acm.zjnu.edu.cn/problem/3055/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
+<pre><code class="c++">#include &lt;cstdlib&gt;
+#include &lt;cstdio&gt;
+using namespace std;
+
+#define ERROR 0
+#define OK 1
+#define OVERFLOW -2
+#define MAX 100000000
+typedef int status;
+typedef struct Binode &#123;
+    char data;
+    int deep;
+    Binode* lchild;
+    Binode* rchild;
+&#125;Binode, * BiTree;
+
+status depthbitree(BiTree&amp; T);
+
+status prebitree(BiTree T) &#123;
+    if (T) &#123;
+        depthbitree(T);
+        printf(&quot;%c(%d)&quot;, T-&gt;data, T-&gt;deep);
+        prebitree(T-&gt;lchild);
+        prebitree(T-&gt;rchild);
+    &#125;
+    return OK;
+&#125;
+
+status depthbitree(BiTree&amp; T) &#123;
+    if(T)
+     &#123;
+        if (T-&gt;lchild != NULL) T-&gt;lchild-&gt;deep = T-&gt;deep +1;
+        if (T-&gt;rchild != NULL) T-&gt;rchild-&gt;deep = T-&gt;deep +1;
+        depthbitree(T-&gt;lchild);
+        depthbitree(T-&gt;rchild);
+    &#125;
+    return OK;
+&#125;
+
+status creabitree(BiTree&amp; T) &#123;
+    char get;
+    scanf(&quot;%c&quot;, &amp;get);
+    if (get == &#39;#&#39; || get == &#39;\n&#39;) T = NULL;
+    else &#123;
+        if (!(T = (Binode*)malloc(sizeof(Binode)))) exit(OVERFLOW);
+        T-&gt;data = get;
+        T-&gt;deep = 1;
+        creabitree(T-&gt;lchild);
+        creabitree(T-&gt;rchild);
+    &#125;
+    return OK;
+&#125;
+
+int main() &#123;
+
+    BiTree T;
+    creabitree(T);
+
+    depthbitree(T);
+
+    prebitree(T);
+    return 0;
+&#125;
+</code></pre>
 <p><strong>三、程序代码及运行结果</strong></p>
 <p><strong>四、收获总结</strong></p>
 <hr>

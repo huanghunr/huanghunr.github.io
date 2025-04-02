@@ -1803,6 +1803,62 @@ int main() &#123;
 </code></pre>
 <p>得到密钥775ff0d3</p>
 <p>提取汇编指令，对dia内的数据进行异或处理</p>
+<p>用ida脚本对enc段解密，并去除花指令</p>
+<pre><code>import idc
+import ida_bytes
+
+#获取范围内的数据
+def getbyte_data(start,end):
+    len = end - start
+    data = idc.get_bytes(start,len)
+    return data
+
+def xordatas(data,key):
+    res = b&quot;&quot;
+    data = bytearray(data)
+    for i in range(len(data)):
+        data[i]= data[i] ^ key[i % 4]
+    print(data)
+    return data
+
+#smc解密
+def decsmc(start,end):
+    data = getbyte_data(start,end)
+    print(data)
+    try:
+        res = xordatas(data,bytes.fromhex(&quot;755ff0d3&quot;))
+        ida_bytes.patch_bytes(start,bytes(res))
+        print(res)
+        print(&quot;ok&quot;)
+    except Exception as e:
+        print(e)
+
+def nop_jzjnz(start_addr,endaddr,pattern):
+    length =len(pattern)
+    flag = 0
+    while start_addr &lt; endaddr:
+        getbytes =idc.get_bytes(start_addr,length) #获取指定范围内指定地址的字节码并返回成列表
+        if(getbytes[0]==pattern[0] and getbytes[1]==pattern[1] and getbytes[2] == pattern[2] and getbytes[3] == pattern[3]):  #匹配花指令模板
+            flag = 1
+            for i in range(length):        
+                idc.patch_byte(start_addr + i,0x90)  #nop
+            print(f&quot;success! nop 0x&#123;hex(start_addr)&#125; to 0x&#123;hex(start_addr + length -1)&#125; length:&#123;length&#125;&quot;)
+            start_addr += length - 1
+        start_addr += 1
+    if(flag == 0):
+        print(&quot;Not find!!!&quot;)
+        
+pattern = [0x50, 0xB8, 0x00, 0x00, 0x00, 0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC0, 0x01, 0x83, 0xF8, 0x02, 0x74, 0x01, 0xC3, 0x58]
+pattern2 = [0x74, 0x03, 0x75, 0x01, 0xE8]
+
+start = 0x00401000
+end = 0x0401600
+
+
+decsmc(start,end)
+nop_jzjnz(start,end,pattern)
+nop_jzjnz(start,end,pattern2)
+</code></pre>
 
     </div>
     
