@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     C语言学习
                 </a>
             </span>
@@ -1683,6 +1683,93 @@ int main() &#123;
     printf(&quot;%d\n&quot;, count);
 
     printf(&quot;%d\n&quot;, BitreeDepth(T) );
+    return 0;
+&#125;
+</code></pre>
+<p>建二叉树并输出所找结点的祖先</p>
+<p>注意这里的代码建议使用pop和push合用的形式，使用我下面的这个代码在过大情况下会导致内存超出的错误。不过因为oj测试数据范围较小，下面的代码也可以通过。<del>（懒得改了）</del></p>
+<pre><code class="c++">#include &lt;cstdlib&gt;
+#include &lt;cstdio&gt;
+using namespace std;
+
+#define ERROR 0
+#define OK 1
+#define OVERFLOW -2
+
+typedef struct Stacknode&#123;
+    int data;
+    struct Stacknode* next;
+&#125;Stacknode;
+
+typedef struct stack &#123;
+    Stacknode* top;
+&#125;stack;
+
+typedef int status;
+typedef struct Binode &#123;
+    int data;
+    Binode* lchild;
+    Binode* rchild;
+&#125;Binode, * BiTree;
+
+status push(stack&amp; t,int data) &#123;
+    Stacknode* p = (Stacknode*)malloc(sizeof(Stacknode));
+    if (p == NULL) exit(OVERFLOW);
+    p-&gt;data = data;
+    p-&gt;next = t.top;
+    t.top = p;
+    return OK;
+&#125;
+status initstack(stack&amp; t) &#123;
+    t.top = NULL;
+    return OK;
+&#125;
+
+status printstack(stack t) &#123;
+    Stacknode* p = t.top;
+    while (p != NULL) &#123;
+        printf(&quot;%d &quot;, p-&gt;data);
+        p = p-&gt;next;
+    &#125;
+    return OK;
+&#125;
+
+status getfather(BiTree&amp; T, int node,stack t) &#123;
+    if (T) &#123;
+        push(t, T-&gt;data);
+        if (T-&gt;data == node) printstack(t);
+        getfather(T-&gt;lchild, node,t);
+        getfather(T-&gt;rchild, node, t);
+    &#125;
+    return OK;
+&#125;
+
+status creabitree(BiTree&amp; T) &#123;
+    int get;
+    scanf(&quot;%d&quot;, &amp;get);
+    if (get == 0) T = NULL;
+    else &#123;
+        if (!(T = (Binode*)malloc(sizeof(Binode)))) exit(OVERFLOW);
+        T-&gt;data = get;
+        creabitree(T-&gt;lchild);
+        creabitree(T-&gt;rchild);
+    &#125;
+    return OK;
+&#125;
+
+int main() &#123;
+    int count = 0,deep=0;
+    BiTree T;
+    creabitree(T);
+    scanf(&quot;%d&quot;, &amp;count);
+    for (int i = 0; i &lt; count; i++) &#123;
+        int node;
+        scanf(&quot;%d&quot;, &amp;node);
+        stack t;
+        initstack(t);
+        getfather(T, node, t);
+        printf(&quot;\n&quot;);
+    &#125;
     return 0;
 &#125;
 </code></pre>
