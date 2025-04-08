@@ -937,6 +937,165 @@ int main() &#123;
 <h3><span id="实验8-树的建立与遍历">实验8 树的建立与遍历</span></h3><p><strong>一、实验内容与要求</strong></p>
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3093/view">https://acm.zjnu.edu.cn/problem/3093/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include&lt;string&gt;
+
+#define ERROR 0
+#define OK 1
+#define OVERFLOW -2
+
+typedef int Elem;
+
+typedef struct CSNode &#123;
+    Elem data;
+    struct CSNode* firstchild, * nextsibling;
+&#125; CSNode, * CSTree;
+
+typedef CSNode Qelemtype;
+typedef int status;
+
+typedef struct QNode &#123;
+    Qelemtype* Qdata;
+    struct QNode* next;
+&#125;Qnode, * QueuePtr;
+
+typedef struct &#123;
+    QueuePtr front;
+    QueuePtr rear;
+&#125; LinkQueue;
+
+status InitQueue(LinkQueue&amp; Q) &#123;
+    Q.front = Q.rear = (QueuePtr)malloc(sizeof(Qnode));
+    if (!Q.front) exit(EOVERFLOW);
+    Q.front-&gt;next = NULL;
+    return OK;
+&#125;
+
+status EnQueue(LinkQueue&amp; Q, Qelemtype *e)
+&#123;
+    QueuePtr p = (QueuePtr)malloc(sizeof(QNode));
+    if (!p) exit(EOVERFLOW);
+    p-&gt;Qdata = e; p-&gt;next = NULL;
+    Q.rear-&gt;next = p;
+    Q.rear = p;
+    return OK;
+&#125;
+
+Qelemtype* DeQueue(LinkQueue&amp; Q) &#123;
+    Qelemtype* e;
+    if (Q.front == Q.rear) return(ERROR);
+    QueuePtr p = Q.front-&gt;next;
+    e = p-&gt;Qdata;
+    Q.front-&gt;next = p-&gt;next;
+    if (Q.rear == p) Q.rear = Q.front;
+    free(p);
+    return e;
+&#125;
+
+Qelemtype* GetHead(LinkQueue&amp; Q) &#123;
+    Qelemtype* e;
+    if (Q.front == Q.rear) return ERROR;
+    e = Q.front-&gt;next-&gt;Qdata;
+    return e;
+&#125;
+
+CSTree GetTreeNode(char ch)&#123;
+    CSTree p = (CSTree)malloc(sizeof(CSNode));
+    p-&gt;data = ch;
+    p-&gt;firstchild = NULL;
+    p-&gt;nextsibling = NULL;
+    return p;
+&#125;
+
+void CreatTree(CSTree&amp; T)&#123;
+    T = NULL;
+    CSTree r =NULL;
+    char ch = NULL, fa = NULL;
+    int i = 0;
+    LinkQueue Q;
+
+    InitQueue(Q);
+
+    scanf(&quot;%d&quot;, &amp;i); getchar();
+    for (int j =0; j&lt;i; j++)
+    &#123;
+        CSTree s = NULL, p;
+
+        scanf(&quot;%c %c&quot;, &amp; fa, &amp;ch); getchar();
+
+        p = GetTreeNode(ch); 
+        EnQueue(Q, p); 
+        if (fa == &#39;#&#39;)  T = p;
+        else &#123;
+            s = GetHead(Q); 
+            while (s-&gt;data != fa) &#123;  
+                s = DeQueue(Q);  s =GetHead(Q);
+            &#125;
+            if (!(s-&gt;firstchild))&#123;
+                s-&gt;firstchild = p; r = p;
+            &#125;
+            else &#123; r-&gt;nextsibling = p; r = p; &#125;
+        &#125; 
+    &#125;
+&#125; 
+
+int TreeDepth(CSTree T) &#123;
+    int h1, h2;
+    if (!T) return 0;
+    else &#123;
+        h1 = TreeDepth(T-&gt;firstchild);
+        h2 = TreeDepth(T-&gt;nextsibling);
+        return(h1 + 1 &gt; h2 ? h1 + 1 : h2);
+    &#125;
+&#125;
+
+void getin(CSNode* p,int &amp;count)&#123;
+    if (p)&#123;
+        if (!p-&gt;firstchild) count++;
+        getin(p-&gt;firstchild,count);
+        getin(p-&gt;nextsibling,count);
+    &#125;
+&#125;
+
+status pretraverse(CSTree T) &#123;
+    if (T) &#123;
+        printf(&quot;%c &quot;, T-&gt;data);
+        pretraverse(T-&gt;firstchild);
+        pretraverse(T-&gt;nextsibling);
+    &#125;
+    return OK;
+&#125;
+status intraverse(CSTree T) &#123;
+    if (T) &#123;
+        intraverse(T-&gt;firstchild);
+        printf(&quot;%c &quot;, T-&gt;data);
+        intraverse(T-&gt;nextsibling);
+    &#125;
+    return OK;
+&#125;
+
+int main() &#123;
+    CSTree T;
+    CreatTree(T);
+
+    printf(&quot;PreOrder: &quot;);
+    pretraverse(T);
+    printf(&quot;\n&quot;);
+
+    printf(&quot;PostOrder: &quot;);
+    intraverse(T);
+    printf(&quot;\n&quot;);
+
+    printf(&quot;Depth: %d\n&quot;, TreeDepth(T));
+
+    int count = 0;
+    getin(T, count);
+    printf(&quot;Number of leaves: %d\n&quot;, count);
+
+    return 0;
+&#125;
+</code></pre>
 <p><strong>三、程序代码及运行结果</strong></p>
 <p><strong>四、收获总结</strong></p>
 <hr>

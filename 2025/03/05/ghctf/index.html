@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/2025GHCTF-Re-Writeup/" style="color: #00bcd4">
+                <a href="/tags/2025GHCTF-Re-Writeup/" style="color: #ffa2c4">
                     2025GHCTF_Re Writeup
                 </a>
             </span>
@@ -1753,6 +1753,7 @@ int decodeBase64(char* str, int len) &#123;
 </code></pre>
 <h3><span id="room-0">Room 0</span></h3><p>多看看main前面的函数就可以发现一个smc函数，用一个传进来的密钥对enc段进行异或解密，动调可以发现其实密钥就是我们输入进来的key。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313234627190.png" alt="image-20250313234627190"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250409012317234.png" alt="image-20250409012317234"></p>
 <p>交叉引用发现了异常处理中调用了函数，加上之前在main里面看到的中有一个除法运算可以推测出我们输入的密钥应该是要触发除0异常，于是打算直接把运算函数拿下来进行爆破。我们可以知道函数开头3字节的值是固定的55 8b ec，我们可以先提取出enc函数的前三字节进行异或得到前三位密钥再进行爆破。</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313234707169.png" alt="image-20250313234707169"></p>
 <p>这个函数把hex字符串转为对应的整数。我们的输入应该是结果的十六进制字符串。<img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250313234202659.png" alt="image-20250313234202659"></p>
@@ -1859,6 +1860,20 @@ decsmc(start,end)
 nop_jzjnz(start,end,pattern)
 nop_jzjnz(start,end,pattern2)
 </code></pre>
+<p>下断点在xor处用ida脚本提取异或数据解密。</p>
+<pre><code class="py">a = [108 ,151 ,243 ,25 ,138 ,171 ,25 ,23 ,75 ,150 ,94 ,212 ,54 ,212 ,84 ,188 ,19 ,254 ,13 ,11 ,193 ,228 ,32 ,170 ,123 ,232 ,5 ,169 ,64 ,237 ,253 ,212 ,]
+
+data = [0x22, 0xC4, 0xA0, 0x5A, 0xDE, 0xED, 0x62, 0x5E, 0x25, 0xE2, 0x6D, 0xA6, 0x05, 0xA7, 0x20, 0x8D, 0x7D, 0x99, 0x52, 0x3E, 0x8C, 0xA7, 0x7F, 0xFA, 0x09, 0xD8, 0x62, 0xDB, 0x00, 0x80, 0xC2, 0xA9]
+flag = &#39;&#39;
+for i,j in zip(a,data):
+    flag += chr(i ^ j)
+print(flag)
+
+#NSSCTF&#123;Int3r3st1ng_5MC_Pr0gr@m?&#125;
+</code></pre>
+<p>这里的密钥是触发异常前v6的值，因为在触发异常后系统会把异常前的数据压入栈中保存以便后续的恢复。从下面也可以看出。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250409012035233.png" alt="image-20250409012035233"></p>
+<p>插曲:我为了保证patch的部分不被原来的函数修改，于是nop掉了smc函数里面的一些代码，但是正好后面rc4的密钥是通过栈转递的，因为修改代码导致栈与原来不符，也就导致了密钥的不符，最后通过密钥转递的位置把修改了密钥的位置nop掉才行。</p>
 
     </div>
     
