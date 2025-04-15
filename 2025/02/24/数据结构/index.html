@@ -236,6 +236,7 @@
 <li><a href="#%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98">汉诺塔问题</a></li>
 <li><a href="#%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97%E6%8F%92%E5%85%A5%E4%B8%8E%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C">循环队列插入与删除操作</a></li>
 <li><a href="#%E4%BA%8C%E5%8F%89%E6%A0%91">二叉树</a></li>
+<li><a href="#%E6%A0%91">树</a></li>
 </ul>
 </li>
 </ul>
@@ -1103,6 +1104,139 @@ int main() &#123;
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1416/view">https://acm.zjnu.edu.cn/problem/1416/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#define ERROR 0
+#define OK 1
+#define OVERFLOW -2
+#define MAX_VERTEX_N 80	
+typedef int VRType;
+typedef int InfoType;
+typedef int VerterType;
+
+typedef struct ArcCell &#123;
+    VRType adj;
+&#125;ArcCell, AdjMatrix[MAX_VERTEX_N][MAX_VERTEX_N];
+
+typedef struct Qnode &#123;
+    VerterType data;
+    struct Qnode* next;
+&#125;;
+
+typedef struct Queue&#123;
+    Qnode* front;
+    Qnode* rear;
+&#125; Queue;
+
+typedef struct &#123;
+    VerterType vexs[MAX_VERTEX_N];
+    AdjMatrix arcx;
+    int vexnum, arcnum;
+&#125;MGraph;
+
+bool visited[MAX_VERTEX_N] = &#123;false&#125;;
+
+int InitQueue(Queue&amp; Q) &#123;
+    Q.front = Q.rear = (Qnode*)malloc(sizeof(Qnode));
+    if (!Q.front) exit(OVERFLOW);
+    Q.front-&gt;next = NULL;
+    return OK;
+&#125;
+int InQueue(Queue&amp; Q, VerterType a) &#123;
+    Qnode* p = (Qnode*)malloc(sizeof(Qnode));
+    if (!p) exit(OVERFLOW);
+    p-&gt;data = a;
+    p-&gt;next = NULL;
+    Q.rear-&gt;next = p;
+    Q.rear = p;
+    return OK;
+&#125;
+
+bool QueueEmpty(Queue&amp; Q) &#123;
+    return Q.front == Q.rear;
+&#125;
+
+int DeQueue(Queue&amp; Q, VerterType&amp; a) &#123;
+    if (Q.front == Q.rear) return ERROR;
+    Qnode* p = Q.front-&gt;next;
+    a = p-&gt;data;
+    Q.front-&gt;next = p-&gt;next;
+    if (Q.rear == p) Q.rear = Q.front;
+    free(p);
+    return OK;
+&#125;
+
+int InitGraph(MGraph &amp;M) &#123;
+    scanf(&quot;%d %d&quot;, &amp;M.vexnum, &amp;M.arcnum); getchar();
+    if (M.vexnum) &#123;
+        for (int i = 0; i &lt; M.vexnum; i++) &#123;
+            M.vexs[i] = i;
+        &#125;
+    &#125;
+    memset(M.arcx, 0, sizeof(M.arcx));
+    if (M.arcnum) &#123;
+        for (int i = 0; i &lt; M.arcnum; i++) &#123;
+            int a, b;
+            scanf(&quot;%d %d&quot;, &amp;a, &amp;b); getchar();
+            M.arcx[a][b].adj = 1;
+            M.arcx[b][a].adj = 1;
+        &#125;
+    &#125;
+    return OK;
+&#125;
+
+void DFS(MGraph M, int v) &#123;
+    visited[v] = true;
+    printf(&quot;%d &quot;, M.vexs[v]);
+    for (int i = 0; i &lt; M.vexnum; i++) &#123;
+        if (M.arcx[v][i].adj == 1 &amp;&amp; !visited[i]) &#123;
+            DFS(M, i);
+        &#125;
+    &#125;
+&#125;
+
+void BFS(MGraph M, Queue&amp; Q) &#123;
+    bool visited[MAX_VERTEX_N] = &#123; false &#125;;
+    for (int i = 0; i &lt; M.vexnum; i++) &#123;
+        if (!visited[i]) &#123;
+            visited[i] = true;
+            printf(&quot;%d &quot;, M.vexs[i]);
+            InQueue(Q, i);
+            while (!QueueEmpty(Q)) &#123;
+                VerterType u;
+                DeQueue(Q, u);
+                for (int j = 0; j &lt; M.vexnum; j++) &#123;
+                    if (M.arcx[u][j].adj &amp;&amp; !visited[j]) &#123;
+                        visited[j] = true;
+                        printf(&quot;%d &quot;, M.vexs[j]);
+                        InQueue(Q, j);
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+int main() &#123;
+    MGraph M;
+    Queue Q;
+    InitQueue(Q);
+    InitGraph(M);
+
+    for (int i = 0; i &lt; M.vexnum; i++) &#123;
+        if (!visited[i]) &#123;
+            DFS(M, i);
+        &#125;
+    &#125;
+
+    printf(&quot;\n&quot;);
+    BFS(M, Q);
+
+    return 0;
+&#125;
+</code></pre>
 <p><strong>四、收获总结</strong></p>
 <hr>
 <h3><span id="实验10-最小生成树prim算法">实验10 最小生成树prim算法</span></h3><p><strong>一、实验内容与要求</strong></p>
@@ -1931,6 +2065,142 @@ int main() &#123;
     &#125;
     return 0;
 &#125;
+</code></pre>
+<h3><span id="树">树</span></h3><p>二元组建树并求其叶子结点和深度</p>
+<pre><code class="c++">#include&lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define ERROR 0
+#define OK 1
+#define OVERFLOW -2
+
+typedef int Elem;
+
+typedef struct CSNode &#123;
+    Elem data;
+    struct CSNode* firstchild, * nextsibling;
+&#125; CSNode, * CSTree;
+
+typedef CSNode Qelemtype;
+typedef int status;
+
+typedef struct QNode &#123;
+    Qelemtype* Qdata;
+    struct QNode* next;
+&#125;Qnode, * QueuePtr;
+
+typedef struct &#123;
+    QueuePtr front;
+    QueuePtr rear;
+&#125; LinkQueue;
+
+status InitQueue(LinkQueue&amp; Q) &#123;
+    Q.front = Q.rear = (QueuePtr)malloc(sizeof(Qnode));
+    if (!Q.front) exit(OVERFLOW);
+    Q.front-&gt;next = NULL;
+    return OK;
+&#125;
+
+status EnQueue(LinkQueue&amp; Q, Qelemtype *e)
+&#123;
+    QueuePtr p = (QueuePtr)malloc(sizeof(QNode));
+    if (!p) exit(OVERFLOW);
+    p-&gt;Qdata = e; p-&gt;next = NULL;
+    Q.rear-&gt;next = p;
+    Q.rear = p;
+    return OK;
+&#125;
+
+Qelemtype* DeQueue(LinkQueue&amp; Q) &#123;
+    Qelemtype* e;
+    if (Q.front == Q.rear) return(ERROR);
+    QueuePtr p = Q.front-&gt;next;
+    e = p-&gt;Qdata;
+    Q.front-&gt;next = p-&gt;next;
+    if (Q.rear == p) Q.rear = Q.front;
+    free(p);
+    return e;
+&#125;
+
+Qelemtype* GetHead(LinkQueue&amp; Q) &#123;
+    Qelemtype* e;
+    if (Q.front == Q.rear) return ERROR;
+    e = Q.front-&gt;next-&gt;Qdata;
+    return e;
+&#125;
+
+CSTree GetTreeNode(int ch)&#123;
+    CSTree p = (CSTree)malloc(sizeof(CSNode));
+    p-&gt;data = ch;
+    p-&gt;firstchild = NULL;
+    p-&gt;nextsibling = NULL;
+    return p;
+&#125;
+
+void CreatTree(CSTree&amp; T)&#123;
+    T = NULL;
+    CSTree r =NULL;
+    int ch = NULL, fa = NULL;
+    int i = 0;
+    LinkQueue Q;
+
+    InitQueue(Q);
+
+    scanf(&quot;%d&quot;, &amp;i); getchar();
+    for (int j =0; j&lt;i; j++)
+    &#123;
+        CSTree s = NULL, p;
+
+        scanf(&quot;%d %d&quot;, &amp; fa, &amp;ch); getchar();
+
+        p = GetTreeNode(ch); 
+        EnQueue(Q, p); 
+        if (fa == -1)  T = p;
+        else &#123;
+            s = GetHead(Q); 
+            while (s-&gt;data != fa) &#123;  
+                s = DeQueue(Q);  s =GetHead(Q);
+            &#125;
+            if (!(s-&gt;firstchild))&#123;
+                s-&gt;firstchild = p; r = p;
+            &#125;
+            else &#123; r-&gt;nextsibling = p; r = p; &#125;
+        &#125; 
+    &#125;
+&#125; 
+
+int TreeDepth(CSTree T) &#123;
+    int h1, h2;
+    if (!T) return 0;
+    else &#123;
+        h1 = TreeDepth(T-&gt;firstchild);
+        h2 = TreeDepth(T-&gt;nextsibling);
+        return(h1 + 1 &gt; h2 ? h1 + 1 : h2);
+    &#125;
+&#125;
+
+status pretraverse(CSTree T) &#123;
+    if (T) &#123;
+        if(!T-&gt;firstchild) printf(&quot;%d &quot;,T-&gt;data);
+        pretraverse(T-&gt;firstchild);
+        pretraverse(T-&gt;nextsibling);
+    &#125;
+    return OK;
+&#125;
+
+int main() &#123;
+    CSTree T;
+    CreatTree(T);
+
+    pretraverse(T);
+    printf(&quot;\n&quot;);
+    printf(&quot;%d&quot;,TreeDepth(T));
+
+    return 0;
+&#125;
+</code></pre>
+<p>数据压缩中的编码问题</p>
+<pre><code>
 </code></pre>
 
     </div>

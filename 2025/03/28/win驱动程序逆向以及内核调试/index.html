@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     Re学习
                 </a>
             </span>
@@ -209,6 +209,10 @@
 
 <ul>
 <li><a href="#%E5%85%88%E6%90%AD%E5%BB%BA%E5%86%85%E6%A0%B8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83">先搭建内核调试环境</a></li>
+<li><a href="#windbg%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE">windbg常用快捷键</a><ul>
+<li><a href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">控制台常用命令</a></li>
+</ul>
+</li>
 </ul>
 <!-- tocstop -->
 
@@ -219,6 +223,7 @@
 <h2><span id="先搭建内核调试环境">先搭建内核调试环境</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guapi_poe/article/details/115051071">windows系统内核调试 环境搭建（保姆级）_dsigntool-CSDN博客</a></p>
 <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/download-the-wdk#download-icon-for-sdk-step-2-install-sdk">下载 Windows 驱动程序工具包 (WDK) - Windows drivers | Microsoft Learn</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.ddosi.org/drivers-reverse-engineering/">Windows驱动程序逆向工程方法 - 🔰雨苁ℒ🔰</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/LyShark/p/11547204.html">驱动开发：WinDBG 配置内核双机调试 - lyshark - 博客园</a></p>
 <p>驱动开发环境配置</p>
 <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/gettingstarted/writing-a-very-small-kmdf--driver">编写 Hello World Windows 驱动程序（内核模式） - Windows drivers | Microsoft Learn</a></p>
 <p>串行接口</p>
@@ -230,11 +235,51 @@
 <p>windbg内核调试操作</p>
 <p>开启调试服务（需要关闭安全引导）</p>
 <pre><code>bcdedit /debug on
-bcdedit /dbgsettings serial debugport:2 baudrate:115200
+bcdedit /dbgsettings serial debugport:1 baudrate:115200
 </code></pre>
 <pre><code>.reload #加载内核符号
 </code></pre>
 <p>需要找到一个内核挂载程序</p>
+<h2><span id="windbg常用快捷键">windbg常用快捷键</span></h2><p>F5 继续</p>
+<p>F10 逐过程</p>
+<p>F11 逐语句</p>
+<p>Shift+F11 单步跳出</p>
+<p>F7 运行到行	</p>
+<p>Ctrl + F9 在突出显示的行上切换启用断点状态</p>
+<p>Shift + F9  添加断点</p>
+<p>Ctrl+Shift+O 打开脚本</p>
+<p>Ctrl+Shift+Enter 执行脚本</p>
+<p>Ctrl+S 保存脚本</p>
+<p>Alt+S、N 新脚本</p>
+<h3><span id="控制台常用命令">控制台常用命令</span></h3><pre><code>.hh 命令访问参考命令帮助
+g 运行
+.symfix 设置符号表或添加本地符号(.symfix+ path)
+.reload 加载符号表 (/f添加路径)
+lm 列出所有模块
+lm m name v 特性模块信息
+x [Options] Module!Symbol 检查符号
+x /D model!name 查找符号可用通配符*
+bl 查看断点
+bp	设置一个将一直处于活动状态的断点，直到其所在模块被卸载。
+bu	设置一个断点，该断点在卸载模块时未解析，并在重新加载模块时重新启用。
+bm	为符号设置一个断点。 此命令适当地使用 bu 或 bp，并允许使用通配符（*）对匹配的每个符号（如类中的所有方法）设置断点。
+bc	清除列表中的断点。 使用 bc * 清除所有断点。
+bd	禁用断点。 使用 bd * 禁用所有断点。
+be	启用断点。 使用 be * 启用所有断点。
+ba &lt;access&gt; &lt;size&gt; &lt;address&gt; &#123;options&#125; 设置在访问内存位置时触发的断点（e	执行：当 CPU 从地址中提取指令时。r	读/写：当 CPU 读取或写入地址时。w	write：当 CPU 写入地址时）
+.bpcmds (显示断点命令)
+dv 命令来显示给定帧的所有局部变量的名称和值
+kp	显示堆栈和参数的完整列表。
+kn	允许您查看堆栈以及旁边的帧信息。
+！process 调试器扩展来显示或设置进程信息
+dv dename!name 查与例程关联的区域设置变量
+!process 0 0 显示所有进程的摘要信息。（0 27）输出全部
+！thread 命令查看线程
+.thread 设置当前线程
+r 查看寄存器
+!lmi 扩展显示有关模块的详细信息
+!dh 扩展显示标头信息
+</code></pre>
 
     </div>
     
