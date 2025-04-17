@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>2025腾讯游戏安全技术竞赛-PC客户端安全-初赛（复现） | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>2025腾讯游戏安全技术竞赛-PC客户端安全-初赛（复现）</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/4/4
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Wp/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Wp
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Wp/" style="color: #ff7d73">
+                    Wp
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+
+
+<!-- tocstop -->
+
+</div>
+
+<p><del><em>复现题目旨在了解题目的逻辑</em>~~~~，可能与真正的解题流程有出入</del></p>
+<p>先看main函数</p>
+<p>首先，加载了ACEDriverSDK，里面有许多函数，我们先标出函数的作用。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404155545778.png" alt="image-20250404155545778"></p>
+<p>在虚表中我们可以看到下面这两个函数，一个是用于后面base58表的初始化的，还有一个就是反调试函数。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404152230121.png" alt="image-20250404152230121"></p>
+<p>根据作用大致恢复一下结构体(命名函数时会自动修改)。</p>
+<pre><code class="c">struct ACEDriverSDK_vftable
+&#123;
+  void *creat_vftable;
+  __int64 (__fastcall *initserver)(ACEDriverSDK_vftable **a1, char *a2, __int64 a3);
+  __int64 (__fastcall *closeserver)(ACEDriverSDK_vftable **a1, __int64 a2);
+  _BOOL8 (__fastcall *startserver)(ACEDriverSDK_vftable **a1, SC_HANDLE hSCManager, const WCHAR *lpServiceName);
+  SC_HANDLE (__fastcall *openserver)(ACEDriverSDK_vftable **a1, SC_HANDLE hSCManager, const WCHAR *lpServiceName);
+  __int64 (__fastcall *Filter_install)(ACEDriverSDK_vftable **a1, SC_HANDLE hSCManager, const WCHAR *lpServiceName, const WCHAR *lpBinaryPathName);
+  __int64 (__fastcall *deleteserver)(ACEDriverSDK_vftable **a1, SC_HANDLE hSCManager, const WCHAR *lpServiceName);
+  HRESULT (__fastcall *FilterConnectCommunicationPort_wrp)(ACEDriverSDK_vftable **a1);
+  __int64 (__fastcall *FilterSendMessaged)(ACEDriverSDK_vftable **a1, int a2, const void *a3, unsigned int Size_1, LPVOID lpOutBuffer, DWORD dwOutBufferSize, DWORD *a7);
+  void *regDriverFunc_;
+  int (__fastcall *CloseHandled)(ACEDriverSDK_vftable ***a1);
+  __int64 (__fastcall *send_test)(ACEDriverSDK_vftable **a1);
+  __int64 (__fastcall *send_message)(ACEDriverSDK_vftable **a1, unsigned int Size, const void *a3);
+&#125;;
+</code></pre>
+<p>这里我们主要注意一下initserver，Filter_install，FilterConnectCommunicationPort_wrp，FilterSendMessaged，send_test，send_message。其他的函数也都是字面意思。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404162534731.png" alt="image-20250404162534731"></p>
+<p>initserver函数注册并启动驱动服务，同时初始化了Windows 文件系统过滤驱动（File System Filter Driver）。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404163025082.png" alt="image-20250404163025082"></p>
+<p>FilterConnectCommunicationPort_wrp()创建了一个端口用于用户层和内核层的通信。</p>
+<p>FilterSendMessaged，send_test，send_message函数把信息发送给内核层。其中send_test发送了一个测试信息，”This is TestHello from r3”。</p>
+<p>接下来我们继续分析main函数。</p>
+<p>regDriverFunc_(sdk)加载sdk，加载驱动后，题目要求我们输入flag，并下下面规定了flag前四位为”ACE_“。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404165115690.png" alt="image-20250404165115690"></p>
+<p>接下来用异或的方式获取了一个密钥。下面还有一个类似strcpy函数把获取的key赋值到了Block中。后面把我们的输入放到了base58enc_and_re()函数处理。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404165208517.png" alt="image-20250404165208517"></p>
+<p>base58加密特征，output是表，看一下引用，是来自一个虚表的函数初始化的，到时候我们动调获得就行。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404170042303.png" alt="image-20250404170042303"></p>
+<p>在末尾还有一个_std_reverse_trivially_swappable_1(v44, v45)会把结果反转(后续调试得来，看名字也可以知道)。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404170220394.png" alt="image-20250404170220394"></p>
+<p>接下来把base58enc_and_re()处理的结果与上面得到的异或密钥进行异或加密，并把加密结果存入res中。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404170804871.png" alt="image-20250404170804871"></p>
+<p>与把数据发送给内核，进行flag的check。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404170903473.png" alt="image-20250404170903473"></p>
+<p>大概逻辑清晰了，接下来动调获取数据。发现有反调试，推测是在main函数前加载，对main交叉引用可以找到__scrt_common_main_seh()函数。在虚表中我们可以看到反调试函数。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404171201529.png" alt="image-20250404171201529"></p>
+<p>在反调试函数中我们能够看到checkdebug()函数被传入beginthreadex()创建了一个反调试的线程，把线程信息保存到了全局变量&amp;byte_7FF7F4D78C40中。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404152423386.png" alt="image-20250404152423386"></p>
+<p>仔细查看checkdebug()函数能够发现调用了CheckRemoteDebuggerPresent()进行调试检测。同时通过Query_perf_frequency()函数获取CPU的时钟频率，调用QueryPerformanceCounter()精确计算程序运行的时间，如果程序的运行时间超过预定时间8.64e14s就会terminate()终止进程。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404152642250.png" alt="image-20250404152642250"></p>
+<p>绕过反调试，我们只需要在函数里修改一下让函数直接返回就行。还可以用frida把checkdebug函数替换掉，这样才遵守了不修改原程序的规则。不过为了分析，我们先把函数ret掉。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250404154156404.png" alt="image-20250404154156404"></p>
+<p>去掉反调试后发现程序在调试的时候会直接闪退在驱动加载阶段。推测在驱动内还有反调试的检测，于是我们直接跳过驱动的加载先分析r3层，毕竟只有在最后checkflag的时候才需要用到驱动。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417230510446.png" alt="image-20250417230510446"></p>
+<p>在base58函数里面拿到表</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417231341261.png" alt="image-20250417231341261"></p>
+<p>base58</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417231630453.png" alt="image-20250417231630453"></p>
+<p>倒转</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417231802343.png" alt="image-20250417231802343"></p>
+<p>异或”sxx”</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417232049426.png" alt="image-20250417232049426"></p>
+<p>发送到内核check</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417232503007.png" alt="image-20250417232503007"></p>
+<p>现在来分析驱动，我们先来了解一下在这题中r3与r0的通信方式。</p>
+<p>查找我们发现的那些通信函数，我们可以发现，本题采用的通信方式是minifilter的port端口通信。参考这篇文章[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/chechen/p/7777029.html">内核驱动] miniFilter 内核层与应用程序通信</a>，和mapi<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/ddi/fltkernel/nf-fltkernel-fltcreatecommunicationport">FltCreateCommunicationPort 函数 （fltkernel.h） - Windows drivers | Microsoft Learn</a>。</p>
+<p>在驱动中，首先要在DriverEntry中用FltRegisterFilter函数进行注册，通过FltCreateCommunicationPort创建一个交互端口，并创建3个回调函数分别在连接，关闭连接，接收消息时调用，我们需要重点关注消息接收函数的作用。</p>
+<p>由于混淆的不是特别强烈，在函数表中我们就能看到FltRegisterFilter函数，交叉引用过去，我们就能看到minifilter的初始化函数</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417203022841.png" alt="image-20250417203022841"></p>
+<p>我们主要看一下MessageNotifyCallback。里面有一些混淆，大概就是以一对push和pop为一组混淆或者花指令。去掉混淆和花指令。没有看到明显加密特征，继续跟函数调用。</p>
+<p>发现sub_1400021C0里面有一堆_mm_stream_ps系统调用，看着像系统函数，（这里可以通过windbg动调给输入的数据下硬件断点找到数据被操作的位置）猜测是memcpy()，继续往下看可以看到一个被混淆的函数sub_140001448，跟进去看看。进去后在第一个call的函数里call了一个地址为0x140001000的函数，看到有加密特征，去一下花指令，恢复函数，可以看到一个tea加密以及密钥。加密后对密文进行了比较，所以这里就是最后的加密逻辑，把两个一字节数据传入加密。对tea交叉引用可以发现有一个函数对tea进行了动态修补。而且还不清楚输入数据是否是没有修改的被传递传递到这里来的，打算采用动调的方式解决。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250417213452689.png" alt="image-20250417213452689"></p>
+<p>用windbg动调，先找到基地址我这里是0xfffff803&#96;31db0000</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411190643290.png" alt="image-20250411190643290"></p>
+<p>找到位置基地址+1000就是tea加密函数的位置，直接在0xfffff803&#96;31db1000处下断点后输入”ACE_1111111”运行到这里，在ida上看到，加密传进来的数据在rcx，密钥在rdx，直接查看内存就可以发现。左边两位”3”,”&#x3D;”是要加密的输入，’’A,C,E,6’就是key。那么逻辑的确就是把r3层传入的数据按两个字节为一组进行加密。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411194259927.png" alt="image-20250411194259927"></p>
+<p>但是tea函数被动态patch了，打算动调拿出patch之后函数的字节码。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411194530396.png" alt="image-20250411194530396"></p>
+<p>从刚刚的断点往下看，现在这就是已经被patch掉的函数了。往下分析，</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411191111341.png" alt="image-20250411191111341"></p>
+<p>发现中间多出一个jmp跳转到l0x0FFFFB98A61565000，跟进去看看</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411191327718.png" alt="image-20250411191327718"></p>
+<p>发现执行完这一段后又会跳转回原来的加密函数，看一下跳转的地址我们就可以发现。第一个jmp是直接跳转到了原来加密函数的末尾，也就是加密结束。第二个jmp跳转到了加密函数前面的位置执行下一轮加密。也就是说原来加密函数的后面部分是执行不到的，原函数直接跳转到了0x0FFFFB98A61565000执行。如下面的汇编</p>
+<pre><code class="asm">fffff803`31db1000 488bc4               mov     rax, rsp
+fffff803`31db1003 48895808             mov     qword ptr [rax+8], rbx
+fffff803`31db1007 48896810             mov     qword ptr [rax+10h], rbp
+fffff803`31db100b 48897018             mov     qword ptr [rax+18h], rsi
+fffff803`31db100f 48897820             mov     qword ptr [rax+20h], rdi
+fffff803`31db1013 4155                 push    r13
+fffff803`31db1015 4c8bea               mov     r13, rdx
+fffff803`31db1018 8b1a                 mov     ebx, dword ptr [rdx]
+fffff803`31db101a 4533db               xor     r11d, r11d
+fffff803`31db101d 8b7a04               mov     edi, dword ptr [rdx+4]
+fffff803`31db1020 4c8bc1               mov     r8, rcx
+fffff803`31db1023 8b7208               mov     esi, dword ptr [rdx+8]
+fffff803`31db1026 8b6a0c               mov     ebp, dword ptr [rdx+0Ch]
+fffff803`31db1029 448b09               mov     r9d, dword ptr [rcx]
+fffff803`31db102c 418d5320             lea     edx, [r11+20h]
+fffff803`31db1030 448b5104             mov     r10d, dword ptr [rcx+4]
+fffff803`31db1034 418bca               mov     ecx, r10d
+fffff803`31db1037 458d9bb979379e       lea     r11d, [r11-61C88647h]
+fffff803`31db103e c1e905               shr     ecx, 5
+fffff803`31db1041 418bc2               mov     eax, r10d
+fffff803`31db1044 03cf                 add     ecx, edi
+fffff803`31db1046 c1e004               shl     eax, 4
+fffff803`31db1049 03c3                 add     eax, ebx
+fffff803`31db104b 33c8                 xor     ecx, eax
+fffff803`31db104d 438d0413             lea     eax, [r11+r10]
+fffff803`31db1051 33c8                 xor     ecx, eax
+fffff803`31db1053 4403c9               add     r9d, ecx
+fffff803`31db1056 50                   push    rax
+fffff803`31db1057 48b8005056618ab9ffff mov     rax, 0FFFFB98A61565000h
+fffff803`31db1061 ffe0                 jmp     rax
+-----------------------------------------------------------------------------&lt;&lt;
+fffff803`31db1062 e0cd                 loopne  FFFFF80331DB1031 ;无效部分
+fffff803`31db1064 03c6                 add     eax, esi
+fffff803`31db1066 33c8                 xor     ecx, eax
+fffff803`31db1068 438d040b             lea     eax, [r11+r9]
+fffff803`31db1069 8d040b               lea     eax, [rbx+rcx]
+fffff803`31db106a 040b                 add     al, 0Bh
+fffff803`31db106c 33c8                 xor     ecx, eax
+fffff803`31db106e 4403d1               add     r10d, ecx
+fffff803`31db106f 03d1                 add     edx, ecx
+fffff803`31db1071 4883ea01             sub     rdx, 1
+fffff803`31db1072 83ea01               sub     edx, 1
+fffff803`31db1075 75bd                 jne     FFFFF80331DB1034
+-----------------------------------------------------------------------------&lt;&lt;
+fffff803`31db1077 415d                 pop     r13	;结尾部分
+fffff803`31db1079 488b5c2408           mov     rbx, qword ptr [rsp+8]
+fffff803`31db107e 488b6c2410           mov     rbp, qword ptr [rsp+10h]
+fffff803`31db1083 488b742418           mov     rsi, qword ptr [rsp+18h]
+fffff803`31db1088 488b7c2420           mov     rdi, qword ptr [rsp+20h]
+fffff803`31db108d 458908               mov     dword ptr [r8], r9d
+fffff803`31db1090 45895004             mov    
+
+
+..........................................................................
+ffffb98a`61565000 58                   pop     rax		;跳转的函数
+ffffb98a`61565001 418bc9               mov     ecx, r9d
+ffffb98a`61565004 418bc1               mov     eax, r9d
+ffffb98a`61565007 c1e004               shl     eax, 4
+ffffb98a`6156500a c1e905               shr     ecx, 5
+ffffb98a`6156500d 33c8                 xor     ecx, eax
+ffffb98a`6156500f 418bc3               mov     eax, r11d
+ffffb98a`61565012 48c1e80b             shr     rax, 0Bh
+ffffb98a`61565016 4103c9               add     ecx, r9d
+ffffb98a`61565019 83e003               and     eax, 3
+ffffb98a`6156501c 418b448500           mov     eax, dword ptr [r13+rax*4]
+ffffb98a`61565021 4103c3               add     eax, r11d
+ffffb98a`61565024 33c8                 xor     ecx, eax
+ffffb98a`61565026 4403d1               add     r10d, ecx
+ffffb98a`61565029 4883ea01             sub     rdx, 1
+ffffb98a`6156502d 48b87710db3103f8ffff mov     rax, 0FFFFF80331DB1077h
+ffffb98a`61565037 48b93410db3103f8ffff mov     rcx, 0FFFFF80331DB1034h
+ffffb98a`61565041 7502                 jne     FFFFB98A61565045
+ffffb98a`61565043 ffe0                 jmp     rax 	;结束加密
+ffffb98a`61565045 ffe1                 jmp     rcx	;下一轮加密
+</code></pre>
+<p>我们到对应的地址去把对应的十六进制dump下来，删掉中间的无效部分，直接进行拼接。拼接完成后保存为文件，用ida打开，修复一下跳转地址就可以看到伪代码。</p>
+<pre><code class="python">
+asm = [72, 139, 196, 72, 137, 88, 8, 72, 137, 104, 16, 72, 137, 112, 24, 72, 137, 120, 32, 65, 85, 76, 139, 234, 139, 26, 69, 51, 219, 139, 122, 4, 76, 139, 193, 139, 114, 8, 139, 106, 12, 68, 139, 9, 65, 141, 83, 32, 68, 139, 81, 4, 65, 139, 202, 69, 141, 155, 185, 121, 55, 158, 193, 233, 5, 65, 139, 194, 3, 207, 193, 224, 4, 3, 195, 51, 200, 67, 141, 4, 19, 51, 200, 68, 3, 201, 144, 65, 139, 201, 65, 139, 193, 193, 224, 4, 193, 233, 5, 51, 200, 65, 139, 195, 72, 193, 232, 11, 65, 3, 201, 131, 224, 3, 65, 139, 68, 133, 0, 65, 3, 195, 51, 200, 68, 3, 209, 72, 131, 234, 1, 72, 199, 192, 119, 0, 0, 0, 144, 144, 144, 72, 199, 193, 52, 0, 0, 0, 144, 144, 144, 117, 2, 255, 224, 255, 225, 65, 93, 72, 139, 92, 36, 8, 72, 139, 108, 36, 16, 72, 139, 116, 36, 24, 72, 139, 124, 36, 32, 69, 137, 8, 69, 137, 80, 4, 195]
+get = &quot;&quot;
+for i in asm:
+    str1 = hex(i)[2::]
+    if len(str1)&lt;2: str1 = &quot;0&quot;*(2-len(str1)) + str1
+    get += str1+&quot; &quot;
+print(get)
+
+res = bytes(asm)
+
+print(res)
+
+f = open(&quot;res&quot;,&quot;wb&quot;)
+f.write(res)
+</code></pre>
+<p>修复</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411192320232.png" alt="image-20250411192320232"></p>
+<p>看伪代码</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411192853115.png" alt="image-20250411192853115"></p>
+<p>现在逻辑就很清晰了，就是一个魔改的tea加密，密钥和加密数据是一样的。</p>
+<p>再动调往后看看。</p>
+<p>在加密函数的ret处下断点运行到这里，单步运行返回到0xFFFFF80331B19C5B处，紧接着的就是一个比较函数，的确这就是最后的加密了。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411195250640.png" alt="image-20250411195250640"></p>
+<p>发现数据来源是rsi-4也就是0xFFFFF80331B14064 - 4，而且每次比较完后都会把rsi+8，也就是2个四字节数据为一组进行比较。查看所在内存，把密文提取出来（当然也可以静态提取密文）。</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250411200952967.png" alt="image-20250411200952967"></p>
+<pre><code>B8 67 C3 0E 44 90 DA C9 EB 2D 6C DA C3 C9 DD 88
+75 15 A0 32 B4 D0 1D 23 74 8A 9E 4B 74 3E 5D D7
+12 87 AB EA 88 E8 04 E7 AC 31 1A E0 5C 20 AE EC
+67 74 BE A7 A3 52 62 0C 4E EC EF 1A 44 ED 0D C4
+CC 42 C8 C3 0E 0C 4A DE FC F3 24 7C 01 D0 B8 8F
+6E 3E 15 11 5C D1 0E 53 11 48 21 F4 E0 17 B5 BE
+34 16 F9 63 A5 F8 96 4D C8 EA 23 FE DF 7A 60 2C
+5C D8 43 CC 5B 6C 18 FF A5 E1 63 87 58 BD 87 91
+9B 06 D1 87 7B 8D 87 D7 68 6B 6E 83 3F C6 A0 55
+B3 FD 79 D9 EE 4D 52 3E 82 5C B3 7A 8D DA F4 A2
+4C BA 08 17 E6 53 06 71 。。。
+</code></pre>
+<p>解密方式有两种，一是写常规解密脚本。二是爆破，因为他每次只对两字节加密，进行比较，我们爆破这两个字节也很容易得到结果。</p>
+<p>下面是解密脚本，base58也可以用赛博厨师解密，记得去掉”@”。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+#include &quot;base58.h&quot;
+
+__int64 __fastcall detea( int* key, unsigned int* a4)
+&#123;
+    unsigned int sum; // r11d
+    unsigned int b0; // r9d
+    __int64 n32; // rdx
+    unsigned int b1; // r10d
+
+    sum = 0;
+    b0 = *a4;
+    n32 = 32;
+    b1 = a4[1];
+    uint32_t delta = 0x61C88647;
+    sum = delta * 32*-1;
+    do
+    &#123;
+        b1 -= (sum + key[(sum &gt;&gt; 11) &amp; 3]) ^ (b0 + ((16 * b0) ^ (b0 &gt;&gt; 5)));
+
+        b0 -= (sum + b1) ^ (*key + 16 * b1) ^ (key[1] + (b1 &gt;&gt; 5));
+        
+        sum += delta;
+        --n32;
+    &#125; while (n32);
+    *a4 = b0;
+    a4[1] = b1;
+    return 0;
+&#125;
+
+int main() &#123;
+    int key[4] = &#123; 0x41, 0x43, 0x45, 0x36 &#125;;
+    uint32_t m[] = &#123; 0x0EC367B8, 0xC9DA9044, 0xDA6C2DEB, 0x88DDC9C3, 0x32A01575, 0x231DD0B4, 0x4B9E8A74, 0xD75D3E74,
+    0xEAAB8712, 0xE704E888, 0xE01A31AC, 0xECAE205C, 0xA7BE7467, 0x0C6252A3, 0x1AEFEC4E, 0xC40DED44,
+    0xC3C842CC, 0xDE4A0C0E, 0x7C24F3FC, 0x8FB8D001, 0x11153E6E, 0x530ED15C, 0xF4214811, 0xBEB517E0,
+    0x63F91634, 0x4D96F8A5, 0xFE23EAC8, 0x2C607ADF, 0xCC43D85C, 0xFF186C5B, 0x8763E1A5, 0x9187BD58,
+    0x87D1069B, 0xD7878D7B, 0x836E6B68, 0x55A0C63F, 0xD979FDB3, 0x3E524DEE, 0x7AB35C82, 0xA2F4DA8D,
+    0x1708BA4C, 0x710653E6 &#125;;
+
+    uint32_t xorkey[] = &#123;&#39;s&#39;,&#39;x&#39;,&#39;x&#39;&#125;;
+
+    unsigned char m2[42];
+    
+    for (int i = 0; i &lt; 42; i += 2) detea(key, m + i);
+
+    for (int i = 0; i &lt; 42; i++) m[i] ^= xorkey[i % 3];
+
+    int c = 0;
+    for (int i = 41; i &gt;= 1; i--) m2[c++] = m[i]; //反转并去除&#39;@&#39;
+    m2[41] = &#39;\0&#39;;
+
+    de_base58(m2); 
+    printf(&quot;%s&quot;, m2);
+
+    return 0;
+&#125;
+//We1C0me!T0Z0Z5GamESecur1t9*CTf
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2025 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+        <div>
+            备案号：
+            
+            <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">桂ICP备2024049894号</a>
+            
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
