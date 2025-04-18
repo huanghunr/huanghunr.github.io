@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>2025ZJNUctf re-Writeup（无悬赏） | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>2025ZJNUctf re-Writeup（无悬赏）</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/4/18
+        </span>
+        
+        <span class="category">
+            <a href="/categories/wp/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                wp
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/2025ZJNUctf-Writeup/" style="color: #03a9f4">
+                    2025ZJNUctf Writeup
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#re1">re1</a></li>
+<li><a href="#re2">re2</a></li>
+<li><a href="#re3">re3</a></li>
+<li><a href="#re4">re4</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h2><span id="re1">re1</span></h2><p>nop一下</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250406124905889.png" alt="image-20250406124905889"></p>
+<p>改eip到<img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250406124933513.png" alt="image-20250406124933513"></p>
+<pre><code class="c">import re
+
+# 输入文本（假设已经复制到剪贴板或保存在文件中）
+text = &quot;&quot;&quot;
+Ooooooooookkkkkkkay, thank you for waiting me for such a long time, here are the 1th char of flag... Z
+............................................................
+Ooooooooookkkkkkkay, thank you for waiting me for such a long time, here are the 2th char of flag... J
+............................................................
+Ooooooooookkkkkkkay, thank you for waiting me for such a long time, here are the 3th char of flag... N
+............................................................
+Ooooooooookkkkkkkay, thank you for waiting me for such a long time, here are the 4th char of flag... U
+。。。。。。。。。。。。。。。。。。。。。。。
+............................................................
+Ooooooooookkkkkkkay, thank you for waiting me for such a long time, here are the 113th char of flag... G
+............................................................
+Ooooooooookkkkkkkay, thank you for waiting me for such a long time, here are the 114th char of flag... &#125;
+............................................................
+2025-04-06 12:37:28 [2] Closing connection from 127.0.0.1...
+&quot;&quot;&quot;
+
+# 使用正则表达式提取所有 flag 字符
+pattern = r&quot;here are the \d+th char of flag... (.)&quot;
+matches = re.findall(pattern, text)
+
+# 拼接所有字符
+flag = &quot;&quot;.join(matches)
+
+print(&quot;提取的 flag 是:&quot;)
+print(flag)
+#submit ZJNUCTF&#123;wOw_y0u_ARE_tHe_7lme_maSTeR_@Nd_y0u_Wi1I_Kn0w_The_TrUTH_i_H#pE_yoU_GO7_7h1S_Fl4G_wI7h0Ut_wA1Tin6_7o0_L#nG&#125;
+</code></pre>
+<h2><span id="re2">re2</span></h2><p>改了delta，记得转端序</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+void decrypt(uint32_t* v, uint32_t* k) &#123;
+    uint32_t v0 = v[0], v1 = v[1], sum = 0x11451419 *32, i;	//这里的sum是0x9e3779b9*32后截取32位的结果，截取很重要。//这里的数据类型可能会有符号，可以尝试改为int
+    uint32_t delta = 0x11451419;
+    uint32_t k0 = k[0], k1 = k[1], k2 = k[2], k3 = k[3];
+    for (i = 0; i &lt; 32; i++) &#123;
+        v1 -= ((v0 &lt;&lt; 4) + k2) ^ (v0 + sum) ^ ((v0 &gt;&gt; 5) + k3);
+        v0 -= ((v1 &lt;&lt; 4) + k0) ^ (v1 + sum) ^ ((v1 &gt;&gt; 5) + k1);
+        sum -= delta;
+    &#125;
+    v[0] = v0; v[1] = v1;
+&#125;
+
+int main()
+&#123;
+    uint32_t v[8] = &#123; 0x25B0D6B1, 0xE4CC934B, 0xB088C228, 0x3B7C4A5F, 0x84C1227A, 0x28A3FF7C &#125;,
+        k[4] = &#123; 0x736E3161,0x6C65775F,0x656D6F63,0x756F795F &#125;;  //若有多组数据，可以每两个进行加密。
+    
+    for (int i = 0; i &lt; 6; i += 2) &#123;
+        decrypt(&amp;v[i], k);
+    &#125;
+    for (int i = 0; i &lt; 40; i++) &#123;
+        printf(&quot;%c&quot;, *((char*)v + i));
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<h2><span id="re3">re3</span></h2><p>程序藏在脱壳代码中，而不是内部程序。</p>
+<p>有花指令</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250407003724194.png" alt="image-20250407003724194"></p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250407003801649.png" alt="image-20250407003801649"></p>
+<p>push全面的全是花指令全部nop掉，下面有一段smc，data就是上面那段函数，注意只有132位，记得计算。</p>
+<pre><code class="c">i =0
+data[i++] ^= 0xcc
+i&gt;132 --&gt;jmp
+</code></pre>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250407004113037.png" alt="image-20250407004113037"></p>
+<p>解密后恢复函数</p>
+<p>v10为我们的输入，从上面的start的rdi寄存器可以看出来</p>
+<p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250407004444280.png" alt="image-20250407004444280"></p>
+<p>加密逻辑</p>
+<pre><code class="c">for ( j = 0LL; *(&amp;word_9B1E + j) == ((((j ^ *(v10 + j) ^ 0x66) &gt;&gt; 4) | (16 * (j ^ *(v10 + j) ^ 0x66))) ^ 0x55); ++j )
+</code></pre>
+<p>解密脚本</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+#include&lt;stdint.h&gt;
+
+int main()
+&#123;
+    unsigned char data[] = &#123;
+    0x96, 0x87, 0xF7, 0x56, 0x47, 0x26, 0x37, 0xF4, 0xC6, 0x57, 0xE4, 0x76, 0x66, 0xD1, 0x84, 0x36,
+    0x54, 0xE4, 0xF4, 0x46, 0x87, 0xB4, 0x04, 0xB7, 0xE5, 0xA7, 0x17, 0x77, 0x64, 0xD7, 0x27, 0xA6,
+    0x66, 0xC5, 0xF7, 0x94, 0x84, 0xA7, 0xA5, 0xD5, 0x44, 0xA5, 0x77, 0xC7, 0x04, 0x67, 0xE3, 0xB6,
+    0xC5, 0x64, 0x03, 0x46, 0x85, 0xF5, 0xA6, 0x15, 0x45, 0xC6, 0x56, 0x64, 0xB6, 0x37
+    &#125;;
+    for (int i = 0; i &lt; 62; i++) &#123;
+        data[i] ^= 0x55;
+        data[i] = (data[i] &lt;&lt; 4) | (data[i] &gt;&gt; 4);
+        data[i] ^= 0x66;
+        data[i] ^= i;
+        printf(&quot;%c&quot;, data[i]);
+    &#125;
+&#125;
+</code></pre>
+<h2><span id="re4">re4</span></h2><p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250407004813580.png" alt="image-20250407004813580"></p>
+<p>第一处的逻辑</p>
+<p>vqtbl1q_s8(*(int8x16_t *)&amp;StringUTFChars_1[16 * i], t)对应汇编代码 TBL V0.16B, {V0.16B}, V1.16B；即以v1为索引，在表v0中查找值，放入v0中，这里是128位为一组进行操作，每次操作都是以byte为单位，逻辑大概是</p>
+<pre><code class="py">for i in range(16):
+        data[i] = input[table[i]
+#逆
+for i in range(16):
+    res[table[i]] = data[i]
+</code></pre>
+<p>再对表进行异或修改,用修改后的表继续下一组操作，一共3组128位数据共48字节。一起的逻辑是</p>
+<pre><code>for j in range(3):
+    for i in range(16):
+        data[i + j*16] = input[table[i]+ j*16]
+        table[i] ^= j
+</code></pre>
+<p>下面有个循环位移，后面还有个换表base64解密就行</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+#include&lt;stdint.h&gt;
+#include&quot;base64.h&quot;
+#include &lt;string.h&gt;
+
+int main()
+&#123;
+    int table[] = &#123; 0xD, 0xE, 0xF, 0xC, 0xB, 0xA, 9, 8, 6, 7, 5, 4, 2 ,3, 1, 0 &#125;;
+    //abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ3456780129+/
+    unsigned char data[100] = &quot;KJn0QBi+7Zba70HhyITl3Rv1c0K77QrGKIWWI08jStDTK1DLw1fPc1DNk1zRg09P&quot;;
+    decodeBase64((char*)data, sizeof(data));
+    //unsigned char data[] = &#123; 0x92,0x33,0x7a,0xa9,0xb2,0x3e,0xe3,0x30,0x40,0xe3,0xa8,0x47,0x62,0x2b,0x4b,0xd2,0xb5,0x7b,0x0b,0xa9,0x38,0xe2,0xa4,0x60,0x92,0x2c,0x30,0x8b,0xae,0x49,0xb1,0x37,0x6d,0x93,0xb7,0x65,0x5b,0xb1,0x69,0x0b,0xb7,0x67,0x2b,0xb6,0x6b,0x1b,0xaf,0x69 &#125;;
+    
+    unsigned char mm[100],res[100];
+
+    for (int j = 0; j &lt;= 47; j += 3)
+    &#123;
+        data[j] = ((unsigned __int8)data[j] &lt;&lt; 5) | (data[j]&gt;&gt;3);
+        data[j + 1] = ((unsigned __int8)data[j + 1] &lt;&lt; 1) | (data[j + 1] &gt;&gt; 7);
+        data[j + 2] = data[j + 2];
+    &#125;
+
+    for (int i = 0; i &lt; 3; i++) &#123;
+        for (int j = 0; j &lt; 16; j++) &#123;
+            data[j+i*16] ^= table[j];
+        &#125;
+        for (int j = 0; j &lt; 16; j++) &#123;
+            res[table[j] + i * 16] = data[j + i * 16];
+            table[j] ^= i;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2025 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+        <div>
+            备案号：
+            
+            <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">桂ICP备2024049894号</a>
+            
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
