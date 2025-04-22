@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     C语言学习
                 </a>
             </span>
@@ -1259,6 +1259,74 @@ int main() &#123;
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1408/view">https://acm.zjnu.edu.cn/problem/1408/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+using namespace std;
+#define MAX_VERTEX_N 105
+#define INF 1000000007
+typedef int VRType;
+typedef int VertexType;
+typedef int status;
+
+typedef struct ArcCell &#123;
+    VRType adj;
+&#125; ArcCell, AdjMatrix[MAX_VERTEX_N][MAX_VERTEX_N];
+
+typedef struct MGraph &#123;
+    VertexType vexs[MAX_VERTEX_N];
+    AdjMatrix arcs;
+    int vexnum, arcnum;
+&#125; MGraph;
+
+struct Closedge &#123;
+    VertexType  adjvex;
+    VRType     lowcost;
+&#125; closedge[MAX_VERTEX_N];
+
+void CreatGraph(MGraph&amp; G) &#123;
+    scanf(&quot;%d&quot;, &amp;G.vexnum);
+    for (int i = 0; i &lt; G.vexnum; i++) &#123;
+        for (int j = 0; j &lt; G.vexnum; j++) &#123;
+            scanf(&quot;%d&quot;, &amp;G.arcs[i][j].adj);
+        &#125;
+    &#125;
+&#125;
+
+int minimum(Closedge closedge[], MGraph G) &#123;
+    int u = 0, min = INF;
+    for (int i = 0; i &lt; G.vexnum; i++) &#123;
+        if (closedge[i].lowcost != -1 &amp;&amp; min &gt; closedge[i].lowcost) &#123;
+
+            min = closedge[i].lowcost;
+            u = i;
+        &#125;
+    &#125;
+    return u;
+&#125;
+
+int Prim(MGraph G) &#123;
+    int u = 0, res = 0;
+    for (int i = 0; i &lt; G.vexnum; i++) closedge[i].lowcost = G.arcs[u][i].adj;
+    closedge[u].lowcost = -1;
+
+    for (int i = 1; i &lt; G.vexnum; i++) &#123;
+        u = minimum(closedge, G);
+        res += closedge[u].lowcost;
+        closedge[u].lowcost = -1;
+        for (int j = 0; j &lt; G.vexnum; j++) &#123;
+            if (closedge[j].lowcost &gt; G.arcs[u][j].adj)
+                closedge[j].lowcost = G.arcs[u][j].adj;
+        &#125;
+    &#125;
+    return res;
+&#125;
+
+int main() &#123;
+    MGraph G;
+    CreatGraph(G);
+    printf(&quot;%d\n&quot;, Prim(G));
+    return 0;
+&#125;
+</code></pre>
 <p><strong>四、收获总结</strong></p>
 <hr>
 <h3><span id="实验11-城市畅通工程的问题">实验11 城市畅通工程的问题</span></h3><p><strong>一、实验内容与要求</strong></p>

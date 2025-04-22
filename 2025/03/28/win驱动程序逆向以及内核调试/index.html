@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
                     Re学习
                 </a>
             </span>
@@ -208,11 +208,16 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#%E5%85%88%E6%90%AD%E5%BB%BA%E5%86%85%E6%A0%B8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83">先搭建内核调试环境</a></li>
+<li><a href="#%E5%85%88%E6%90%AD%E5%BB%BA%E5%86%85%E6%A0%B8%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">先搭建内核开发环境</a><ul>
+<li><a href="#windbg%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E7%9A%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">windbg驱动调试的环境搭建。</a></li>
+</ul>
+</li>
 <li><a href="#windbg%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE">windbg常用快捷键</a><ul>
 <li><a href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">控制台常用命令</a></li>
 </ul>
 </li>
+<li><a href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE">驱动开发环境配置</a></li>
+<li><a href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90%E4%B8%8E%E5%AD%A6%E4%B9%A0">驱动开发结构分析与学习</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -220,12 +225,12 @@
 
 
 
-<h2><span id="先搭建内核调试环境">先搭建内核调试环境</span></h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guapi_poe/article/details/115051071">windows系统内核调试 环境搭建（保姆级）_dsigntool-CSDN博客</a></p>
+<h2><span id="先搭建内核开发环境">先搭建内核开发环境</span></h2><h3><span id="windbg驱动调试的环境搭建">windbg驱动调试的环境搭建。</span></h3><p>推荐阅读微软官方文档<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/debugger/getting-started-with-windbg--kernel-mode-">开始使用 WinDbg（内核模式） - Windows drivers | Microsoft Learn</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guapi_poe/article/details/115051071">windows系统内核调试 环境搭建（保姆级）_dsigntool-CSDN博客</a></p>
 <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/download-the-wdk#download-icon-for-sdk-step-2-install-sdk">下载 Windows 驱动程序工具包 (WDK) - Windows drivers | Microsoft Learn</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.ddosi.org/drivers-reverse-engineering/">Windows驱动程序逆向工程方法 - 🔰雨苁ℒ🔰</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/LyShark/p/11547204.html">驱动开发：WinDBG 配置内核双机调试 - lyshark - 博客园</a></p>
-<p>驱动开发环境配置</p>
-<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/gettingstarted/writing-a-very-small-kmdf--driver">编写 Hello World Windows 驱动程序（内核模式） - Windows drivers | Microsoft Learn</a></p>
+<p>一些要用到的命令。</p>
 <p>串行接口</p>
 <pre><code>\\.\pipe\com_2
 </code></pre>
@@ -239,7 +244,6 @@ bcdedit /dbgsettings serial debugport:1 baudrate:115200
 </code></pre>
 <pre><code>.reload #加载内核符号
 </code></pre>
-<p>需要找到一个内核挂载程序</p>
 <h2><span id="windbg常用快捷键">windbg常用快捷键</span></h2><p>F5 继续</p>
 <p>F10 逐过程</p>
 <p>F11 逐语句</p>
@@ -279,6 +283,90 @@ dv dename!name 查与例程关联的区域设置变量
 r 查看寄存器
 !lmi 扩展显示有关模块的详细信息
 !dh 扩展显示标头信息
+lsf- [filename] 添加源码
+ .lsrcpath+ 设置本地源路径
+</code></pre>
+<h2><span id="驱动开发环境配置">驱动开发环境配置</span></h2><p>微软的教程非常的好用，下面我只提出几点需要记住的比较重要的事项。</p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/gettingstarted/writing-a-very-small-kmdf--driver">编写 Hello World Windows 驱动程序（内核模式） - Windows drivers | Microsoft Learn</a></p>
+<p>我这里使用的是windows11 + vs2022的主机和用于调试的windows 10的虚拟机。开发框架采用KWDF。</p>
+<p>KWDF是以调用回调函数的来执行操作的，每一个函数都对应一个事件，通过事件的触发来调用回调函数进行数据处理。由于封装的方法较多，开发比较简单。</p>
+<p>根据微软的教程，配置好环境，我们在编写完后可以用vs直接把驱动部署在虚拟机上，其中的驱动文件位置在</p>
+<pre><code>%systemdrive%\drivertest\drivers
+</code></pre>
+<p>把devcon.exe放到虚拟机的驱动位置下，通过命令来进行驱动程序的安装。（好像需要管理员权限）</p>
+<pre><code>devcon install XXX.inf root\XXX
+</code></pre>
+<p>root\后面的内容可以在inf文件中找到（驱动程序路径）</p>
+<pre><code>[Standard.NT$ARCH$]
+%KmdfHelloWorld.DeviceDesc%=KmdfHelloWorld_Device, Root\KmdfHelloWorld
+</code></pre>
+<p>源码调试时用，把pdb文件所在位置设置为本地源路径，.reload后会自动加载源码的符号。</p>
+<pre><code> .lsrcpath+ 设置本地源路径
+</code></pre>
+<p>在windbg的左上角点击文件，选择source file添加源代码（直接显示源代码窗口），或者用lsf- [filename] 添加源码（无窗口）。根据微软文档的解释，如果使用 WinDbg，只要程序计数器位于调试器具有其源信息的代码中，就会立即显示“源”窗口。即用源代码进行调试。<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/debugger/debugging-in-source-mode">在源模式下调试 - Windows drivers | Microsoft Learn</a></p>
+<p>跟随官方文档，我们的环境差不多安装完成，接下来正式进行代码编写。</p>
+<h2><span id="驱动开发结构分析与学习">驱动开发结构分析与学习</span></h2><p>下面通过一个以diviceiocontrol进行通信的程序为例子分析一个驱动程序的一些主要要素。</p>
+<p>Deviceiocontrol：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lsh123/p/7354573.html">应用程序与驱动程序通信 DeviceIoControl - 沉疴 - 博客园</a></p>
+<pre><code class="c">#include &lt;ntddk.h&gt;
+#include &lt;wdf.h&gt;
+#include &lt;initguid.h&gt;
+
+// 自定义 IOCTL 控制码,用于deviceiocontrol通信执行操作 参数(irp生成函数，设备对象类型，ioct控制码(0x800--0xfff)，
+// 访问权限)
+#define Driver_IOCT CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+// 回调函数声明
+DRIVER_INITIALIZE DriverEntry; //声明入口
+EVT_WDF_DRIVER_DEVICE_ADD HelloKMDFEvtDeviceAdd; //声明在设备连接时调用的函数
+EVT_WDF_IO_QUEUE_IO_DEVICE_CONTROL HelloKMDFEvtIoDeviceControl; //deviceiocontrol消息处理函数
+
+// 驱动入口 参数(驱动对象，注册表路径)
+NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) &#123;
+    WDF_DRIVER_CONFIG config; //WDF_DRIVER_CONFIG结构体，保存了驱动的一些信息
+    WDF_DRIVER_CONFIG_INIT(&amp;config, HelloKMDFEvtDeviceAdd); //初始化回调函数(把回调函数注册到驱动的信息中)
+
+    KdPrint((&quot;HelloKMDF: DriverEntry\n&quot;)); //输出信息
+    //KMDF创建并注册驱动对象，这代表我们已经完成所有回调函数的部署，KMDF框架自动帮我们注册驱动。
+    return WdfDriverCreate(DriverObject, RegistryPath, WDF_NO_OBJECT_ATTRIBUTES, &amp;config, WDF_NO_HANDLE);
+&#125;
+
+// 设备添加时回调(由WDF_DRIVER_CONFIG_INIT()注册)
+NTSTATUS HelloKMDFEvtDeviceAdd(WDFDRIVER Driver, PWDFDEVICE_INIT DeviceInit) &#123;
+    UNREFERENCED_PARAMETER(Driver);
+
+    WDFDEVICE device;
+    NTSTATUS status;
+
+    // 设置设备名字
+    DECLARE_CONST_UNICODE_STRING(devName, L&quot;\\Device\\HelloKMDF&quot;);
+    WdfDeviceInitAssignName(DeviceInit, &amp;devName);
+
+    // 创建设备
+    status = WdfDeviceCreate(&amp;DeviceInit, WDF_NO_OBJECT_ATTRIBUTES, &amp;device);
+    if (!NT_SUCCESS(status)) return status;
+
+    // 创建默认队列处理 DeviceIoControl
+    WDF_IO_QUEUE_CONFIG ioQueueConfig;
+    WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&amp;ioQueueConfig, WdfIoQueueDispatchSequential);
+    ioQueueConfig.EvtIoDeviceControl = HelloKMDFEvtIoDeviceControl;
+
+    return WdfIoQueueCreate(device, &amp;ioQueueConfig, WDF_NO_OBJECT_ATTRIBUTES, WDF_NO_HANDLE);
+&#125;
+
+// 处理用户态 IOCTL 请求
+VOID HelloKMDFEvtIoDeviceControl(WDFQUEUE Queue, WDFREQUEST Request,
+                                 size_t OutputBufferLength, size_t InputBufferLength,
+                                 ULONG IoControlCode) &#123;
+    UNREFERENCED_PARAMETER(Queue);
+    UNREFERENCED_PARAMETER(OutputBufferLength);
+    UNREFERENCED_PARAMETER(InputBufferLength);
+
+    if (IoControlCode == IOCTL_HELLOKMDF) &#123;
+        KdPrint((&quot;HelloKMDF: 收到 IOCTL_HELLOKMDF 指令！\n&quot;));
+    &#125;
+
+    WdfRequestComplete(Request, STATUS_SUCCESS);
+&#125;
 </code></pre>
 
     </div>
