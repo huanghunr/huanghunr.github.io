@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     C语言学习
                 </a>
             </span>
@@ -1333,6 +1333,81 @@ int main() &#123;
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1414/view">https://acm.zjnu.edu.cn/problem/1414/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+struct edge
+&#123;
+    int u, v, w;
+&#125; edge[4005];
+
+int father[4005];
+
+int Find(int l)
+&#123;
+    if (father[l] != l)&#123;
+        return father[l] = Find(father[l]);
+    &#125;
+    return l;
+&#125;
+
+void Union(int p, int q)
+&#123;
+    father[q] = p;
+&#125;
+
+void swap(int &amp;a, int &amp;b)
+&#123;
+    int t = a;
+    a = b;
+    b = t;
+&#125;
+void Sort(struct edge edge[], int m)
+&#123;
+    for (int i = m - 1; i &gt; 0; i--)&#123;
+        for (int j = 0; j &lt; i; j++)&#123;
+            if (edge[j].w &gt; edge[j + 1].w)&#123;
+                swap(edge[j].u, edge[j + 1].u);
+                swap(edge[j].v, edge[j + 1].v);
+                swap(edge[j].w, edge[j + 1].w);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+void Initialize(int n)&#123;
+    for (int i = 1; i &lt;= n; i++)&#123;
+        father[i] = i;
+    &#125;
+&#125;
+
+int main()
+&#123;
+    int n, m;
+    scanf(&quot;%d%d&quot;, &amp;n, &amp;m);
+    for (int i = 0; i &lt; m; i++)&#123;
+        scanf(&quot;%d%d%d&quot;, &amp;edge[i].u, &amp;edge[i].v, &amp;edge[i].w);
+    &#125;
+
+    Initialize(n);
+    Sort(edge, m);
+
+    int sum = 0, j = 0, k = 0;
+    while (k &lt; n - 1)&#123;
+        int p = Find(edge[j].u);
+        int q = Find(edge[j].v);
+        if (p != q)&#123;
+            Union(p, q);
+            sum += edge[j].w;
+            k++;
+        &#125;
+        j++;
+    &#125;
+    printf(&quot;%d\n&quot;, sum);
+    return 0;
+&#125;
+</code></pre>
 <p><strong>四、收获总结</strong></p>
 <hr>
 <h3><span id="实验12-单源最短路径">实验12 单源最短路径</span></h3><p><strong>一、实验内容与要求</strong></p>
