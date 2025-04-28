@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>2025TGCTF_Re Writeup | huanghunr&#39;s Blog</title>
+    <meta name="author" content="huanghunr" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/tx%20%283%29.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <!-- <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script> -->
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>HUANGHUNR&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-home fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于huanghunr</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;全部文章(搜索)</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;HUANGHUNR&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-home fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于huanghunr</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">全部文章(搜索)</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>2025TGCTF_Re Writeup</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/4/25
+        </span>
+        
+        <span class="category">
+            <a href="/categories/2025TGCTF/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                2025TGCTF
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/2025TGCTF-Re-Writeup/" style="color: #ff7d73">
+                    2025TGCTF_Re Writeup
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    
+    <div class="content" v-pre>
+        <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#base64">base64</a></li>
+<li><a href="#xtea">XTEA</a></li>
+<li><a href="#conforand">conforand</a></li>
+<li><a href="#%E8%9B%87%E5%B9%B4%E7%9A%84%E6%9C%AC%E5%91%BD%E8%AF%AD%E8%A8%80"><strong>蛇年的本命语言</strong></a></li>
+<li><a href="#%E6%B0%B4%E6%9E%9C%E5%BF%8D%E8%80%85">水果忍者</a></li>
+<li><a href="#randomsystem">randomsystem</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="base64">base64</span></h3><p>表右移24位</p>
+<h3><span id="xtea">XTEA</span></h3><p>大端序密文输入。</p>
+<p>delta没给，直接爆破0—&gt;0xffffffff</p>
+<pre><code class="python">#include&lt;stdio.h&gt;
+#include&lt;stdint.h&gt;
+#include&lt;stdlib.h&gt;
+
+void encipher(unsigned int num_rounds, uint32_t v[2], uint32_t const key[4],uint32_t delta) &#123;
+    unsigned int i;
+    uint32_t v0 = v[0], v1 = v[1], sum = 0,a,b,c    ;
+    
+    for (i = 0; i &lt; num_rounds; i++) &#123;
+    /*  printf(&quot;%x,%x,%x\n&quot;, v0, v1,sum);*/
+        a = (v1 &lt;&lt; 4) ^ (v1 &gt;&gt; 5);
+        //printf(&quot;%x\n&quot;, a);
+        b = a+v1;
+        c = sum + key[sum &amp; 3];
+        v0 += ( b^ c);
+        sum -= delta;
+        v1 += (((v0 &lt;&lt; 4) ^ (v0 &gt;&gt; 5)) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3]);
+    &#125;
+    v[0] = v0; v[1] = v1;
+&#125;
+
+void decipher(unsigned int num_rounds, uint32_t v[2], uint32_t const key[4],uint32_t delta) &#123;
+    unsigned int i;
+    uint32_t v0 = v[0], v1 = v[1], sum = delta * num_rounds ;
+    sum = 0;
+    for (int j = 0; j &lt; 32; j++) sum -= delta;
+    for (i = 0; i &lt; num_rounds; i++) &#123;
+
+        v1 -= (((v0 &lt;&lt; 4) ^ (v0 &gt;&gt; 5)) + v0) ^ (sum + key[(sum &gt;&gt; 11) &amp; 3]);
+        sum += delta;
+        v0 -= (((v1 &lt;&lt; 4) ^ (v1 &gt;&gt; 5)) + v1) ^ (sum + key[sum &amp; 3]);
+        
+    &#125;
+    v[0] = v0; v[1] = v1;
+&#125;
+
+int main() &#123;
+    uint32_t v[8] = &#123; 0x8CCB2324, 0x09A7741A, 0xFB3C678D, 0xF6083A79, 0xF1CC241B, 0x39FA59F2, 0xF2ABE1CC, 0x17189F72 &#125;;
+    uint32_t k[4] = &#123; 0x000019F8, 0x000011BE, 0x00000991, 0x00003418 &#125;;
+    srand(2024);
+    uint32_t v2[4] = &#123;0&#125;;
+    char flag[] = &quot;HZNUCTF&#123;&quot;;
+    //for (int i = 0; i &lt; 4; i++) &#123;
+    //  k[i] = rand();
+    //&#125;
+
+    uint32_t delta = 0;
+    for (uint32_t j = 0; j &lt; 0xffffffff; j++) &#123;
+        v2[0] = 0x485a4e55;
+        v2[1] = 0x4354467b;
+        encipher(32, v2, k,j);
+        if (v2[0] == v[0]) &#123;
+            delta = j;
+            printf(&quot;%d\n&quot;, j);
+        &#125;
+    &#125;
+    printf(&quot;\n&quot;);
+    unsigned int r = 32;            
+    for (int i = 6; i &gt;=0; i--) &#123;
+        decipher(r, &amp;v[i], k, delta);
+    &#125;
+    for (int i = 0; i &lt; 32; i++) &#123;
+        printf(&quot;%c&quot;, *((char*)v + i));
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<p>最后手动把四字节反转一下</p>
+<pre><code class="python">HZNUCTF&#123;ae6-9f57-4b74-b423-98eb&#125;
+</code></pre>
+<h3><span id="conforand">conforand</span></h3><p>混淆成一坨了，把seed改为1后动调+盯帧查看数据变化和加密逻辑。</p>
+<p>魔改rc4，魔改了下面的部分。</p>
+<p>时间戳作为种子生成随机数（delta）对密钥进行了异或加密。</p>
+<p>加密时盒交换就交换了一次，详情看下面的脚本。</p>
+<p>解密时对随机数进行爆破再异或密钥解密魔改rc4就行。</p>
+<pre><code class="c">#include&lt;stdio.h&gt; 
+#include&lt;stdlib.h&gt;
+#include&lt;string.h&gt;
+
+//s 表的长度取 256
+#define size 257
+
+unsigned char sbox[257] = &#123; 0 &#125;;
+
+// 初始化 s 表
+void init_sbox(unsigned char* key,unsigned int delta) &#123;
+    unsigned int i, j, k;
+    int tmp;
+    unsigned char keyt[257] = &#123; 0 &#125;;
+    //int delta = 0x6B8B4567;
+    for (i = 0; i &lt; size; i++) &#123;
+        sbox[i] = i;
+        keyt[i] = (key[i % 9] ^ delta) % 256; 
+
+    &#125;
+    j =k = 0;
+    for (i = 0; i &lt; size; i++) &#123;
+        tmp = sbox[i];
+        j = (j + tmp + keyt[i]) % 257;  
+        //printf(&quot;%x,&quot;, j);
+        sbox[i] = sbox[j];
+        sbox[j] = tmp;
+        /*if (++k &gt;= 12)
+            k = 0;*/
+    &#125;
+    //printf(&quot;\n&quot;);
+
+
+&#125;
+
+// 加解密函数
+void enc_dec(unsigned char* key, unsigned char* data,unsigned int delta) &#123;
+    int i, j, k, R, tmp;
+
+    init_sbox(key,delta);
+    //printf(&quot;R:\n&quot;);
+    j = k = 0;
+    for (i = 0; i &lt; strlen((char*)data); i++) &#123;
+        j = (j + 1) % size;
+        k = (k + sbox[j]) % size;
+
+        tmp = sbox[j];
+        sbox[j] = sbox[k];
+        //sbox[k] = tmp;
+        int a, b, c;
+        a = (sbox[j]);
+        b = sbox[k];
+        c = a + b;
+        /*for (int i = 0; i &lt; 256; i++) &#123;
+            printf(&quot;0x%x,&quot;, sbox[i]);
+        &#125;*/
+        R = sbox[c % size];
+        //printf(&quot;%x,&quot;, R);
+        data[i] ^= R;
+    &#125;
+&#125;
+
+int main() &#123;
+    unsigned char key[100] =&quot;JustDoIt!&quot;;
+    unsigned char data[100] = &quot;000000000000000000000000000000000000000000&quot;;
+    unsigned char mm[100] = &#123; 0x83,0x1e,0x9c,0x48,0x7a,0xfa,0xe8,0x88,0x36,0xd5,0x0a,0x08,0xf6,0xa7,0x70,0x0f,0xfd,0x67,0xdd,0xd4,0x3c,0xa7,0xed,0x8d,0x51,0x10,0xce,0x6a,0x9e,0x56,0x57,0x83,0x56,0xe7,0x67,0x9a,0x67,0x22,0x24,0x6e,0xcd,0x2f &#125;;
+    unsigned char flag[] = &quot;HZNUCTF&#123;&#125;&quot;;
+    unsigned char tmp[100];
+    tmp[42] = &#39;\0&#39;;
+
+    for (unsigned int i = 0; i &lt; 0xffffffff; i++) &#123;  //爆破随机数
+        for (int j = 0; j &lt; 42; j++) &#123;
+            tmp[j] = mm[j];
+        &#125;
+        enc_dec(key, tmp,i);
+        if (tmp[0] == flag[0] &amp;&amp; tmp[1] == flag[1] &amp;&amp;tmp[2] == flag[2] &amp;&amp; tmp[3] == flag[3])
+        &#123;
+            printf(&quot;delta:%d\n&quot;, i);
+            for (int i = 0; i &lt; 42; i++) &#123;
+                printf(&quot;0x%x,&quot;, mm[i]);
+            &#125;
+            break;
+        &#125;
+    &#125;
+    printf(&quot;\n%s&quot;, tmp);
+
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="蛇年的本命语言"><strong>蛇年的本命语言</strong></span></h3><p>z3解一下。</p>
+<pre><code class="python">from z3 import *
+
+s = Solver()
+i11i1Iii1I1 =list(Int(f&quot;a_&#123;i&#125;&quot;) for i in range(30))
+ii1iIi1i11i = [
+    7 * i11i1Iii1I1[0] == 504,
+    9 * i11i1Iii1I1[0] - 5 * i11i1Iii1I1[1] == 403,
+    (2 * i11i1Iii1I1[0] - 5 * i11i1Iii1I1[1]) + 10 * i11i1Iii1I1[2] == 799,
+    3 * i11i1Iii1I1[0] + 8 * i11i1Iii1I1[1] + 15 * i11i1Iii1I1[2] + 20 * i11i1Iii1I1[3] == 2938,
+    (5 * i11i1Iii1I1[0] + 15 * i11i1Iii1I1[1] + 20 * i11i1Iii1I1[2] - 19 * i11i1Iii1I1[3]) + 1 * i11i1Iii1I1[4] == 2042,
+    (7 * i11i1Iii1I1[0] + 1 * i11i1Iii1I1[1] + 9 * i11i1Iii1I1[2] - 11 * i11i1Iii1I1[3]) + 2 * i11i1Iii1I1[4] + 5 * i11i1Iii1I1[5] == 1225,
+    11 * i11i1Iii1I1[0] + 22 * i11i1Iii1I1[1] + 33 * i11i1Iii1I1[2] + 44 * i11i1Iii1I1[3] + 55 * i11i1Iii1I1[4] + 66 * i11i1Iii1I1[5] - 77 * i11i1Iii1I1[6] == 7975,
+    ((21 * i11i1Iii1I1[0] + 23 * i11i1Iii1I1[1] + 3 * i11i1Iii1I1[2] + 24 * i11i1Iii1I1[3] - 55 * i11i1Iii1I1[4]) + 6 * i11i1Iii1I1[5] - 7 * i11i1Iii1I1[6]) + 15 * i11i1Iii1I1[7] == 229,
+    (2 * i11i1Iii1I1[0] + 26 * i11i1Iii1I1[1] + 13 * i11i1Iii1I1[2] + 0 * i11i1Iii1I1[3] - 65 * i11i1Iii1I1[4]) + 15 * i11i1Iii1I1[5] + 29 * i11i1Iii1I1[6] + 1 * i11i1Iii1I1[7] + 20 * i11i1Iii1I1[8] == 2107,
+    (10 * i11i1Iii1I1[0] + 7 * i11i1Iii1I1[1] + -9 * i11i1Iii1I1[2] + 6 * i11i1Iii1I1[3] + 7 * i11i1Iii1I1[4] + 1 * i11i1Iii1I1[5] + 22 * i11i1Iii1I1[6] + 21 * i11i1Iii1I1[7] - 22 * i11i1Iii1I1[8]) + 30 * i11i1Iii1I1[9] == 4037,
+    (15 * i11i1Iii1I1[0] + 59 * i11i1Iii1I1[1] + 56 * i11i1Iii1I1[2] + 66 * i11i1Iii1I1[3] + 7 * i11i1Iii1I1[4] + 1 * i11i1Iii1I1[5] - 122 * i11i1Iii1I1[6]) + 21 * i11i1Iii1I1[7] + 32 * i11i1Iii1I1[8] + 3 * i11i1Iii1I1[9] - 10 * i11i1Iii1I1[10] == 4950,
+    (((13 * i11i1Iii1I1[0] + 66 * i11i1Iii1I1[1] + 29 * i11i1Iii1I1[2] + 39 * i11i1Iii1I1[3] - 33 * i11i1Iii1I1[4]) + 13 * i11i1Iii1I1[5] - 2 * i11i1Iii1I1[6]) + 42 * i11i1Iii1I1[7] + 62 * i11i1Iii1I1[8] + 1 * i11i1Iii1I1[9] - 10 * i11i1Iii1I1[10]) + 11 * i11i1Iii1I1[11] == 12544,
+    (((23 * i11i1Iii1I1[0] + 6 * i11i1Iii1I1[1] + 29 * i11i1Iii1I1[2] + 3 * i11i1Iii1I1[3] - 3 * i11i1Iii1I1[4]) + 63 * i11i1Iii1I1[5] - 25 * i11i1Iii1I1[6]) + 2 * i11i1Iii1I1[7] + 32 * i11i1Iii1I1[8] + 1 * i11i1Iii1I1[9] - 10 * i11i1Iii1I1[10]) + 11 * i11i1Iii1I1[11] - 12 * i11i1Iii1I1[12] == 6585,
+    ((((223 * i11i1Iii1I1[0] + 6 * i11i1Iii1I1[1] - 29 * i11i1Iii1I1[2] - 53 * i11i1Iii1I1[3] - 3 * i11i1Iii1I1[4]) + 3 * i11i1Iii1I1[5] - 65 * i11i1Iii1I1[6]) + 0 * i11i1Iii1I1[7] + 36 * i11i1Iii1I1[8] + 1 * i11i1Iii1I1[9] - 15 * i11i1Iii1I1[10]) + 16 * i11i1Iii1I1[11] - 18 * i11i1Iii1I1[12]) + 13 * i11i1Iii1I1[13] == 6893,
+    ((((29 * i11i1Iii1I1[0] + 13 * i11i1Iii1I1[1] - 9 * i11i1Iii1I1[2] - 93 * i11i1Iii1I1[3]) + 33 * i11i1Iii1I1[4] + 6 * i11i1Iii1I1[5] + 65 * i11i1Iii1I1[6] + 1 * i11i1Iii1I1[7] - 36 * i11i1Iii1I1[8]) + 0 * i11i1Iii1I1[9] - 16 * i11i1Iii1I1[10]) + 96 * i11i1Iii1I1[11] - 68 * i11i1Iii1I1[12]) + 33 * i11i1Iii1I1[13] - 14 * i11i1Iii1I1[14] == 1883,
+    (((69 * i11i1Iii1I1[0] + 77 * i11i1Iii1I1[1] - 93 * i11i1Iii1I1[2] - 12 * i11i1Iii1I1[3]) + 0 * i11i1Iii1I1[4] + 0 * i11i1Iii1I1[5] + 1 * i11i1Iii1I1[6] + 16 * i11i1Iii1I1[7] + 36 * i11i1Iii1I1[8] + 6 * i11i1Iii1I1[9] + 19 * i11i1Iii1I1[10] + 66 * i11i1Iii1I1[11] - 8 * i11i1Iii1I1[12]) + 38 * i11i1Iii1I1[13] - 16 * i11i1Iii1I1[14]) + 15 * i11i1Iii1I1[15] == 8257,
+    ((((23 * i11i1Iii1I1[0] + 2 * i11i1Iii1I1[1] - 3 * i11i1Iii1I1[2] - 11 * i11i1Iii1I1[3]) + 12 * i11i1Iii1I1[4] + 24 * i11i1Iii1I1[5] + 1 * i11i1Iii1I1[6] + 6 * i11i1Iii1I1[7] + 14 * i11i1Iii1I1[8] - 0 * i11i1Iii1I1[9]) + 1 * i11i1Iii1I1[10] + 68 * i11i1Iii1I1[11] - 18 * i11i1Iii1I1[12]) + 68 * i11i1Iii1I1[13] - 26 * i11i1Iii1I1[14]) + 15 * i11i1Iii1I1[15] - 16 * i11i1Iii1I1[16] == 5847,
+    (((((24 * i11i1Iii1I1[0] + 0 * i11i1Iii1I1[1] - 1 * i11i1Iii1I1[2] - 15 * i11i1Iii1I1[3]) + 13 * i11i1Iii1I1[4] + 4 * i11i1Iii1I1[5] + 16 * i11i1Iii1I1[6] + 67 * i11i1Iii1I1[7] + 146 * i11i1Iii1I1[8] - 50 * i11i1Iii1I1[9]) + 16 * i11i1Iii1I1[10] + 6 * i11i1Iii1I1[11] - 1 * i11i1Iii1I1[12]) + 69 * i11i1Iii1I1[13] - 27 * i11i1Iii1I1[14]) + 45 * i11i1Iii1I1[15] - 6 * i11i1Iii1I1[16]) + 17 * i11i1Iii1I1[17] == 18257,
+    ((((25 * i11i1Iii1I1[0] + 26 * i11i1Iii1I1[1] - 89 * i11i1Iii1I1[2]) + 16 * i11i1Iii1I1[3] + 19 * i11i1Iii1I1[4] + 44 * i11i1Iii1I1[5] + 36 * i11i1Iii1I1[6] + 66 * i11i1Iii1I1[7] - 150 * i11i1Iii1I1[8] - 250 * i11i1Iii1I1[9]) + 166 * i11i1Iii1I1[10] + 126 * i11i1Iii1I1[11] - 11 * i11i1Iii1I1[12]) + 690 * i11i1Iii1I1[13] - 207 * i11i1Iii1I1[14]) + 46 * i11i1Iii1I1[15] + 6 * i11i1Iii1I1[16] + 7 * i11i1Iii1I1[17] - 18 * i11i1Iii1I1[18] == 12591,
+    (((((5 * i11i1Iii1I1[0] + 26 * i11i1Iii1I1[1] + 8 * i11i1Iii1I1[2] + 160 * i11i1Iii1I1[3] + 9 * i11i1Iii1I1[4] - 4 * i11i1Iii1I1[5]) + 36 * i11i1Iii1I1[6] + 6 * i11i1Iii1I1[7] - 15 * i11i1Iii1I1[8] - 20 * i11i1Iii1I1[9]) + 66 * i11i1Iii1I1[10] + 16 * i11i1Iii1I1[11] - 1 * i11i1Iii1I1[12]) + 690 * i11i1Iii1I1[13] - 20 * i11i1Iii1I1[14]) + 46 * i11i1Iii1I1[15] + 6 * i11i1Iii1I1[16] + 7 * i11i1Iii1I1[17] - 18 * i11i1Iii1I1[18]) + 19 * i11i1Iii1I1[19] == 52041,
+    ((((((29 * i11i1Iii1I1[0] - 26 * i11i1Iii1I1[1]) + 0 * i11i1Iii1I1[2] + 60 * i11i1Iii1I1[3] + 90 * i11i1Iii1I1[4] - 4 * i11i1Iii1I1[5]) + 6 * i11i1Iii1I1[6] + 6 * i11i1Iii1I1[7] - 16 * i11i1Iii1I1[8] - 21 * i11i1Iii1I1[9]) + 69 * i11i1Iii1I1[10] + 6 * i11i1Iii1I1[11] - 12 * i11i1Iii1I1[12]) + 69 * i11i1Iii1I1[13] - 20 * i11i1Iii1I1[14] - 46 * i11i1Iii1I1[15]) + 65 * i11i1Iii1I1[16] + 0 * i11i1Iii1I1[17] - 1 * i11i1Iii1I1[18]) + 39 * i11i1Iii1I1[19] - 20 * i11i1Iii1I1[20] == 20253,
+    (((((((45 * i11i1Iii1I1[0] - 56 * i11i1Iii1I1[1]) + 10 * i11i1Iii1I1[2] + 650 * i11i1Iii1I1[3] - 900 * i11i1Iii1I1[4]) + 44 * i11i1Iii1I1[5] + 66 * i11i1Iii1I1[6] - 6 * i11i1Iii1I1[7] - 6 * i11i1Iii1I1[8] - 21 * i11i1Iii1I1[9]) + 9 * i11i1Iii1I1[10] - 6 * i11i1Iii1I1[11] - 12 * i11i1Iii1I1[12]) + 69 * i11i1Iii1I1[13] - 2 * i11i1Iii1I1[14] - 406 * i11i1Iii1I1[15]) + 651 * i11i1Iii1I1[16] + 2 * i11i1Iii1I1[17] - 10 * i11i1Iii1I1[18]) + 69 * i11i1Iii1I1[19] - 0 * i11i1Iii1I1[20]) + 21 * i11i1Iii1I1[21] == 18768,
+    (((((555 * i11i1Iii1I1[0] - 6666 * i11i1Iii1I1[1]) + 70 * i11i1Iii1I1[2] + 510 * i11i1Iii1I1[3] - 90 * i11i1Iii1I1[4]) + 499 * i11i1Iii1I1[5] + 66 * i11i1Iii1I1[6] - 66 * i11i1Iii1I1[7] - 610 * i11i1Iii1I1[8] - 221 * i11i1Iii1I1[9]) + 9 * i11i1Iii1I1[10] - 23 * i11i1Iii1I1[11] - 102 * i11i1Iii1I1[12]) + 6 * i11i1Iii1I1[13] + 2050 * i11i1Iii1I1[14] - 406 * i11i1Iii1I1[15]) + 665 * i11i1Iii1I1[16] + 333 * i11i1Iii1I1[17] + 100 * i11i1Iii1I1[18] + 609 * i11i1Iii1I1[19] + 777 * i11i1Iii1I1[20] + 201 * i11i1Iii1I1[21] - 22 * i11i1Iii1I1[22] == 111844,
+    (((((((1 * i11i1Iii1I1[0] - 22 * i11i1Iii1I1[1]) + 333 * i11i1Iii1I1[2] + 4444 * i11i1Iii1I1[3] - 5555 * i11i1Iii1I1[4]) + 6666 * i11i1Iii1I1[5] - 666 * i11i1Iii1I1[6]) + 676 * i11i1Iii1I1[7] - 660 * i11i1Iii1I1[8] - 22 * i11i1Iii1I1[9]) + 9 * i11i1Iii1I1[10] - 73 * i11i1Iii1I1[11] - 107 * i11i1Iii1I1[12]) + 6 * i11i1Iii1I1[13] + 250 * i11i1Iii1I1[14] - 6 * i11i1Iii1I1[15]) + 65 * i11i1Iii1I1[16] + 39 * i11i1Iii1I1[17] + 10 * i11i1Iii1I1[18] + 69 * i11i1Iii1I1[19] + 777 * i11i1Iii1I1[20] + 201 * i11i1Iii1I1[21] - 2 * i11i1Iii1I1[22]) + 23 * i11i1Iii1I1[23] == 159029,
+    (((520 * i11i1Iii1I1[0] - 222 * i11i1Iii1I1[1]) + 333 * i11i1Iii1I1[2] + 4 * i11i1Iii1I1[3] - 56655 * i11i1Iii1I1[4]) + 6666 * i11i1Iii1I1[5] + 666 * i11i1Iii1I1[6] + 66 * i11i1Iii1I1[7] - 60 * i11i1Iii1I1[8] - 220 * i11i1Iii1I1[9]) + 99 * i11i1Iii1I1[10] + 73 * i11i1Iii1I1[11] + 1007 * i11i1Iii1I1[12] + 7777 * i11i1Iii1I1[13] + 2500 * i11i1Iii1I1[14] + 6666 * i11i1Iii1I1[15] + 605 * i11i1Iii1I1[16] + 390 * i11i1Iii1I1[17] + 100 * i11i1Iii1I1[18] + 609 * i11i1Iii1I1[19] + 99999 * i11i1Iii1I1[20] + 210 * i11i1Iii1I1[21] + 232 * i11i1Iii1I1[22] + 23 * i11i1Iii1I1[23] - 24 * i11i1Iii1I1[24] == 2762025,
+    ((((1323 * i11i1Iii1I1[0] - 22 * i11i1Iii1I1[1]) + 333 * i11i1Iii1I1[2] + 4 * i11i1Iii1I1[3] - 55 * i11i1Iii1I1[4]) + 666 * i11i1Iii1I1[5] + 666 * i11i1Iii1I1[6] + 66 * i11i1Iii1I1[7] - 660 * i11i1Iii1I1[8] - 220 * i11i1Iii1I1[9]) + 99 * i11i1Iii1I1[10] + 3 * i11i1Iii1I1[11] + 100 * i11i1Iii1I1[12] + 777 * i11i1Iii1I1[13] + 2500 * i11i1Iii1I1[14] + 6666 * i11i1Iii1I1[15] + 605 * i11i1Iii1I1[16] + 390 * i11i1Iii1I1[17] + 100 * i11i1Iii1I1[18] + 609 * i11i1Iii1I1[19] + 9999 * i11i1Iii1I1[20] + 210 * i11i1Iii1I1[21] + 232 * i11i1Iii1I1[22] + 23 * i11i1Iii1I1[23] - 24 * i11i1Iii1I1[24]) + 25 * i11i1Iii1I1[25] == 1551621,
+    (((((777 * i11i1Iii1I1[0] - 22 * i11i1Iii1I1[1]) + 6969 * i11i1Iii1I1[2] + 4 * i11i1Iii1I1[3] - 55 * i11i1Iii1I1[4]) + 666 * i11i1Iii1I1[5] - 6 * i11i1Iii1I1[6]) + 96 * i11i1Iii1I1[7] - 60 * i11i1Iii1I1[8] - 220 * i11i1Iii1I1[9]) + 99 * i11i1Iii1I1[10] + 3 * i11i1Iii1I1[11] + 100 * i11i1Iii1I1[12] + 777 * i11i1Iii1I1[13] + 250 * i11i1Iii1I1[14] + 666 * i11i1Iii1I1[15] + 65 * i11i1Iii1I1[16] + 90 * i11i1Iii1I1[17] + 100 * i11i1Iii1I1[18] + 609 * i11i1Iii1I1[19] + 999 * i11i1Iii1I1[20] + 21 * i11i1Iii1I1[21] + 232 * i11i1Iii1I1[22] + 23 * i11i1Iii1I1[23] - 24 * i11i1Iii1I1[24]) + 25 * i11i1Iii1I1[25] - 26 * i11i1Iii1I1[26] == 948348,
+    ((((((97 * i11i1Iii1I1[0] - 22 * i11i1Iii1I1[1]) + 6969 * i11i1Iii1I1[2] + 4 * i11i1Iii1I1[3] - 56 * i11i1Iii1I1[4]) + 96 * i11i1Iii1I1[5] - 6 * i11i1Iii1I1[6]) + 96 * i11i1Iii1I1[7] - 60 * i11i1Iii1I1[8] - 20 * i11i1Iii1I1[9]) + 99 * i11i1Iii1I1[10] + 3 * i11i1Iii1I1[11] + 10 * i11i1Iii1I1[12] + 707 * i11i1Iii1I1[13] + 250 * i11i1Iii1I1[14] + 666 * i11i1Iii1I1[15] + -9 * i11i1Iii1I1[16] + 90 * i11i1Iii1I1[17] + -2 * i11i1Iii1I1[18] + 609 * i11i1Iii1I1[19] + 0 * i11i1Iii1I1[20] + 21 * i11i1Iii1I1[21] + 2 * i11i1Iii1I1[22] + 23 * i11i1Iii1I1[23] - 24 * i11i1Iii1I1[24]) + 25 * i11i1Iii1I1[25] - 26 * i11i1Iii1I1[26]) + 27 * i11i1Iii1I1[27] == 777044,
+    (((((177 * i11i1Iii1I1[0] - 22 * i11i1Iii1I1[1]) + 699 * i11i1Iii1I1[2] + 64 * i11i1Iii1I1[3] - 56 * i11i1Iii1I1[4] - 96 * i11i1Iii1I1[5] - 66 * i11i1Iii1I1[6]) + 96 * i11i1Iii1I1[7] - 60 * i11i1Iii1I1[8] - 20 * i11i1Iii1I1[9]) + 99 * i11i1Iii1I1[10] + 3 * i11i1Iii1I1[11] + 10 * i11i1Iii1I1[12] + 707 * i11i1Iii1I1[13] + 250 * i11i1Iii1I1[14] + 666 * i11i1Iii1I1[15] + -9 * i11i1Iii1I1[16] + 0 * i11i1Iii1I1[17] + -2 * i11i1Iii1I1[18] + 69 * i11i1Iii1I1[19] + 0 * i11i1Iii1I1[20] + 21 * i11i1Iii1I1[21] + 222 * i11i1Iii1I1[22] + 23 * i11i1Iii1I1[23] - 224 * i11i1Iii1I1[24]) + 25 * i11i1Iii1I1[25] - 26 * i11i1Iii1I1[26]) + 27 * i11i1Iii1I1[27] - 28 * i11i1Iii1I1[28] == 185016,
+    ((((((77 * i11i1Iii1I1[0] - 2 * i11i1Iii1I1[1]) + 6 * i11i1Iii1I1[2] + 6 * i11i1Iii1I1[3] - 96 * i11i1Iii1I1[4] - 9 * i11i1Iii1I1[5] - 6 * i11i1Iii1I1[6]) + 96 * i11i1Iii1I1[7] - 0 * i11i1Iii1I1[8] - 20 * i11i1Iii1I1[9]) + 99 * i11i1Iii1I1[10] + 3 * i11i1Iii1I1[11] + 10 * i11i1Iii1I1[12] + 707 * i11i1Iii1I1[13] + 250 * i11i1Iii1I1[14] + 666 * i11i1Iii1I1[15] + -9 * i11i1Iii1I1[16] + 0 * i11i1Iii1I1[17] + -2 * i11i1Iii1I1[18] + 9 * i11i1Iii1I1[19] + 0 * i11i1Iii1I1[20] + 21 * i11i1Iii1I1[21] + 222 * i11i1Iii1I1[22] + 23 * i11i1Iii1I1[23] - 224 * i11i1Iii1I1[24]) + 26 * i11i1Iii1I1[25] - -58 * i11i1Iii1I1[26]) + 27 * i11i1Iii1I1[27] - 2 * i11i1Iii1I1[28]) + 29 * i11i1Iii1I1[29] == 130106]
+
+
+for i in ii1iIi1i11i:
+    s.add(i)
+
+res =&quot;&quot;
+if s.check() == sat:
+    for i in range(30):
+        res += chr(s.model()[i11i1Iii1I1[i]].as_long())
+print(res)
+
+tab = dict()
+for i in range(0,len(res),2):
+    if res[i+1] == &#39;1&#39;: continue
+    tab[res[i+1]] = res[i]
+print(tab)
+
+m = &quot;111111116257645365477364777645752361&quot;
+flag = &quot;HZNUCTF&#123;&quot;
+for i in m:
+    if i == &#39;1&#39;: continue
+    flag += tab[i]
+flag+=&#39;&#125;&#39;
+print(flag)
+HZNUCTF&#123;ad7fa-76a7-ff6a-fffa-7f7d6a&#125;
+</code></pre>
+<h3><span id="水果忍者">水果忍者</span></h3><p> AES加密</p>
+<p>![image (3)](<a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image">https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image</a> (3).png)</p>
+<p>![image (4)](<a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image">https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image</a> (4).png)</p>
+<p>![image (5)](<a target="_blank" rel="noopener" href="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image">https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image</a> (5).png)</p>
+<h3><span id="randomsystem">randomsystem</span></h3><p>矩阵操作，换位，乘法，生成密钥，异或加密</p>
+<pre><code class="py">import re
+import numpy as np
+
+def gettaable_byasm():
+    asm =   &quot;&quot;&quot;
+    mov     [ebp+var_104], 1
+mov     [ebp+var_100], 1
+mov     [ebp+var_FC], 0
+mov     [ebp+var_F8], 1
+mov     [ebp+var_F4], 0
+mov     [ebp+var_F0], 0
+mov     [ebp+var_EC], 1
+mov     [ebp+var_E8], 0
+mov     [ebp+var_E4], 0
+mov     [ebp+var_E0], 1
+mov     [ebp+var_DC], 1
+mov     [ebp+var_D8], 0
+mov     [ebp+var_D4], 0
+mov     [ebp+var_D0], 1
+mov     [ebp+var_CC], 0
+mov     [ebp+var_C8], 1
+mov     [ebp+var_C4], 0
+mov     [ebp+var_C0], 0
+mov     [ebp+var_BC], 1
+mov     [ebp+var_B8], 1
+mov     [ebp+var_B4], 0
+mov     [ebp+var_B0], 1
+mov     [ebp+var_AC], 1
+mov     [ebp+var_A8], 0
+mov     [ebp+var_A4], 0
+mov     [ebp+var_A0], 0
+mov     [ebp+var_9C], 0
+mov     [ebp+var_98], 1
+mov     [ebp+var_94], 0
+mov     [ebp+var_90], 1
+mov     [ebp+var_8C], 0
+mov     [ebp+var_88], 1
+mov     [ebp+var_84], 0
+mov     [ebp+var_80], 1
+mov     [ebp+var_7C], 0
+mov     [ebp+var_78], 0
+mov     [ebp+var_74], 1
+mov     [ebp+var_70], 0
+mov     [ebp+var_6C], 1
+mov     [ebp+var_68], 0
+mov     [ebp+var_64], 0
+mov     [ebp+var_60], 0
+mov     [ebp+var_5C], 0
+mov     [ebp+var_58], 0
+mov     [ebp+var_54], 0
+mov     [ebp+var_50], 1
+mov     [ebp+var_4C], 0
+mov     [ebp+var_48], 1
+mov     [ebp+var_44], 0
+mov     [ebp+var_40], 0
+mov     [ebp+var_3C], 0
+mov     [ebp+var_38], 0
+mov     [ebp+var_34], 0
+mov     [ebp+var_30], 0
+mov     [ebp+var_2C], 1
+mov     [ebp+var_28], 1
+mov     [ebp+var_24], 0
+mov     [ebp+var_20], 1
+mov     [ebp+var_1C], 1
+mov     [ebp+var_18], 0
+mov     [ebp+var_14], 0
+mov     [ebp+var_10], 0
+mov     [ebp+var_C], 0
+mov     [ebp+var_8], 1
+            &quot;&quot;&quot;
+    values = re.findall(r&quot;mov.*?,\s*(\d+)&quot;, asm)
+    values = [int(x) for x in values]
+    return values
+
+def exchange(input, tableM):
+    inlen = len(input)
+    for i in range(32):
+        input[i], input[inlen - tableM[i] - 1] = input[inlen - tableM[i] - 1], input[i] #前32位与后32按盒位交换
+    return input
+
+def deexchange(input, tableM):
+    inlen = len(input)
+    for i in range(32):
+        input[inlen - tableM[i] - 1], input[i] = input[i], input[inlen - tableM[i] - 1] #前32位与后32按盒位交换
+    return input
+
+def changeKey(key):
+    data = []
+    for i in range(0, len(key), 2):
+        data.append((((key[i] - 48)&lt;&lt;4) | (key[i + 1] - 48)) &amp;0xff)
+    return data
+
+
+key2 = [53, 50, 54, 53, 53, 54, 54, 53, 53, 50, 54, 53, 53, 51, 54, 53]
+mm = [376, 356, 169, 501, 277, 329, 139, 342, 380, 365, 162, 258, 381, 339, 347, 307, 263, 359, 162, 484, 310, 333, 346,
+      339, 150, 194, 175, 344, 158, 250, 128, 175, 158, 173, 152, 379, 158, 292, 130, 365, 197, 20, 197, 161, 198, 10,
+      207, 244, 202, 14, 204, 176, 193, 255, 35, 7, 158, 181, 145, 353, 153, 357, 246, 151]
+
+randi = [27, 26, 25, 23, 28, 1, 6, 10, 20, 7, 15, 14, 31, 18, 19, 21, 9, 30, 22, 24, 8, 2, 29, 3, 12, 11, 17, 16, 0, 13, 5, 4] #用c语言生成随机数
+
+MatrixB = gettaable_byasm()
+
+key = changeKey(key2)
+
+for i in range(len(mm)):
+    mm[i] ^= key[i % len(key)]
+
+B = np.array(mm).reshape(-1,8)
+A = np.array(MatrixB).reshape(-1,8) #转为矩阵-1为自适应
+
+invA = np.linalg.inv(A) #求逆
+res = invA @ B #矩阵乘法
+
+resl =deexchange(res.astype(int).flatten().tolist(),randi) #flatten降维，转成list,astype转为int类型
+
+flag =&#39;&#39;.join(map(chr,resl))
+
+print(flag)
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2024 - 2025 huanghunr&#39;s Blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;huanghunr
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+        <div>
+            备案号：
+            
+            <a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">桂ICP备2024049894号</a>
+            
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

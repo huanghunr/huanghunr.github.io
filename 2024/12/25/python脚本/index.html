@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">
+                <a href="/tags/Re%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     Re学习
                 </a>
             </span>
@@ -366,6 +366,12 @@ for i in range(100):
     r.sendline(senddata) # 发送结果
     print(r.recvline())# 跳过一行，以便读取下一行
 print(r.recv())# 读取结果
+</code></pre>
+<p>add矩阵</p>
+<pre><code class="python">var = list([Int(f&quot;&#123;i&#125;_&#123;j&#125;&quot;) for j in range(8)] for i in range(8))
+for i in range(8):
+     for j in range(8):
+         s.add(Sum([tableB[i][k] * var[k][j] for k in range(8)]) == mm1[i][j])
 </code></pre>
 
     </div>
