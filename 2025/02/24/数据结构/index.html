@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
                     C语言学习
                 </a>
             </span>
@@ -1414,92 +1414,74 @@ int main()
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3933/view">https://acm.zjnu.edu.cn/problem/3933/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
-<pre><code class="c++">#include &lt;stdio.h&gt;
+<pre><code class="c++">#include &lt;iostream&gt;
+using namespace std;
+#define MAX_VERTEX_N 3005
+#define MAX_EDGE_M 10005
+#define INF 1000000007
+typedef int VRType;
+typedef int VertexType;
+typedef int status;
+int s, t;
+int dist[MAX_VERTEX_N];
+bool visited[MAX_VERTEX_N];
+typedef struct ArcCell &#123;
+    VRType adj;
+&#125; ArcCell, AdjMatrix[MAX_VERTEX_N][MAX_VERTEX_N];
 
-#include &lt;string.h&gt;
+typedef struct MGraph &#123;
+    VertexType vexs[MAX_VERTEX_N];
+    AdjMatrix arcs;
+    int vexnum, arcnum;
+&#125; MGraph;
+MGraph G;
 
-#include &lt;stdlib.h&gt;
-
-#define INF 35000
-
-struct Graph
-&#123;
-    int arcs[3005][3005];
-
-    int size;
-
-&#125;g;
-
-int dist[3005];
-
-int flag[3005];
-
-int dijstra(int s, int t)
-
-&#123;
-    for (int i = 1; i &lt;= g.size; i++)
-
-    &#123;
-        dist[i] = g.arcs[s][i];
-
-        flag[i] = 0;
+void CreatGraph() &#123;
+    int u, v, x;
+    cin &gt;&gt; G.vexnum &gt;&gt; G.arcnum &gt;&gt; s &gt;&gt; t;
+    for (int i = 0; i &lt; G.vexnum; i++) &#123;
+        G.vexs[i] = i;
     &#125;
+    for (int i = 0; i &lt;= G.vexnum; i++) &#123;
+        for (int j = 0; j &lt;= G.vexnum; j++) &#123;
+            G.arcs[i][j].adj = INF;
+        &#125;
+    &#125;
+    for (int i = 0; i &lt; G.arcnum; i++) &#123;
+        cin &gt;&gt; u &gt;&gt; v &gt;&gt; x;
+        if (G.arcs[u][v].adj &gt; x) &#123;
+            G.arcs[v][u].adj = G.arcs[u][v].adj = x;
+        &#125;
+    &#125;
+&#125;
 
-    flag[s] = 1;
-
-    for (int i = 1; i &lt; g.size; i++)
-
-    &#123;
-        int min = INF, minj, j;
-        for (j = 1; j &lt;= g.size; j++)
-        &#123;
-            if (!flag[j] &amp;&amp; dist[j] &lt; min)
-            &#123;
+void Dijkstra() &#123;
+    for (int i = 1; i &lt;= G.vexnum; i++) &#123;
+        dist[i] = G.arcs[s][i].adj;
+        visited[i] = false;
+    &#125;
+    for (int i = 0; i &lt;= G.vexnum; i++) &#123;
+        int min = INF, u=0, j;
+        for (j = 1; j &lt;= G.vexnum; j++) &#123;
+            if (!visited[j] &amp;&amp; dist[j] &lt; min) &#123;
                 min = dist[j];
-                minj = j;
+                u = j;
             &#125;
-
         &#125;
-
-        flag[minj] = 1;
-        for (j = 1; j &lt;= g.size; j++)
-        &#123;
-            if (!flag[j] &amp;&amp; dist[minj] + g.arcs[minj][j] &lt; dist[j])
-            &#123;
-                dist[j] = dist[minj] + g.arcs[minj][j];
+        visited[u] = true;
+        for (int j = 1; j &lt;= G.vexnum; j++) &#123;
+            if (!visited[j] &amp;&amp; dist[u] + G.arcs[u][j].adj &lt; dist[j]) &#123;
+                dist[j] = dist[u] + G.arcs[u][j].adj;
             &#125;
-
         &#125;
-
     &#125;
-    return dist[t];
+    cout &lt;&lt; dist[t] &lt;&lt; endl;
 &#125;
 
-
-int main()
-&#123;
-    int n, m, s, t;
-    scanf(&quot;%d%d%d%d&quot;, &amp;n, &amp;m, &amp;s, &amp;t);
-    g.size = n;
-    for (int i = 1; i &lt;= n; i++)
-    &#123;
-        for (int j = 1; j &lt;= n; j++)
-        &#123;
-            g.arcs[i][j] = INF;
-        &#125;
-    &#125;
-
-    for (int i = 1; i &lt;= m; i++)&#123;
-        int u, v, w;
-    scanf(&quot;%d%d%d&quot;, &amp;u, &amp;v, &amp;w);
-    if (w &lt; g.arcs[u][v])
-    &#123;
-        g.arcs[u][v] = g.arcs[v][u] = w;
-    &#125;
-&#125;
-printf(&quot;%d\n&quot;, dijstra(s, t));
-return 0;
-
+int main() &#123;
+    CreatGraph();
+    Dijkstra();
+    return 0;
 &#125;
 </code></pre>
 <p><strong>四、收获总结</strong></p>
@@ -1508,6 +1490,109 @@ return 0;
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/1413/view">https://acm.zjnu.edu.cn/problem/1413/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+#define maxex 200
+
+// 定义图的结构体
+typedef struct &#123;
+    int vexnum, arcnum;
+    int arcs[maxex][maxex];
+&#125; MGraph;
+
+MGraph g;
+int in[maxex], visit[maxex];
+
+// 统计入度
+void countIndegree() &#123;
+    memset(in, 0, sizeof(in));
+    for (int i = 1; i &lt;= g.vexnum; i++) &#123;
+        for (int j = 1; j &lt;= g.vexnum; j++) &#123;
+            if (g.arcs[j][i])
+                in[i]++;
+        &#125;
+    &#125;
+&#125;
+
+// 拓扑排序
+bool topoSort() &#123;
+    int base = 0, top = 0;
+    int stack[maxex];
+
+    countIndegree();
+
+    // 入度为 0 的顶点入栈（倒序）
+    for (int i = g.vexnum; i &gt;= 1; i--) &#123;
+        if (!in[i])
+            stack[top++] = i;
+    &#125;
+
+    int count = 0;
+
+    while (top != base) &#123;
+        int v = stack[--top];
+        visit[count++] = v;
+
+        for (int u = 1; u &lt;= g.vexnum; u++) &#123;
+            if (g.arcs[v][u]) &#123;
+                in[u]--;
+                if (!in[u])
+                    stack[top++] = u;
+            &#125;
+        &#125;
+
+        // 对栈中元素进行降序排序（每次调整）
+        for (int i = 0; i &lt; top; i++) &#123;
+            int k = i;
+            for (int j = i + 1; j &lt; top; j++) &#123;
+                if (stack[k] &lt; stack[j])
+                    k = j;
+            &#125;
+            if (k != i) &#123;
+                int t = stack[i];
+                stack[i] = stack[k];
+                stack[k] = t;
+            &#125;
+        &#125;
+    &#125;
+
+    // 检查是否存在环
+    if (count == g.vexnum) &#123;
+        printf(&quot;%d&quot;, visit[0]);
+        for (int i = 1; i &lt; g.vexnum; i++)
+            printf(&quot; %d&quot;, visit[i]);
+    &#125;
+    else &#123;
+        printf(&quot;no&quot;);
+    &#125;
+
+    return true;
+&#125;
+
+int main() &#123;
+    // 读入顶点数和边数
+    scanf(&quot;%d%d&quot;, &amp;g.vexnum, &amp;g.arcnum);
+
+    // 初始化邻接矩阵
+    for (int i = 1; i &lt;= g.vexnum; i++) &#123;
+        for (int j = 1; j &lt;= g.vexnum; j++) &#123;
+            g.arcs[i][j] = 0;
+        &#125;
+    &#125;
+
+    // 读入边的信息，并构建邻接矩阵
+    for (int i = 1; i &lt;= g.arcnum; i++) &#123;
+        int u, v;
+        scanf(&quot;%d%d&quot;, &amp;u, &amp;v);
+        g.arcs[u][v] = 1;
+    &#125;
+
+    // 进行拓扑排序
+    topoSort();
+    return 0;
+&#125;
+</code></pre>
 <p><strong>四、收获总结</strong></p>
 <hr>
 <h3><span id="实验14-二叉搜索树的构建与应用">实验14 二叉搜索树的构建与应用</span></h3><p><strong>一、实验内容与要求</strong></p>
