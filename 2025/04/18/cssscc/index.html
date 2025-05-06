@@ -243,7 +243,7 @@
 <p>至此驱动加载完毕。驱动在加载完毕后会删除注册表信息所以我们找不到在注册表内的信息，但是驱动已经被加载到内核运行。</p>
 <p>动调验证一下，</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250418154258225.png" alt="image-20250418154258225"></p>
-<p>在注册表删除前windbg可以看到内核程序</p>
+<p>xxxxxxxxxx #include &lt;stdio.h&gt;​int main() {    unsigned char mm[42] &#x3D; {    0x34, 0x6C, 0x60, 0x33, 0x15, 0x3B, 0x74, 0x38, 0x5E, 0x6A, 0x53, 0x05, 0x31, 0x1C, 0x43, 0x35,    0x53, 0x58, 0x4A, 0x12, 0x39, 0x3B, 0x35, 0x5E, 0x3A, 0x21, 0x08, 0x1B, 0x44, 0x00, 0x7C, 0x26,    0x6E, 0x5D, 0x54, 0x0C, 0x01, 0x07, 0x00, 0x1F, 0x52, 0x1B    };​        for (int i &#x3D; 41; i&gt;&#x3D;0; i–) {        mm[41-i] ^&#x3D; mm[(2 * i) % 42];        printf(“%c”, mm[41-i]);    }  }&#x2F;&#x2F;flag{G00d_jOb_!_7h1s_i5_nOt_0nIy_junkc0d3}c</p>
 <p><img src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/img/image-20250418154604544.png" alt="image-20250418154604544"></p>
 <p>动调时发现驱动会被卸载并蓝屏，推测还有反调试。</p>
 <p>仔细看unload()函数，这里发现，只要注册表打开成功就会把驱动卸载，？？？</p>
