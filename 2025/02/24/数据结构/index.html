@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     C语言学习
                 </a>
             </span>
@@ -237,6 +237,8 @@
 <li><a href="#%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97%E6%8F%92%E5%85%A5%E4%B8%8E%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C">循环队列插入与删除操作</a></li>
 <li><a href="#%E4%BA%8C%E5%8F%89%E6%A0%91">二叉树</a></li>
 <li><a href="#%E6%A0%91">树</a></li>
+<li><a href="#%E4%BB%BB%E4%B8%A4%E7%82%B9%E9%97%B4%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84floyd%E7%AE%97%E6%B3%95">任两点间最短路径Floyd算法</a></li>
+<li><a href="#%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84">关键路径</a></li>
 </ul>
 </li>
 </ul>
@@ -2532,7 +2534,304 @@ int main() &#123;
 &#125;
 </code></pre>
 <p>数据压缩中的编码问题</p>
-<pre><code>
+<p>不会，用ai辅助写的。。。</p>
+<pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#define MAX_CHAR 127
+
+
+typedef struct Node &#123;
+    int freq;
+    struct Node* next;
+&#125; Node;
+
+void insertSorted(Node** head, int freq) &#123;
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode-&gt;freq = freq;
+    newNode-&gt;next = NULL;
+
+    if (*head == NULL || (*head)-&gt;freq &gt;= freq) &#123;
+        newNode-&gt;next = *head;
+        *head = newNode;
+    &#125;
+    else &#123;
+        Node* curr = *head;
+        while (curr-&gt;next != NULL &amp;&amp; curr-&gt;next-&gt;freq &lt; freq) &#123;
+            curr = curr-&gt;next;
+        &#125;
+        newNode-&gt;next = curr-&gt;next;
+        curr-&gt;next = newNode;
+    &#125;
+&#125;
+
+int popMin(Node** head) &#123;
+    if (*head == NULL) return 0;
+    Node* temp = *head;
+    int val = temp-&gt;freq;
+    *head = (*head)-&gt;next;
+    free(temp);
+    return val;
+&#125;
+
+int huffmanEncodedLength(const char* str) &#123;
+    int freq[MAX_CHAR] = &#123; 0 &#125;;
+
+    for (int i = 0; str[i]; i++) &#123;
+        freq[(unsigned char)str[i]]++;
+    &#125;
+
+    Node* head = NULL;
+    for (int i = 0; i &lt; MAX_CHAR; i++) &#123;
+        if (freq[i] &gt; 0) &#123;
+            insertSorted(&amp;head, freq[i]);
+        &#125;
+    &#125;
+
+    int totalLength = 0;
+
+    while (head &amp;&amp; head-&gt;next) &#123;
+        int f1 = popMin(&amp;head);
+        int f2 = popMin(&amp;head);
+        int merged = f1 + f2;
+        totalLength += merged;
+        insertSorted(&amp;head, merged);
+    &#125;
+
+    return totalLength;
+&#125;
+
+int main() &#123;
+    char input[101];
+    int count = 0;
+    scanf(&quot;%d&quot;, &amp;count); getchar(); 
+    for (int i = 0; i &lt; count; i++) &#123;
+        fgets(input, 101, stdin);
+        input[strcspn(input, &quot;\n&quot;)] = &#39;\0&#39;;
+
+        int encodedLength = huffmanEncodedLength(input);
+        printf(&quot;%d\n&quot;, encodedLength);
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="任两点间最短路径floyd算法">任两点间最短路径Floyd算法</span></h3><pre><code class="c++">#include &lt;iostream&gt;
+using namespace std;
+#define MAX_VERTEX_N 105
+#define MAX_EDGE_M 10005
+#define INF 1000000007
+typedef int VRType;
+typedef int VertexType;
+typedef int status;
+
+typedef struct ArcCell &#123;
+    VRType adj;
+&#125; ArcCell, AdjMatrix[MAX_VERTEX_N][MAX_VERTEX_N];
+
+typedef struct MGraph &#123;
+    VertexType vexs[MAX_VERTEX_N];
+    AdjMatrix arcs;
+    int vexnum, arcnum;
+&#125; MGraph;
+int m;
+int dist[MAX_VERTEX_N][MAX_VERTEX_N];
+
+void CreatGraph(MGraph&amp; G) &#123;
+    int u, v, t;
+    cin &gt;&gt; G.vexnum &gt;&gt; m;
+    for (int i = 0; i &lt; G.vexnum; i++) &#123;
+        for (int j = 0; j &lt; G.vexnum; j++) &#123;
+            G.arcs[i][j].adj = INF;
+        &#125;
+    &#125;
+    for (int i = 0; i &lt; G.vexnum; i++) &#123;
+        for (int j = 0; j &lt; G.vexnum; j++) &#123;
+            cin &gt;&gt; G.arcs[i][j].adj;
+        &#125;
+    &#125;
+&#125;
+void Floyd(MGraph G) &#123;
+    for (int i = 0; i &lt; G.vexnum; i++) &#123;
+        for (int j = 0; j &lt; G.vexnum; j++) &#123;
+            dist[i][j] = G.arcs[i][j].adj;
+        &#125;
+    &#125;
+    for (int k = 0; k &lt; G.vexnum; k++) &#123;
+        for (int i = 0; i &lt; G.vexnum; i++) &#123;
+            for (int j = 0; j &lt; G.vexnum; j++) &#123;
+                if(dist[i][j] &gt; dist[i][k]+dist[k][j])&#123;
+                    dist[i][j] = dist[i][k]+dist[k][j];
+                &#125;
+                            
+            &#125;
+        &#125;
+    &#125;
+
+    int u,v;
+    for(int i =0;i&lt;m;i++)&#123;
+        cin &gt;&gt; u &gt;&gt;v;
+        cout &lt;&lt; dist[u][v] &lt;&lt;endl;
+    &#125;
+&#125;
+
+int main() &#123;
+    MGraph G;
+    CreatGraph(G);
+    Floyd(G);
+
+    return 0;
+&#125;
+</code></pre>
+<h3><span id="关键路径">关键路径</span></h3><pre><code class="c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+#define MAX_VERTEX_N 250
+#define MAX_EDGE_M 10005
+#define INF 1000000007
+typedef int VRType;
+typedef int VertexType;
+typedef int status;
+
+typedef struct ArcNode &#123;
+    int adjvex;
+    VRType cost;
+    struct ArcNode *nextarc;
+&#125; ArcNode; 
+
+typedef struct VNode &#123; 
+    VertexType data;
+    ArcNode *firstarc;
+&#125; VNode, AdjList[MAX_VERTEX_N];
+
+typedef struct &#123;  
+    AdjList vertices;
+    int vexnum, arcnum; 
+&#125; ALGraph;
+
+typedef struct Queue&#123; 
+    int data[MAX_VERTEX_N];
+    int rear, front; 
+&#125; Queue;
+
+typedef struct Edge &#123; 
+    int v, w;
+&#125; Edge;
+
+bool cmp(Edge a, Edge b) &#123;
+    return a.v == b.v? a.w &lt; b.w :a.v &lt; b.v;
+&#125;
+
+void InitQueue(Queue &amp;Q)&#123;
+    Q.rear = Q.front = 0;
+&#125;
+int EmptyQueue(Queue Q)&#123;
+    return Q.rear == Q.front;
+&#125;
+void Push(Queue &amp;Q, int x)&#123;
+    Q.data[Q.rear++] = x;
+&#125;
+void Pop(Queue &amp;Q, int &amp;x)&#123;
+    int minn = Q.data[Q.front], j = Q.front;
+    for (int i=Q.front;i&lt;Q.rear;i++)
+        if (Q.data[i] &lt; minn) minn = Q.data[i], j=i;
+    int temp = Q.data[j];
+    Q.data[j] = Q.data[Q.front];
+    Q.data[Q.front] = temp;
+    x = Q.data[Q.front++];
+&#125;
+
+void CreatGraph(ALGraph &amp;G)&#123;
+    int v, w, x;
+    scanf(&quot;%d%d&quot;, &amp;G.vexnum, &amp;G.arcnum);	
+    
+    for (int i=1;i&lt;=G.vexnum;i++) &#123;
+        G.vertices[i].data = i;
+        G.vertices[i].firstarc = NULL;
+    &#125;
+    for (int i=1;i&lt;=G.arcnum;i++)&#123;
+        scanf(&quot;%d%d%d&quot;, &amp;v, &amp;w, &amp;x);
+        ArcNode *p = (ArcNode*)malloc(sizeof(ArcNode));
+        p-&gt;adjvex = w; p-&gt;cost = x; p-&gt;nextarc = G.vertices[v].firstarc;
+        G.vertices[v].firstarc = p;
+    &#125;
+&#125;
+
+void CountInDegree(ALGraph G, int indegree[])&#123;
+    for (int v=1;v&lt;=G.vexnum;v++) indegree[v] = 0;
+    for (int v=1;v&lt;=G.vexnum;v++)&#123;
+        for (ArcNode* w=G.vertices[v].firstarc; w; w=w-&gt;nextarc)
+            indegree[w-&gt;adjvex]++;
+    &#125;
+&#125;
+
+void TopoLogicalSort(ALGraph G)&#123;
+    //拓扑排序 
+    Queue Q;
+    int v, indegree[MAX_VERTEX_N];
+    int topo[MAX_VERTEX_N], ve[MAX_VERTEX_N], vl[MAX_VERTEX_N];
+    CountInDegree(G,indegree);
+    InitQueue(Q);
+    for (int v=1;v&lt;=G.vexnum;v++)
+        if (!indegree[v]) &#123;
+            Push(Q, v); indegree[v] = INF;
+        &#125;			
+    while (!EmptyQueue(Q)) &#123;
+        Pop(Q, v);
+        for (ArcNode* w=G.vertices[v].firstarc; w; w=w-&gt;nextarc)  &#123;
+            indegree[w-&gt;adjvex]--; 
+            if (!indegree[w-&gt;adjvex]) &#123;
+                Push(Q, w-&gt;adjvex); indegree[w-&gt;adjvex] = INF;
+            &#125;			
+        &#125; 
+    &#125; 
+    if (Q.rear&lt;G.vexnum) &#123;
+        printf(&quot;unworkable project\n&quot;);	
+        return ;
+    &#125;	
+    for (int i=1;i&lt;=G.vexnum;i++) topo[i] = Q.data[i-1];
+        
+    int max =0;	
+    for(int i=1;i&lt;=G.vexnum;i++)ve[i] =0;
+    for(int i=1;i&lt;=G.vexnum;i++)&#123;
+        int v =topo[i];
+        if(ve[v]&gt;max)max=ve[v];
+        for(ArcNode * p=G.vertices[v].firstarc;p;p=p-&gt;nextarc)&#123;
+            if(ve[p-&gt;adjvex]&lt;ve[v] + p-&gt;cost) ve[p-&gt;adjvex] = ve[v] + p-&gt;cost;
+        &#125;
+    &#125;
+
+    printf(&quot;%d\n&quot;, max);
+    for(int i =1;i&lt;=G.vexnum;i++) vl[i] =max;
+    for(int i =G.vexnum;i&gt;0;i--)&#123;
+        int v = topo[i];
+        for(ArcNode * p=G.vertices[v].firstarc;p;p=p-&gt;nextarc)&#123;
+            if(vl[v] &gt; vl[p-&gt;adjvex]- p-&gt;cost) vl[v] = vl[p-&gt;adjvex] - p-&gt;cost;
+        &#125;
+        
+    &#125;
+    int t =0;
+    Edge edge[MAX_EDGE_M];
+    for(int v=1;v&lt;=G.vexnum;v++)&#123;
+        for(ArcNode * p=G.vertices[v].firstarc;p;p=p-&gt;nextarc)&#123;
+            int e =ve[v];
+            int l =vl[p-&gt;adjvex] - p-&gt;cost;
+            if(e==l)&#123;
+                edge[t].v = v;
+                edge[t++].w =p-&gt;adjvex;
+            &#125; 
+        &#125;
+    &#125;
+    sort(edge, edge+t, cmp);
+    for (int i=0;i&lt;t;i++) printf(&quot;%d-&gt;%d\n&quot;, edge[i].v, edge[i].w);
+&#125; 
+
+int main() &#123;
+    ALGraph G; 
+    CreatGraph(G);
+    TopoLogicalSort(G); 
+    return 0;
+&#125;
 </code></pre>
 
     </div>
