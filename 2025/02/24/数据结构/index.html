@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
+                <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
                     C语言学习
                 </a>
             </span>
@@ -1601,6 +1601,74 @@ int main() &#123;
 <p><a target="_blank" rel="noopener" href="https://acm.zjnu.edu.cn/problem/3065/view">https://acm.zjnu.edu.cn/problem/3065/view</a></p>
 <p><strong>二、算法思路与流程</strong></p>
 <p><strong>三、程序代码及运行结果</strong></p>
+<pre><code class="c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+#define MAXN 100005
+#define TRUE 1
+#define FALSE 0
+
+typedef struct BiTNode&#123;
+    int data;
+    struct BiTNode *lchild, *rchild;
+&#125;BiTNode, *BiTree;
+
+int SearchBST(BiTree T, int e, BiTree f, BiTree &amp;p)&#123;
+    if(T)&#123;
+        if(e==T-&gt;data) &#123;
+            p = T;
+            return TRUE;
+        &#125;
+        else if(e&gt;T-&gt;data) return SearchBST(T-&gt;rchild,e,T,p);
+        else return SearchBST(T-&gt;lchild,e,T,p);
+    &#125;
+    else&#123;
+        p=f;
+        return FALSE;
+    &#125;
+&#125;
+ 
+int InsertBST(BiTree &amp;T, int e)&#123;
+    BiTree f=NULL,p=NULL;
+    if(!SearchBST(T,e,f,p))&#123;
+        BiTree s = new BiTNode;
+        s-&gt;data = e;
+        s-&gt;lchild = s-&gt;rchild =NULL;
+        if(!p)&#123;
+            T=s;
+        &#125;
+        else&#123;
+            if(e &gt; p-&gt;data) p-&gt;rchild = s;
+            else p-&gt;lchild =s;
+        &#125;
+        return TRUE;
+    &#125;
+    return FALSE;
+&#125;
+
+int CreateBST(BiTree &amp;T)&#123;
+    int n, x, cnt=0;
+    scanf(&quot;%d&quot;, &amp;n);
+    for (int i=0;i&lt;n;i++)&#123;
+        scanf(&quot;%d&quot;, &amp;x);
+        if (InsertBST(T, x)) cnt++;
+    &#125;
+    return cnt;
+&#125;
+
+void PreOrder(BiTree T)&#123;
+    if(T)&#123;
+        cout &lt;&lt; T-&gt;data &lt;&lt; &quot; &quot;;
+        PreOrder(T-&gt;lchild);
+        PreOrder(T-&gt;rchild);
+    &#125;
+&#125;
+
+int main()&#123;
+    BiTree T = NULL;
+    cout &lt;&lt; CreateBST(T) &lt;&lt;endl;
+    PreOrder(T);
+&#125;
+</code></pre>
 <p><strong>四、收获总结</strong></p>
 <hr>
 <h3><span id="实验15-对大量数据快速排序">实验15 对大量数据快速排序</span></h3><p><strong>一、实验内容与要求</strong></p>
