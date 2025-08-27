@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="zh-cn" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>huanghunr's Blog</title><meta name="author" content="huanghunr"><meta name="copyright" content="huanghunr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF8F0"><meta property="og:type" content="website">
+<meta property="og:title" content="huanghunr&#39;s Blog">
+<meta property="og:url" content="http://example.com/page/3/index.html">
+<meta property="og:site_name" content="huanghunr&#39;s Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/tx4.jpg">
+<meta property="article:author" content="huanghunr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/tx4.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/page/3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#402218')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF8F0')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'huanghunr\'s Blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/tx4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(http://img.huanghunr.top/random-image?type=desktop);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">huanghunr's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">huanghunr's Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/07/%E6%98%A5%E7%A7%8B%E6%9D%AF/" title="2024春秋杯部分Re-wp+复现">2024春秋杯部分Re-wp+复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-06T16:00:00.000Z" title="Created 2025-01-07 00:00:00">2025-01-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">day1earecustom_md5_init(seed);会检测断点，我们可以在输入和比较的数据下硬件断点，用写内存的方法把密文写回内存就可以在s1中看到flag。\n 密文:5C 76 4A 78 15 62 05 7C 6B 21 40 66 5B 1A 48 7A\n 1E 46 7F 28 02 75 68 2A 34 0C 4B 1D 3D 2E 6B 7A  17 45 07 75 47 27 39 78 61 0B   ko0h前面的flag是假的，修一下jzjnz的花指令，可以看到主逻辑   魔改RC4  密文在sub_402A70()里，”DDDDAAAASSSS” 脚本如下 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657#include&lt;stdio.h&gt; #include&lt;stdlib.h&gt;#include&lt;string.h&gt;//s 表的长度取 256#defi...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/07/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" title="IDApython初步使用和花指令的初步学习">IDApython初步使用和花指令的初步学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-06T16:00:00.000Z" title="Created 2025-01-07 00:00:00">2025-01-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Re%E5%AD%A6%E4%B9%A0/">Re学习</a></span></div><div class="content"> ida版本为IDA9.0  用VScode编写IDApython 找到这个项目IDAcode,把下来的文件加到你ida的plugins文件夹中。 修改idacode_utils&#x2F;settings.py中的PYTHON路径为本地的python路径 在本地中用控制台安装依赖  1python -m pip install --user debugpy tornado  在VScode中安装IDAcode插件 在VScode按CTRL+Shift+P输入”Open User Settings(JSON)”打开后添加如下代码。  123456&quot;python.autoComplete.extraPaths&quot;: [        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径     ],     &quot;python.analysis.extraPaths&quot;: [        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\p...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/06/%E8%BD%AF%E4%BB%B6%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B/" title="2024软件创新大赛部分Re-wp">2024软件创新大赛部分Re-wp</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-05T16:00:00.000Z" title="Created 2025-01-06 00:00:00">2025-01-06</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">主函数在start的第一个参数里面。去除如下花指令  一个rc4加密，密钥在第一个生成盒函数的参数里。第二个函数是加密函数，动调密钥会被修改。  在第二个函数的call处下断点动调就可以看到加密函数，进入加密函数后发现花指令，和上面一样的nop掉后可以发现魔改RC4。   我们输入一串字符进行动调，在主函数的unk_5C6CC0中下硬件断点。后面会断在如下位置,这里就是比较的位置。去除这里的花指令后就可以看到逻辑，密文就是上面这些。所有数据都已经拿到，记得把密文转一下端序（见python脚本）,最后还有一个异或0x23。 密文:25cd54af511c58d3a84b4f56ec835dd4f6474a6fe073b0a5a8c317815e2bf4f671ea2fffa8639957 密钥:921C2B1FBAFBA2FF07697D77188C   1234567a = [0x0D3581C51AF54CD25,0x0D45D83EC564F4BA8,0x0A5B073E06F4A47F6,0x0F6F42B5E8117C3A8,0x579963A8FF2FEA71]b=&q...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2024/12/31/%E5%B8%B8%E8%A7%81%E5%8A%A0%E5%AF%86/" title="常见加密和编码"><img class="post-bg" src="https://huanghunr-blog.oss-cn-hangzhou.aliyuncs.com/website/img/qiaomi1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="常见加密和编码"></a></div><div class="recent-post-info"><a class="article-title" href="/2024/12/31/%E5%B8%B8%E8%A7%81%E5%8A%A0%E5%AF%86/" title="常见加密和编码">常见加密和编码</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-30T16:00:00.000Z" title="Created 2024-12-31 00:00:00">2024-12-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/re%E5%AD%A6%E4%B9%A0/">re学习</a></span></div><div class="content">Base64一种基于64个可打印的字符来表示二进制的数据的一种方法。 https://cloud.tencent.com/developer/article/1868972 动画演示 总的来说就是把原数据的二进制按3字节分块，后再按6位二进制分成4块，然后在每组二进制前面补00，变成8位（一块二进制内少于6位在末尾补0，三字节数据块内存在空字节就用等号补上。），按分块的二进制表示的值为索引到表中去寻找对应的元素。 解码时按4字节到表中寻找元素后计算索引按三字节恢复就行。 源码解读，来自  https://gitcode.com/g310773517/base64/overview?isLogin=1 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991001...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/12/25/python%E8%84%9A%E6%9C%AC/" title="python脚本">python脚本</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-24T16:00:00.000Z" title="Created 2024-12-25 00:00:00">2024-12-25</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/python%E8%84%9A%E6%9C%AC/">python脚本</a></span></div><div class="content">enumerate()12enumerate(obj)  # 迭代器，输入可迭代对象，返回索引和迭代元素for i, char in enumerate(chars): fromhex()1bytes.fromhex(hex_char) # 输入十六进制，按两位转换为byte数据 join()12345separator.join(iterable) # 将可迭代对象中的元素连接成一个新的字符串。# separator：连接符，通常是一个字符串，表示元素之间的分隔符。# iterable：一个可迭代对象（如列表、元组、字符串等）要求元素是字符串。chars = &quot;&quot;.join(chr(i) for i in range(32,127)) get()12345dict.get(key, default=None)# 获取字典中指定键对应的值。# key：要查找的键。# default：当指定的 key 不在字典中时返回的默认值。如果未指定，默认返回 None。plaintext += mp.get(bytes([b]), &#x27;?&#x27;)  # 用g...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/12/25/%E5%9B%BD%E8%B5%9B2024/" title="2024长城杯初赛Re部分复现">2024长城杯初赛Re部分复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-24T16:00:00.000Z" title="Created 2024-12-25 00:00:00">2024-12-25</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">dump原程序是一个命令行工具，需要用命令行参数来进行使用，使用方法是在命令行输入以下命令 1re.exe [data]  我们输入的数据会被加密，我们尝试输入几个字符就可以发现每个字符加密的对应结果是相同的，也就是单字节加密，那么我们就可以输入所有可打印字符得到加密后的结果，再把结果和原字符的数据映射起来就可以依据密文得出明文。 在这里密文被以二进制的形式保存都在flag文件中，我们需要用读文件的方式把密文读入。 脚本如下 在这个脚本中我尝试直接获得可打印字符，但是最后对比了其他人的wp，发现引号是不会被re.exe输出的，也就是如果你把引号也输入进去获取映射表，那么你的获得的映射表就会少一位，导致映射错误。在最后我们会发现还缺少了一个字符，但是base64编码的样子已经出来了，我们手动添加一个字符解码看看规律。  解码后我们会发现很多奇怪的数字，感觉上像是一个时间戳，于是我们过滤掉那些含有符号的结果，最终找到上面的结果，把每个都输入一下就可以发现flag就是(原题中告诉了我们第十三位为4，我们假设不知道，分析数据解决) flag{MTczMDc4MzQ2Ng&#x3D;&#x...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/12/21/IDApython/" title="IDApython的初步学习">IDApython的初步学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-20T16:00:00.000Z" title="Created 2024-12-21 00:00:00">2024-12-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content"> ida版本为IDA9.0  用VScode编写IDApython 找到这个项目IDAcode,把下来的文件加到你ida的plugins文件夹中。 修改idacode_utils&#x2F;settings.py中的PYTHON路径为本地的python路径 在本地中用控制台安装依赖  1python -m pip install --user debugpy tornado  在VScode中安装IDAcode插件 在VScode按CTRL+Shift+P输入”Open User Settings(JSON)”打开后添加如下代码。  123456&quot;python.autoComplete.extraPaths&quot;: [        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\python\\3&quot;   //你的ida库路径     ],     &quot;python.analysis.extraPaths&quot;: [        &quot;E:\\CTFtoolsNEW\\Reverse\\IDA90\\p...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/12/20/AWD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%9D%82%E7%89%A9/" title="AWD的一些杂物">AWD的一些杂物</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-19T16:00:00.000Z" title="Created 2024-12-20 00:00:00">2024-12-20</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></span></div><div class="content">Linux操作打包备份在 Linux 中，可以通过将 .tar 文件解压到指定目录来完成备份恢复。以下是详细步骤：  1. 解压到目标目录使用 tar 命令时可以通过 -C 选项指定目标解压目录。假设你的备份文件是 backup.tar，目标目录是 /home/user/restore，操作如下： 基本解压命令1tar -xvf backup.tar -C /home/user/restore   -x：表示解压。 -v：显示解压的详细过程（可选）。 -f：指定解压的文件。 -C：指定解压的目标目录。   2. 备份目录打包恢复如果你有一个备份文件夹 mydata，需要先打包备份，然后再恢复，操作如下： 备份文件夹到 .tar1tar -cvf backup.tar /path/to/mydata  恢复到指定目录如果目标目录不存在，可以先创建： 1mkdir -p /home/user/restore  然后执行解压： 1tar -xvf backup.tar -C /home/user/restore   3. 带压缩的备份与恢复压缩备份使用 gzip 或 bzip2 进行压...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/12/16/adb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E7%AC%94%E8%AE%B0/" title="常用的adb命令记录">常用的adb命令记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-15T16:00:00.000Z" title="Created 2024-12-16 00:00:00">2024-12-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Re%E5%AD%A6%E4%B9%A0/">Re学习</a></span></div><div class="content">adb命令初始化查看设备1adb devices  指定设备操作1adb -s 设备 指令  查看Activity&#x2F;包名查看运行中的包名1adb shell dumpsys activity top 第二种方法 123adb shellsudumpsys activity top  查看安装应用的包名123adb shellsupm list packages 根据某个关键字查找包1pm list packages | grep ...  端口转发(IDA)1adb forward tcp:23946 tcp:23946  端口转发(frida)1adb forward tcp:27042 tcp:27043  root启动1adb root  获取root在shell下执行 123456su -c &quot;resetprop ro.debuggable 1&quot;su -c &quot;resetprop service.adb.root 1&quot;su -c &quot;magiskpolicy --live &#x27;allow adbd adbd ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/28/%E5%85%B3%E4%BA%8E%E9%9D%9EPE%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95/" title="调试学习">调试学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-11-27T16:00:00.000Z" title="Created 2024-11-28 00:00:00">2024-11-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Re%E5%AD%A6%E4%B9%A0/">Re学习</a></span></div><div class="content">arm文件 安装qemu-arm虚拟机以及依赖  1234567891011apt install re2capt install ninja-buildapt install build-essential zlib1g-dev pkg-config libglib2.0-devapt install binutils-dev libboost-all-dev autoconf libtool libssl-dev libpixman-1-dev libpython-dev python-pip python-capstone virtualenvapt install libpixman-1-devapt install bison flexapt install mesonapt install libpixman-1-devapt-get install libpcap-dev libnids-dev libnet1-devapt-get install libattr1-devapt-get install libcap-ng-dev  qemu-arm –versio...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#content-inner">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/4/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/tx4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">huanghunr</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huanghunr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/10/D3CTF2025/" title="D^3CTF2025 Re-wp&amp;复现">D^3CTF2025 Re-wp&amp;复现</a><time datetime="2025-07-09T16:00:00.000Z" title="Created 2025-07-10 00:00:00">2025-07-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/10/r3ctf2025/" title="2025 r3CTF Re-部分复现">2025 r3CTF Re-部分复现</a><time datetime="2025-07-09T16:00:00.000Z" title="Created 2025-07-10 00:00:00">2025-07-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/21/ISCC-re/" title="2025ISCC 复现">2025ISCC 复现</a><time datetime="2025-05-20T16:00:00.000Z" title="Created 2025-05-21 00:00:00">2025-05-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/miniLCTF2025/" title="2025miniLCTF 部分Re-wp+复现">2025miniLCTF 部分Re-wp+复现</a><time datetime="2025-05-18T16:00:00.000Z" title="Created 2025-05-19 00:00:00">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/01/%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C%E5%AD%A6%E4%B9%A0/" title="矩阵逆向初步学习">矩阵逆向初步学习</a><time datetime="2025-04-30T16:00:00.000Z" title="Created 2025-05-01 00:00:00">2025-05-01</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Re%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">Re学习</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/WriteUp/"><span class="card-category-list-name">WriteUp</span><span class="card-category-list-count">23</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/python%E8%84%9A%E6%9C%AC/"><span class="card-category-list-name">python脚本</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/re%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">re学习</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">学习</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="card-category-list-name">工具</span><span class="card-category-list-count">5</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/re-%E5%B7%A5%E5%85%B7/" style="font-size: 1.3em; color: #99a1ac">re,工具</a> <a href="/tags/re-WriteUp/" style="font-size: 1.5em; color: #99a9bf">re,WriteUp</a> <a href="/tags/re%EF%BC%8CWriteUp/" style="font-size: 1.1em; color: #999">re，WriteUp</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 1.1em; color: #999">学习</a> <a href="/tags/%E5%8A%A0%E8%A7%A3%E5%AF%86%E3%80%81%E7%BC%96%E7%A0%81/" style="font-size: 1.1em; color: #999">加解密、编码</a> <a href="/tags/%E7%94%9F%E6%B4%BB-%E5%B7%A5%E5%85%B7/" style="font-size: 1.2em; color: #999da3">生活,工具</a> <a href="/tags/re-%E5%AD%A6%E4%B9%A0/" style="font-size: 1.4em; color: #99a5b6">re,学习</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>Archives</span>
+      <a class="card-more-btn" href="/archives/"
+            title="View More">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/07/">
+            <span class="card-archive-list-date">
+              七月 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/05/">
+            <span class="card-archive-list-date">
+              五月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/04/">
+            <span class="card-archive-list-date">
+              四月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/03/">
+            <span class="card-archive-list-date">
+              三月 2025
+            </span>
+            <span class="card-archive-list-count">5</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/02/">
+            <span class="card-archive-list-date">
+              二月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/01/">
+            <span class="card-archive-list-date">
+              一月 2025
+            </span>
+            <span class="card-archive-list-count">7</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/12/">
+            <span class="card-archive-list-date">
+              十二月 2024
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/11/">
+            <span class="card-archive-list-date">
+              十一月 2024
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">41</div></div><div class="webinfo-item"><div class="item-name">Total Word Count :</div><div class="item-count">153.8k</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-08-27T18:46:21.298Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: linear-gradient( 135deg, #FFD89B 10%, #FCA17D 100%);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By huanghunr</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.3</a></span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><span>桂ICP备2024049894号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = "做自己喜欢的事 (*＞◡❛)".slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle("做自己喜欢的事 (*＞◡❛)")
+}
+typedJSFn.run(subtitleType)</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

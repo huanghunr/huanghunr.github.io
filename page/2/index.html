@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="zh-cn" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>huanghunr's Blog</title><meta name="author" content="huanghunr"><meta name="copyright" content="huanghunr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#FFF8F0"><meta property="og:type" content="website">
+<meta property="og:title" content="huanghunr&#39;s Blog">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="huanghunr&#39;s Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/tx4.jpg">
+<meta property="article:author" content="huanghunr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/tx4.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#402218')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF8F0')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'huanghunr\'s Blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/tx4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(http://img.huanghunr.top/random-image?type=desktop);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">huanghunr's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">huanghunr's Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/03/13/DOS%E7%A8%8B%E5%BA%8F/" title="DOS程序逆向学习">DOS程序逆向学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-03-12T16:00:00.000Z" title="Created 2025-03-13 00:00:00">2025-03-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Re%E5%AD%A6%E4%B9%A0/">Re学习</a></span></div><div class="content">Dos常用命令参考 123456789101112131415161718dir #查看目录cd 	#切换目录d:	#切换盘符到dmd	#新建目录rmdir	#删除目录rmdir /s	#删除非空目录xcopy /e [source] [destination]	#复制文件move [sourcr] [destination] #移动文件ren [oldname] [newname]	#重命名type nul&gt;[name].xxx	#创建空文件echo [content]&gt;[filename]	#新建非空文件echo [content]&gt;&gt;[filname]	#追加文件内容type [filename]	#查看文件del [filename]	#删除文件start /d &quot;[path]&quot;[exename] #启动程序explorer #打开文件管理器ipconfig #查看ip地址mount c [filepath] #挂载文件夹到c盘  编译并运行程序参考 1.下载Turboc2，并创建目录，用mount挂载 2.创建.c文件放到挂载...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/03/09/TPCTF/" title="2025TPCTF部分Re-wp+复现">2025TPCTF部分Re-wp+复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-03-08T16:00:00.000Z" title="Created 2025-03-09 00:00:00">2025-03-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">linuxpdfpdf里运行Linux，010打开发现有一个base64解密函数，一些文件名以及文件对应的base64编码，通过正则匹配 ”文件名”: “文件内容“ 获取文件名和文件内容，直接用脚本导出。随便拿个文件看看信息，发现是zlib格式的压缩文件，用python的zlib库解压就行，查看解压出来有许多二进制文件，有一百多个有点不好看，于是寻找看是不是有elf可执行文件，写个函数遍历一下(脚本是AI写的)。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125import osimport reimp...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/03/05/ghctf/" title="2025GHCTF Re-wp+复现">2025GHCTF Re-wp+复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-03-04T16:00:00.000Z" title="Created 2025-03-05 00:00:00">2025-03-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">ASM?Signin!读汇编就行，可以用AI辅助。 要注意的是下面这里的数据 12345678910111213141516ENC PROC    PUSH CX    MOV SI,OFFSET BUFFER1 + 2    MOV DI,OFFSET DATA1    MOV CX,8LOOP2:    MOV AX,WORD PTR[DI + 1]  ;读取的是双字WORD，所以AX应该是di[2]和di[1]组成的2字节数据    XOR WORD PTR[SI],AX ;这里也是读取的si[1] 和si[0]的2字节数据    MOV AX,WORD PTR[DI + 2] ;di[2]和di[3]同上    XOR WORD PTR[SI + 2],AX ;si[2]和si[3]同上    ADD SI,4    ADD DI,4    LOOP LOOP2    POP CX    RETENC ENDP  就一个异或加密，异或回来就行。 大概逻辑和解密脚本 123456789101112131415161718192021222324252627282930313...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/22/TRXctf/" title="2025TRXCTF Re-Wp+复现">2025TRXCTF Re-Wp+复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-02-21T16:00:00.000Z" title="Created 2025-02-22 00:00:00">2025-02-22</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">sudo kurl https&#x2F;&#x2F;spacewar游戏的逻辑是在一个25×25的区域内填写数字。 在play()函数中，首先会对我们的每次输入用isValid()进行检查。 isValid()，函数首先会初始化一个bool向量的表(存储0，1的数组)，然后获取board中的值判断是不是0。如果不是0那么获取这个值作为下标获取bool向量中的值判断是不是1，如果是1返回0，如果不是1，把值修改为1。继续进行判断。其实就是判断broad中某一特定的位置的元素是否已经存在。它的检查顺序是，先检查行，再检查列，最后分5x5的块进行检查。 那么逻辑就是检查行，列，块中是否有重复的数字。如果没有返回1，有的话返回0； checkWin()检查了broad中是否有元素为0 ，如果没有0且isValid()检查也正确就赢得游戏。 很明显这就是一个数独游戏。查看broad的交叉引用就可以看到初始值在__static_initialization_and_destruction_0()中。拿下来用z3解。 解完后判断哪些值是要我们要输入的，用pwndbg把值输入，程序输出flag...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/09/n1ctf/" title="2025n1CTF Re-wp+复现">2025n1CTF Re-wp+复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-02-08T16:00:00.000Z" title="Created 2025-02-09 00:00:00">2025-02-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">5mcvirtureprotect动态修改函数，用ida动态调试，给输入的数据下硬件断点运行分析就可以发现正确的逻辑。  但是不能反汇编，选中按c恢复成汇编代码。  直接读汇编写出加密代码，注意一下细节，每次循环左移的值都是不一样的，以防万一还是每次加密都细看了一下。一共有四种加密方法，四种加密循环进行一共十六次加密，顺序大概是box()–&gt;index()–&gt;shift(stat&#x3D;&#x3D;0)–&gt;shift(stat&#x3D;&#x3D;1)–&gt;……。直接写出逆向函数就行，密文就在比对的位置。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210310410510610710810911011111...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/08/vnctf/" title="2025VNCTF Re-wp+复现">2025VNCTF Re-wp+复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-02-07T16:00:00.000Z" title="Created 2025-02-08 00:00:00">2025-02-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/WriteUp/">WriteUp</a></span></div><div class="content">hook_fish运行应用提示输入一串字符并要求联网。 jadx分析，发现在main中，在点击按钮后会调用encrypt()方法对我们输入的数据加密，然后调用fish()方法下载了一个“hook_fish.dex”文件。通过下面的registerReceiver方法创注册了一个广播接收器，只要收到系统下载完成的广播时，就会调用onReceive()方法。 12registerReceiver(this.downloadCompleteReceiver, new IntentFilter(&quot;android.intent.action.DOWNLOAD_COMPLETE&quot;));  在onReceive()方法中把加密后的的输入传入了MainActivity.this.loadClass();，加载下载来的.dex文件并反射调用了encode(input0);对输入再次加密，最后调用check()方法检查结果。然后删除本地的“hook_fish.dex”文件。 我们先hook file.delete()方法，在删除前转移出dex文件(脚本1); 在savedDexF...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/21/IDA%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" title="IDA的一些用法笔记">IDA的一些用法笔记</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-20T16:00:00.000Z" title="Created 2025-01-21 00:00:00">2025-01-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">常用快捷键11、切换文本视图与图表视图 空格键 2、返回上一个操作地址 ESC 3、搜索地址和符号 G 4、对符号进行重命名 N 5、常规注释 冒号键 6、可重复注释 分号键 7、添加标签 Alt+M 8、查看标签 Ctrl+M 9、查看段的信息 Ctrl+S 10、查看交叉应用 X 11、查看伪代码 F5 12、搜索文本 Alt+T 13、搜索十六进 Alt+B 2a：将数据转换为字符串 f5：一键反汇编 esc：回退键，能够倒回上一部操作的视图（只有在反汇编窗口才是这个作用，如果是在其他窗口按下esc，会关闭该窗口） shift+f12：可以打开string窗口，一键找出所有的字符串，右击setup，还能对窗口的属性进行设置 ctrl+w：保存ida数据库 ctrl+s：选择某个数据段，直接进行跳转 ctrl+鼠标滚轮：能够调节流程视图的大小 r：把大数转为字符串 x：对着某个函数、变量按该快捷键，可以查看它的交叉引用 g：直接跳转到某个地址 n：更改变量的名称 y：更改变量的类型 &#x2F; ：在反编译后伪代码的界面中写下注释 \在反编译后伪代码的界面中隐藏&#x2F;显...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/16/cython/" title="Cython逆向初步学习">Cython逆向初步学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-15T16:00:00.000Z" title="Created 2025-01-16 00:00:00">2025-01-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Re%E5%AD%A6%E4%B9%A0/">Re学习</a></span></div><div class="content">我们只进行一些总结，基础理解我参考了这篇文章 Cython编写系统环境:windows，python编译器pycharm(python虚拟环境.venv)，c&#x2F;c++编译器visual stdio 2022 1.在python中安装cython和setuptools包建议给Cython单独开一个python虚拟环境，有时候包多了导入pyd会报错。 pycharm可以直接使用包管理器搜索安装。 12pip install cythonpip install setuptools  2.安装c\c++编译器我这里用的是visual stdio,也可以用MinGW。 3.编写cython拓展可以参考用户指南 - 《Cython 3.0 中文文档》 - 书栈网 · BookStack 随意编写一个source.py作为拓展模块，代码如下 123456789def sayhello():    a = &quot;hello world&quot;    print(a)    cdef int add(int n,int m):    return m+ndef aadd(n,...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/07/py%E5%AD%97%E8%8A%82%E7%A0%81/" title="python常用机器码助记符总结">python常用机器码助记符总结</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-06T16:00:00.000Z" title="Created 2025-01-07 00:00:00">2025-01-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">由于内容太多一下信息由AI辅助整理。 模块操作 IMPORT_NAME: 导入模块或名称。 IMPORT_FROM: 从模块中加载特定的名称。 IMPORT_STAR: 从模块中导入所有名称。  加载和存储操作 LOAD_CONST(consti): 将常量 co_consts[consti] 推入栈顶。 LOAD_NAME(namei): 将名称 co_names[namei] 对应的值推入栈顶。 LOAD_FAST(var_num): 将局部变量 co_varnames[var_num] 推入栈顶。 STORE_NAME(namei): 将栈顶的值存储到名称 co_names[namei]。 STORE_FAST(var_num): 将栈顶的值存储到局部变量 co_varnames[var_num]。  算术操作1. 数学运算这些操作码用于执行基本的数学运算，操作数从栈顶弹出，结果推入栈顶。  BINARY_ADD:弹出栈顶两个元素，执行加法运算（TOS = TOS1 + TOS），结果推入栈顶。示例：a + b  BINARY_SUBTRACT:弹出栈顶两个元素，执行减法运...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/01/07/xdbg%E6%89%8B%E5%B7%A5%E8%84%B1%E5%A3%B3%E5%AD%A6%E4%B9%A0/" title="x64dbg手工脱壳学习">x64dbg手工脱壳学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-01-06T16:00:00.000Z" title="Created 2025-01-07 00:00:00">2025-01-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></span></div><div class="content">对一个程序壳的理解一个程序被加壳，在我的理解下就是一个程序的代码被加密，从而使ida等反编译工具不能识别为代码数据，然后再在程序前嵌入一块代码，在程序运行时会先进行解密然后再运行。既然如此，我们就可以在运行时解密完程序就把程序提取出来。 下面的程序中，这是我们一开始的点，程序从这里开始。对于一个加了壳的程序而言，它必须先运行解密代码，这段解密代码一般会被xdbg识别为Enterpoint（主入口），而一个函数的执行必须先压入栈，结束时又要弹出栈，且先入栈的最后弹出，那么在第一个被压入的栈被弹出时，也就意味着一个函数的结束，我们可以在第一个入栈时的栈顶RSP下断点，那么在出栈时就会断在函数结束的位置，从而走完解密程序我们只要把解密后的程序dump下来就行了。那么思路就清晰了，步骤就是   寻找解密开始点 在push上下硬件断点 运行到pop的位置（解密结束的位置） 找jmp到主程序的点 在jmp处断点，用scylla进行dump   具体步骤找到程序的入口，运行一步push，在RSP处下硬件断点  运行后停在这个位置，上面有一堆pop，我们执行到下面jmp的位置，然后用scylla...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/tx4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">huanghunr</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huanghunr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/10/D3CTF2025/" title="D^3CTF2025 Re-wp&amp;复现">D^3CTF2025 Re-wp&amp;复现</a><time datetime="2025-07-09T16:00:00.000Z" title="Created 2025-07-10 00:00:00">2025-07-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/10/r3ctf2025/" title="2025 r3CTF Re-部分复现">2025 r3CTF Re-部分复现</a><time datetime="2025-07-09T16:00:00.000Z" title="Created 2025-07-10 00:00:00">2025-07-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/21/ISCC-re/" title="2025ISCC 复现">2025ISCC 复现</a><time datetime="2025-05-20T16:00:00.000Z" title="Created 2025-05-21 00:00:00">2025-05-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/miniLCTF2025/" title="2025miniLCTF 部分Re-wp+复现">2025miniLCTF 部分Re-wp+复现</a><time datetime="2025-05-18T16:00:00.000Z" title="Created 2025-05-19 00:00:00">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/01/%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C%E5%AD%A6%E4%B9%A0/" title="矩阵逆向初步学习">矩阵逆向初步学习</a><time datetime="2025-04-30T16:00:00.000Z" title="Created 2025-05-01 00:00:00">2025-05-01</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Re%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">Re学习</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/WriteUp/"><span class="card-category-list-name">WriteUp</span><span class="card-category-list-count">23</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/python%E8%84%9A%E6%9C%AC/"><span class="card-category-list-name">python脚本</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/re%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">re学习</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">学习</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="card-category-list-name">工具</span><span class="card-category-list-count">5</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/re-%E5%B7%A5%E5%85%B7/" style="font-size: 1.3em; color: #99a1ac">re,工具</a> <a href="/tags/re-WriteUp/" style="font-size: 1.5em; color: #99a9bf">re,WriteUp</a> <a href="/tags/re%EF%BC%8CWriteUp/" style="font-size: 1.1em; color: #999">re，WriteUp</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 1.1em; color: #999">学习</a> <a href="/tags/%E5%8A%A0%E8%A7%A3%E5%AF%86%E3%80%81%E7%BC%96%E7%A0%81/" style="font-size: 1.1em; color: #999">加解密、编码</a> <a href="/tags/%E7%94%9F%E6%B4%BB-%E5%B7%A5%E5%85%B7/" style="font-size: 1.2em; color: #999da3">生活,工具</a> <a href="/tags/re-%E5%AD%A6%E4%B9%A0/" style="font-size: 1.4em; color: #99a5b6">re,学习</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>Archives</span>
+      <a class="card-more-btn" href="/archives/"
+            title="View More">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/07/">
+            <span class="card-archive-list-date">
+              七月 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/05/">
+            <span class="card-archive-list-date">
+              五月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/04/">
+            <span class="card-archive-list-date">
+              四月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/03/">
+            <span class="card-archive-list-date">
+              三月 2025
+            </span>
+            <span class="card-archive-list-count">5</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/02/">
+            <span class="card-archive-list-date">
+              二月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/01/">
+            <span class="card-archive-list-date">
+              一月 2025
+            </span>
+            <span class="card-archive-list-count">7</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/12/">
+            <span class="card-archive-list-date">
+              十二月 2024
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/11/">
+            <span class="card-archive-list-date">
+              十一月 2024
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">41</div></div><div class="webinfo-item"><div class="item-name">Total Word Count :</div><div class="item-count">153.8k</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-08-27T18:46:21.298Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: linear-gradient( 135deg, #FFD89B 10%, #FCA17D 100%);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By huanghunr</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.3</a></span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><span>桂ICP备2024049894号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = "做自己喜欢的事 (*＞◡❛)".slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle("做自己喜欢的事 (*＞◡❛)")
+}
+typedJSFn.run(subtitleType)</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
